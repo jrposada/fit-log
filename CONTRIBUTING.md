@@ -1,22 +1,16 @@
-# AWS Client developer guide
+# FIT Log developer guide
 
 _This guide assumes you are using a Linux system like WSL or Ubuntu._
 
 ## Prerequisites
-
-1. [Rust](https://www.rust-lang.org/tools/install)
-
-2. `rustup component add rust-analyzer`
-
-3. Tauri setup. Official Linux [instructions](https://v2.tauri.app/start/prerequisites/#linux).
 
 ## Getting started
 
 ```bash
 # Install project node dependencies
 npm i
-# Launch app in debug mode
-npm run tauri dev
+# Launch local full-stack in debug mode
+npm run dev
 ```
 
 ## Contributing
@@ -59,7 +53,7 @@ aws sso login --profile <your-profile>
 1. Go to **IAM Identity Center**
 2. Got to **Users** section and select **Add user**
 3. Fill username and click **Next**
-4. Add new user to group **AWSClientDeveloper**
+4. Add new user to group **FITLogDeveloper**
 5. User should receive an email to setup their password and do their first login.
 6. For subsequent access the will need IAM Identity Center's **AWS access portal URL**
 
@@ -79,19 +73,19 @@ aws sso login --profile <your-profile>
    SSO region [None]: eu-west-3
    ```
 
-   Choose `AWSClientDeveloper` role and `eu-west-3` region when prompted.
+   Choose `FITLogDeveloper` role and `eu-west-3` region when prompted.
 
-   For the profile name you can use whatever you prefer. For this guide we have used `aws-client-dev`
+   For the profile name you can use whatever you prefer. For this guide we have used `fit-log-dev`
 
-   Run `aws dynamodb list-tables --profile aws-client-dev` to test your setup.
+   Run `aws dynamodb list-tables --profile fit-log-dev` to test your setup.
 
    If everything goes correctly you should see a list of DynamoDB tables and you `~/.aws/config` file should look something like:
 
    ```
-   [profile aws-client-dev]
+   [profile fit-log-dev]
    sso_session = jrposada-sso
    sso_account_id = <account-id>
-   sso_role_name = AWSClientDeveloper
+   sso_role_name = FITLogDeveloper
    region = eu-west-3
    output = json
 
@@ -102,17 +96,3 @@ aws sso login --profile <your-profile>
    ```
 
 ## Troubleshooting
-
-### Can not open browser
-
-Install the following dependencies
-
-```bash
-sudo apt install wslu
-```
-
-If it still does not work afterwards:
-
-```bash
-sudo apt install -y ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils
-```

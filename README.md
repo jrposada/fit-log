@@ -1,6 +1,6 @@
-# AWS Client
+# FIT Log
 
-Client to execute queries against AWS services. Inspired by Postman.
+App to track workouts.
 
 ## Contribute
 
