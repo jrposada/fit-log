@@ -3,24 +3,24 @@ import { FunctionComponent, MouseEventHandler } from 'react';
 import { useMenuButton } from './use-menu-button';
 
 const MenuButtonItem: FunctionComponent<MenuItemProps> = ({
-    onClick,
-    children,
-    ...restProps
+  onClick,
+  children,
+  ...restProps
 }) => {
-    const requestService = useMenuButton();
+  const requestService = useMenuButton();
 
-    const handleClick: MouseEventHandler<HTMLLIElement> = (event) => {
-        onClick?.(event);
-        requestService.close();
-    };
+  const handleClick: MouseEventHandler<HTMLLIElement> = (event) => {
+    onClick?.(event);
+    requestService.close();
+  };
 
-    return (
-        <>
-            <MenuItem {...restProps} onClick={handleClick}>
-                {children}
-            </MenuItem>
-        </>
-    );
+  return (
+    <>
+      <MenuItem {...restProps} onClick={handleClick}>
+        {children}
+      </MenuItem>
+    </>
+  );
 };
 
 export default MenuButtonItem;

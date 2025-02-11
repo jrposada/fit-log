@@ -6,37 +6,36 @@ import { MenuButtonService } from './menu-button-service';
 type MenuButtonProps = {};
 
 const MenuButton = forwardRef<
-    MenuButtonService,
-    PropsWithChildren<MenuButtonProps>
+  MenuButtonService,
+  PropsWithChildren<MenuButtonProps>
 >(({ children }, ref) => {
-    const { menuButtonContext, menuButtonService } =
-        useCreateMenuButtonContext();
+  const { menuButtonContext, menuButtonService } = useCreateMenuButtonContext();
 
-    useImperativeHandle(ref, () => {
-        return menuButtonService;
-    });
+  useImperativeHandle(ref, () => {
+    return menuButtonService;
+  });
 
-    return (
-        <>
-            <menuButtonContext.Provider value={menuButtonService}>
-                <Menu
-                    open={menuButtonService.contextMenu !== null}
-                    onClose={menuButtonService.close}
-                    anchorReference="anchorPosition"
-                    anchorPosition={
-                        menuButtonService.contextMenu !== null
-                            ? {
-                                  top: menuButtonService.contextMenu.mouseY,
-                                  left: menuButtonService.contextMenu.mouseX,
-                              }
-                            : undefined
-                    }
-                >
-                    {children}
-                </Menu>
-            </menuButtonContext.Provider>
-        </>
-    );
+  return (
+    <>
+      <menuButtonContext.Provider value={menuButtonService}>
+        <Menu
+          open={menuButtonService.contextMenu !== null}
+          onClose={menuButtonService.close}
+          anchorReference="anchorPosition"
+          anchorPosition={
+            menuButtonService.contextMenu !== null
+              ? {
+                  top: menuButtonService.contextMenu.mouseY,
+                  left: menuButtonService.contextMenu.mouseX,
+                }
+              : undefined
+          }
+        >
+          {children}
+        </Menu>
+      </menuButtonContext.Provider>
+    </>
+  );
 });
 
 export default MenuButton;

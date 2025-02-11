@@ -6,13 +6,13 @@ import SnackbarContent from './styled/snackbar-content';
 type SnackbarProps = Omit<CustomContentProps, 'children'>;
 
 const Snackbar = forwardRef<HTMLDivElement, SnackbarProps>(
-    ({ autoHideDuration, ...props }, ref) => {
-        return (
-            <SnackbarContent {...(props as any)} ref={ref}>
-                <MuiSnackbar />;
-            </SnackbarContent>
-        );
-    },
+  ({ autoHideDuration, ...props }, ref) => {
+    return (
+      <SnackbarContent {...(props as any)} ref={ref}>
+        <MuiSnackbar />;
+      </SnackbarContent>
+    );
+  }
 );
 
 export default Snackbar;

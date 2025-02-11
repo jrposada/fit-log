@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
 function stringifyValue(value: unknown) {
-  let valueType = typeof value;
+  const valueType = typeof value;
   let stringifiedValue = '';
 
   if (valueType === 'boolean') {

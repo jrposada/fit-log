@@ -1,40 +1,38 @@
 import { Dispatch, MouseEventHandler, SetStateAction } from 'react';
 
 type ContextMenu = {
-    mouseY: number;
-    mouseX: number;
+  mouseY: number;
+  mouseX: number;
 };
 
 class MenuButtonService {
-    get contextMenu(): ContextMenu | null {
-        return this.#contextMenu;
-    }
+  get contextMenu(): ContextMenu | null {
+    return this.#contextMenu;
+  }
 
-    #contextMenu: ContextMenu | null = null;
+  #contextMenu: ContextMenu | null = null;
 
-    constructor(
-        private _setter: Dispatch<SetStateAction<ContextMenu | null>>,
-    ) {}
+  constructor(private _setter: Dispatch<SetStateAction<ContextMenu | null>>) {}
 
-    handleOpen: MouseEventHandler<HTMLElement> = (event) => {
-        event.preventDefault();
-        this._setter((prev) =>
-            prev === null
-                ? {
-                      mouseX: event.clientX - 2,
-                      mouseY: event.clientY - 4,
-                  }
-                : null,
-        );
-    };
+  handleOpen: MouseEventHandler<HTMLElement> = (event) => {
+    event.preventDefault();
+    this._setter((prev) =>
+      prev === null
+        ? {
+            mouseX: event.clientX - 2,
+            mouseY: event.clientY - 4,
+          }
+        : null
+    );
+  };
 
-    close = () => {
-        this._setter(null);
-    };
+  close = () => {
+    this._setter(null);
+  };
 
-    _refresh(contextMenu: ContextMenu | null): void {
-        this.#contextMenu = contextMenu;
-    }
+  _refresh(contextMenu: ContextMenu | null): void {
+    this.#contextMenu = contextMenu;
+  }
 }
 
 export { MenuButtonService };
