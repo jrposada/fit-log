@@ -1,0 +1,23 @@
+{
+  "translation": {
+    "navigation": {
+      "home": "Home",
+      "movements": "Movements"
+    },
+    "movements-table": {
+      "headers": {
+        "valueDate": "Value Date",
+        "transactionDate": "Transaction Date",
+        "concept": "Concept",
+        "import": "Import"
+      }
+    },
+    "home": {
+      "report": {
+        "expense": "Expense",
+        "income": "Income",
+        "growth": "Growth"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "@jrposada/fit-log-shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "author": {
+    "email": "jrposada.dev@gmail.com",
+    "name": "Javier Rodriguez Posada"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrposada/fit-log.git"
+  },
+  "engines": {
+    "node": "^22",
+    "npm": "^10"
+  }
+}
