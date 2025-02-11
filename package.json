@@ -18,6 +18,7 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@babel/types": "^7.26.8",
     "@commitlint/config-conventional": "^19.7.1",
     "dotenv": "^16.4.7",
     "eslint-config-prettier": "^10.0.1",
