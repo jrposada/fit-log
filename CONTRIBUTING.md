@@ -1,17 +1,16 @@
-# FIT Log developer guide
-
 _This guide assumes you are using a Linux system like WSL or Ubuntu._
 
 ## Prerequisites
 
+1. NodeJS.
+2. _Recommended_ NVM.
+
 ## Getting started
 
-```bash
-# Install project node dependencies
-npm i
-# Launch local full-stack in debug mode
-npm run dev
-```
+1.  Clone repository through ssh `git@github.com:jrposada/fit-log.git`
+2.  Install dependencies `npm i`
+3.  Setup husky `npx husky`
+4.  Execute code locally `npm run dev`
 
 ## Contributing
 
@@ -22,11 +21,11 @@ npm run dev
    git pull
    ```
 
-2. Create branch name. Branch name must follow pattern `[feat|fix]/<short-description>`. For example `feat/dynamo-db-request` or `fix/incorrect-aws-credentials`
+2. Create branch name. Branch name must follow pattern `[feat|fix|chore]/<short-description>`. For example `feat/dynamo-db-request` or `fix/incorrect-aws-credentials`
 
 3. Make your changes and publish branch.
 
-4. Open Pull Request against `beta`. Make sure to include a short description of your changes. Make sure your PR title follow's pattern `[feat|fix]: <short-description>`. For example `feat: dynamo-db-request` or `fix: incorrect-aws-credentials`.
+4. Open Pull Request against `beta`. Make sure to include a short description of your changes. Make sure your PR title follow's pattern `[feat|fix|chore]: <short-description>`. For example `feat: dynamo-db-request` or `fix: incorrect-aws-credentials`.
 
    Use the following template for your description:
 
@@ -37,6 +36,11 @@ npm run dev
    ```
 
 5. Wait for your changes to be approved.
+
+### Deploy from local (test only)
+
+1. `npm run build --workspace=packages/backend`
+2. `npm run deploy --workspace=packages/backend`
 
 ## AWS Credentials
 
