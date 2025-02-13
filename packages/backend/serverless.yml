@@ -1,81 +1,32 @@
 service: fit-log
 
-frameworkVersion: "3"
-
-provider:
-  name: aws
-  runtime: nodejs22.x
-  region: eu-west-3
-  stage: dev
-  memorySize: 128
-  environment:
-    ITEMS_TABLE: ItemsTable
-
-functions:
-  createItem:
-    handler: src/handler.createItem
-    events:
-      - http:
-          path: items
-          method: post
-          cors: true
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerArn: arn:aws:cognito-idp:eu-west-3:123456789012:userpool/YOUR_USER_POOL_ID
-  getItem:
-    handler: src/handler.getItem
-    events:
-      - http:
-          path: items/{id}
-          method: get
-          cors: true
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerArn: arn:aws:cognito-idp:eu-west-3:123456789012:userpool/YOUR_USER_POOL_ID
-  updateItem:
-    handler: src/handler.updateItem
-    events:
-      - http:
-          path: items/{id}
-          method: put
-          cors: true
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerArn: arn:aws:cognito-idp:eu-west-3:123456789012:userpool/YOUR_USER_POOL_ID
-  deleteItem:
-    handler: src/handler.deleteItem
-    events:
-      - http:
-          path: items/{id}
-          method: delete
-          cors: true
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerArn: arn:aws:cognito-idp:eu-west-3:123456789012:userpool/YOUR_USER_POOL_ID
-  listItems:
-    handler: src/handler.listItems
-    events:
-      - http:
-          path: items
-          method: get
-          cors: true
-          authorizer:
-            type: COGNITO_USER_POOLS
-            authorizerArn: arn:aws:cognito-idp:eu-west-3:123456789012:userpool/YOUR_USER_POOL_ID
+frameworkVersion: '3'
 
 plugins:
+  - serverless-esbuild
   - serverless-offline
+  - serverless-prune-plugin
+
+package:
+  individually: true
+
+custom:
+  # Serverless prune plugin
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 1
+
+provider:
+  memorySize: 128
+  name: aws
+  region: eu-west-3
+  runtime: nodejs20.x
+  stage: ${opt:stage, 'test'}
+
+functions: ${file(./src/api/version/get/version-get.yml)}
 
 resources:
   Resources:
-    ItemsTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ItemsTable
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
+    # Roles
+    ${file(./src/api/version/get/version-get-role.yml)}

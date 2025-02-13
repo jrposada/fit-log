@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "ES2023",
     "useDefineForClassFields": true,
-    "module": "Es2022",
-    "lib": ["ES2022"],
+    "module": "Es2020",
+    "lib": ["ES2020"],
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -21,7 +21,7 @@
     "noImplicitReturns": true,
 
     "paths": {
-      "@shared": ["../shared/*"]
+      "@shared/*": ["../shared/*"]
     }
   },
   "include": ["src", "../shared/src"]

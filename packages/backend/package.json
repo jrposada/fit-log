@@ -1,6 +1,6 @@
 {
   "name": "@jrposada/fit-log-backend",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "type": "module",
   "author": {
     "email": "jrposada.dev@gmail.com",
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/jrposada/fit-log.git"
   },
   "engines": {
-    "node": "^22",
+    "node": "^20",
     "npm": "^10"
   },
   "scripts": {
@@ -33,6 +33,8 @@
     "@types/uuid": "^10.0.0",
     "esbuild": "^0.24.0",
     "serverless-esbuild": "^1.54.6",
+    "serverless-offline": "^13.9.0",
+    "serverless-prune-plugin": "^2.1.0",
     "serverless": "^3.40.0"
   }
 }

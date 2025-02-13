@@ -1,0 +1,11 @@
+getData:
+  handler: src/api/version/get/version-get.handler
+  timeout: 30
+  role: ApiVersionGetRole
+  events:
+    - http:
+        path: api/version
+        method: get
+        cors: true
+        authorizer:
+          - aws_iam

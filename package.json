@@ -11,7 +11,7 @@
     "url": "git+https://github.com/jrposada/fit-log.git"
   },
   "engines": {
-    "node": "^22",
+    "node": "^20",
     "npm": "^10"
   },
   "workspaces": [
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@babel/types": "^7.26.8",
     "@commitlint/config-conventional": "^19.7.1",
+    "@types/node": "^20.13.1",
     "dotenv": "^16.4.7",
     "eslint-config-prettier": "^10.0.1",
     "eslint": "^9.20.1",
