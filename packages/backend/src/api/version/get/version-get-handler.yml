@@ -1,4 +1,4 @@
-getData:
+VersionGet:
   handler: src/api/version/get/version-get.handler
   timeout: 30
   role: ApiVersionGetRole

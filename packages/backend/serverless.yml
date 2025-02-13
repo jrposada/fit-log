@@ -11,11 +11,27 @@ package:
   individually: true
 
 custom:
-  # Serverless prune plugin
+  # serverless-prune-plugin
   prune:
     automatic: true
     includeLayers: true
     number: 1
+
+  # Serverless
+  convention:
+    functions:
+      folders:
+        - src/api
+      pattern:
+        - '*-handler.yml'
+    resources:
+      folders:
+        - cloudformation
+        - src/api
+      pattern:
+        - '*-role.yml'
+        - '*-resources.yml'
+  included: ${file(../../node_modules/serverless-convention/index.js)}
 
 provider:
   memorySize: 128
@@ -24,9 +40,7 @@ provider:
   runtime: nodejs20.x
   stage: ${opt:stage, 'test'}
 
-functions: ${file(./src/api/version/get/version-get.yml)}
-
+functions:
+  - ${self:custom.included.functions}
 resources:
-  Resources:
-    # Roles
-    ${file(./src/api/version/get/version-get-role.yml)}
+  - ${self:custom.included.resources}
