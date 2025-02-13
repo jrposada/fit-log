@@ -1,7 +1,6 @@
 {
   "name": "@jrposada/fit-log-backend",
   "version": "0.0.0",
-  "type": "module",
   "author": {
     "email": "jrposada.dev@gmail.com",
     "name": "Javier Rodriguez Posada"

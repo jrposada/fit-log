@@ -17,6 +17,7 @@
   },
   "scripts": {
     "build": "tsc -b && vite build",
+    "deploy": "aws s3 sync ./dist s3://fit-log-test-frontend --delete",
     "coverage": "vitest run --coverage",
     "dev": "vite",
     "lint:eslint": "eslint . --report-unused-disable-directives --max-warnings 0",
