@@ -4,18 +4,16 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: ${self:service}-${self:provider.stage}-frontend
-      AccessControl: Private
-      WebsiteConfiguration:
-        IndexDocument: index.html
-        ErrorDocument: index.html
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true # was false?
     DeletionPolicy: Delete
-
-  # CloudFront Origin Access Identity (OAI)
-  CloudFrontOriginAccessIdentity:
-    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
-    Properties:
-      CloudFrontOriginAccessIdentityConfig:
-        Comment: 'Access Identity for S3 Frontend Bucket'
 
   # S3 Bucket Policy to Grant CloudFront OAI Access
   FrontendBucketPolicy:
@@ -25,47 +23,78 @@ Resources:
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Sid: AllowCloudFrontRead
+          - Sid: AllowCloudFrontServicePrincipal
             Effect: Allow
             Principal:
-              CanonicalUser: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId
-            Action: s3:GetObject
-            Resource: !Join
-              - ''
-              - - 'arn:aws:s3:::'
-                - !Ref FrontendBucket
-                - '/*'
+              Service: 'cloudfront.amazonaws.com'
+            Action: 's3:GetObject'
+            Resource:
+              Fn::Sub:
+                - ${s3BucketArn}/*
+                - s3BucketArn:
+                    Fn::GetAtt:
+                      - FrontendBucket
+                      - Arn
+            Condition:
+              StringEquals:
+                AWS:SourceArn:
+                  Fn::GetAtt:
+                    - FrontendCloudFrontDistribution
+                    - Arn
+
+  # CloudFront Origin Access Identity (OAI)
+  CloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: 'Access Identity for S3 Frontend Bucket'
 
   # CloudFront Distribution for the Frontend
-  FrontendDistribution:
+  FrontendCloudFrontDistribution:
     Type: AWS::CloudFront::Distribution
     Properties:
       DistributionConfig:
-        Origins:
-          - Id: S3Origin
-            DomainName: !GetAtt FrontendBucket.DomainName
-            S3OriginConfig:
-              OriginAccessIdentity: !Join
-                - ''
-                - - 'origin-access-identity/cloudfront/'
-                  - !Ref CloudFrontOriginAccessIdentity
         Enabled: true
         DefaultCacheBehavior:
-          TargetOriginId: S3Origin
-          ViewerProtocolPolicy: redirect-to-https
           AllowedMethods:
             - GET
             - HEAD
           CachedMethods:
             - GET
             - HEAD
-          ForwardedValues:
-            QueryString: false
-            Cookies:
-              Forward: none
-        ViewerCertificate:
-          CloudFrontDefaultCertificate: true
+          TargetOriginId: S3Origin
+          ViewerProtocolPolicy: allow-all # TODO use redirect-to-https?
+
+        DefaultRootObject: index.html
+        Origins:
+          - Id: S3Origin
+            DomainName: !GetAtt FrontendBucket.DomainName
+
+            S3OriginConfig: {}
+          # - Id: ApiOrigin
+          #   DomainName: ${self:custom.restApiDomainName}
+          #   CustomOriginConfig:
+          #     HTTPPort: 80
+          #     HTTPSPort: 443
+          #     OriginProtocolPolicy: https-only
+        PriceClass: PriceClass_100
+
         # Custom error responses to handle SPA routing
+        # CacheBehaviors:
+        #   - PathPattern: '/api/*'
+        #     TargetOriginId: ApiOrigin
+        #     ViewerProtocolPolicy: https-only
+        #     AllowedMethods:
+        #       - GET
+        #       - HEAD
+        #       - OPTIONS
+        #       - PUT
+        #       - POST
+        #       - PATCH
+        #       - DELETE
+        #     CachedMethods:
+        #       - GET
+        #       - HEAD
         CustomErrorResponses:
           - ErrorCode: 403
             ResponsePagePath: /index.html
