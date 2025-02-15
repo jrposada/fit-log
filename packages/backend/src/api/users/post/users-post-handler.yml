@@ -1,0 +1,14 @@
+UsersPost:
+  handler: src/api/users/post/users-post.handler
+  role: ApiUsersPostRole
+  timeout: 30
+  memorySize: 128
+  events:
+    - http:
+        path: api/users
+        method: post
+        cors: true
+        authorizer: aws_iam
+  environment:
+    USER_POOL_ID:
+      Ref: CognitoUserPool

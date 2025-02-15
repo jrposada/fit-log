@@ -30,6 +30,7 @@ export function apiHandler<TData>(
       const { body, statusCode } = await handler(event);
       return apiResponse({ event, statusCode, body: JSON.stringify(body) });
     } catch (error) {
+      console.error(error);
       return apiError(event, error);
     }
   };

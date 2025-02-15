@@ -1,0 +1,19 @@
+TestGet:
+  handler: src/api/test/get/test-get.handler
+  role: ApiTestGetRole
+  timeout: 30
+  memorySize: 128
+  events:
+    - http:
+        path: api/test
+        method: get
+        cors: true
+        authorizer:
+          name: PrivateAuthorizer
+          type: COGNITO_USER_POOLS
+          arn:
+            Fn::GetAtt:
+              - CognitoUserPool
+              - Arn
+          claims:
+            - email

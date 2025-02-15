@@ -8,5 +8,4 @@ VersionGet:
         path: api/version
         method: get
         cors: true
-        authorizer:
-          - aws_iam
+        authorizer: aws_iam
