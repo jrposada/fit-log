@@ -1,0 +1,15 @@
+UsersAuthorize:
+  handler: src/api/users/authorize/users-authorize.handler
+  role: ApiUsersAuthorizeRole
+  timeout: 30
+  memorySize: 128
+  events:
+    - http:
+        path: api/users/authorize
+        method: post
+        cors: true
+  environment:
+    USER_POOL_ID:
+      Ref: CognitoUserPool
+    CLIENT_ID:
+      Ref: CognitoUserPoolClient
