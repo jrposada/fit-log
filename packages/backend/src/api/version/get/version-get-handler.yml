@@ -1,7 +1,8 @@
 VersionGet:
   handler: src/api/version/get/version-get.handler
-  timeout: 30
   role: ApiVersionGetRole
+  timeout: 30
+  memorySize: 128
   events:
     - http:
         path: api/version

@@ -34,7 +34,8 @@ custom:
   included: ${file(../../node_modules/serverless-convention/index.js)}
 
 provider:
-  memorySize: 128
+  deploymentBucket:
+    name: jrposada-deployment-bucket
   name: aws
   region: eu-west-3
   runtime: nodejs20.x
@@ -43,4 +44,5 @@ provider:
 functions:
   - ${self:custom.included.functions}
 resources:
+  - Description: App to track workouts
   - ${self:custom.included.resources}
