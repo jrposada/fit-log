@@ -3,9 +3,6 @@ import {
   APIGatewayAuthorizerEvent,
   APIGatewayAuthorizerResult,
   APIGatewayProxyEvent,
-  Callback,
-  Context,
-  CustomAuthorizerResult,
   StatementEffect,
 } from 'aws-lambda';
 
@@ -16,25 +13,28 @@ const verifier = CognitoJwtVerifier.create({
 });
 
 export const handler = async (
-  event: APIGatewayProxyEvent & APIGatewayAuthorizerEvent,
-  context: Context,
-  callback: Callback<APIGatewayAuthorizerResult>
+  event: APIGatewayProxyEvent & APIGatewayAuthorizerEvent
 ): Promise<APIGatewayAuthorizerResult> => {
-  console.log({ event });
-  console.log({ context });
-  const accessToken = validateCookies(event.headers.Cookie);
-
   try {
+    const accessToken = validateCookies(event.headers.Cookie);
+
     await verifier.verify(accessToken, {
       clientId: process.env.CLIENT_ID!,
       tokenUse: 'access',
     });
-    const policy = generatePolicy('user', 'Allow', event.methodArn);
-    callback(null, policy);
+    const policy = generatePolicy({
+      effect: 'Allow',
+      principalId: 'user',
+      resource: event.methodArn,
+    });
     return policy;
   } catch (e) {
     console.error(e);
-    callback('Unauthorized');
+    return generatePolicy({
+      effect: 'Deny',
+      principalId: 'user',
+      resource: '*',
+    });
   }
 };
 
@@ -59,15 +59,16 @@ function validateCookies(cookies: string | undefined): string {
   throw new Error('Missing auth cookie');
 }
 
-// https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html
-// https://github.com/aws-samples/openbanking-brazilian-auth-samples/blob/main/resources/lambda/lambda-auth.js
-// Helper function to generate an IAM policy
-function generatePolicy(
-  principalId: string,
-  effect: StatementEffect,
-  resource: string,
-  context: 
-): APIGatewayAuthorizerResult {
+type GeneratePolicyParams = {
+  effect: StatementEffect;
+  principalId: string;
+  resource: string;
+};
+function generatePolicy({
+  effect,
+  principalId,
+  resource,
+}: GeneratePolicyParams): APIGatewayAuthorizerResult {
   return {
     principalId,
     policyDocument: {
@@ -76,10 +77,9 @@ function generatePolicy(
         {
           Action: 'execute-api:Invoke',
           Effect: effect,
-          Resource: resource,
+          Resource: effect === 'Allow' ? resource : '*',
         },
       ],
     },
-    context,
   };
 }
