@@ -1,5 +1,7 @@
 import { Button, Container, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { useUsersAuthorize } from '../../core/hooks/users/use-users-authorize';
+import { t } from 'i18next';
 
 interface LoginProps {
   onLogin: () => void;
@@ -9,19 +11,21 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
-    try {
+  const { mutateAsync: authorize } = useUsersAuthorize({
+    onSuccess: () => {
       onLogin();
-    } catch (error) {
-      console.error('Error signing in:', error);
-      alert('Login failed! Check the console for details.');
-    }
+    },
+  });
+
+  const handleLogin = async () => {
+    console.log({ username, password });
+    authorize({ email: username, password });
   };
 
   return (
     <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
       <Typography variant="h4" gutterBottom>
-        Login
+        {t('login.title')}
       </Typography>
       <TextField
         fullWidth
@@ -39,7 +43,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <Button variant="contained" color="primary" onClick={handleLogin}>
-        Login
+        {t('login.action')}
       </Button>
     </Container>
   );
