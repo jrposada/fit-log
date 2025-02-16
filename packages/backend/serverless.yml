@@ -5,6 +5,7 @@ frameworkVersion: '3'
 plugins:
   - serverless-esbuild
   - serverless-offline
+  - serverless-plugin-log-retention
   - serverless-prune-plugin
 
 package:
@@ -17,17 +18,22 @@ custom:
     includeLayers: true
     number: 1
 
-  # Serverless
+  # serverless-plugin-log-retention
+  logRetentionInDays: 7
+
+  # Serverless convention
   convention:
     functions:
       folders:
         - src/api
+        - src/lambdas
       pattern:
         - '*-handler.yml'
     resources:
       folders:
         - cloudformation
         - src/api
+        - src/lambdas
       pattern:
         - '*-role.yml'
         - '*-resources.yml'
@@ -36,6 +42,7 @@ custom:
 provider:
   deploymentBucket:
     name: jrposada-deployment-bucket
+  endpointType: REGIONAL
   name: aws
   region: eu-west-3
   runtime: nodejs20.x

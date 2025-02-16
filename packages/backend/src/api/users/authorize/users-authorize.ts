@@ -5,13 +5,14 @@ import {
   AdminInitiateAuthCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 
+const cognito = new CognitoIdentityProviderClient({
+  region: process.env.AWS_REGION,
+});
+
 export const handler = apiHandler(async (event) => {
   const { email, password } = validateEvent(event);
   const { CLIENT_ID, USER_POOL_ID } = process.env;
 
-  const cognito = new CognitoIdentityProviderClient({
-    region: process.env.AWS_REGION,
-  });
   const response = await cognito.send(
     new AdminInitiateAuthCommand({
       AuthFlow: 'ADMIN_NO_SRP_AUTH',
@@ -30,7 +31,16 @@ export const handler = apiHandler(async (event) => {
 
   return {
     statusCode: 200,
-    body: { success: true, data: response.AuthenticationResult.IdToken },
+    body: { success: true, data: undefined },
+    headers: {
+      Location: '/',
+    },
+    multiValueHeaders: {
+      'Set-Cookie': [
+        `accessToken=${response.AuthenticationResult.AccessToken}; Secure; HttpOnly; SameSite=Strict; Path=/`,
+        `refreshToken=${response.AuthenticationResult.RefreshToken}; Secure; HttpOnly; SameSite=Strict; Path=/`,
+      ],
+    },
   };
 });
 

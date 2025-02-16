@@ -9,11 +9,6 @@ TestGet:
         method: get
         cors: true
         authorizer:
-          name: PrivateAuthorizer
-          type: COGNITO_USER_POOLS
-          arn:
-            Fn::GetAtt:
-              - CognitoUserPool
-              - Arn
-          claims:
-            - email
+          name: Authorizer
+          type: Request
+          resultTtlInSeconds: 0

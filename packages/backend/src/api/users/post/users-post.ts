@@ -6,13 +6,14 @@ import {
   AdminCreateUserCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 
+const cognito = new CognitoIdentityProviderClient({
+  region: process.env.AWS_REGION,
+});
+
 export const handler = apiHandler(async (event) => {
   const { email, password } = validateEvent(event);
   const { USER_POOL_ID } = process.env;
 
-  const cognito = new CognitoIdentityProviderClient({
-    region: process.env.AWS_REGION,
-  });
   const response = await cognito.send(
     new AdminCreateUserCommand({
       MessageAction: 'SUPPRESS',

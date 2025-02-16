@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.749.0",
+    "aws-jwt-verify": "^5.0.0",
     "uuid": "^11.0.5"
   },
   "devDependencies": {
@@ -35,6 +36,7 @@
     "serverless-convention": "^2.0.3",
     "serverless-esbuild": "^1.54.6",
     "serverless-offline": "^13.9.0",
+    "serverless-plugin-log-retention": "^2.1.0",
     "serverless-prune-plugin": "^2.1.0",
     "serverless": "^3.40.0"
   }
