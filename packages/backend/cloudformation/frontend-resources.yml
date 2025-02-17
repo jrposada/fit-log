@@ -4,6 +4,9 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: ${self:service}-${self:provider.stage}-frontend
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
@@ -26,8 +29,8 @@ Resources:
           - Sid: AllowCloudFrontOAC
             Effect: Allow
             Principal:
-              Service: 'cloudfront.amazonaws.com'
-            Action: 's3:GetObject'
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
             Resource:
               Fn::Sub:
                 - ${s3BucketArn}/*
@@ -69,8 +72,28 @@ Resources:
           TargetOriginId: S3Origin
           ViewerProtocolPolicy: redirect-to-https
           # For more info see https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-caching-optimized
-          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # CacheOptimized
-
+          # CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6 # CacheOptimized
+          CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad # CachingDisabled
+        CacheBehaviors:
+          - PathPattern: '/api/*'
+            TargetOriginId: ApiOrigin
+            ViewerProtocolPolicy: https-only
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - POST
+              - PATCH
+              - DELETE
+            CachedMethods:
+              - GET
+              - HEAD
+            # Have to use legacy system as CachePolicyId do not work for our application
+            ForwardedValues:
+              QueryString: true
+              Cookies:
+                Forward: all
         DefaultRootObject: index.html
         Origins:
           - Id: S3Origin
@@ -81,31 +104,22 @@ Resources:
               Fn::GetAtt:
                 - CloudFrontOriginAccessControl
                 - Id
-          # - Id: ApiOrigin
-          #   DomainName: ${self:custom.restApiDomainName}
-          #   CustomOriginConfig:
-          #     HTTPPort: 80
-          #     HTTPSPort: 443
-          #     OriginProtocolPolicy: https-only
+          - Id: ApiOrigin
+            DomainName:
+              Fn::Join:
+                - ''
+                - - Ref: ApiGatewayRestApi
+                  - .execute-api.
+                  - ${self:provider.region}
+                  - .amazonaws.com
+            CustomOriginConfig:
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+            OriginPath: /${self:provider.stage}
         PriceClass: PriceClass_100
 
-        # CacheBehaviors:
-        #   - PathPattern: '/api/*'
-        #     TargetOriginId: ApiOrigin
-        #     ViewerProtocolPolicy: https-only
-        #     AllowedMethods:
-        #       - GET
-        #       - HEAD
-        #       - OPTIONS
-        #       - PUT
-        #       - POST
-        #       - PATCH
-        #       - DELETE
-        #     CachedMethods:
-        #       - GET
-        #       - HEAD
-
         # Custom error responses to handle SPA routing
+        # FIXME: this custom redirects work, but means we lose 403 from api calls.
         CustomErrorResponses:
           - ErrorCode: 403
             ResponsePagePath: /index.html
