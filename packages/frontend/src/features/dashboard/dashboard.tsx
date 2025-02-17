@@ -10,7 +10,7 @@ const Dashboard: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Dashboard
       </Typography>
-      {JSON.stringify(data ?? '{}')}
+      {data?.data}
     </Container>
   );
 };

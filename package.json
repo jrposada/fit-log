@@ -17,6 +17,11 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "dev:backend": "npm run dev -w packages/backend",
+    "dev:frontend": "npm run dev -w packages/frontend",
+    "dev": "run-p dev:*"
+  },
   "devDependencies": {
     "@babel/types": "^7.26.8",
     "@commitlint/config-conventional": "^19.7.1",

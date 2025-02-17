@@ -16,7 +16,7 @@
   "scripts": {
     "build": "serverless package",
     "deploy": "serverless deploy --package .serverless --stage test",
-    "dev": "serverless offline",
+    "dev": "serverless offline --stage development",
     "format": "prettier . --write",
     "lint:eslint": "eslint .",
     "lint:format": "prettier . --check",

@@ -14,4 +14,9 @@ export const routes = [
     path: '/dashboard',
     component: Dashboard,
   }),
+  createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/*',
+    component: Dashboard,
+  }),
 ];

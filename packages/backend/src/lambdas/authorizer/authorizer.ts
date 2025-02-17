@@ -5,6 +5,12 @@ import {
   APIGatewayProxyEvent,
   StatementEffect,
 } from 'aws-lambda';
+import dotenv from 'dotenv';
+
+if (process.env.IS_OFFLINE) {
+  const env = dotenv.config({ path: '.env.development' }).parsed;
+  Object.assign(process.env, env);
+}
 
 const verifier = CognitoJwtVerifier.create({
   clientId: process.env.CLIENT_ID!,

@@ -1,9 +1,15 @@
-import { APIGatewayProxyEvent } from 'aws-lambda';
-import { apiHandler } from '../../api-utils';
 import {
-  CognitoIdentityProviderClient,
   AdminInitiateAuthCommand,
+  CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import dotenv from 'dotenv';
+import { apiHandler } from '../../api-utils';
+
+if (process.env.IS_OFFLINE) {
+  const env = dotenv.config({ path: '.env.development' }).parsed;
+  Object.assign(process.env, env);
+}
 
 const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,
@@ -32,9 +38,6 @@ export const handler = apiHandler(async (event) => {
   return {
     statusCode: 200,
     body: { success: true, data: undefined },
-    headers: {
-      Location: '/',
-    },
     multiValueHeaders: {
       'Set-Cookie': [
         `accessToken=${response.AuthenticationResult.AccessToken}; Secure; HttpOnly; SameSite=Strict; Path=/`,
