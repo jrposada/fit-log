@@ -12,3 +12,8 @@ TestGet:
           name: Authorizer
           type: Request
           resultTtlInSeconds: 0
+  environment:
+    ALLOWED_ORIGIN:
+      Fn::GetAtt:
+        - FrontendCloudFrontDistribution
+        - DomainName

@@ -10,5 +10,9 @@ UsersPost:
         cors: true
         authorizer: aws_iam
   environment:
+    ALLOWED_ORIGIN:
+      Fn::GetAtt:
+        - FrontendCloudFrontDistribution
+        - DomainName
     USER_POOL_ID:
       Ref: CognitoUserPool

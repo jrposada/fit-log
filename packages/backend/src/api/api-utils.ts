@@ -1,9 +1,7 @@
 import { ApiResponse } from '@shared/src/models/api-response';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { ALLOWED_ORIGIN_DEFAULT, ALLOWED_ORIGINS } from './api-constants';
 
 export function apiError<TError = unknown>(
-  event: APIGatewayProxyEvent,
   _error: TError
 ): APIGatewayProxyResult {
   const body: ApiResponse = {
@@ -13,7 +11,6 @@ export function apiError<TError = unknown>(
 
   return apiResponse({
     body: JSON.stringify(body),
-    event,
     statusCode: 500,
   });
 }
@@ -33,28 +30,25 @@ export function apiHandler<TData>(
         await handler(event);
       return apiResponse({
         body: JSON.stringify(body),
-        event,
         headers,
         multiValueHeaders,
         statusCode,
       });
     } catch (error) {
       console.error(error);
-      return apiError(event, error);
+      return apiError(error);
     }
   };
 }
 
 type ApiResponseParams = {
   body?: string;
-  event: APIGatewayProxyEvent;
   headers?: APIGatewayProxyResult['headers'];
   multiValueHeaders?: APIGatewayProxyResult['multiValueHeaders'];
   statusCode: number;
 };
 export function apiResponse({
   body,
-  event,
   headers,
   multiValueHeaders,
   statusCode,
@@ -64,17 +58,11 @@ export function apiResponse({
     headers: {
       ...headers,
       'Content-Type': 'aplication/json',
-      'Access-Control-Allow-Origin': calculateAllowedOrigin(
-        event.headers.origin
-      ),
+      'Access-Control-Allow-Origin': `https://${process.env.ALLOWED_ORIGIN!}`,
       'Access-Control-Allow-Credentials': true,
     },
     multiValueHeaders,
     statusCode,
   };
   return response;
-}
-
-export function calculateAllowedOrigin(domain: string = ''): string {
-  return ALLOWED_ORIGINS.includes(domain) ? domain : ALLOWED_ORIGIN_DEFAULT;
 }

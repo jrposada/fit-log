@@ -9,7 +9,11 @@ UsersAuthorize:
         method: post
         cors: true
   environment:
-    USER_POOL_ID:
-      Ref: CognitoUserPool
     CLIENT_ID:
       Ref: CognitoUserPoolClient
+    ALLOWED_ORIGIN:
+      Fn::GetAtt:
+        - FrontendCloudFrontDistribution
+        - DomainName
+    USER_POOL_ID:
+      Ref: CognitoUserPool
