@@ -12,6 +12,7 @@ TestGet:
           name: Authorizer
           type: Request
           resultTtlInSeconds: 0
+          identitySource: method.request.header.Authorization
   environment:
     ALLOWED_ORIGIN:
       Fn::GetAtt:

@@ -21,7 +21,6 @@ const verifier = CognitoJwtVerifier.create({
 export const handler = async (
   event: APIGatewayProxyEvent & APIGatewayAuthorizerEvent
 ): Promise<APIGatewayAuthorizerResult> => {
-  console.log('PACO authorizer');
   if (process.env.MOCK === 'true') {
     console.info('Running in MOCK mode. AUTHORIZATION IS DISABLED!');
     return generateAllowPolicy({

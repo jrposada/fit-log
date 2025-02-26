@@ -33,7 +33,6 @@ export function apiHandler<TData>(
   return async (event: APIGatewayProxyEvent) => {
     try {
       if (process.env.MOCK === 'true') {
-        console.log('PACO LOG');
         return apiResponse({
           statusCode: 200,
           multiValueHeaders: {

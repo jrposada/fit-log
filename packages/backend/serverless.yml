@@ -39,6 +39,9 @@ custom:
         - '*-resources.yml'
   included: ${file(../../node_modules/serverless-convention/index.js)}
 
+  serverless-offline:
+    httpPort: 3100
+
 provider:
   deploymentBucket:
     name: jrposada-deployment-bucket

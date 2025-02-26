@@ -11,9 +11,18 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   return defineConfig({
-    base: `/${env.VITE_BASE_PATH!}`,
+    base: `/${env.VITE_BASE_PATH}`,
     server: {
-      port: parseInt(env.VITE_PORT!),
+      host: 'local.server.com',
+      port: parseInt(env.VITE_PORT),
+      allowedHosts: ['local.server.com'],
+      proxy: {
+        '/api': {
+          target: `http://local.server.com:3100/development/api`,
+          changeOrigin: true,
+          secure: false,
+        },
+      },
     },
     plugins: [
       TanStackRouterVite({ autoCodeSplitting: true }),
