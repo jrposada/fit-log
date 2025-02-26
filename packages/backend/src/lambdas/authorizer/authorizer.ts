@@ -21,6 +21,14 @@ const verifier = CognitoJwtVerifier.create({
 export const handler = async (
   event: APIGatewayProxyEvent & APIGatewayAuthorizerEvent
 ): Promise<APIGatewayAuthorizerResult> => {
+  console.log('PACO authorizer');
+  if (process.env.MOCK === 'true') {
+    console.info('Running in MOCK mode. AUTHORIZATION IS DISABLED!');
+    return generateAllowPolicy({
+      resource: event.methodArn,
+    });
+  }
+
   try {
     const accessToken = validateCookies(event.headers.Cookie);
 
@@ -28,19 +36,12 @@ export const handler = async (
       clientId: process.env.CLIENT_ID!,
       tokenUse: 'access',
     });
-    const policy = generatePolicy({
-      effect: 'Allow',
-      principalId: 'user',
+    return generateAllowPolicy({
       resource: event.methodArn,
     });
-    return policy;
   } catch (e) {
     console.error(e);
-    return generatePolicy({
-      effect: 'Deny',
-      principalId: 'user',
-      resource: '*',
-    });
+    return generateDisallowPolicy();
   }
 };
 
@@ -70,6 +71,23 @@ type GeneratePolicyParams = {
   principalId: string;
   resource: string;
 };
+function generateAllowPolicy({
+  resource,
+}: Pick<GeneratePolicyParams, 'resource'>): APIGatewayAuthorizerResult {
+  const policy = generatePolicy({
+    effect: 'Allow',
+    principalId: 'user',
+    resource,
+  });
+  return policy;
+}
+function generateDisallowPolicy(): APIGatewayAuthorizerResult {
+  return generatePolicy({
+    effect: 'Deny',
+    principalId: 'user',
+    resource: '*',
+  });
+}
 function generatePolicy({
   effect,
   principalId,

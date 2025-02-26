@@ -2,15 +2,14 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { SnackbarProvider } from 'notistack';
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
+import App from './app';
+import { SessionProvider } from './core/hooks/session/session-context';
 import './i18n';
-import { rootRoute } from './root-route';
-import { routes } from './routes';
 import ErrorSnackbar from './ui/snackbar/error-snackbar';
 import InfoSnackbar from './ui/snackbar/info-snackbar';
 import Snackbar from './ui/snackbar/snackbar';
@@ -20,27 +19,26 @@ import WarningSnackbar from './ui/snackbar/warning-snackbar';
 const defaultTheme = createTheme();
 const queryClient = new QueryClient();
 
-const routeTree = rootRoute.addChildren(routes);
-const router = createRouter({ routeTree });
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline />
-        <SnackbarProvider
-          maxSnack={3}
-          Components={{
-            default: Snackbar,
-            error: ErrorSnackbar,
-            info: InfoSnackbar,
-            success: SuccessSnackbar,
-            warning: WarningSnackbar,
-          }}
-        >
-          <RouterProvider router={router} basepath={import.meta.env.BASE_URL} />
-        </SnackbarProvider>
+        <SessionProvider>
+          <SnackbarProvider
+            maxSnack={3}
+            Components={{
+              default: Snackbar,
+              error: ErrorSnackbar,
+              info: InfoSnackbar,
+              success: SuccessSnackbar,
+              warning: WarningSnackbar,
+            }}
+          >
+            <App />
+          </SnackbarProvider>
+        </SessionProvider>
       </ThemeProvider>
     </QueryClientProvider>
-  </React.StrictMode>
+  </StrictMode>
 );

@@ -1,24 +1,37 @@
 import { Button, Container, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { useUsersAuthorize } from '../../core/hooks/users/use-users-authorize';
+import {
+  createFileRoute,
+  redirect,
+  useNavigate,
+  useSearch,
+} from '@tanstack/react-router';
 import { t } from 'i18next';
+import { FunctionComponent, useState } from 'react';
+import { z } from 'zod';
+import { useSession } from '../core/hooks/session/use-session';
+import { useUsersAuthorize } from '../core/hooks/users/use-users-authorize';
+import { Route as dashboardRoute } from './index';
 
-interface LoginProps {
-  onLogin: () => void;
-}
-
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: FunctionComponent = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
+  const { setIsAuthenticated } = useSession();
+  const { redirect } = useSearch({
+    from: Route.fullPath,
+  });
+
   const { mutateAsync: authorize } = useUsersAuthorize({
     onSuccess: () => {
-      onLogin();
+      setIsAuthenticated(true);
+      navigate({
+        to: redirect ?? dashboardRoute.to,
+      });
     },
   });
 
   const handleLogin = async () => {
-    console.log({ username, password });
     authorize({ email: username, password });
   };
 
@@ -49,4 +62,18 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   );
 };
 
-export default Login;
+const loginSearchSchema = z.object({
+  redirect: z.string().optional().catch(''),
+});
+
+export const Route = createFileRoute('/login')({
+  beforeLoad: ({ context }) => {
+    if (context.session.isAuthenticated) {
+      throw redirect({
+        to: '/',
+      });
+    }
+  },
+  component: Login,
+  validateSearch: loginSearchSchema,
+});

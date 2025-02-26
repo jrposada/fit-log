@@ -4,13 +4,7 @@ import {
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import dotenv from 'dotenv';
 import { apiHandler } from '../../api-utils';
-
-if (process.env.IS_OFFLINE) {
-  const env = dotenv.config({ path: '.env.development' }).parsed;
-  Object.assign(process.env, env);
-}
 
 const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,

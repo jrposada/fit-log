@@ -7,7 +7,12 @@ export function useTest() {
     queryKey: ['test'],
     queryFn: async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/test`
+        `${import.meta.env.VITE_API_BASE_URL}/test`,
+        {
+          headers: {
+            Authorization: 'PACO',
+          },
+        }
       );
 
       return response.data as ApiResponse<string>;

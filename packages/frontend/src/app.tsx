@@ -1,12 +1,33 @@
-import React from 'react';
-import { Outlet } from '@tanstack/react-router';
+import { RouterProvider } from '@tanstack/react-router';
+import { FunctionComponent, Suspense, lazy } from 'react';
+import { router } from './router';
+import { useSession } from './core/hooks/session/use-session';
 
-// TODO: https://docs.amplify.aws/react/how-amplify-works/concepts/#auth
+const TanStackRouterDevtools =
+  process.env.NODE_ENV === 'production'
+    ? () => null // Render nothing in production
+    : lazy(() =>
+        // Lazy load in development
+        import('@tanstack/router-devtools').then((res) => ({
+          default: res.TanStackRouterDevtools,
+        }))
+      );
 
-const App: React.FC = () => {
-  // In a real app, check Auth.currentAuthenticatedUser() to set auth state
+const App: FunctionComponent = () => {
+  const session = useSession();
 
-  return <Outlet />;
+  return (
+    <>
+      <RouterProvider
+        router={router}
+        context={{ session }}
+        basepath={import.meta.env.BASE_URL}
+      />
+      <Suspense>
+        <TanStackRouterDevtools router={router} />
+      </Suspense>
+    </>
+  );
 };
 
 export default App;

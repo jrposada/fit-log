@@ -1,5 +1,11 @@
 import { ApiResponse } from '@shared/src/models/api-response';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import dotenv from 'dotenv';
+
+if (process.env.IS_OFFLINE) {
+  const env = dotenv.config({ path: '.env.development' }).parsed;
+  Object.assign(process.env, env);
+}
 
 export function apiError<TError = unknown>(
   _error: TError
@@ -26,6 +32,19 @@ export function apiHandler<TData>(
 ): (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult> {
   return async (event: APIGatewayProxyEvent) => {
     try {
+      if (process.env.MOCK === 'true') {
+        console.log('PACO LOG');
+        return apiResponse({
+          statusCode: 200,
+          multiValueHeaders: {
+            'Set-Cookie': [
+              `accessToken=mocked; Secure; HttpOnly; SameSite=Strict; Path=/`,
+              `refreshToken=mocked; Secure; HttpOnly; SameSite=Strict; Path=/`,
+            ],
+          },
+        });
+      }
+
       const { body, statusCode, headers, multiValueHeaders } =
         await handler(event);
       return apiResponse({
