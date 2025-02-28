@@ -12,7 +12,7 @@ TestGet:
           name: Authorizer
           type: Request
           resultTtlInSeconds: 0
-          identitySource: method.request.header.Authorization
+          identitySource: method.request.header.Cookie
   environment:
     ALLOWED_ORIGIN:
       Fn::GetAtt:

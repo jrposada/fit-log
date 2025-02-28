@@ -8,7 +8,11 @@ VersionGet:
         path: api/version
         method: get
         cors: true
-        authorizer: aws_iam
+        authorizer:
+          name: Authorizer
+          type: Request
+          resultTtlInSeconds: 0
+          identitySource: method.request.header.Cookie
   environment:
     ALLOWED_ORIGIN:
       Fn::GetAtt:
