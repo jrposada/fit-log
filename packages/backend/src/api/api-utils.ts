@@ -1,4 +1,4 @@
-import { ApiResponse } from '@shared/src/models/api-response';
+import { ApiResponse } from '@shared/models/api-response';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import dotenv from 'dotenv';
 

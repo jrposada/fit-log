@@ -6,16 +6,19 @@ import {
   StatementEffect,
 } from 'aws-lambda';
 import dotenv from 'dotenv';
+import assert from 'node:assert';
 
 if (process.env.IS_OFFLINE) {
   const env = dotenv.config({ path: '.env.development' }).parsed;
   Object.assign(process.env, env);
 }
 
+assert(process.env.CLIENT_ID);
+assert(process.env.USER_POOL_ID);
 const verifier = CognitoJwtVerifier.create({
-  clientId: process.env.CLIENT_ID!,
+  clientId: process.env.CLIENT_ID,
   tokenUse: 'access',
-  userPoolId: process.env.USER_POOL_ID!,
+  userPoolId: process.env.USER_POOL_ID,
 });
 
 export const handler = async (
@@ -32,7 +35,7 @@ export const handler = async (
     const accessToken = validateCookies(event.headers.Cookie);
 
     await verifier.verify(accessToken, {
-      clientId: process.env.CLIENT_ID!,
+      clientId: process.env.CLIENT_ID,
       tokenUse: 'access',
     });
     return generateAllowPolicy({
@@ -45,9 +48,10 @@ export const handler = async (
 };
 
 /**
- * Validate authorization cookies
- * @param cookies String with all cookies separated by `;`
- * @returns Access Token
+ * Validate authorization cookies.
+ *
+ * @param cookies String with all cookies separated by `;`.
+ * @returns Access Token.
  */
 function validateCookies(cookies: string | undefined): string {
   if (!cookies) {

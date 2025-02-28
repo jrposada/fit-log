@@ -1,11 +1,11 @@
-TestGet:
-  handler: src/api/test/get/test-get.handler
-  role: ApiTestGetRole
+WorkoutsGet:
+  handler: src/api/workouts/get/workouts-get.handler
+  role: ApiWorkoutsGetRole
   timeout: 30
   memorySize: 128
   events:
     - http:
-        path: api/test
+        path: api/workouts
         method: get
         cors: true
         authorizer:
@@ -18,3 +18,5 @@ TestGet:
       Fn::GetAtt:
         - FrontendCloudFrontDistribution
         - DomainName
+    TABLE_NAME:
+      Ref: DB

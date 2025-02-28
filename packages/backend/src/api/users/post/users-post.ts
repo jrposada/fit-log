@@ -5,6 +5,7 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { apiHandler } from '../../api-utils';
+import assert from 'node:assert';
 
 const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,
@@ -13,6 +14,7 @@ const cognito = new CognitoIdentityProviderClient({
 export const handler = apiHandler(async (event) => {
   const { email, password } = validateEvent(event);
   const { USER_POOL_ID } = process.env;
+  assert(USER_POOL_ID);
 
   const response = await cognito.send(
     new AdminCreateUserCommand({

@@ -21,7 +21,7 @@
     "noImplicitReturns": true,
 
     "paths": {
-      "@shared/*": ["../shared/*"]
+      "@shared/*": ["../shared/src/*"]
     }
   },
   "include": ["src", "../shared/src"]
