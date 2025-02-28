@@ -13,11 +13,6 @@ export type Session = {
   setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
 };
 
-export const defaultSession: Session = {
-  isAuthenticated: false,
-  setIsAuthenticated: () => {},
-};
-
 // Context
 export const SessionContext = createContext<Session | null>(null);
 
@@ -26,7 +21,7 @@ export type SessionProviderProps = {};
 export const SessionProvider: FunctionComponent<
   PropsWithChildren<SessionProviderProps>
 > = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   const session = useMemo<Session>(
     () => ({
