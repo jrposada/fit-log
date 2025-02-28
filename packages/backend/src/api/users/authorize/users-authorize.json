@@ -1,0 +1,9 @@
+{
+  "statusCode": 200,
+  "multiValueHeaders": {
+    "Set-Cookie": [
+      "accessToken=mocked; Secure; HttpOnly; SameSite=Strict; Path=/",
+      "refreshToken=mocked; Secure; HttpOnly; SameSite=Strict; Path=/"
+    ]
+  }
+}

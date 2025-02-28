@@ -28,20 +28,13 @@ type ApiHandlerParams<TData> = (event: APIGatewayProxyEvent) => Promise<{
   statusCode: number;
 }>;
 export function apiHandler<TData>(
-  handler: ApiHandlerParams<TData>
+  handler: ApiHandlerParams<TData>,
+  mockResponse?: ApiResponseParams
 ): (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult> {
   return async (event: APIGatewayProxyEvent) => {
     try {
       if (process.env.MOCK === 'true') {
-        return apiResponse({
-          statusCode: 200,
-          multiValueHeaders: {
-            'Set-Cookie': [
-              `accessToken=mocked; Secure; HttpOnly; SameSite=Strict; Path=/`,
-              `refreshToken=mocked; Secure; HttpOnly; SameSite=Strict; Path=/`,
-            ],
-          },
-        });
+        return apiResponse(mockResponse ?? { statusCode: 200 });
       }
 
       const { body, statusCode, headers, multiValueHeaders } =

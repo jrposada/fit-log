@@ -4,6 +4,7 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { apiHandler } from '../../api-utils';
+import mockResponse from './users-authorize.json';
 
 const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,
@@ -39,7 +40,7 @@ export const handler = apiHandler(async (event) => {
       ],
     },
   };
-});
+}, mockResponse);
 
 function validateEvent(event: APIGatewayProxyEvent): {
   email: string;
