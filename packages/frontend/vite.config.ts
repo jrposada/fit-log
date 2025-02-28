@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => {
       allowedHosts: ['local.server.com'],
       proxy: {
         '/api': {
-          target: `http://local.server.com:3100/development/api`,
+          target: `http://local.server.com:3100/development`,
           changeOrigin: true,
           secure: false,
         },
