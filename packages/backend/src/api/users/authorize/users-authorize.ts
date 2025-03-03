@@ -20,7 +20,7 @@ const cognito = new CognitoIdentityProviderClient({
 export const handler = apiHandler(async (event) => {
   const { email, password } = validateEvent(event);
 
-  if (process.env.MOCK === 'true') {
+  if (process.env.IS_OFFLINE) {
     return {
       statusCode: 200,
       body: { success: true, data: undefined },

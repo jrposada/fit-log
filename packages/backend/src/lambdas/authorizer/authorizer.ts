@@ -24,8 +24,8 @@ const verifier = CognitoJwtVerifier.create({
 export const handler = async (
   event: APIGatewayProxyEvent & APIGatewayAuthorizerEvent
 ): Promise<APIGatewayAuthorizerResult> => {
-  if (process.env.MOCK === 'true') {
-    console.info('Running in MOCK mode. AUTHORIZATION IS DISABLED!');
+  if (process.env.IS_OFFLINE) {
+    console.info('Running in OFFLINE mode. AUTHORIZATION IS DISABLED!');
     return generateAllowPolicy({
       resource: event.methodArn,
     });

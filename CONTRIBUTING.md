@@ -9,10 +9,32 @@ _This guide assumes you are using a Linux system like WSL or Ubuntu._
 ## Getting started
 
 1.  Clone repository through ssh `git@github.com:jrposada/fit-log.git`
+
 2.  Install dependencies `npm i`
+
 3.  Setup husky `npx husky`
-4.  Execute code locally `npm run dev`
-5. _(Once)_ Initialize local database
+
+4. _(Once)_ Setup .env files
+
+`packages/backend/.env.development`
+```
+ALLOWED_ORIGIN=
+CLIENT_ID=<client-id>
+DB_LOCAL_ENDPOINT=http://localhost:3200
+TABLE_NAME=fit-log-development
+USER_POOL_ID=<user-pool-id>
+```
+
+`packages/frontend/.env.development`
+```
+VITE_BASE_PATH=
+VITE_PORT=3000
+
+VITE_API_BASE_URL=api
+```
+
+5.  Execute code locally `npm run dev`
+6. _(Once)_ Initialize local database
 
 ```
 aws dynamodb create-table \
