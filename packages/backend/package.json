@@ -16,7 +16,9 @@
   "scripts": {
     "build": "serverless package",
     "deploy": "serverless deploy --package .serverless --stage test",
-    "dev": "serverless offline --stage development",
+    "dev": "run-p dev:*",
+    "dev:stack": "serverless offline --stage development",
+    "dev:db": "docker-compose up -d",
     "format": "prettier . --write",
     "lint:eslint": "eslint .",
     "lint:format": "prettier . --check",

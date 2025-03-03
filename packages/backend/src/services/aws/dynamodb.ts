@@ -12,6 +12,12 @@ import {
 } from '@aws-sdk/lib-dynamodb';
 import { batch } from '@shared/utils';
 import assert from 'node:assert';
+import dotenv from 'dotenv';
+
+if (process.env.IS_OFFLINE) {
+  const env = dotenv.config({ path: '.env.development' }).parsed;
+  Object.assign(process.env, env);
+}
 
 /** @see https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/dynamodb/command/BatchWriteItemCommand/ */
 const BATCH_WRITE_SIZE = 25;
@@ -25,6 +31,9 @@ export class DynamoDBHelper {
     assert(process.env.AWS_REGION);
     const client = new DynamoDBClient({
       region: process.env.AWS_REGION,
+      ...(process.env.IS_OFFLINE && {
+        endpoint: process.env.DB_LOCAL_ENDPOINT,
+      }),
     });
 
     this.documentClient = DynamoDBDocumentClient.from(client);
@@ -104,6 +113,7 @@ export class DynamoDBHelper {
     items: T[];
     lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
   }> {
+    console.log('query', params, this.tableName);
     const command = new QueryCommand({
       ...params,
       TableName: this.tableName,

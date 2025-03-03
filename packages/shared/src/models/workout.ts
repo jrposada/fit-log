@@ -5,6 +5,10 @@ export type WorkoutsGetResponse = {
   lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
 
+export type WorkoutsPutResponse = {
+  workout: Workout;
+};
+
 export type Workout = {
   /**
    * ID.

@@ -22,7 +22,12 @@ export function useUsersAuthorize({
     mutationFn: async ({ email, password }) => {
       await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/users/authorize`,
-        JSON.stringify({ email, password })
+        JSON.stringify({ email, password }),
+        {
+          headers: {
+            Authorization: '',
+          },
+        }
       );
     },
     onError: (message) => {

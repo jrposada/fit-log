@@ -3,9 +3,14 @@ import {
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { apiHandler } from '../../api-utils';
-import mockResponse from './users-authorize.json';
+import dotenv from 'dotenv';
 import assert from 'node:assert';
+import { apiHandler } from '../../api-utils';
+
+if (process.env.IS_OFFLINE) {
+  const env = dotenv.config({ path: '.env.development' }).parsed;
+  Object.assign(process.env, env);
+}
 
 assert(process.env.AWS_REGION);
 const cognito = new CognitoIdentityProviderClient({
@@ -14,6 +19,20 @@ const cognito = new CognitoIdentityProviderClient({
 
 export const handler = apiHandler(async (event) => {
   const { email, password } = validateEvent(event);
+
+  if (process.env.MOCK === 'true') {
+    return {
+      statusCode: 200,
+      body: { success: true, data: undefined },
+      multiValueHeaders: {
+        'Set-Cookie': [
+          'accessToken=mocked; Secure; HttpOnly; SameSite=Strict; Path=/',
+          'refreshToken=mocked; Secure; HttpOnly; SameSite=Strict; Path=/',
+        ],
+      },
+    };
+  }
+
   const { CLIENT_ID, USER_POOL_ID } = process.env;
   assert(CLIENT_ID);
   assert(USER_POOL_ID);
@@ -44,7 +63,7 @@ export const handler = apiHandler(async (event) => {
       ],
     },
   };
-}, mockResponse);
+});
 
 function validateEvent(event: APIGatewayProxyEvent): {
   email: string;

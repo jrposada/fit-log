@@ -1,12 +1,12 @@
-WorkoutsGet:
-  handler: src/api/workouts/get/workouts-get.handler
-  role: ApiWorkoutsGetRole
+WorkoutsPut:
+  handler: src/api/workouts/put/workouts-put.handler
+  role: ApiWorkoutsPutRole
   timeout: 30
   memorySize: 128
   events:
     - http:
         path: api/workouts
-        method: get
+        method: put
         cors: true
         authorizer:
           name: Authorizer

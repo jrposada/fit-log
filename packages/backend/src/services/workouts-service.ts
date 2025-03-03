@@ -33,4 +33,8 @@ export class WorkoutsService {
 
     return data;
   }
+
+  async put(item: DbRecord<'workout'>): Promise<void> {
+    void (await this.db.put<DbRecord<'workout'>>(item));
+  }
 }

@@ -16,7 +16,12 @@ export function useWorkouts() {
     queryFn: query({
       fn: async () => {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/workouts`
+          `${import.meta.env.VITE_API_BASE_URL}/workouts`,
+          {
+            headers: {
+              Authorization: '',
+            },
+          }
         );
 
         return (response.data as ApiResponse<WorkoutsGetResponse>).data

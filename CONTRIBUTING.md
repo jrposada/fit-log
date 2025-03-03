@@ -4,6 +4,7 @@ _This guide assumes you are using a Linux system like WSL or Ubuntu._
 
 1. NodeJS.
 2. _Recommended_ NVM.
+3. Docker.
 
 ## Getting started
 
@@ -11,6 +12,17 @@ _This guide assumes you are using a Linux system like WSL or Ubuntu._
 2.  Install dependencies `npm i`
 3.  Setup husky `npx husky`
 4.  Execute code locally `npm run dev`
+5. _(Once)_ Initialize local database
+
+```
+aws dynamodb create-table \
+    --table-name fit-log-development \
+    --attribute-definitions AttributeName=PK,AttributeType=S AttributeName=SK,AttributeType=S \
+    --key-schema AttributeName=PK,KeyType=HASH AttributeName=SK,KeyType=RANGE \
+    --billing-mode PROVISIONED \
+    --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 \
+    --endpoint-url http://localhost:3200
+```
 
 ## Contributing
 

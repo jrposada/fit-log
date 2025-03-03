@@ -1,11 +1,5 @@
 import { ApiResponse } from '@shared/models/api-response';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import dotenv from 'dotenv';
-
-if (process.env.IS_OFFLINE) {
-  const env = dotenv.config({ path: '.env.development' }).parsed;
-  Object.assign(process.env, env);
-}
 
 export function apiError<TError = unknown>(
   _error: TError
@@ -28,15 +22,10 @@ type ApiHandlerParams<TData> = (event: APIGatewayProxyEvent) => Promise<{
   statusCode: number;
 }>;
 export function apiHandler<TData>(
-  handler: ApiHandlerParams<TData>,
-  mockResponse?: ApiResponseParams
+  handler: ApiHandlerParams<TData>
 ): (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult> {
   return async (event: APIGatewayProxyEvent) => {
     try {
-      if (process.env.MOCK === 'true') {
-        return apiResponse(mockResponse ?? { statusCode: 200 });
-      }
-
       const { body, statusCode, headers, multiValueHeaders } =
         await handler(event);
       return apiResponse({
