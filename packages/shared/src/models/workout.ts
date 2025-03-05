@@ -118,3 +118,5 @@ type WorkoutsPutRequestTest = Expect<
 export type WorkoutsPutResponse = {
   workout: Workout;
 };
+
+export type WorkoutsDeleteResponse = undefined;

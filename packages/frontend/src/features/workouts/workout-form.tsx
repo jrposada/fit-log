@@ -46,10 +46,10 @@ const WorkoutForm: FunctionComponent = () => {
     name: 'exercises',
   });
 
-  const { mutate: workoutsPut } = useWorkoutsPut();
+  const { mutate: sendWorkoutsPut } = useWorkoutsPut();
 
   const submit = (data: WorkoutsPutRequest) => {
-    workoutsPut(data);
+    sendWorkoutsPut(data);
   };
 
   return (
@@ -167,7 +167,6 @@ const WorkoutForm: FunctionComponent = () => {
           <IconButton
             onClick={() => remove(index)}
             disabled={fields.length === 1}
-            aria-label="Remove exercise"
             sx={{ position: 'absolute', top: 8, right: 8 }}
           >
             <DeleteIcon />

@@ -1,3 +1,4 @@
+import { Add, Delete, Edit, Favorite } from '@mui/icons-material';
 import {
   Card,
   CardContent,
@@ -7,13 +8,15 @@ import {
 } from '@mui/material';
 import { Workout } from '@shared/models/workout';
 import { FunctionComponent } from 'react';
-import { Favorite, Edit, Delete, Add } from '@mui/icons-material';
+import { useWorkoutsDelete } from '../../core/hooks/workouts/use-workouts-delete';
 
 type WorkoutCardProps = {
   data: Workout;
 };
 
 const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
+  const { mutate: sendWorkoutsDelete } = useWorkoutsDelete();
+
   const addSession = () => {
     console.log('Add session', data);
   };
@@ -21,8 +24,8 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
     console.log('Edit workout', data);
   };
 
-  const removeWorkout = () => {
-    console.log('Remove workout', data);
+  const deleteWorkout = () => {
+    sendWorkoutsDelete(data.id);
   };
 
   const toggleFavorite = () => {
@@ -39,7 +42,7 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
               <Edit />
             </IconButton>
 
-            <IconButton onClick={removeWorkout}>
+            <IconButton onClick={deleteWorkout}>
               <Delete />
             </IconButton>
 

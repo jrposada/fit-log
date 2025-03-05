@@ -1,0 +1,25 @@
+WorkoutsDelete:
+  handler: src/api/workouts/delete/workouts-delete.handler
+  role: ApiWorkoutsDeleteRole
+  timeout: 30
+  memorySize: 128
+  events:
+    - http:
+        path: api/workouts/{id}
+        method: delete
+        request:
+          parameters:
+            paths:
+              id: true
+        cors: true
+        authorizer:
+          name: Authorizer
+          type: Request
+          resultTtlInSeconds: 0
+  environment:
+    ALLOWED_ORIGIN:
+      Fn::GetAtt:
+        - FrontendCloudFrontDistribution
+        - DomainName
+    TABLE_NAME:
+      Ref: DB

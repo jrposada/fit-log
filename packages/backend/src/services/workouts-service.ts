@@ -20,6 +20,10 @@ export class WorkoutsService {
     this.db = new DynamoDBHelper(tableName);
   }
 
+  async delete(id: string): Promise<undefined> {
+    return this.db.delete({ PK: 'workout', SK: id });
+  }
+
   async getAll(): Promise<{
     items: DbRecord<'workout'>[];
     lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
@@ -35,6 +39,6 @@ export class WorkoutsService {
   }
 
   async put(item: DbRecord<'workout'>): Promise<undefined> {
-    void (await this.db.put<DbRecord<'workout'>>(item));
+    return this.db.put<DbRecord<'workout'>>(item);
   }
 }
