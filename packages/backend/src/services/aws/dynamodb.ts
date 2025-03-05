@@ -11,8 +11,8 @@ import {
   QueryCommandOutput,
 } from '@aws-sdk/lib-dynamodb';
 import { batch } from '@shared/utils';
-import assert from 'node:assert';
 import dotenv from 'dotenv';
+import assert from 'node:assert';
 
 if (process.env.IS_OFFLINE) {
   const env = dotenv.config({ path: '.env.development' }).parsed;

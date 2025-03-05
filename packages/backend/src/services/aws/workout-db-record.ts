@@ -1,6 +1,8 @@
 export type WorkoutDbRecord = {
   PK: 'workout';
-  SK: string;
+
+  /** workout#<user-id>#<workout-id> */
+  SK: `workout#${string}#${string}`;
 
   name: string;
   description: string;

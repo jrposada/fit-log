@@ -1,37 +1,8 @@
 import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
-
-export type WorkoutsGetResponse = {
-  workouts: Workout[];
-  lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
-};
-
-export type WorkoutsPutResponse = {
-  workout: Workout;
-};
-
-export type Workout = {
-  /**
-   * ID.
-   *
-   * @format uuid
-   */
-  id: string;
-
-  /**
-   * Name.
-   */
-  name: string;
-
-  /**
-   * Description.
-   */
-  description: string;
-
-  /**
-   * List of exercise.
-   */
-  exercises: Exercise[];
-};
+import z from 'zod';
+import { IsEqual } from '../types/is-equal';
+import { Expect } from '../types/expect';
+import { IsTrue } from '../types/is-true';
 
 export type Exercise = {
   /**
@@ -69,4 +40,75 @@ export type Exercise = {
    * Use `time` for duration (in seconds) or `weight` for load (in kilograms).
    */
   intensityUnit: 'time' | 'weight';
+};
+export const exerciseSchema = z.object({
+  sets: z.number(),
+  restBetweenSets: z.number(),
+  reps: z.number(),
+  restBetweenReps: z.number(),
+  intensity: z.number(),
+  intensityUnit: z.union([z.literal('time'), z.literal('weight')]),
+});
+type ExerciseTest = Expect<
+  IsTrue<IsEqual<Exercise, z.infer<typeof exerciseSchema>>>
+>;
+
+export type Workout = {
+  /**
+   * ID.
+   *
+   * @format uuid
+   */
+  id: string;
+
+  /**
+   * Name.
+   */
+  name: string;
+
+  /**
+   * Description.
+   */
+  description: string;
+
+  /**
+   * List of exercise.
+   */
+  exercises: Exercise[];
+};
+export const workoutSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  description: z.string(),
+  exercises: z.array(exerciseSchema),
+});
+type WorkoutTest = Expect<
+  IsTrue<IsEqual<Workout, z.infer<typeof workoutSchema>>>
+>;
+
+export type WorkoutsGetResponse = {
+  workouts: Workout[];
+  lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
+};
+
+export type WorkoutsPutRequest = Omit<Workout, 'id'> & {
+  /**
+   * ID.
+   *
+   * @format uuid
+   */
+  id?: string;
+};
+export const workoutsPutRequestSchema = z.object({
+  id: z.string().uuid().optional(),
+  name: z.string(),
+  description: z.string(),
+  exercises: z.array(exerciseSchema),
+});
+type WorkoutsPutRequestTest = Expect<
+  IsTrue<IsEqual<WorkoutsPutRequest, z.infer<typeof workoutsPutRequestSchema>>>
+>;
+
+export type WorkoutsPutResponse = {
+  workout: Workout;
 };

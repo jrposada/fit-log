@@ -1,38 +1,49 @@
-import { Workout, WorkoutsPutResponse } from '@shared/models/workout';
+import {
+  WorkoutsPutRequest,
+  workoutsPutRequestSchema,
+  WorkoutsPutResponse,
+} from '@shared/models/workout';
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import { v4 as uuid } from 'uuid';
+import { DbRecord } from '../../../services/aws/db-record';
 import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
-import { APIGatewayProxyEvent } from 'aws-lambda';
 
-export const handler = apiHandler<WorkoutsPutResponse>(async (_event) => {
-  const { workout } = validateEvent(event);
-  const { items, lastEvaluatedKey } = await WorkoutsService.instance.put();
+export const handler = apiHandler<WorkoutsPutResponse>(async (event) => {
+  const { workoutPutData } = validateEvent(event);
+  // TODO: user-id
+  const userId = 'test-user-id';
+
+  const record: DbRecord<'workout'> = {
+    description: workoutPutData.description,
+    exercises: workoutPutData.exercises,
+    lastUpdated: new Date().toUTCString(),
+    name: workoutPutData.name,
+    PK: 'workout',
+    SK:
+      (workoutPutData.id as DbRecord<'workout'>['SK']) ??
+      `workout#${userId}#${uuid()}`,
+  };
+  void (await WorkoutsService.instance.put(record));
 
   return Promise.resolve({
     statusCode: 200,
     body: {
       success: true,
       data: {
-        lastEvaluatedKey,
-        workouts: items.map<Workout>((item) => ({
-          description: item.description,
-          exercises: item.exercises.map((exercise) => ({
-            intensity: exercise.intensity,
-            intensityUnit: exercise.intensityUnit,
-            reps: exercise.reps,
-            restBetweenReps: exercise.restBetweenReps,
-            restBetweenSets: exercise.restBetweenSets,
-            sets: exercise.sets,
-          })),
-          id: item.PK,
-          name: item.name,
-        })),
+        workout: {
+          description: record.description,
+          exercises: record.exercises,
+          id: record.SK,
+          name: record.name,
+        },
       },
     },
   });
 });
 
 function validateEvent(event: APIGatewayProxyEvent): {
-  workout: Workout;
+  workoutPutData: WorkoutsPutRequest;
 } {
   if (!event.body) {
     throw new Error('Invalid request');
@@ -40,15 +51,8 @@ function validateEvent(event: APIGatewayProxyEvent): {
 
   try {
     const body = JSON.parse(event.body);
-
-    if (!body.email || !body.password) {
-      throw new Error('Invalid request');
-    }
-
-    return {
-      email: body.email,
-      password: body.password,
-    };
+    const workoutPutData = workoutsPutRequestSchema.parse(body);
+    return { workoutPutData };
   } catch {
     throw new Error('Invalid request');
   }

@@ -1,7 +1,8 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
 import { Container, Typography } from '@mui/material';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { FunctionComponent } from 'react';
 import { useWorkouts } from '../core/hooks/workouts/use-workouts';
+import WorkoutForm from '../features/workouts/workout-form';
 
 const Index: FunctionComponent = () => {
   const { data } = useWorkouts();
@@ -12,6 +13,8 @@ const Index: FunctionComponent = () => {
         Dashboard
       </Typography>
       {JSON.stringify(data ?? '[]')}
+
+      <WorkoutForm />
     </Container>
   );
 };
