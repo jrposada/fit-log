@@ -1,12 +1,14 @@
 {
   "translation": {
-    "navigation": {
-      "home": "Home",
-      "movements": "Movements"
+    "dashboard": {
+      "create-workout": "New Workout",
+      "favorite-workouts": "Favorite Workouts",
+      "last-sessions": "Last Sessions",
+      "title": "FIT Log"
     },
     "login": {
-      "title": "Login",
-      "action": "Login"
+      "action": "Login",
+      "title": "Login"
     }
   }
 }

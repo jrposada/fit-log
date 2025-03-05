@@ -6,6 +6,11 @@ import { IsTrue } from '../types/is-true';
 
 export type Exercise = {
   /**
+   * Sort order against other exercises.
+   */
+  sort: number;
+
+  /**
    * Number of sets.
    */
   sets: number;
@@ -42,6 +47,7 @@ export type Exercise = {
   intensityUnit: 'time' | 'weight';
 };
 export const exerciseSchema = z.object({
+  sort: z.number(),
   sets: z.number(),
   restBetweenSets: z.number(),
   reps: z.number(),

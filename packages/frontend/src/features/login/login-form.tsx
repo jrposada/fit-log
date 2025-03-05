@@ -1,4 +1,4 @@
-import { Button, Container, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent, useState } from 'react';
@@ -30,7 +30,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ redirect }) => {
   };
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: '2rem' }}>
+    <>
       <Typography variant="h4" gutterBottom>
         {t('login.title')}
       </Typography>
@@ -52,7 +52,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ redirect }) => {
       <Button variant="contained" color="primary" onClick={handleLogin}>
         {t('login.action')}
       </Button>
-    </Container>
+    </>
   );
 };
 
