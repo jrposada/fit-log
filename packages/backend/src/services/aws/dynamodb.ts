@@ -113,7 +113,6 @@ export class DynamoDBHelper {
     items: T[];
     lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
   }> {
-    console.log('query', params, this.tableName);
     const command = new QueryCommand({
       ...params,
       TableName: this.tableName,

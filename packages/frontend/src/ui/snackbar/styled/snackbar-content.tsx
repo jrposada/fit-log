@@ -24,7 +24,7 @@ const SnackbarContent = styled(
           : variant === 'warning'
             ? theme.palette.warning.main
             : undefined,
-  // TODO add auto hide duration border
+  // TODO: add auto hide duration border
   // transition: theme.transitions.create(['width', 'margin'], {
   //     easing: theme.transitions.easing.sharp,
   //     duration: theme.transitions.duration.leavingScreen,

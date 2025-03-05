@@ -57,9 +57,10 @@ const Index: FunctionComponent = () => {
           </Paper>
         </Grid>
 
-        {/* Last session */}
+        {/* Last sessions */}
         <Grid {...gridProps}>
           <Paper {...paperProps}>
+            {/* TODO: sessions */}
             <Typography variant="h6">{t('dashboard.last-sessions')}</Typography>
 
             {workouts?.map((workout) => (

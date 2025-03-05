@@ -18,10 +18,12 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
   const { mutate: sendWorkoutsDelete } = useWorkoutsDelete();
 
   const addSession = () => {
-    console.log('Add session', data);
+    // TODO: add session
+    console.log('TODO: Add session', data);
   };
   const editWorkout = () => {
-    console.log('Edit workout', data);
+    // TODO: edit workout
+    console.log('TODO: Edit workout', data);
   };
 
   const deleteWorkout = () => {
@@ -29,7 +31,8 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
   };
 
   const toggleFavorite = () => {
-    console.log('Toggle favorite', data);
+    // TODO: favorites
+    console.log('TODO: Toggle favorite', data);
   };
 
   return (
