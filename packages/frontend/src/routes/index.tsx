@@ -12,14 +12,20 @@ import {
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
+import { useModals } from '../core/hooks/modals/use-modals';
 import { useWorkouts } from '../core/hooks/workouts/use-workouts';
 import WorkoutCard from '../features/workouts/workout-card';
-import WorkoutForm from '../features/workouts/workout-form';
+import WorkoutFormDialog from '../features/workouts/workout-form-dialog';
 
 const Index: FunctionComponent = () => {
   const { data: workouts } = useWorkouts();
+  const { push } = useModals();
 
-  const createWorkout = () => {};
+  const createWorkout = () => {
+    push({
+      node: <WorkoutFormDialog />,
+    });
+  };
 
   const gridProps: GridProps = {
     size: { xs: 12, md: 6 },
@@ -69,7 +75,6 @@ const Index: FunctionComponent = () => {
           </Paper>
         </Grid>
       </Grid>
-      <WorkoutForm></WorkoutForm>
     </Container>
   );
 };

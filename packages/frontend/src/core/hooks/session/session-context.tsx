@@ -13,10 +13,8 @@ export type Session = {
   setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
 };
 
-// Context
 export const SessionContext = createContext<Session | null>(null);
 
-// Context Provider
 export type SessionProviderProps = {};
 export const SessionProvider: FunctionComponent<
   PropsWithChildren<SessionProviderProps>

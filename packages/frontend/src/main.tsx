@@ -15,6 +15,7 @@ import InfoSnackbar from './ui/snackbar/info-snackbar';
 import Snackbar from './ui/snackbar/snackbar';
 import SuccessSnackbar from './ui/snackbar/success-snackbar';
 import WarningSnackbar from './ui/snackbar/warning-snackbar';
+import { ModalsProvider } from './core/hooks/modals/modals-context';
 
 const defaultTheme = createTheme();
 const queryClient = new QueryClient();
@@ -35,7 +36,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               warning: WarningSnackbar,
             }}
           >
-            <App />
+            <ModalsProvider>
+              <App />
+            </ModalsProvider>
           </SnackbarProvider>
         </SessionProvider>
       </ThemeProvider>

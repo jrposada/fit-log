@@ -1,5 +1,9 @@
 {
   "translation": {
+    "actions": {
+      "cancel": "Cancel",
+      "create": "Create"
+    },
     "dashboard": {
       "create-workout": "New Workout",
       "favorite-workouts": "Favorite Workouts",
