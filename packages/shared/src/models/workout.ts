@@ -42,9 +42,9 @@ export type Exercise = {
   /**
    * Specifies the unit for the {@link Exercise.intensity} value.
    *
-   * Use `time` for duration (in seconds) or `weight` for load (in kilograms).
+   * Use `time` for duration (in seconds), `weight` for load (in kilograms) or `body-weight` for load (in % of body weight).
    */
-  intensityUnit: 'time' | 'weight';
+  intensityUnit: 'time' | 'weight' | 'body-weight';
 };
 export const exerciseSchema = z.object({
   sort: z.number(),
@@ -53,7 +53,11 @@ export const exerciseSchema = z.object({
   reps: z.number(),
   restBetweenReps: z.number(),
   intensity: z.number(),
-  intensityUnit: z.union([z.literal('time'), z.literal('weight')]),
+  intensityUnit: z.union([
+    z.literal('time'),
+    z.literal('weight'),
+    z.literal('body-weight'),
+  ]),
 });
 type ExerciseTest = Expect<
   IsTrue<IsEqual<Exercise, z.infer<typeof exerciseSchema>>>

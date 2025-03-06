@@ -13,6 +13,11 @@
     "login": {
       "action": "Login",
       "title": "Login"
+    },
+    "units": {
+      "kg": "kg",
+      "percentage": "%",
+      "seconds": "seconds"
     }
   }
 }

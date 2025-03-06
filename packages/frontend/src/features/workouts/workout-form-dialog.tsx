@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import CloseIcon from '@mui/icons-material/Close';
-import DeleteIcon from '@mui/icons-material/Delete';
 import {
   Box,
   Button,
@@ -9,8 +8,8 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  MenuItem,
   TextField,
+  TextFieldProps,
   Typography,
 } from '@mui/material';
 import {
@@ -19,30 +18,32 @@ import {
 } from '@shared/models/workout';
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useModals } from '../../core/hooks/modals/use-modals';
 import { useWorkoutsPut } from '../../core/hooks/workouts/use-workouts-put';
+import WorkoutExerciseForm from './workout-exercise-form';
 
 const defaultExercise: WorkoutsPutRequest['exercises'][number] = {
   sort: 0,
-  sets: 0,
-  restBetweenSets: 0,
-  reps: 0,
-  restBetweenReps: 0,
+  sets: 1,
+  restBetweenSets: 5 * 60,
+  reps: 10,
+  restBetweenReps: 3 * 60,
   intensity: 0,
-  intensityUnit: 'time',
+  intensityUnit: 'weight',
+};
+
+const textFieldProps: TextFieldProps = {
+  fullWidth: true,
+  margin: 'normal',
 };
 
 type WorkoutFormProps = {};
 const WorkoutForm: FunctionComponent = () => {
+  const { mutate: sendWorkoutsPut } = useWorkoutsPut();
   const { pop } = useModals();
 
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    register,
-  } = useForm<WorkoutsPutRequest>({
+  const methods = useForm<WorkoutsPutRequest>({
     defaultValues: {
       description: '',
       exercises: [],
@@ -50,13 +51,20 @@ const WorkoutForm: FunctionComponent = () => {
     },
     resolver: zodResolver(workoutsPutRequestSchema),
   });
-
-  const { fields, append, remove } = useFieldArray({
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = methods;
+  const { fields, append } = useFieldArray({
     control,
     name: 'exercises',
   });
 
-  const { mutate: sendWorkoutsPut } = useWorkoutsPut();
+  const addExercise = () => {
+    append(structuredClone(defaultExercise));
+  };
 
   const submit = (data: WorkoutsPutRequest) => {
     sendWorkoutsPut(data);
@@ -68,159 +76,68 @@ const WorkoutForm: FunctionComponent = () => {
   };
 
   return (
-    <Dialog
-      open={true}
-      component="form"
-      onSubmit={handleSubmit(submit)}
-      sx={{ m: 2 }}
-    >
-      <DialogTitle>{t('dashboard.create-workout')}</DialogTitle>
-      <IconButton
-        aria-label="close"
-        onClick={close}
-        sx={{
-          position: 'absolute',
-          right: 8,
-          top: 8,
-        }}
+    <FormProvider {...methods}>
+      <Dialog
+        open={true}
+        component="form"
+        onSubmit={handleSubmit(submit)}
+        sx={{ m: 2 }}
       >
-        <CloseIcon />
-      </IconButton>
+        <DialogTitle>{t('dashboard.create-workout')}</DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={close}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
 
-      <DialogContent>
-        <TextField
-          label="Workout Name"
-          {...register('name')}
-          error={!!errors.name}
-          helperText={errors.name?.message}
-          fullWidth
-          margin="normal"
-          required
-        />
+        <DialogContent>
+          <TextField
+            label="Workout Name"
+            {...register('name')}
+            {...textFieldProps}
+            error={!!errors.name}
+            helperText={errors.name?.message}
+          />
 
-        <TextField
-          label="Workout Description"
-          {...register('description')}
-          error={!!errors.description}
-          helperText={errors.description?.message}
-          fullWidth
-          margin="normal"
-          multiline
-          rows={3}
-          required
-        />
+          <TextField
+            label="Workout Description"
+            {...register('description')}
+            {...textFieldProps}
+            error={!!errors.description}
+            helperText={errors.description?.message}
+            multiline
+            rows={3}
+          />
 
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          Exercises
-        </Typography>
+          <Typography variant="h6" sx={{ mt: 2 }}>
+            Exercises
+          </Typography>
 
-        {fields.map((field, index) => (
-          <Box
-            key={field.id}
-            sx={{
-              border: '1px solid #ccc',
-              borderRadius: 2,
-              p: 2,
-              mt: 2,
-              position: 'relative',
-            }}
-          >
-            <TextField
-              label="Sets"
-              type="number"
-              {...register(`exercises.${index}.sets` as const, {
-                valueAsNumber: true,
-              })}
-              error={!!errors.exercises?.[index]?.sets}
-              helperText={errors.exercises?.[index]?.sets?.message}
-              fullWidth
-              margin="normal"
-            />
+          {fields.map((field, index) => (
+            <WorkoutExerciseForm key={field.id} index={index} />
+          ))}
 
-            <TextField
-              label="Rest Between Sets (seconds)"
-              type="number"
-              {...register(`exercises.${index}.restBetweenSets` as const, {
-                valueAsNumber: true,
-              })}
-              error={!!errors.exercises?.[index]?.restBetweenSets}
-              helperText={errors.exercises?.[index]?.restBetweenSets?.message}
-              fullWidth
-              margin="normal"
-            />
-
-            <TextField
-              label="Reps"
-              type="number"
-              {...register(`exercises.${index}.reps` as const, {
-                valueAsNumber: true,
-              })}
-              error={!!errors.exercises?.[index]?.reps}
-              helperText={errors.exercises?.[index]?.reps?.message}
-              fullWidth
-              margin="normal"
-            />
-
-            <TextField
-              label="Rest Between Reps (seconds)"
-              type="number"
-              {...register(`exercises.${index}.restBetweenReps` as const, {
-                valueAsNumber: true,
-              })}
-              error={!!errors.exercises?.[index]?.restBetweenReps}
-              helperText={errors.exercises?.[index]?.restBetweenReps?.message}
-              fullWidth
-              margin="normal"
-            />
-
-            <TextField
-              label="Intensity"
-              type="number"
-              {...register(`exercises.${index}.intensity` as const, {
-                valueAsNumber: true,
-              })}
-              error={!!errors.exercises?.[index]?.intensity}
-              helperText={errors.exercises?.[index]?.intensity?.message}
-              fullWidth
-              margin="normal"
-            />
-
-            <TextField
-              select
-              label="Intensity Unit"
-              {...register(`exercises.${index}.intensityUnit` as const)}
-              error={!!errors.exercises?.[index]?.intensityUnit}
-              helperText={errors.exercises?.[index]?.intensityUnit?.message}
-              fullWidth
-              margin="normal"
-            >
-              <MenuItem value="time">Time</MenuItem>
-              <MenuItem value="weight">Weight</MenuItem>
-            </TextField>
-
-            <IconButton
-              onClick={() => remove(index)}
-              disabled={fields.length === 1}
-              sx={{ position: 'absolute', top: 8, right: 8 }}
-            >
-              <DeleteIcon />
-            </IconButton>
+          <Box sx={{ mt: 2 }}>
+            <Button variant="outlined" onClick={addExercise}>
+              Add Exercise
+            </Button>
           </Box>
-        ))}
+        </DialogContent>
 
-        <Box sx={{ mt: 2 }}>
-          <Button variant="outlined" onClick={() => append(defaultExercise)}>
-            Add Exercise
+        <DialogActions>
+          <Button onClick={close}>{t('actions.cancel')}</Button>
+          <Button variant="contained" type="submit" sx={{ ml: 2 }}>
+            {t('actions.create')}
           </Button>
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={close}>{t('actions.cancel')}</Button>
-        <Button variant="contained" type="submit" sx={{ ml: 2 }}>
-          {t('actions.create')}
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </DialogActions>
+      </Dialog>
+    </FormProvider>
   );
 };
 
