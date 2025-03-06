@@ -87,9 +87,9 @@ export type Workout = {
   exercises: Exercise[];
 };
 export const workoutSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string(),
-  description: z.string(),
+  id: z.string().uuid().nonempty(),
+  name: z.string().nonempty(),
+  description: z.string().nonempty(),
   exercises: z.array(exerciseSchema),
 });
 type WorkoutTest = Expect<
@@ -110,9 +110,9 @@ export type WorkoutsPutRequest = Omit<Workout, 'id'> & {
   id?: string;
 };
 export const workoutsPutRequestSchema = z.object({
-  id: z.string().uuid().optional(),
-  name: z.string(),
-  description: z.string(),
+  id: z.string().uuid().nonempty().optional(),
+  name: z.string().nonempty(),
+  description: z.string().nonempty(),
   exercises: z.array(exerciseSchema),
 });
 type WorkoutsPutRequestTest = Expect<
