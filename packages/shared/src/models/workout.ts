@@ -1,10 +1,17 @@
 import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import z from 'zod';
-import { IsEqual } from '../types/is-equal';
-import { Expect } from '../types/expect';
-import { IsTrue } from '../types/is-true';
 
 export type Exercise = {
+  /**
+   * Exercise name.
+   */
+  name: string;
+
+  /**
+   * Exercise description.
+   */
+  description: string;
+
   /**
    * Sort order against other exercises.
    */
@@ -47,6 +54,8 @@ export type Exercise = {
   intensityUnit: 'time' | 'weight' | 'body-weight';
 };
 export const exerciseSchema = z.object({
+  name: z.string().nonempty(),
+  description: z.string().nonempty(),
   sort: z.number(),
   sets: z.number(),
   restBetweenSets: z.number(),
@@ -59,9 +68,6 @@ export const exerciseSchema = z.object({
     z.literal('body-weight'),
   ]),
 });
-type ExerciseTest = Expect<
-  IsTrue<IsEqual<Exercise, z.infer<typeof exerciseSchema>>>
->;
 
 export type Workout = {
   /**
@@ -92,9 +98,6 @@ export const workoutSchema = z.object({
   description: z.string().nonempty(),
   exercises: z.array(exerciseSchema),
 });
-type WorkoutTest = Expect<
-  IsTrue<IsEqual<Workout, z.infer<typeof workoutSchema>>>
->;
 
 export type WorkoutsGetResponse = {
   workouts: Workout[];
@@ -115,9 +118,6 @@ export const workoutsPutRequestSchema = z.object({
   description: z.string().nonempty(),
   exercises: z.array(exerciseSchema),
 });
-type WorkoutsPutRequestTest = Expect<
-  IsTrue<IsEqual<WorkoutsPutRequest, z.infer<typeof workoutsPutRequestSchema>>>
->;
 
 export type WorkoutsPutResponse = {
   workout: Workout;

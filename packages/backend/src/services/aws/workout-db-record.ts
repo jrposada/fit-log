@@ -10,8 +10,10 @@ export type WorkoutDbRecord = {
 };
 
 type Exercise = {
+  description: string;
   intensity: number;
   intensityUnit: 'time' | 'weight';
+  name: string;
   reps: number;
   restBetweenReps: number;
   restBetweenSets: number;
