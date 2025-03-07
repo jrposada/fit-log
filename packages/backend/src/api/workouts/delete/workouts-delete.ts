@@ -11,7 +11,7 @@ export const handler = apiHandler<WorkoutsDeleteResponse>(
     const { workoutId } = validateEvent(event);
     const { userId } = authorizerContext;
 
-    assert(workoutId.startsWith(`workout#${userId}#`));
+    assert(workoutId.startsWith(`workout#${userId}#`), 'Unauthorize');
 
     void (await WorkoutsService.instance.delete(workoutId));
 
@@ -32,5 +32,5 @@ function validateEvent(event: APIGatewayProxyEvent): {
     throw new Error('Invalid request');
   }
 
-  return { workoutId: event.pathParameters.id };
+  return { workoutId: decodeURIComponent(event.pathParameters.id) };
 }
