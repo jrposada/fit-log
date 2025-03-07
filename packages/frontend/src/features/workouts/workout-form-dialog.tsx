@@ -62,7 +62,7 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = () => {
     handleSubmit,
     register,
   } = methods;
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'exercises',
   });
@@ -125,7 +125,7 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = () => {
           </Typography>
 
           {fields.map((field, index) => (
-            <WorkoutExerciseForm key={field.id} index={index} />
+            <WorkoutExerciseForm key={field.id} index={index} remove={remove} />
           ))}
 
           <Box sx={{ mt: 2 }}>

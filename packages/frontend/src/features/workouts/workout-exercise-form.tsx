@@ -12,7 +12,7 @@ import {
 import { WorkoutsPutRequest } from '@shared/models/workout';
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { UseFieldArrayRemove, useFormContext } from 'react-hook-form';
 
 const textFieldProps: TextFieldProps = {
   fullWidth: true,
@@ -21,27 +21,25 @@ const textFieldProps: TextFieldProps = {
 
 type WorkoutExerciseFormProps = {
   index: number;
+  remove: UseFieldArrayRemove;
 };
 const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
   index,
+  remove,
 }) => {
   const {
-    control,
     formState: { errors },
     register,
     watch,
   } = useFormContext<WorkoutsPutRequest>();
-  const { remove } = useFieldArray({
-    control,
-    name: 'exercises',
-  });
 
+  const name = watch(`exercises.${index}.name`);
   const intensityUnit = watch(`exercises.${index}.intensityUnit`);
 
   return (
     <Card>
       <CardHeader
-        title="// TODO: name input"
+        title={name || 'Exercise Name'}
         action={
           <IconButton onClick={() => remove(index)}>
             <DeleteIcon />
@@ -50,6 +48,24 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
       />
 
       <CardContent>
+        <TextField
+          label="Exercise Name"
+          {...register(`exercises.${index}.name` as const)}
+          {...textFieldProps}
+          error={!!errors.exercises?.[index]?.name}
+          helperText={errors.exercises?.[index]?.name?.message}
+        />
+
+        <TextField
+          label="Exercise Description"
+          {...register(`exercises.${index}.description` as const)}
+          {...textFieldProps}
+          error={!!errors.exercises?.[index]?.description}
+          helperText={errors.exercises?.[index]?.description?.message}
+          multiline
+          rows={3}
+        />
+
         <TextField
           label="Sets"
           type="number"
