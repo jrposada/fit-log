@@ -6,9 +6,15 @@ import SnackbarContent from './styled/snackbar-content';
 type WarningSnackbarProps = Omit<CustomContentProps, 'children'>;
 
 const WarningSnackbar = forwardRef<HTMLDivElement, WarningSnackbarProps>(
-  ({ autoHideDuration, ...props }, ref) => {
+  ({ action, id, ...props }, ref) => {
     return (
-      <SnackbarContent {...(props as any)} variant="warning" ref={ref}>
+      <SnackbarContent
+        {...props}
+        action={typeof action === 'function' ? action(id) : action}
+        id={`${id}`}
+        ref={ref}
+        variant="warning"
+      >
         <Snackbar />;
       </SnackbarContent>
     );

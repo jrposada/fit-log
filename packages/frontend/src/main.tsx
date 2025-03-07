@@ -8,14 +8,14 @@ import { SnackbarProvider } from 'notistack';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './app';
-import { SessionProvider } from './core/hooks/session/session-context';
+import ModalsProvider from './core/hooks/modals/modals-context-provider';
+import SessionProvider from './core/hooks/session/session-context-provider';
 import './i18n';
 import ErrorSnackbar from './ui/snackbar/error-snackbar';
 import InfoSnackbar from './ui/snackbar/info-snackbar';
 import Snackbar from './ui/snackbar/snackbar';
 import SuccessSnackbar from './ui/snackbar/success-snackbar';
 import WarningSnackbar from './ui/snackbar/warning-snackbar';
-import { ModalsProvider } from './core/hooks/modals/modals-context';
 
 const defaultTheme = createTheme();
 const queryClient = new QueryClient();

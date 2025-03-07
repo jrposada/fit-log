@@ -6,9 +6,15 @@ import SnackbarContent from './styled/snackbar-content';
 type ErrorSnackbarProps = Omit<CustomContentProps, 'children'>;
 
 const ErrorSnackbar = forwardRef<HTMLDivElement, ErrorSnackbarProps>(
-  ({ autoHideDuration, ...props }, ref) => {
+  ({ action, id, ...props }, ref) => {
     return (
-      <SnackbarContent {...(props as any)} variant="error" ref={ref}>
+      <SnackbarContent
+        {...props}
+        action={typeof action === 'function' ? action(id) : action}
+        id={`${id}`}
+        ref={ref}
+        variant="error"
+      >
         <Snackbar />;
       </SnackbarContent>
     );

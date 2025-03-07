@@ -6,7 +6,7 @@ import { render } from '@testing-library/react';
 import App from './app';
 
 describe('Given <App/>', () => {
-    it('then it renders', () => {
-        expect(() => render(<App />)).not.toThrow();
-    });
+  it('then it renders', () => {
+    expect(() => render(<App />)).not.toThrow();
+  });
 });

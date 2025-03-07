@@ -1,12 +1,4 @@
-import {
-  createContext,
-  Dispatch,
-  FunctionComponent,
-  PropsWithChildren,
-  SetStateAction,
-  useMemo,
-  useState,
-} from 'react';
+import { createContext, Dispatch, SetStateAction } from 'react';
 
 export type Session = {
   isAuthenticated: boolean;
@@ -14,24 +6,3 @@ export type Session = {
 };
 
 export const SessionContext = createContext<Session | null>(null);
-
-export type SessionProviderProps = {};
-export const SessionProvider: FunctionComponent<
-  PropsWithChildren<SessionProviderProps>
-> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-
-  const session = useMemo<Session>(
-    () => ({
-      isAuthenticated,
-      setIsAuthenticated,
-    }),
-    [isAuthenticated]
-  );
-
-  return (
-    <SessionContext.Provider value={session}>
-      {children}
-    </SessionContext.Provider>
-  );
-};

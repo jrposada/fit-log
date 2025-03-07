@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import {
+  Workout,
   WorkoutsPutRequest,
   workoutsPutRequestSchema,
 } from '@shared/models/workout';
@@ -24,13 +25,15 @@ import { useWorkoutsPut } from '../../core/hooks/workouts/use-workouts-put';
 import WorkoutExerciseForm from './workout-exercise-form';
 
 const defaultExercise: WorkoutsPutRequest['exercises'][number] = {
-  sort: 0,
-  sets: 1,
-  restBetweenSets: 5 * 60,
-  reps: 10,
-  restBetweenReps: 3 * 60,
+  description: '',
   intensity: 0,
   intensityUnit: 'weight',
+  name: '',
+  reps: 10,
+  restBetweenReps: 3 * 60,
+  restBetweenSets: 5 * 60,
+  sets: 1,
+  sort: 0,
 };
 
 const textFieldProps: TextFieldProps = {
@@ -38,8 +41,10 @@ const textFieldProps: TextFieldProps = {
   margin: 'normal',
 };
 
-type WorkoutFormProps = {};
-const WorkoutForm: FunctionComponent = () => {
+type WorkoutFormProps = {
+  data?: Workout;
+};
+const WorkoutForm: FunctionComponent<WorkoutFormProps> = () => {
   const { mutate: sendWorkoutsPut } = useWorkoutsPut();
   const { pop } = useModals();
 

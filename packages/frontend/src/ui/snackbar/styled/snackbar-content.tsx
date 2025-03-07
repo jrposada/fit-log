@@ -3,17 +3,20 @@ import {
   SnackbarContentProps as MuiSnackbarContentProps,
   styled,
 } from '@mui/material';
+import { PropsWithChildren } from 'react';
 
 interface SnackbarContentProps
   extends Omit<MuiSnackbarContentProps, 'variant'> {
-  autoHideDuration?: number;
+  autoHideDuration?: number | null;
   variant?: 'error' | 'info' | 'success' | 'warning';
 }
 
 const SnackbarContent = styled(
-  MuiSnackbarContent,
+  (props: PropsWithChildren<SnackbarContentProps>) => (
+    <MuiSnackbarContent {...props} variant={undefined} />
+  ),
   {}
-)<SnackbarContentProps>(({ theme, variant }) => ({
+)(({ theme, variant }) => ({
   backgroundColor:
     variant === 'error'
       ? theme.palette.error.main
