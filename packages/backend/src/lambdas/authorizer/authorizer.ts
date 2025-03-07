@@ -13,8 +13,9 @@ if (process.env.IS_OFFLINE) {
   Object.assign(process.env, env);
 }
 
-assert(process.env.CLIENT_ID);
-assert(process.env.USER_POOL_ID);
+assert(process.env.CLIENT_ID, 'CLIENT_ID must be defined');
+assert(process.env.USER_POOL_ID, 'USER_POOL_ID must be defined');
+
 const verifier = CognitoJwtVerifier.create({
   clientId: process.env.CLIENT_ID,
   tokenUse: 'access',
@@ -26,34 +27,42 @@ export const handler = async (
 ): Promise<APIGatewayAuthorizerResult> => {
   if (process.env.IS_OFFLINE) {
     console.info('Running in OFFLINE mode. AUTHORIZATION IS DISABLED!');
+
     return generateAllowPolicy({
       resource: event.methodArn,
+      principalId: 'offline-user',
+      context: {
+        userId: 'offline-user',
+        username: 'offline',
+      },
     });
   }
 
   try {
-    const accessToken = validateCookies(event.headers.Cookie);
+    const accessToken = getAccessTokenFromCookies(event.headers.Cookie);
 
-    await verifier.verify(accessToken, {
-      clientId: process.env.CLIENT_ID,
-      tokenUse: 'access',
-    });
+    const tokenPayload = await verifier.verify(accessToken);
+
     return generateAllowPolicy({
       resource: event.methodArn,
+      principalId: tokenPayload.sub,
+      context: {
+        userId: tokenPayload.sub,
+        username: tokenPayload.username,
+      },
     });
   } catch (e) {
-    console.error(e);
+    console.error('Authorization error:', e);
     return generateDisallowPolicy();
   }
 };
 
 /**
- * Validate authorization cookies.
- *
+ * Extracts the access token from the provided cookie string.
  * @param cookies String with all cookies separated by `;`.
  * @returns Access Token.
  */
-function validateCookies(cookies: string | undefined): string {
+function getAccessTokenFromCookies(cookies: string | undefined): string {
   if (!cookies) {
     throw new Error('Missing cookies');
   }
@@ -69,32 +78,53 @@ function validateCookies(cookies: string | undefined): string {
   throw new Error('Missing auth cookie');
 }
 
+/**
+ * Generates an allow policy including the provided context.
+ */
+function generateAllowPolicy({
+  resource,
+  principalId,
+  context,
+}: Omit<GeneratePolicyParams, 'effect'>): APIGatewayAuthorizerResult {
+  return generatePolicy({
+    effect: 'Allow',
+    principalId,
+    resource,
+    context,
+  });
+}
+
+/**
+ * Generates a deny policy.
+ */
+function generateDisallowPolicy(): APIGatewayAuthorizerResult {
+  return generatePolicy({
+    effect: 'Deny',
+    principalId: 'unauthorized',
+    resource: '*',
+  });
+}
+
+export type AuthorizerContext = {
+  userId: string;
+  username: string;
+};
+
 type GeneratePolicyParams = {
   effect: StatementEffect;
   principalId: string;
   resource: string;
+  context?: AuthorizerContext;
 };
-function generateAllowPolicy({
-  resource,
-}: Pick<GeneratePolicyParams, 'resource'>): APIGatewayAuthorizerResult {
-  const policy = generatePolicy({
-    effect: 'Allow',
-    principalId: 'user',
-    resource,
-  });
-  return policy;
-}
-function generateDisallowPolicy(): APIGatewayAuthorizerResult {
-  return generatePolicy({
-    effect: 'Deny',
-    principalId: 'user',
-    resource: '*',
-  });
-}
+
+/**
+ * Generates a policy document with an optional context.
+ */
 function generatePolicy({
   effect,
   principalId,
   resource,
+  context,
 }: GeneratePolicyParams): APIGatewayAuthorizerResult {
   return {
     principalId,
@@ -108,5 +138,6 @@ function generatePolicy({
         },
       ],
     },
+    context,
   };
 }

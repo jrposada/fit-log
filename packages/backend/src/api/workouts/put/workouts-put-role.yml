@@ -22,7 +22,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - dynamodb:Query
+                  - dynamodb:PutItem
                 Resource:
                   Fn::GetAtt:
                     - DB

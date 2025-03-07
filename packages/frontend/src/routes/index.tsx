@@ -57,7 +57,7 @@ const Index: FunctionComponent = () => {
               {t('dashboard.favorite-workouts')}
             </Typography>
 
-            {workouts?.map((workout) => (
+            {workouts.map((workout) => (
               <WorkoutCard key={workout.id} data={workout}></WorkoutCard>
             ))}
           </Paper>
@@ -69,7 +69,7 @@ const Index: FunctionComponent = () => {
             {/* TODO: sessions */}
             <Typography variant="h6">{t('dashboard.last-sessions')}</Typography>
 
-            {workouts?.map((workout) => (
+            {workouts.map((workout) => (
               <WorkoutCard key={workout.id} data={workout}></WorkoutCard>
             ))}
           </Paper>

@@ -31,5 +31,6 @@ export function useWorkouts() {
       navigate,
       session,
     }),
+    initialData: [],
   });
 }

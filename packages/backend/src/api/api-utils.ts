@@ -1,5 +1,6 @@
 import { ApiResponse } from '@shared/models/api-response';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { AuthorizerContext } from '../lambdas/authorizer/authorizer';
 
 export function apiError<TError = unknown>(
   _error: TError
@@ -15,7 +16,10 @@ export function apiError<TError = unknown>(
   });
 }
 
-type ApiHandlerParams<TData> = (event: APIGatewayProxyEvent) => Promise<{
+type ApiHandlerParams<TData> = (
+  event: APIGatewayProxyEvent,
+  authorizerContext?: AuthorizerContext
+) => Promise<{
   body: ApiResponse<TData>;
   headers?: ApiResponseParams['headers'];
   multiValueHeaders?: ApiResponseParams['multiValueHeaders'];
@@ -26,8 +30,19 @@ export function apiHandler<TData>(
 ): (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult> {
   return async (event: APIGatewayProxyEvent) => {
     try {
-      const { body, statusCode, headers, multiValueHeaders } =
-        await handler(event);
+      let authorizerContext: AuthorizerContext | undefined;
+
+      if (event.requestContext.authorizer?.userId) {
+        authorizerContext = {
+          userId: event.requestContext.authorizer?.userId,
+          username: event.requestContext.authorizer?.username,
+        };
+      }
+
+      const { body, statusCode, headers, multiValueHeaders } = await handler(
+        event,
+        authorizerContext
+      );
       return apiResponse({
         body: JSON.stringify(body),
         headers,

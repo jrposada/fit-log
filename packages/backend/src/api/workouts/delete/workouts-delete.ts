@@ -2,21 +2,28 @@ import { WorkoutsDeleteResponse } from '@shared/models/workout';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
+import assert from 'node:assert';
 
-export const handler = apiHandler<WorkoutsDeleteResponse>(async (event) => {
-  // TODO: verify workout owner through userId
-  const { workoutId } = validateEvent(event);
+export const handler = apiHandler<WorkoutsDeleteResponse>(
+  async (event, authorizerContext) => {
+    assert(authorizerContext, 'Unauthorized');
 
-  void (await WorkoutsService.instance.delete(workoutId));
+    const { workoutId } = validateEvent(event);
+    const { userId } = authorizerContext;
 
-  return Promise.resolve({
-    statusCode: 200,
-    body: {
-      success: true,
-      data: undefined,
-    },
-  });
-});
+    assert(workoutId.startsWith(`workout#${userId}#`));
+
+    void (await WorkoutsService.instance.delete(workoutId));
+
+    return Promise.resolve({
+      statusCode: 200,
+      body: {
+        success: true,
+        data: undefined,
+      },
+    });
+  }
+);
 
 function validateEvent(event: APIGatewayProxyEvent): {
   workoutId: string;

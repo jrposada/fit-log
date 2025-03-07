@@ -3,8 +3,6 @@ import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<WorkoutsGetResponse>(async (_event) => {
-  console.log('event', _event);
-
   const { items, lastEvaluatedKey } = await WorkoutsService.instance.getAll();
 
   return Promise.resolve({
