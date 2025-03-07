@@ -16,7 +16,19 @@ export const handler = apiHandler<WorkoutsPutResponse>(async (event) => {
 
   const record: DbRecord<'workout'> = {
     description: workoutPutData.description,
-    exercises: workoutPutData.exercises,
+    exercises: workoutPutData.exercises.map<
+      DbRecord<'workout'>['exercises'][number]
+    >((exercise) => ({
+      description: exercise.description,
+      intensity: exercise.intensity,
+      intensityUnit: exercise.intensityUnit,
+      name: exercise.name,
+      reps: exercise.reps,
+      restBetweenReps: exercise.restBetweenReps,
+      restBetweenSets: exercise.restBetweenSets,
+      sets: exercise.sets,
+      sort: exercise.sort,
+    })),
     lastUpdated: new Date().toUTCString(),
     name: workoutPutData.name,
     PK: 'workout',

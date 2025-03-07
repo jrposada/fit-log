@@ -12,7 +12,7 @@ export type WorkoutDbRecord = {
 type Exercise = {
   description: string;
   intensity: number;
-  intensityUnit: 'time' | 'weight';
+  intensityUnit: 'time' | 'weight' | 'body-weight';
   name: string;
   reps: number;
   restBetweenReps: number;
