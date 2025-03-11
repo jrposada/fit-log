@@ -40,7 +40,8 @@
       "add-exercise": "Add Exercise",
       "description": "Workout Description",
       "exercises": "Exercises",
-      "name": "Workout Name"
+      "name": "Workout Name",
+      "session-history": "Sessions"
     }
   }
 }

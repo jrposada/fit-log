@@ -1,14 +1,13 @@
-import { PlayArrow } from '@mui/icons-material';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   Container,
-  IconButton,
+  Divider,
   Typography,
 } from '@mui/material';
-import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import { t } from 'i18next';
 import { FunctionComponent } from 'react';
 import { useWorkoutsById } from '../../core/hooks/workouts/use-workouts-by-id';
 import WorkoutActions from '../../features/workouts/workout-actions';
@@ -16,20 +15,6 @@ import WorkoutActions from '../../features/workouts/workout-actions';
 const WorkoutDetails: FunctionComponent = () => {
   const { 'workout-id': workoutId } = Route.useParams();
   const { data: workout } = useWorkoutsById(workoutId);
-  const navigate = useNavigate();
-
-  const startSession = () => {
-    if (!workout) {
-      return;
-    }
-
-    navigate({
-      to: '/workouts/$workout-id/session',
-      params: {
-        'workout-id': workout.id,
-      },
-    });
-  };
 
   return (
     <Container>
@@ -44,9 +29,8 @@ const WorkoutDetails: FunctionComponent = () => {
 
         <Box>{!!workout && <WorkoutActions data={workout} />}</Box>
       </Box>
-
       <Typography variant="body1">{workout?.description}</Typography>
-
+      <Divider />
       {workout?.exercises.map((exercise, index) => (
         <Card key={index} sx={{ marginBottom: 2 }}>
           <CardContent>
@@ -55,10 +39,9 @@ const WorkoutDetails: FunctionComponent = () => {
           </CardContent>
         </Card>
       ))}
-
-      <Button variant="contained" fullWidth onClick={startSession}>
-        Start Training Session
-      </Button>
+      <Divider />
+      <Typography variant="h4">{t('workout.session-history')}</Typography>
+      TODO
     </Container>
   );
 };
