@@ -17,9 +17,9 @@ export function useWorkoutsDelete({
   const client = useQueryClient();
 
   return useMutation<void, string, UseWorkoutsDeleteMutationParams, unknown>({
-    mutationFn: async (workoutId) => {
+    mutationFn: async (id) => {
       await axios.delete(
-        `${import.meta.env.VITE_API_BASE_URL}/workouts/${encodeURIComponent(workoutId)}`,
+        `${import.meta.env.VITE_API_BASE_URL}/workouts/${encodeURIComponent(id)}`,
         {
           headers: {
             Authorization: '',

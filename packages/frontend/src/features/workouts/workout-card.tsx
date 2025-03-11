@@ -1,6 +1,8 @@
-import { Add, Delete, Edit, Favorite } from '@mui/icons-material';
+import { Delete, Edit, Favorite, PlayArrow } from '@mui/icons-material';
 import {
   Card,
+  CardActionArea,
+  CardActions,
   CardContent,
   CardHeader,
   IconButton,
@@ -9,6 +11,9 @@ import {
 import { Workout } from '@shared/models/workout';
 import { FunctionComponent } from 'react';
 import { useWorkoutsDelete } from '../../core/hooks/workouts/use-workouts-delete';
+import { useNavigate } from '@tanstack/react-router';
+import { useModals } from '../../core/hooks/modals/use-modals';
+import WorkoutFormDialog from './workout-form-dialog';
 
 type WorkoutCardProps = {
   data: Workout;
@@ -16,18 +21,33 @@ type WorkoutCardProps = {
 
 const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
   const { mutate: sendWorkoutsDelete } = useWorkoutsDelete();
+  const navigate = useNavigate();
+  const { push } = useModals();
 
-  const addSession = () => {
-    // TODO: add session
-    console.log('TODO: Add session', data);
+  const startSession = () => {
+    navigate({
+      to: '/workouts/$workout-id/session',
+      params: {
+        'workout-id': data.id,
+      },
+    });
   };
+
   const editWorkout = () => {
-    // TODO: edit workout
-    console.log('TODO: Edit workout', data);
+    push({ node: <WorkoutFormDialog data={data} /> });
   };
 
   const deleteWorkout = () => {
     sendWorkoutsDelete(data.id);
+  };
+
+  const goToDetails = () => {
+    navigate({
+      to: '/workouts/$workout-id',
+      params: {
+        'workout-id': data.id,
+      },
+    });
   };
 
   const toggleFavorite = () => {
@@ -37,37 +57,35 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
 
   return (
     <Card>
-      <CardHeader
-        title={data.name}
-        action={
-          <>
-            <IconButton onClick={editWorkout}>
-              <Edit />
-            </IconButton>
+      <CardActionArea onClick={goToDetails}>
+        <CardHeader title={data.name}></CardHeader>
 
-            <IconButton onClick={deleteWorkout}>
-              <Delete />
-            </IconButton>
+        <CardContent>
+          <Typography variant="body2" color="text.secondary">
+            {data.description}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+      <CardActions>
+        <IconButton onClick={startSession} color="primary">
+          <PlayArrow />
+        </IconButton>
 
-            <IconButton
-              onClick={toggleFavorite}
-              // color={data.isFavorite ? 'primary' : 'default'}
-            >
-              <Favorite />
-            </IconButton>
+        <IconButton
+          onClick={toggleFavorite}
+          // color={data.isFavorite ? 'primary' : 'default'}
+        >
+          <Favorite />
+        </IconButton>
 
-            <IconButton onClick={addSession} color="primary">
-              <Add />
-            </IconButton>
-          </>
-        }
-      ></CardHeader>
+        <IconButton onClick={editWorkout}>
+          <Edit />
+        </IconButton>
 
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {data.description}
-        </Typography>
-      </CardContent>
+        <IconButton onClick={deleteWorkout} color="error">
+          <Delete />
+        </IconButton>
+      </CardActions>
     </Card>
   );
 };

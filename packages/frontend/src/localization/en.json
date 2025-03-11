@@ -2,13 +2,15 @@
   "translation": {
     "actions": {
       "cancel": "Cancel",
-      "create": "Create"
+      "create": "Create",
+      "update": "Update"
     },
     "dashboard": {
       "create-workout": "New Workout",
       "favorite-workouts": "Favorite Workouts",
       "last-sessions": "Last Sessions",
-      "title": "FIT Log"
+      "title": "FIT Log",
+      "update-workout": "Update Workout"
     },
     "login": {
       "action": "Login",
