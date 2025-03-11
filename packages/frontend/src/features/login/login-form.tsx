@@ -36,7 +36,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ redirect }) => {
       </Typography>
       <TextField
         fullWidth
-        label="Username"
+        label={t('login.username')}
         margin="normal"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
@@ -44,7 +44,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ redirect }) => {
       <TextField
         fullWidth
         type="password"
-        label="Password"
+        label={t('login.password')}
         margin="normal"
         value={password}
         onChange={(e) => setPassword(e.target.value)}

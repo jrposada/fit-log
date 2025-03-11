@@ -14,7 +14,9 @@
     },
     "login": {
       "action": "Login",
-      "title": "Login"
+      "password": "Password",
+      "title": "Login",
+      "username": "Username"
     },
     "units": {
       "kg": "kg",
