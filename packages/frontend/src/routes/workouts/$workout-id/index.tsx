@@ -9,8 +9,8 @@ import {
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
-import { useWorkoutsById } from '../../core/hooks/workouts/use-workouts-by-id';
-import WorkoutActions from '../../features/workouts/workout-actions';
+import { useWorkoutsById } from '../../../core/hooks/workouts/use-workouts-by-id';
+import WorkoutActions from '../../../features/workouts/workout-actions';
 
 const WorkoutDetails: FunctionComponent = () => {
   const { 'workout-id': workoutId } = Route.useParams();
@@ -46,7 +46,7 @@ const WorkoutDetails: FunctionComponent = () => {
   );
 };
 
-export const Route = createFileRoute('/workouts/$workout-id')({
+export const Route = createFileRoute('/workouts/$workout-id/')({
   beforeLoad: ({ context, location }) => {
     if (!context.session?.isAuthenticated) {
       throw redirect({
