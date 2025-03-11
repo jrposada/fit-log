@@ -42,7 +42,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
   return (
     <Card sx={sx}>
       <CardHeader
-        title={name || 'Exercise Name'}
+        title={name || t('exercise.name')}
         action={
           <IconButton onClick={() => remove(index)}>
             <DeleteIcon />
@@ -52,7 +52,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
 
       <CardContent>
         <TextField
-          label="Exercise Name"
+          label={t('exercise.name')}
           {...register(`exercises.${index}.name` as const)}
           {...textFieldProps}
           error={!!errors.exercises?.[index]?.name}
@@ -60,7 +60,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
         />
 
         <TextField
-          label="Exercise Description"
+          label={t('exercise.description')}
           {...register(`exercises.${index}.description` as const)}
           {...textFieldProps}
           error={!!errors.exercises?.[index]?.description}
@@ -70,7 +70,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
         />
 
         <TextField
-          label="Sets"
+          label={t('exercise.sets')}
           type="number"
           {...register(`exercises.${index}.sets` as const, {
             valueAsNumber: true,
@@ -81,7 +81,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
         />
 
         <TextField
-          label="Rest Between Sets"
+          label={t('exercise.rest-between-sets')}
           type="number"
           {...register(`exercises.${index}.restBetweenSets` as const, {
             valueAsNumber: true,
@@ -101,7 +101,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
         />
 
         <TextField
-          label="Reps"
+          label={t('exercise.reps')}
           type="number"
           {...register(`exercises.${index}.reps` as const, {
             valueAsNumber: true,
@@ -112,7 +112,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
         />
 
         <TextField
-          label="Rest Between Reps"
+          label={t('exercise.rest-between-reps')}
           type="number"
           {...register(`exercises.${index}.restBetweenReps` as const, {
             valueAsNumber: true,
@@ -133,7 +133,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
 
         <TextField
           select
-          label="Intensity Unit"
+          label={t('exercise.intensity-unit')}
           {...register(`exercises.${index}.intensityUnit` as const)}
           {...textFieldProps}
           error={!!errors.exercises?.[index]?.intensityUnit}
@@ -146,7 +146,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
         </TextField>
 
         <TextField
-          label="Intensity"
+          label={t('exercise.intensity')}
           type="number"
           {...register(`exercises.${index}.intensity` as const, {
             valueAsNumber: true,

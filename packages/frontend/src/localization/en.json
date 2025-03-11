@@ -12,6 +12,16 @@
       "title": "FIT Log",
       "update-workout": "Update Workout"
     },
+    "exercise": {
+      "description": "Exercise Description",
+      "intensity-unit": "Intensity Unit",
+      "intensity": "Intensity",
+      "name": "Exercise Name",
+      "reps": "Reps",
+      "rest-between-reps": "Rest Between Reps",
+      "rest-between-sets": "Rest Between Sets",
+      "sets": "Sets"
+    },
     "login": {
       "action": "Login",
       "password": "Password",
