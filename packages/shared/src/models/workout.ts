@@ -113,7 +113,7 @@ export type WorkoutsPutRequest = Omit<Workout, 'id'> & {
   id?: string;
 };
 export const workoutsPutRequestSchema = z.object({
-  id: z.string().uuid().nonempty().optional(),
+  id: z.string().nonempty().optional(),
   name: z.string().nonempty(),
   description: z.string().nonempty(),
   exercises: z.array(exerciseSchema),
@@ -124,3 +124,7 @@ export type WorkoutsPutResponse = {
 };
 
 export type WorkoutsDeleteResponse = undefined;
+
+export type WorkoutsGetByIdResponse = {
+  workout: Workout;
+};
