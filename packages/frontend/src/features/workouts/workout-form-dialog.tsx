@@ -95,7 +95,6 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = ({ data }) => {
         </DialogTitle>
 
         <IconButton
-          aria-label="close"
           onClick={close}
           sx={{
             position: 'absolute',
@@ -108,7 +107,7 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = ({ data }) => {
 
         <DialogContent>
           <TextField
-            label="Workout Name"
+            label={t('workout.name')}
             {...register('name')}
             {...textFieldProps}
             error={!!errors.name}
@@ -116,7 +115,7 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = ({ data }) => {
           />
 
           <TextField
-            label="Workout Description"
+            label={t('workout.description')}
             {...register('description')}
             {...textFieldProps}
             error={!!errors.description}
@@ -126,7 +125,7 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = ({ data }) => {
           />
 
           <Typography variant="h6" sx={{ mt: 2 }}>
-            Exercises
+            {t('workout.exercises')}
           </Typography>
 
           {fields.map((field, index) => (
@@ -140,7 +139,7 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = ({ data }) => {
 
           <Box sx={{ mt: 2 }}>
             <Button variant="outlined" onClick={addExercise}>
-              Add Exercise
+              {t('workout.add-exercise')}
             </Button>
           </Box>
         </DialogContent>

@@ -30,7 +30,7 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
   return (
     <Card>
       <CardActionArea onClick={goToDetails}>
-        <CardHeader title={data.name}></CardHeader>
+        <CardHeader title={data.name} />
 
         <CardContent>
           <Typography variant="body2" color="text.secondary">

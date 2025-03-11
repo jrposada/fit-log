@@ -35,6 +35,12 @@
       "seconds": "seconds",
       "time": "Time",
       "weight": "Weight"
+    },
+    "workout": {
+      "add-exercise": "Add Exercise",
+      "description": "Workout Description",
+      "exercises": "Exercises",
+      "name": "Workout Name"
     }
   }
 }
