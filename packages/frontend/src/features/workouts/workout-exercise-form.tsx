@@ -140,9 +140,9 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
           helperText={errors.exercises?.[index]?.intensityUnit?.message}
           defaultValue={'weight'}
         >
-          <MenuItem value="time">Time</MenuItem>
-          <MenuItem value="weight">Weight</MenuItem>
-          <MenuItem value="body-weight">Body Weight</MenuItem>
+          <MenuItem value="time">{t('units.time')}</MenuItem>
+          <MenuItem value="weight">{t('units.weight')}</MenuItem>
+          <MenuItem value="body-weight">{t('units.body-weight')}</MenuItem>
         </TextField>
 
         <TextField

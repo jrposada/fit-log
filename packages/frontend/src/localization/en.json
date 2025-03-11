@@ -29,9 +29,12 @@
       "username": "Username"
     },
     "units": {
+      "body-weight": "Body Weight",
       "kg": "kg",
       "percentage": "%",
-      "seconds": "seconds"
+      "seconds": "seconds",
+      "time": "Time",
+      "weight": "Weight"
     }
   }
 }
