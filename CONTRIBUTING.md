@@ -30,7 +30,7 @@ USER_POOL_ID=<user-pool-id>
 VITE_BASE_PATH=
 VITE_PORT=3000
 
-VITE_API_BASE_URL=api
+VITE_API_BASE_URL=/api
 ```
 
 5.  Execute code locally `npm run dev`
