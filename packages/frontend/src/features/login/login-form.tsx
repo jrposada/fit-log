@@ -31,9 +31,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ redirect }) => {
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
-        {t('login.title')}
-      </Typography>
+      <Typography variant="h4">{t('login.title')}</Typography>
       <TextField
         fullWidth
         label={t('login.username')}
