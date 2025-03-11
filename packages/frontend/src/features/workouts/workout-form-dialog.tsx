@@ -44,12 +44,12 @@ const textFieldProps: TextFieldProps = {
 type WorkoutFormProps = {
   data?: Workout;
 };
-const WorkoutForm: FunctionComponent<WorkoutFormProps> = () => {
+const WorkoutForm: FunctionComponent<WorkoutFormProps> = ({ data }) => {
   const { mutate: sendWorkoutsPut } = useWorkoutsPut();
   const { pop } = useModals();
 
   const methods = useForm<WorkoutsPutRequest>({
-    defaultValues: {
+    defaultValues: data ?? {
       description: '',
       exercises: [],
       name: '',
@@ -88,7 +88,12 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = () => {
         onSubmit={handleSubmit(submit)}
         sx={{ m: 2 }}
       >
-        <DialogTitle>{t('dashboard.create-workout')}</DialogTitle>
+        <DialogTitle>
+          {Boolean(data)
+            ? t('dashboard.update-workout')
+            : t('dashboard.create-workout')}
+        </DialogTitle>
+
         <IconButton
           aria-label="close"
           onClick={close}
@@ -125,7 +130,12 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = () => {
           </Typography>
 
           {fields.map((field, index) => (
-            <WorkoutExerciseForm key={field.id} index={index} remove={remove} />
+            <WorkoutExerciseForm
+              key={field.id}
+              index={index}
+              remove={remove}
+              sx={{ mt: 2 }}
+            />
           ))}
 
           <Box sx={{ mt: 2 }}>
@@ -138,7 +148,7 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = () => {
         <DialogActions>
           <Button onClick={close}>{t('actions.cancel')}</Button>
           <Button variant="contained" type="submit" sx={{ ml: 2 }}>
-            {t('actions.create')}
+            {Boolean(data) ? t('actions.update') : t('actions.create')}
           </Button>
         </DialogActions>
       </Dialog>

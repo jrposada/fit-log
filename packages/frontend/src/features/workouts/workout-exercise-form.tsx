@@ -8,6 +8,7 @@ import {
   MenuItem,
   TextField,
   TextFieldProps,
+  CardProps,
 } from '@mui/material';
 import { WorkoutsPutRequest } from '@shared/models/workout';
 import { t } from 'i18next';
@@ -22,10 +23,12 @@ const textFieldProps: TextFieldProps = {
 type WorkoutExerciseFormProps = {
   index: number;
   remove: UseFieldArrayRemove;
+  sx?: CardProps['sx'];
 };
 const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
   index,
   remove,
+  sx,
 }) => {
   const {
     formState: { errors },
@@ -37,7 +40,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
   const intensityUnit = watch(`exercises.${index}.intensityUnit`);
 
   return (
-    <Card>
+    <Card sx={sx}>
       <CardHeader
         title={name || 'Exercise Name'}
         action={

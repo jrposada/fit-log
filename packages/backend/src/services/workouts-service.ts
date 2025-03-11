@@ -24,6 +24,19 @@ export class WorkoutsService {
     return this.db.delete({ PK: 'workout', SK: id });
   }
 
+  async get(id: string): Promise<DbRecord<'workout'>> {
+    const workout = await this.db.get<DbRecord<'workout'>>({
+      PK: 'workout',
+      SK: id,
+    });
+
+    if (!workout) {
+      throw new Error('Not Found');
+    }
+
+    return workout;
+  }
+
   async getAll(): Promise<{
     items: DbRecord<'workout'>[];
     lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
