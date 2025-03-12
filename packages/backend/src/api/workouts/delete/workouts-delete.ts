@@ -1,17 +1,17 @@
 import { WorkoutsDeleteResponse } from '@shared/models/workout';
+import { assert } from '@shared/utils/assert';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
-import assert from 'node:assert';
 
 export const handler = apiHandler<WorkoutsDeleteResponse>(
   async (event, authorizerContext) => {
-    assert(authorizerContext, 'Unauthorized');
+    assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { workoutId } = validateEvent(event);
     const { userId } = authorizerContext;
 
-    assert(workoutId.startsWith(`workout#${userId}#`), 'Unauthorize');
+    assert(workoutId.startsWith(`workout#${userId}#`), { msg: 'Unauthorized' });
 
     void (await WorkoutsService.instance.delete(workoutId));
 

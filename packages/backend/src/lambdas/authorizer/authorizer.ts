@@ -1,3 +1,4 @@
+import { assert } from '@shared/utils/assert';
 import { CognitoJwtVerifier } from 'aws-jwt-verify';
 import {
   APIGatewayAuthorizerEvent,
@@ -6,15 +7,14 @@ import {
   StatementEffect,
 } from 'aws-lambda';
 import dotenv from 'dotenv';
-import assert from 'node:assert';
 
 if (process.env.IS_OFFLINE) {
   const env = dotenv.config({ path: '.env.development' }).parsed;
   Object.assign(process.env, env);
 }
 
-assert(process.env.CLIENT_ID, 'CLIENT_ID must be defined');
-assert(process.env.USER_POOL_ID, 'USER_POOL_ID must be defined');
+assert(process.env.CLIENT_ID, { msg: 'CLIENT_ID must be defined' });
+assert(process.env.USER_POOL_ID, { msg: 'USER_POOL_ID must be defined' });
 
 const verifier = CognitoJwtVerifier.create({
   clientId: process.env.CLIENT_ID,

@@ -3,16 +3,16 @@ import {
   workoutsPutRequestSchema,
   WorkoutsPutResponse,
 } from '@shared/models/workout';
+import { assert } from '@shared/utils/assert';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { v4 as uuid } from 'uuid';
 import { DbRecord } from '../../../services/aws/db-record';
 import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
-import assert from 'node:assert';
 
 export const handler = apiHandler<WorkoutsPutResponse>(
   async (event, authorizerContext) => {
-    assert(authorizerContext, 'Unauthorized');
+    assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { workoutPutData } = validateEvent(event);
     const { userId } = authorizerContext;

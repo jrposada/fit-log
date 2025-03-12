@@ -2,9 +2,9 @@ import {
   AdminInitiateAuthCommand,
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
+import { assert } from '@shared/utils/assert';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import dotenv from 'dotenv';
-import assert from 'node:assert';
 import { apiHandler } from '../../api-utils';
 
 if (process.env.IS_OFFLINE) {

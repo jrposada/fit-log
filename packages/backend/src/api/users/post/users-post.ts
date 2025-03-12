@@ -3,9 +3,9 @@ import {
   AdminSetUserPasswordCommand,
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
+import { assert } from '@shared/utils/assert';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { apiHandler } from '../../api-utils';
-import assert from 'node:assert';
 
 const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,

@@ -1,5 +1,5 @@
 import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
-import assert from 'node:assert';
+import { assert } from '@shared/utils/assert';
 import { DbRecord } from './aws/db-record';
 import { DynamoDBHelper } from './aws/dynamodb';
 
