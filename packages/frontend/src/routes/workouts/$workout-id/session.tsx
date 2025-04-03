@@ -206,7 +206,7 @@ const WorkoutSession: FunctionComponent = () => {
 
 export const Route = createFileRoute('/workouts/$workout-id/session')({
   beforeLoad: ({ context, location }) => {
-    if (!context.session?.isAuthenticated) {
+    if (!context.auth?.isAuthenticated) {
       throw redirect({
         to: '/login',
         search: {

@@ -1,6 +1,9 @@
 import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import z from 'zod';
 
+////////////
+// Models //
+////////////
 export type Exercise = {
   /**
    * Exercise name.
@@ -71,9 +74,7 @@ export const exerciseSchema = z.object({
 
 export type Workout = {
   /**
-   * ID.
-   *
-   * @format uuid
+   * ID `workout#<user-id>#<workout-id>`.
    */
   id: string;
 
@@ -93,22 +94,26 @@ export type Workout = {
   exercises: Exercise[];
 };
 export const workoutSchema = z.object({
-  id: z.string().uuid().nonempty(),
+  id: z.string().nonempty(),
   name: z.string().nonempty(),
   description: z.string().nonempty(),
   exercises: z.array(exerciseSchema),
 });
 
+/////////
+// GET //
+/////////
 export type WorkoutsGetResponse = {
   workouts: Workout[];
   lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
 
+/////////
+// PUT //
+/////////
 export type WorkoutsPutRequest = Omit<Workout, 'id'> & {
   /**
-   * ID.
-   *
-   * @format uuid
+   * ID `workout#<user-id>#<workout-id>`.
    */
   id?: string;
 };
@@ -123,8 +128,14 @@ export type WorkoutsPutResponse = {
   workout: Workout;
 };
 
+////////////
+// DELETE //
+////////////
 export type WorkoutsDeleteResponse = undefined;
 
+///////////////
+// GET by ID //
+///////////////
 export type WorkoutsGetByIdResponse = {
   workout: Workout;
 };

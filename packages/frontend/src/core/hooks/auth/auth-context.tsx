@@ -1,8 +1,8 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
 
-export type Session = {
+export type Auth = {
   isAuthenticated: boolean;
   setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
 };
 
-export const SessionContext = createContext<Session | null>(null);
+export const AuthContext = createContext<Auth | null>(null);

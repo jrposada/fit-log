@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import CloseIcon from '@mui/icons-material/Close';
+import { Close } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -102,7 +102,7 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = ({ data }) => {
             top: 8,
           }}
         >
-          <CloseIcon />
+          <Close />
         </IconButton>
 
         <DialogContent>

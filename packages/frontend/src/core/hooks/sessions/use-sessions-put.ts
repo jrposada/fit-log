@@ -1,27 +1,27 @@
-import { WorkoutsPutRequest } from '@shared/models/workout';
+import { SessionsPutRequest } from '@shared/models/session';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import useSnackbar from '../../../ui/snackbar/use-snackbar';
 
-type UseWorkoutsPutParams = {
+type UseSessionsPutParams = {
   onError?: (message: string) => void;
   onSuccess?: () => void;
 };
 
-type UseWorkoutsPutMutationParams = WorkoutsPutRequest;
+type UseSessionsPutMutationParams = SessionsPutRequest;
 
-export function useWorkoutsPut({
+export function useSessionsPut({
   onError,
   onSuccess,
-}: UseWorkoutsPutParams = {}) {
+}: UseSessionsPutParams = {}) {
   const { enqueueAutoHideSnackbar } = useSnackbar();
   const client = useQueryClient();
 
-  return useMutation<void, string, UseWorkoutsPutMutationParams, unknown>({
-    mutationFn: async (workout) => {
+  return useMutation<void, string, UseSessionsPutMutationParams, unknown>({
+    mutationFn: async (session) => {
       await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/workouts`,
-        JSON.stringify(workout),
+        `${import.meta.env.VITE_API_BASE_URL}/sessions`,
+        JSON.stringify(session),
         {
           headers: {
             Authorization: '',
@@ -31,14 +31,14 @@ export function useWorkoutsPut({
     },
     onError: (message) => {
       enqueueAutoHideSnackbar({
-        message: 'Could not create or update workout.',
+        message: 'Could not create or update session.',
         variant: 'error',
       });
       onError?.(message);
     },
     onSuccess: () => {
       client.invalidateQueries({
-        queryKey: ['workouts'],
+        queryKey: ['sessions'],
       });
       onSuccess?.();
     },

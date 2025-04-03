@@ -10,7 +10,7 @@ import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './app';
 import ModalsProvider from './core/hooks/modals/modals-context-provider';
-import SessionProvider from './core/hooks/session/session-context-provider';
+import AuthProvider from './core/hooks/auth/auth-context-provider';
 import './i18n';
 import ErrorSnackbar from './ui/snackbar/error-snackbar';
 import InfoSnackbar from './ui/snackbar/info-snackbar';
@@ -27,7 +27,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <ReactQueryDevtools />
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline />
-        <SessionProvider>
+        <AuthProvider>
           <SnackbarProvider
             maxSnack={3}
             Components={{
@@ -42,7 +42,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <App />
             </ModalsProvider>
           </SnackbarProvider>
-        </SessionProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>

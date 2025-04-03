@@ -2,7 +2,7 @@ import { Button, TextField, Typography } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent, useState } from 'react';
-import { useSession } from '../../core/hooks/session/use-session';
+import { useAuth } from '../../core/hooks/auth/use-auth';
 import { useUsersAuthorize } from '../../core/hooks/users/use-users-authorize';
 
 type LoginFormProps = {
@@ -14,7 +14,7 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ redirect }) => {
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
-  const { setIsAuthenticated } = useSession();
+  const { setIsAuthenticated } = useAuth();
 
   const { mutateAsync: authorize } = useUsersAuthorize({
     onSuccess: () => {

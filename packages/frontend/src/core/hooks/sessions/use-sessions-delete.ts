@@ -1,27 +1,25 @@
-import { WorkoutsPutRequest } from '@shared/models/workout';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import useSnackbar from '../../../ui/snackbar/use-snackbar';
 
-type UseWorkoutsPutParams = {
+type UseSessionsDeleteParams = {
   onError?: (message: string) => void;
   onSuccess?: () => void;
 };
 
-type UseWorkoutsPutMutationParams = WorkoutsPutRequest;
+type UseSessionsDeleteMutationParams = string;
 
-export function useWorkoutsPut({
+export function useSessionsDelete({
   onError,
   onSuccess,
-}: UseWorkoutsPutParams = {}) {
+}: UseSessionsDeleteParams = {}) {
   const { enqueueAutoHideSnackbar } = useSnackbar();
   const client = useQueryClient();
 
-  return useMutation<void, string, UseWorkoutsPutMutationParams, unknown>({
-    mutationFn: async (workout) => {
-      await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/workouts`,
-        JSON.stringify(workout),
+  return useMutation<void, string, UseSessionsDeleteMutationParams, unknown>({
+    mutationFn: async (id) => {
+      await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/sessions/${encodeURIComponent(id)}`,
         {
           headers: {
             Authorization: '',
@@ -31,14 +29,14 @@ export function useWorkoutsPut({
     },
     onError: (message) => {
       enqueueAutoHideSnackbar({
-        message: 'Could not create or update workout.',
+        message: 'Could not delete session.',
         variant: 'error',
       });
       onError?.(message);
     },
     onSuccess: () => {
       client.invalidateQueries({
-        queryKey: ['workouts'],
+        queryKey: ['sessions'],
       });
       onSuccess?.();
     },

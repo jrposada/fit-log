@@ -1,6 +1,6 @@
 import { ParsedLocation, UseNavigateResult } from '@tanstack/react-router';
 import { AxiosError } from 'axios';
-import { Session } from './session/session-context';
+import { Auth } from './auth/auth-context';
 
 export type QueryParams<TResponse> = {
   fn: () => Promise<TResponse>;
@@ -8,13 +8,13 @@ export type QueryParams<TResponse> = {
     redirect?: string | undefined;
   }>;
   navigate: UseNavigateResult<string>;
-  session: Session;
+  auth: Auth;
 };
 export function query<TResponse>({
   fn,
   location,
   navigate,
-  session,
+  auth,
 }: QueryParams<TResponse>): () => Promise<TResponse> {
   return async () => {
     try {
@@ -24,7 +24,7 @@ export function query<TResponse>({
         error instanceof AxiosError &&
         (error.status === 401 || error.status === 403)
       ) {
-        session.setIsAuthenticated(false);
+        auth.setIsAuthenticated(false);
         navigate({
           to: '/login',
           search: {

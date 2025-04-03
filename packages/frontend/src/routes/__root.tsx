@@ -1,8 +1,8 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
-import { Session } from '../core/hooks/session/session-context';
+import { Auth } from '../core/hooks/auth/auth-context';
 
 type RouterContext = {
-  session: Session | null;
+  auth: Auth | null;
 };
 
 export const Route = createRootRouteWithContext<RouterContext>()({
