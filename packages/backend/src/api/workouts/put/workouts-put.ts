@@ -5,7 +5,6 @@ import {
 } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { v4 as uuid } from 'uuid';
 import { DbRecord } from '../../../services/aws/db-record';
 import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
@@ -37,7 +36,7 @@ export const handler = apiHandler<WorkoutsPutResponse>(
       PK: 'workout',
       SK:
         (workoutPutData.id as DbRecord<'workout'>['SK']) ??
-        `workout#${userId}#${uuid()}`,
+        WorkoutsService.instance.newId(userId),
     };
     void (await WorkoutsService.instance.put(record));
 

@@ -4,9 +4,9 @@ import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<WorkoutsGetByIdResponse>(async (event) => {
-  const { workoutId } = validateEvent(event);
+  const { id } = validateEvent(event);
 
-  const workout = await WorkoutsService.instance.get(workoutId);
+  const workout = await WorkoutsService.instance.get(id);
 
   return Promise.resolve({
     statusCode: 200,
@@ -35,11 +35,11 @@ export const handler = apiHandler<WorkoutsGetByIdResponse>(async (event) => {
 });
 
 function validateEvent(event: APIGatewayProxyEvent): {
-  workoutId: string;
+  id: string;
 } {
   if (!event.pathParameters?.id) {
     throw new Error('Invalid request');
   }
 
-  return { workoutId: decodeURIComponent(event.pathParameters.id) };
+  return { id: decodeURIComponent(event.pathParameters.id) };
 }

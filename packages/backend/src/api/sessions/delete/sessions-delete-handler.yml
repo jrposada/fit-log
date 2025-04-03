@@ -1,0 +1,25 @@
+SessionsDelete:
+  handler: src/api/sessions/delete/sessions-delete.handler
+  role: ApiSessionsDeleteRole
+  timeout: 30
+  memorySize: 128
+  events:
+    - http:
+        path: api/sessions/{id}
+        method: delete
+        request:
+          parameters:
+            paths:
+              id: true
+        cors: true
+        authorizer:
+          name: Authorizer
+          type: Request
+          resultTtlInSeconds: 0
+  environment:
+    ALLOWED_ORIGIN:
+      Fn::GetAtt:
+        - FrontendCloudFrontDistribution
+        - DomainName
+    TABLE_NAME:
+      Ref: DB

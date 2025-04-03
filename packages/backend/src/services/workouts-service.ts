@@ -1,9 +1,9 @@
-import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import { assert } from '@shared/utils/assert';
+import { v4 as uuid } from 'uuid';
 import { DbRecord } from './aws/db-record';
-import { DynamoDBHelper } from './aws/dynamodb';
+import { RestfulService } from './restful-service';
 
-export class WorkoutsService {
+export class WorkoutsService extends RestfulService<'workout'> {
   static #instance: WorkoutsService;
   static get instance() {
     if (!WorkoutsService.#instance) {
@@ -14,44 +14,17 @@ export class WorkoutsService {
     return WorkoutsService.#instance;
   }
 
-  private db: DynamoDBHelper;
+  static getUserId(id: string): string {
+    const segments = id.split(`#`);
+    assert(segments.length === 3);
+    return segments[1];
+  }
 
   private constructor(tableName: string) {
-    this.db = new DynamoDBHelper(tableName);
+    super(tableName, 'workout');
   }
 
-  async delete(id: string): Promise<undefined> {
-    return this.db.delete({ PK: 'workout', SK: id });
-  }
-
-  async get(id: string): Promise<DbRecord<'workout'>> {
-    const workout = await this.db.get<DbRecord<'workout'>>({
-      PK: 'workout',
-      SK: id,
-    });
-
-    if (!workout) {
-      throw new Error('Not Found');
-    }
-
-    return workout;
-  }
-
-  async getAll(): Promise<{
-    items: DbRecord<'workout'>[];
-    lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
-  }> {
-    const data = await this.db.query<DbRecord<'workout'>>({
-      KeyConditionExpression: 'PK = :PK',
-      ExpressionAttributeValues: {
-        ':PK': 'workout',
-      },
-    });
-
-    return data;
-  }
-
-  async put(item: DbRecord<'workout'>): Promise<undefined> {
-    return this.db.put<DbRecord<'workout'>>(item);
+  public newId(userId: string): DbRecord<'workout'>['SK'] {
+    return `${this.entity}#${userId}#${uuid()}` as DbRecord<'workout'>['SK'];
   }
 }

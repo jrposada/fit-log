@@ -1,19 +1,19 @@
-import { WorkoutsDeleteResponse } from '@shared/models/workout';
+import { SessionsDeleteResponse } from '@shared/models/session';
 import { assert } from '@shared/utils/assert';
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { WorkoutsService } from '../../../services/workouts-service';
+import { SessionsService } from '../../../services/sessions-service';
 import { apiHandler } from '../../api-utils';
 
-export const handler = apiHandler<WorkoutsDeleteResponse>(
+export const handler = apiHandler<SessionsDeleteResponse>(
   async (event, authorizerContext) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { id } = validateEvent(event);
     const { userId } = authorizerContext;
 
-    assert(WorkoutsService.getUserId(id) === userId, { msg: 'Unauthorized' });
+    assert(SessionsService.getUserId(id) === userId, { msg: 'Unauthorized' });
 
-    void (await WorkoutsService.instance.delete(id));
+    void (await SessionsService.instance.delete(id));
 
     return Promise.resolve({
       statusCode: 200,

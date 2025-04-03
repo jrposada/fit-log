@@ -1,6 +1,7 @@
+import { SessionDbRecord } from './session-db-record';
 import { WorkoutDbRecord } from './workout-db-record';
 
-export type DbRecordType = 'workout';
+export type DbRecordType = WorkoutDbRecord['PK'] | SessionDbRecord['PK'];
 export type DbRecord<TRecordType extends DbRecordType> = {
   PK: TRecordType;
 
@@ -12,4 +13,4 @@ export type DbRecord<TRecordType extends DbRecordType> = {
    * @format date-time
    */
   lastUpdated: string;
-} & WorkoutDbRecord;
+} & (WorkoutDbRecord | SessionDbRecord);
