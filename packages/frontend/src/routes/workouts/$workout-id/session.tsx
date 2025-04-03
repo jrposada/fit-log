@@ -7,10 +7,12 @@ import {
   SkipPrevious,
 } from '@mui/icons-material';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import { assert } from '@shared/utils/assert';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { FunctionComponent, useState } from 'react';
+import { useModals } from '../../../core/hooks/modals/use-modals';
 import { useWorkoutsById } from '../../../core/hooks/workouts/use-workouts-by-id';
-import { assert } from '@shared/utils/assert';
+import SessionFormDialog from '../../../features/sessions/session-form-dialog';
 
 type State = {
   exerciseIndex: number;
@@ -18,6 +20,10 @@ type State = {
   set: number;
 };
 const WorkoutSession: FunctionComponent = () => {
+  const { 'workout-id': workoutId } = Route.useParams();
+  const { data: workout } = useWorkoutsById(workoutId);
+  const { push } = useModals();
+
   const [{ exerciseIndex, rep, set }, setState] = useState<State>({
     exerciseIndex: 0,
     rep: 0,
@@ -25,11 +31,8 @@ const WorkoutSession: FunctionComponent = () => {
   });
   const [running, setRunning] = useState(false);
 
-  const { 'workout-id': workoutId } = Route.useParams();
-  const { data: workout } = useWorkoutsById(workoutId);
-
   const done = () => {
-    console.log('// TODO: done');
+    push({ node: <SessionFormDialog workoutId={workoutId} /> });
   };
 
   const _nextExercise = (state: State) => {

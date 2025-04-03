@@ -13,12 +13,15 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
 import { useModals } from '../core/hooks/modals/use-modals';
+import { useSessions } from '../core/hooks/sessions/use-sessions';
 import { useWorkouts } from '../core/hooks/workouts/use-workouts';
+import SessionCard from '../features/sessions/session-card';
 import WorkoutCard from '../features/workouts/workout-card';
 import WorkoutFormDialog from '../features/workouts/workout-form-dialog';
 
 const Index: FunctionComponent = () => {
   const { data: workouts } = useWorkouts();
+  const { data: sessions } = useSessions();
   const { push } = useModals();
 
   const createWorkout = () => {
@@ -66,11 +69,10 @@ const Index: FunctionComponent = () => {
         {/* Last sessions */}
         <Grid {...gridProps}>
           <Paper {...paperProps}>
-            {/* TODO: sessions */}
             <Typography variant="h6">{t('dashboard.last-sessions')}</Typography>
 
-            {workouts.map((workout) => (
-              <WorkoutCard key={workout.id} data={workout}></WorkoutCard>
+            {sessions.map((workout) => (
+              <SessionCard key={workout.id} data={workout}></SessionCard>
             ))}
           </Paper>
         </Grid>

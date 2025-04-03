@@ -12,7 +12,7 @@ export const handler = apiHandler<SessionsGetResponse>(async (_event) => {
       data: {
         lastEvaluatedKey,
         sessions: items.map<Session>((item) => ({
-          completedAt: new Date(item.completedAt),
+          completedAt: item.completedAt,
           id: item.SK,
         })),
       },

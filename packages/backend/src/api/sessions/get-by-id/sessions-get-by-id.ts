@@ -14,7 +14,7 @@ export const handler = apiHandler<SessionsGetByIdResponse>(async (event) => {
       success: true,
       data: {
         session: {
-          completedAt: new Date(session.completedAt),
+          completedAt: session.completedAt,
           id: session.SK,
         },
       },

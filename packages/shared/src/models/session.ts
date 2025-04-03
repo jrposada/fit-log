@@ -11,15 +11,15 @@ export type Session = {
   id: string;
 
   /**
-   * Date when session was logged.
+   * Date when session was logged in ISO 8601 format (UTC).
    *
-   * @format date
+   * @format date-time
    */
-  completedAt: Date;
+  completedAt: string;
 };
 export const sessionSchema = z.object({
   id: z.string().nonempty(),
-  completedAt: z.date(),
+  completedAt: z.string().datetime(),
 });
 
 /////////
@@ -47,7 +47,7 @@ export type SessionsPutRequest = Omit<Session, 'id' | 'workoutId'> & {
 export const sessionsPutRequestSchema = z.object({
   id: z.string().optional(),
   workoutId: z.string().optional(),
-  completedAt: z.date(),
+  completedAt: z.string().datetime(),
 });
 
 export type SessionsPutResponse = {

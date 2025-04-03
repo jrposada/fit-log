@@ -41,10 +41,12 @@ const textFieldProps: TextFieldProps = {
   margin: 'normal',
 };
 
-type WorkoutFormProps = {
+type WorkoutFormDialogProps = {
   data?: Workout;
 };
-const WorkoutForm: FunctionComponent<WorkoutFormProps> = ({ data }) => {
+const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
+  data,
+}) => {
   const { mutate: sendWorkoutsPut } = useWorkoutsPut();
   const { pop } = useModals();
 
@@ -155,5 +157,5 @@ const WorkoutForm: FunctionComponent<WorkoutFormProps> = ({ data }) => {
   );
 };
 
-export default WorkoutForm;
-export type { WorkoutFormProps };
+export default WorkoutFormDialog;
+export type { WorkoutFormDialogProps };

@@ -20,8 +20,8 @@ export const handler = apiHandler<SessionsPutResponse>(
     }
 
     const record: DbRecord<'session'> = {
-      completedAt: new Date().toUTCString(),
-      lastUpdated: new Date().toUTCString(),
+      completedAt: sessionPutData.completedAt,
+      lastUpdated: new Date().toISOString(),
       PK: 'session',
       SK:
         (sessionPutData.id as DbRecord<'session'>['SK']) ??
@@ -38,7 +38,7 @@ export const handler = apiHandler<SessionsPutResponse>(
         success: true,
         data: {
           session: {
-            completedAt: new Date(record.completedAt),
+            completedAt: record.completedAt,
             id: record.SK,
           },
         },
@@ -58,7 +58,8 @@ function validateEvent(event: APIGatewayProxyEvent): {
     const body = JSON.parse(event.body);
     const sessionPutData = sessionsPutRequestSchema.parse(body);
     return { sessionPutData };
-  } catch {
+  } catch (error) {
+    console.error(error);
     throw new Error('Invalid request');
   }
 }
