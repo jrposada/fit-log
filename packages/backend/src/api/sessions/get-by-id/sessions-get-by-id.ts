@@ -16,6 +16,8 @@ export const handler = apiHandler<SessionsGetByIdResponse>(async (event) => {
         session: {
           completedAt: session.completedAt,
           id: session.SK,
+          workoutDescription: session.workoutDescription,
+          workoutName: session.workoutName,
         },
       },
     },

@@ -11,6 +11,8 @@ import {
   TextField,
   TextFieldProps,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import {
   Workout,
@@ -49,6 +51,8 @@ const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
 }) => {
   const { mutate: sendWorkoutsPut } = useWorkoutsPut();
   const { pop } = useModals();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const methods = useForm<WorkoutsPutRequest>({
     defaultValues: data ?? {
@@ -85,15 +89,13 @@ const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
   return (
     <FormProvider {...methods}>
       <Dialog
-        open={true}
         component="form"
+        fullScreen={fullScreen}
         onSubmit={handleSubmit(submit)}
-        sx={{ m: 2 }}
+        open={true}
       >
         <DialogTitle>
-          {Boolean(data)
-            ? t('dashboard.update-workout')
-            : t('dashboard.create-workout')}
+          {Boolean(data) ? t('workout.update') : t('workout.create')}
         </DialogTitle>
 
         <IconButton

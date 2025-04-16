@@ -6,18 +6,23 @@ import axios from 'axios';
 import { useAuth } from '../auth/use-auth';
 import { query } from '../query';
 
-export function useSessions() {
+type UseSessionsParams = {
+  workoutId?: string;
+};
+
+export function useSessions(params: UseSessionsParams = {}) {
   const location = useLocation();
   const navigate = useNavigate();
   const auth = useAuth();
 
   return useQuery({
-    queryKey: ['sessions'],
+    queryKey: ['sessions', params],
     queryFn: query({
       fn: async () => {
         const response = await axios.get<ApiResponse<SessionsGetResponse>>(
           `${import.meta.env.VITE_API_BASE_URL}/sessions`,
           {
+            params,
             headers: {
               Authorization: '',
             },

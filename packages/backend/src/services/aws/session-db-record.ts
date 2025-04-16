@@ -10,4 +10,13 @@ export type SessionDbRecord = {
    * @format date-time
    */
   completedAt: string;
+
+  /**
+   * Workout name when this session was logged.
+   */
+  workoutName: string;
+  /**
+   * Workout description when this session was logged.
+   */
+  workoutDescription: string;
 };

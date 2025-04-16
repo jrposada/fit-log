@@ -9,12 +9,13 @@ import {
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import { assert } from '@shared/utils/assert';
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { useModals } from '../../../core/hooks/modals/use-modals';
 import { useWorkoutsById } from '../../../core/hooks/workouts/use-workouts-by-id';
 import SessionFormDialog from '../../../features/sessions/session-form-dialog';
 
 type State = {
+  done: boolean;
   exerciseIndex: number;
   rep: number;
   set: number;
@@ -24,16 +25,13 @@ const WorkoutSession: FunctionComponent = () => {
   const { data: workout } = useWorkoutsById(workoutId);
   const { push } = useModals();
 
-  const [{ exerciseIndex, rep, set }, setState] = useState<State>({
+  const [{ done, exerciseIndex, rep, set }, setState] = useState<State>({
+    done: false,
     exerciseIndex: 0,
     rep: 0,
     set: 0,
   });
   const [running, setRunning] = useState(false);
-
-  const done = () => {
-    push({ node: <SessionFormDialog workoutId={workoutId} /> });
-  };
 
   const _nextExercise = (state: State) => {
     const next = { ...state };
@@ -44,7 +42,9 @@ const WorkoutSession: FunctionComponent = () => {
       next.exerciseIndex = workout?.exercises.length - 1;
       next.set = workout.exercises[next.exerciseIndex].sets;
       next.rep = workout.exercises[next.exerciseIndex].reps;
-      done();
+      // Since this method is called inside a setState we can not call push
+      // modals directly.
+      next.done = true;
       return next;
     }
 
@@ -132,6 +132,17 @@ const WorkoutSession: FunctionComponent = () => {
   const toggle = () => {
     setRunning((prev) => !prev);
   };
+
+  // Push session form dialog on done.
+  useEffect(() => {
+    if (!done) {
+      return;
+    }
+
+    assert(workout, { msg: 'Expected workout to be defined.' });
+
+    push({ node: <SessionFormDialog workout={workout} /> });
+  }, [done]);
 
   const currentExercise = workout?.exercises[exerciseIndex];
 

@@ -1,6 +1,7 @@
 {
   "editor.formatOnSave": true,
+  "editor.rulers": [80],
   "i18n-ally.localesPaths": [
     "packages/frontend/src/localization"
-  ]
+  ],
 }

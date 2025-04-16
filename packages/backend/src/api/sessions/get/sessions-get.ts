@@ -14,6 +14,8 @@ export const handler = apiHandler<SessionsGetResponse>(async (_event) => {
         sessions: items.map<Session>((item) => ({
           completedAt: item.completedAt,
           id: item.SK,
+          workoutDescription: item.workoutDescription,
+          workoutName: item.workoutName,
         })),
       },
     },

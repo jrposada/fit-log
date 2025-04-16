@@ -19,6 +19,14 @@ import SessionCard from '../features/sessions/session-card';
 import WorkoutCard from '../features/workouts/workout-card';
 import WorkoutFormDialog from '../features/workouts/workout-form-dialog';
 
+const GRID_PROPS: GridProps = {
+  size: { xs: 12, md: 6 },
+};
+const PAPER_PROPS: PaperProps = {
+  elevation: 2,
+  sx: { p: 2, display: 'flex', flexDirection: 'column', gap: 2 },
+};
+
 const Index: FunctionComponent = () => {
   const { data: workouts } = useWorkouts();
   const { data: sessions } = useSessions();
@@ -28,14 +36,6 @@ const Index: FunctionComponent = () => {
     push({
       node: <WorkoutFormDialog />,
     });
-  };
-
-  const gridProps: GridProps = {
-    size: { xs: 12, md: 6 },
-  };
-  const paperProps: PaperProps = {
-    elevation: 2,
-    sx: { p: 2, display: 'flex', flexDirection: 'column', gap: 2 },
   };
 
   return (
@@ -54,8 +54,8 @@ const Index: FunctionComponent = () => {
 
       <Grid container spacing={2}>
         {/* Favorite workouts */}
-        <Grid {...gridProps}>
-          <Paper {...paperProps}>
+        <Grid {...GRID_PROPS}>
+          <Paper {...PAPER_PROPS}>
             <Typography variant="h6">
               {t('dashboard.favorite-workouts')}
             </Typography>
@@ -67,8 +67,8 @@ const Index: FunctionComponent = () => {
         </Grid>
 
         {/* Last sessions */}
-        <Grid {...gridProps}>
-          <Paper {...paperProps}>
+        <Grid {...GRID_PROPS}>
+          <Paper {...PAPER_PROPS}>
             <Typography variant="h6">{t('dashboard.last-sessions')}</Typography>
 
             {sessions.map((workout) => (

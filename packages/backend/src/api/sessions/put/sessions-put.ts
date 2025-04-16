@@ -20,8 +20,6 @@ export const handler = apiHandler<SessionsPutResponse>(
     }
 
     const record: DbRecord<'session'> = {
-      completedAt: sessionPutData.completedAt,
-      lastUpdated: new Date().toISOString(),
       PK: 'session',
       SK:
         (sessionPutData.id as DbRecord<'session'>['SK']) ??
@@ -29,6 +27,10 @@ export const handler = apiHandler<SessionsPutResponse>(
           msg: 'Workout ID is required when creating new sessions.',
         }) ??
         SessionsService.instance.newId(userId, sessionPutData.workoutId!),
+      completedAt: sessionPutData.completedAt,
+      lastUpdated: new Date().toISOString(),
+      workoutDescription: sessionPutData.workoutDescription,
+      workoutName: sessionPutData.workoutName,
     };
     void (await SessionsService.instance.put(record));
 
@@ -40,6 +42,8 @@ export const handler = apiHandler<SessionsPutResponse>(
           session: {
             completedAt: record.completedAt,
             id: record.SK,
+            workoutDescription: record.workoutDescription,
+            workoutName: record.workoutName,
           },
         },
       },

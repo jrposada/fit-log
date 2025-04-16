@@ -28,11 +28,11 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
   return (
     <Card>
       <CardActionArea onClick={goToDetails}>
-        <CardHeader title={data.id} />
+        <CardHeader title={data.workoutName} subheader={data.completedAt} />
 
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            {data.completedAt}
+            {data.workoutDescription}
           </Typography>
         </CardContent>
       </CardActionArea>

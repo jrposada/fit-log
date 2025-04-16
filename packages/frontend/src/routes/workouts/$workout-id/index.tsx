@@ -3,18 +3,32 @@ import {
   Card,
   CardContent,
   Container,
-  Divider,
+  Grid2 as Grid,
+  Grid2Props as GridProps,
+  Paper,
+  PaperProps,
   Typography,
 } from '@mui/material';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
+import { useSessions } from '../../../core/hooks/sessions/use-sessions';
 import { useWorkoutsById } from '../../../core/hooks/workouts/use-workouts-by-id';
+import SessionCard from '../../../features/sessions/session-card';
 import WorkoutActions from '../../../features/workouts/workout-actions';
+
+const GRID_PROPS: GridProps = {
+  size: { xs: 12, md: 6 },
+};
+const PAPER_PROPS: PaperProps = {
+  elevation: 2,
+  sx: { p: 2, display: 'flex', flexDirection: 'column', gap: 2 },
+};
 
 const WorkoutDetails: FunctionComponent = () => {
   const { 'workout-id': workoutId } = Route.useParams();
   const { data: workout } = useWorkoutsById(workoutId);
+  const { data: sessions } = useSessions({ workoutId });
 
   return (
     <Container>
@@ -30,18 +44,35 @@ const WorkoutDetails: FunctionComponent = () => {
         <Box>{!!workout && <WorkoutActions data={workout} />}</Box>
       </Box>
       <Typography variant="body1">{workout?.description}</Typography>
-      <Divider />
-      {workout?.exercises.map((exercise, index) => (
-        <Card key={index} sx={{ marginBottom: 2 }}>
-          <CardContent>
-            <Typography variant="h6">{exercise.name}</Typography>
-            <Typography variant="body2">{exercise.description}</Typography>
-          </CardContent>
-        </Card>
-      ))}
-      <Divider />
-      <Typography variant="h4">{t('workout.session-history')}</Typography>
-      TODO
+
+      <Grid container spacing={2}>
+        {/* Workout exercises */}
+        <Grid {...GRID_PROPS}>
+          <Paper {...PAPER_PROPS}>
+            {workout?.exercises.map((exercise, index) => (
+              <Card key={index} sx={{ marginBottom: 2 }}>
+                <CardContent>
+                  <Typography variant="h6">{exercise.name}</Typography>
+                  <Typography variant="body2">
+                    {exercise.description}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </Paper>
+        </Grid>
+
+        {/* Workout sessions */}
+        <Grid {...GRID_PROPS}>
+          <Paper {...PAPER_PROPS}>
+            <Typography variant="h4">{t('workout.session-history')}</Typography>
+
+            {sessions.map((workout) => (
+              <SessionCard key={workout.id} data={workout}></SessionCard>
+            ))}
+          </Paper>
+        </Grid>
+      </Grid>
     </Container>
   );
 };

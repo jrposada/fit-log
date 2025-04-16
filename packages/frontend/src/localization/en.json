@@ -1,16 +1,15 @@
 {
   "translation": {
     "actions": {
+      "add": "Add",
       "cancel": "Cancel",
       "create": "Create",
       "update": "Update"
     },
     "dashboard": {
-      "create-workout": "New Workout",
       "favorite-workouts": "Favorite Workouts",
       "last-sessions": "Last Sessions",
-      "title": "FIT Log",
-      "update-workout": "Update Workout"
+      "title": "FIT Log"
     },
     "exercise": {
       "description": "Exercise Description",
@@ -28,6 +27,11 @@
       "title": "Login",
       "username": "Username"
     },
+    "session": {
+      "completed-at": "Workout Date",
+      "create": "New Session",
+      "update": "Update Session"
+    },
     "units": {
       "body-weight": "Body Weight",
       "kg": "kg",
@@ -38,10 +42,12 @@
     },
     "workout": {
       "add-exercise": "Add Exercise",
+      "create": "New Workout",
       "description": "Workout Description",
       "exercises": "Exercises",
       "name": "Workout Name",
-      "session-history": "Sessions"
+      "session-history": "Sessions",
+      "update": "Update Workout"
     }
   }
 }

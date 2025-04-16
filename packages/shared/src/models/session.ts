@@ -16,10 +16,20 @@ export type Session = {
    * @format date-time
    */
   completedAt: string;
+  /**
+   * Workout name when this session was logged.
+   */
+  workoutName: string;
+  /**
+   * Workout description when this session was logged.
+   */
+  workoutDescription: string;
 };
 export const sessionSchema = z.object({
-  id: z.string().nonempty(),
   completedAt: z.string().datetime(),
+  id: z.string().nonempty(),
+  workoutDescription: z.string().nonempty(),
+  workoutName: z.string().nonempty(),
 });
 
 /////////
@@ -45,9 +55,11 @@ export type SessionsPutRequest = Omit<Session, 'id' | 'workoutId'> & {
   workoutId?: string;
 };
 export const sessionsPutRequestSchema = z.object({
-  id: z.string().optional(),
-  workoutId: z.string().optional(),
   completedAt: z.string().datetime(),
+  id: z.string().optional(),
+  workoutDescription: z.string().nonempty(),
+  workoutId: z.string().optional(),
+  workoutName: z.string().nonempty(),
 });
 
 export type SessionsPutResponse = {
