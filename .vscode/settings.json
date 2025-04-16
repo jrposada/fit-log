@@ -4,4 +4,8 @@
   "i18n-ally.localesPaths": [
     "packages/frontend/src/localization"
   ],
+  "i18n-ally.enabledFrameworks": [
+    "react-i18next"
+  ],
+  "i18n-ally.keystyle": "nested",
 }

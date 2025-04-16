@@ -158,6 +158,7 @@ const WorkoutSession: FunctionComponent = () => {
       </Box>
       {currentExercise?.name}
       {currentExercise?.description}
+      {/* // TODO: Remove */}
       <ul>
         <li>
           Index: {exerciseIndex} / {workout?.exercises.length}
