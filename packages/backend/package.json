@@ -18,7 +18,7 @@
     "deploy": "serverless deploy --package .serverless --stage test",
     "dev": "run-p dev:*",
     "dev:stack": "serverless offline --stage development",
-    "dev:db": "docker-compose up -d",
+    "dev:db": "docker-compose --project-name fit-log up -d",
     "format": "prettier . --write",
     "lint:eslint": "eslint .",
     "lint:format": "prettier . --check",
