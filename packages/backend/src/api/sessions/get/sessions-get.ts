@@ -11,7 +11,6 @@ import { WorkoutsService } from '../../../services/workouts-service';
 
 export const handler = apiHandler<SessionsGetResponse>(async ({ event }) => {
   const { params } = validateEvent(event);
-  console.log({ params });
 
   const userId = params.workoutId
     ? WorkoutsService.getUserId(params.workoutId)

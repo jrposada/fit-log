@@ -16,6 +16,7 @@ type WorkoutCardProps = {
 const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
   const navigate = useNavigate();
 
+  // FIXME: do we go to workout or session details?
   const goToDetails = () => {
     navigate({
       to: '/workouts/$workout-id',
