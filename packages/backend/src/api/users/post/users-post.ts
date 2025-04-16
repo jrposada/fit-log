@@ -11,7 +11,7 @@ const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,
 });
 
-export const handler = apiHandler(async (event) => {
+export const handler = apiHandler(async ({ event }) => {
   const { email, password } = validateEvent(event);
   const { USER_POOL_ID } = process.env;
   assert(USER_POOL_ID);

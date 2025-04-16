@@ -3,26 +3,28 @@ import { APIGatewayProxyEvent } from 'aws-lambda';
 import { SessionsService } from '../../../services/sessions-service';
 import { apiHandler } from '../../api-utils';
 
-export const handler = apiHandler<SessionsGetByIdResponse>(async (event) => {
-  const { id } = validateEvent(event);
+export const handler = apiHandler<SessionsGetByIdResponse>(
+  async ({ event }) => {
+    const { id } = validateEvent(event);
 
-  const session = await SessionsService.instance.get(id);
+    const session = await SessionsService.instance.get(id);
 
-  return Promise.resolve({
-    statusCode: 200,
-    body: {
-      success: true,
-      data: {
-        session: {
-          completedAt: session.completedAt,
-          id: session.SK,
-          workoutDescription: session.workoutDescription,
-          workoutName: session.workoutName,
+    return Promise.resolve({
+      statusCode: 200,
+      body: {
+        success: true,
+        data: {
+          session: {
+            completedAt: session.completedAt,
+            id: session.SK,
+            workoutDescription: session.workoutDescription,
+            workoutName: session.workoutName,
+          },
         },
       },
-    },
-  });
-});
+    });
+  }
+);
 
 function validateEvent(event: APIGatewayProxyEvent): {
   id: string;

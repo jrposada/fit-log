@@ -5,7 +5,7 @@ import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<WorkoutsDeleteResponse>(
-  async (event, authorizerContext) => {
+  async ({ authorizerContext, event }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { id } = validateEvent(event);

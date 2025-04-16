@@ -29,14 +29,17 @@ export abstract class RestfulService<T extends DbRecordType> {
     return workout;
   }
 
-  public async getAll(): Promise<{
+  public async getAll(sk?: string): Promise<{
     items: DbRecord<T>[];
     lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
   }> {
     const data = await this.db.query<DbRecord<T>>({
-      KeyConditionExpression: 'PK = :PK',
+      KeyConditionExpression: sk
+        ? 'PK = :PK AND begins_with(SK, :SK)'
+        : 'PK = :PK',
       ExpressionAttributeValues: {
         ':PK': this.entity,
+        ...(sk ? { ':SK': sk } : {}),
       },
     });
 

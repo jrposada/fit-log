@@ -24,7 +24,7 @@ export class WorkoutsService extends RestfulService<'workout'> {
     super(tableName, 'workout');
   }
 
-  public newId(userId: string): DbRecord<'workout'>['SK'] {
+  public newSk(userId: string): DbRecord<'workout'>['SK'] {
     return `${this.entity}#${userId}#${uuid()}` as DbRecord<'workout'>['SK'];
   }
 }

@@ -1,9 +1,30 @@
-import { Session, SessionsGetResponse } from '@shared/models/session';
+import {
+  Session,
+  SessionsGetParams,
+  sessionsGetParamsSchema,
+  SessionsGetResponse,
+} from '@shared/models/session';
 import { SessionsService } from '../../../services/sessions-service';
 import { apiHandler } from '../../api-utils';
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import { WorkoutsService } from '../../../services/workouts-service';
 
-export const handler = apiHandler<SessionsGetResponse>(async (_event) => {
-  const { items, lastEvaluatedKey } = await SessionsService.instance.getAll();
+export const handler = apiHandler<SessionsGetResponse>(async ({ event }) => {
+  const { params } = validateEvent(event);
+  console.log({ params });
+
+  const userId = params.workoutId
+    ? WorkoutsService.getUserId(params.workoutId)
+    : undefined;
+
+  const { items, lastEvaluatedKey } = await SessionsService.instance.getAll(
+    userId && params.workoutId
+      ? SessionsService.instance.calculateSkByWorkoutId(
+          userId,
+          params.workoutId
+        )
+      : undefined
+  );
 
   return Promise.resolve({
     statusCode: 200,
@@ -21,3 +42,17 @@ export const handler = apiHandler<SessionsGetResponse>(async (_event) => {
     },
   });
 });
+
+function validateEvent(event: APIGatewayProxyEvent): {
+  params: SessionsGetParams;
+} {
+  try {
+    const params = sessionsGetParamsSchema.parse(
+      event.queryStringParameters ?? {}
+    );
+    return { params };
+  } catch (error) {
+    console.error(error);
+    throw new Error('Invalid request');
+  }
+}

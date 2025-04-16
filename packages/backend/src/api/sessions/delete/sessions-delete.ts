@@ -5,7 +5,7 @@ import { SessionsService } from '../../../services/sessions-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<SessionsDeleteResponse>(
-  async (event, authorizerContext) => {
+  async ({ authorizerContext, event }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { id } = validateEvent(event);

@@ -10,7 +10,7 @@ import { SessionsService } from '../../../services/sessions-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<SessionsPutResponse>(
-  async (event, authorizerContext) => {
+  async ({ authorizerContext, event }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { sessionPutData } = validateEvent(event);
@@ -26,7 +26,7 @@ export const handler = apiHandler<SessionsPutResponse>(
         assert(sessionPutData.workoutId, {
           msg: 'Workout ID is required when creating new sessions.',
         }) ??
-        SessionsService.instance.newId(userId, sessionPutData.workoutId!),
+        SessionsService.instance.newSk(userId, sessionPutData.workoutId!),
       completedAt: sessionPutData.completedAt,
       lastUpdated: new Date().toISOString(),
       workoutDescription: sessionPutData.workoutDescription,

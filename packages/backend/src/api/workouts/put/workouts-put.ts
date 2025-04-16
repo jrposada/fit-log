@@ -10,7 +10,7 @@ import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<WorkoutsPutResponse>(
-  async (event, authorizerContext) => {
+  async ({ authorizerContext, event }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { workoutPutData } = validateEvent(event);
@@ -36,7 +36,7 @@ export const handler = apiHandler<WorkoutsPutResponse>(
       PK: 'workout',
       SK:
         (workoutPutData.id as DbRecord<'workout'>['SK']) ??
-        WorkoutsService.instance.newId(userId),
+        WorkoutsService.instance.newSk(userId),
     };
     void (await WorkoutsService.instance.put(record));
 

@@ -16,10 +16,13 @@ export function apiError<TError = unknown>(
   });
 }
 
-type ApiHandlerParams<TData> = (
-  event: APIGatewayProxyEvent,
-  authorizerContext?: AuthorizerContext
-) => Promise<{
+type ApiHandlerParams<TData> = ({
+  authorizerContext,
+  event,
+}: {
+  authorizerContext?: AuthorizerContext;
+  event: APIGatewayProxyEvent;
+}) => Promise<{
   body: ApiResponse<TData>;
   headers?: ApiResponseParams['headers'];
   multiValueHeaders?: ApiResponseParams['multiValueHeaders'];
@@ -39,10 +42,10 @@ export function apiHandler<TData>(
         };
       }
 
-      const { body, statusCode, headers, multiValueHeaders } = await handler(
+      const { body, statusCode, headers, multiValueHeaders } = await handler({
         event,
-        authorizerContext
-      );
+        authorizerContext,
+      });
       return apiResponse({
         body: JSON.stringify(body),
         headers,
@@ -72,7 +75,7 @@ export function apiResponse({
     body: body ?? '',
     headers: {
       ...headers,
-      'Content-Type': 'aplication/json',
+      'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': `https://${process.env.ALLOWED_ORIGIN!}`,
       'Access-Control-Allow-Credentials': true,
     },

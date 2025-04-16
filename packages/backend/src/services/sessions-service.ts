@@ -24,7 +24,11 @@ export class SessionsService extends RestfulService<'session'> {
     super(tableName, 'session');
   }
 
-  public newId(userId: string, workoutId: string): DbRecord<'session'>['SK'] {
+  public calculateSkByWorkoutId(userId: string, workoutId: string): string {
+    return `${this.entity}#${userId}#${workoutId}#`;
+  }
+
+  public newSk(userId: string, workoutId: string): DbRecord<'session'>['SK'] {
     return `${this.entity}#${userId}#${workoutId}#${uuid()}` as DbRecord<'session'>['SK'];
   }
 }

@@ -40,6 +40,13 @@ export type SessionsGetResponse = {
   lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
 
+export type SessionsGetParams = {
+  workoutId?: string;
+};
+export const sessionsGetParamsSchema = z.object({
+  workoutId: z.string().nonempty().optional(),
+});
+
 /////////
 // PUT //
 /////////
