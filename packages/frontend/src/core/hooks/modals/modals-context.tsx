@@ -6,6 +6,7 @@ export type Modals = {
 };
 
 export type ModalInstance = {
+  onClose?: (result: boolean) => void;
   node: ReactNode;
   id: string;
 };

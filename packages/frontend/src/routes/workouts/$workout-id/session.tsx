@@ -8,7 +8,7 @@ import {
 } from '@mui/icons-material';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import { assert } from '@shared/utils/assert';
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useModals } from '../../../core/hooks/modals/use-modals';
 import { useWorkoutsById } from '../../../core/hooks/workouts/use-workouts-by-id';
@@ -24,6 +24,7 @@ const WorkoutSession: FunctionComponent = () => {
   const { 'workout-id': workoutId } = Route.useParams();
   const { data: workout } = useWorkoutsById(workoutId);
   const { push } = useModals();
+  const navigate = useNavigate();
 
   const [{ done, exerciseIndex, rep, set }, setState] = useState<State>({
     done: false,
@@ -141,8 +142,18 @@ const WorkoutSession: FunctionComponent = () => {
 
     assert(workout, { msg: 'Expected workout to be defined.' });
 
-    push({ node: <SessionFormDialog workout={workout} /> });
-  }, [done]);
+    push({
+      node: <SessionFormDialog workout={workout} />,
+      onClose: () => {
+        navigate({
+          to: '/workouts/$workout-id',
+          params: {
+            'workout-id': workoutId,
+          },
+        });
+      },
+    });
+  }, [done, navigate, push, workout, workoutId]);
 
   const currentExercise = workout?.exercises[exerciseIndex];
 

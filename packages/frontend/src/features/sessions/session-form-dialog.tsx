@@ -64,8 +64,7 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
     pop();
   };
 
-  const { onChange: _completedAtOnChange, ...completedAtRegister } =
-    register('completedAt');
+  const completedAtRegister = register('completedAt');
 
   const _completedAtValue = watch('completedAt');
   const completedAtValue = useMemo(
@@ -75,14 +74,17 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
 
   const completedAtOnChange = useCallback<
     NonNullable<DatePickerProps<PickerValidDate, false>['onChange']>
-  >((value) => {
-    // FIXME: review dates timezone and time picker hour.
-    setValue('completedAt', value?.toISOString() ?? '', {
-      shouldDirty: true,
-      shouldTouch: true,
-      shouldValidate: true,
-    });
-  }, []);
+  >(
+    (value) => {
+      // FIXME: review dates timezone and time picker hour.
+      setValue('completedAt', value?.toISOString() ?? '', {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    },
+    [setValue]
+  );
 
   return (
     <FormProvider {...methods}>
@@ -93,7 +95,7 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
         open={true}
       >
         <DialogTitle>
-          {Boolean(session) ? t('session.update') : t('session.create')}
+          {session ? t('session.update') : t('session.create')}
         </DialogTitle>
 
         <IconButton
@@ -123,7 +125,7 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
         <DialogActions>
           <Button onClick={close}>{t('actions.cancel')}</Button>
           <Button variant="contained" type="submit" sx={{ ml: 2 }}>
-            {Boolean(session) ? t('actions.update') : t('actions.add')}
+            {session ? t('actions.update') : t('actions.add')}
           </Button>
         </DialogActions>
       </Dialog>

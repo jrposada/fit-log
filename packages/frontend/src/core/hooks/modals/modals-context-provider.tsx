@@ -14,12 +14,16 @@ const ModalsProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const [modalInstances, setModalInstances] = useState<ModalInstance[]>([]);
 
   const pop = useCallback<Modals['pop']>(() => {
+    const { onClose } = modalInstances[modalInstances.length - 1];
+
+    onClose?.(false);
+
     setModalInstances((prev) => {
       const next = [...prev];
       void next.splice(-1);
       return next;
     });
-  }, []);
+  }, [modalInstances]);
 
   const push = useCallback<Modals['push']>((instance) => {
     setModalInstances((prev) => [...prev, { ...instance, id: uuid() }]);

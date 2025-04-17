@@ -95,7 +95,7 @@ const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
         open={true}
       >
         <DialogTitle>
-          {Boolean(data) ? t('workout.update') : t('workout.create')}
+          {data ? t('workout.update') : t('workout.create')}
         </DialogTitle>
 
         <IconButton
@@ -151,7 +151,7 @@ const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
         <DialogActions>
           <Button onClick={close}>{t('actions.cancel')}</Button>
           <Button variant="contained" type="submit" sx={{ ml: 2 }}>
-            {Boolean(data) ? t('actions.update') : t('actions.create')}
+            {data ? t('actions.update') : t('actions.create')}
           </Button>
         </DialogActions>
       </Dialog>
