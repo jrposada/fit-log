@@ -6,23 +6,21 @@ import {
   Typography,
 } from '@mui/material';
 import { Session } from '@shared/models/session';
-import { useNavigate } from '@tanstack/react-router';
 import { FunctionComponent } from 'react';
+import { useModals } from '../../core/hooks/modals/use-modals';
+import SessionFormDialog from './session-form-dialog';
 
-type WorkoutCardProps = {
+type SessionCardProps = {
   data: Session;
 };
 
-const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
-  const navigate = useNavigate();
+const SessionCard: FunctionComponent<SessionCardProps> = ({ data }) => {
+  const { push } = useModals();
 
   // FIXME: do we go to workout or session details?
   const goToDetails = () => {
-    navigate({
-      to: '/workouts/$workout-id',
-      params: {
-        'workout-id': data.id,
-      },
+    push({
+      node: <SessionFormDialog session={data} />,
     });
   };
 
@@ -41,5 +39,5 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
   );
 };
 
-export default WorkoutCard;
-export type { WorkoutCardProps };
+export default SessionCard;
+export type { SessionCardProps };

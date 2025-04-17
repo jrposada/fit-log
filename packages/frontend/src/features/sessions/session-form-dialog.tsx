@@ -25,16 +25,19 @@ import { FunctionComponent, useCallback, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useModals } from '../../core/hooks/modals/use-modals';
 import { useSessionsPut } from '../../core/hooks/sessions/use-sessions-put';
+import { assert } from '@shared/utils/assert';
 
 type SessionFormDialogProps = {
   session?: Session;
-  workout: Workout;
+  workout?: Workout;
 };
 
 const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
   session,
   workout,
 }) => {
+  assert(session || workout, { msg: 'Session or workout must be defined.' });
+
   const { mutate: sendSessionsPut } = useSessionsPut();
   const { pop } = useModals();
   const theme = useTheme();
@@ -43,19 +46,15 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
   const methods = useForm<SessionsPutRequest>({
     defaultValues: session ?? {
       completedAt: new Date().toISOString(),
-      workoutDescription: workout.description,
-      workoutId: workout.id,
-      workoutName: workout.name,
+      workoutDescription: workout?.description,
+      workoutId: workout?.id,
+      workoutName: workout?.name,
     },
     resolver: zodResolver(sessionsPutRequestSchema),
   });
   const { handleSubmit, register, watch, setValue } = methods;
   const submit = (data: SessionsPutRequest) => {
-    sendSessionsPut({
-      ...data,
-      workoutDescription: workout.description,
-      workoutName: workout.name,
-    });
+    sendSessionsPut(data);
 
     close();
   };
@@ -112,7 +111,9 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
         <DialogContent
           sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
         >
-          <DialogContentText>{workout.name}</DialogContentText>
+          <DialogContentText>
+            {session?.workoutName ?? workout?.name}
+          </DialogContentText>
 
           <DatePicker
             label={t('session.completed-at')}
