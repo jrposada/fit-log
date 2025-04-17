@@ -3,8 +3,19 @@ _This guide assumes you are using a Linux system like WSL or Ubuntu._
 ## Prerequisites
 
 1. NodeJS.
+
 2. _Recommended_ NVM.
+
 3. Docker.
+
+_For Mac_ You many need to manually add `docker` to `PATH` variable by adding the following to your profile file.
+
+```
+# Add Docker Desktop for Mac (docker)
+export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
+```
+
+4. [Configure AWS CLI](#configure-aws-cli)
 
 ## Getting started
 
@@ -14,7 +25,13 @@ _This guide assumes you are using a Linux system like WSL or Ubuntu._
 
 3.  Setup husky `npx husky`
 
-4. _(Once)_ Setup .env files
+4. Map localhost to local.server.com (This is needed for cookie base authorization to work in development mode):
+
+```
+127.0.0.1        local.server.com
+```
+
+5. _(Once)_ Setup .env files
 
 `packages/backend/.env.development`
 ```
@@ -33,8 +50,9 @@ VITE_PORT=3000
 VITE_API_BASE_URL=/api
 ```
 
-5.  Execute code locally `npm run dev`
-6. _(Once)_ Initialize local database
+6.  Execute code locally `npm run dev`
+
+7. _(Once)_ Initialize local database
 
 ```
 aws dynamodb create-table \
@@ -101,6 +119,8 @@ aws_session_token=...
 ### Configure AWS CLI
 
 1. [Install AWS CLI 2](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) Follow Linux instructions. _Don't forget to remove installer folder once you are done._
+
+2. Add `region=eu-west-3` to profile configuration or credentials file.
 
 ## Troubleshooting
 
