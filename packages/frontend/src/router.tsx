@@ -6,6 +6,7 @@ export const router = createRouter({
   context: {
     auth: null,
   },
+  defaultViewTransition: true,
 });
 
 // Register the router instance for type safety
