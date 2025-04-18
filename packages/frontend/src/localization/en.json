@@ -3,7 +3,8 @@
     "add": "Add",
     "cancel": "Cancel",
     "create": "Create",
-    "update": "Update"
+    "update": "Update",
+    "search-placeholder": "Search..."
   },
   "dashboard": {
     "create-workout": "New Workout",
