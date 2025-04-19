@@ -14,14 +14,18 @@ export class WorkoutsService extends RestfulService<'workout'> {
     return WorkoutsService.#instance;
   }
 
-  static getUserId(id: string): string {
-    const segments = id.split(`#`);
+  static getUserId(sk: string): string {
+    const segments = sk.split('#');
     assert(segments.length === 3);
     return segments[1];
   }
 
   private constructor(tableName: string) {
     super(tableName, 'workout');
+  }
+
+  public calculateSk(userId: string, uuid: string): string {
+    return `${this.entity}#${userId}#${uuid}` as DbRecord<'workout'>['SK'];
   }
 
   public newSk(userId: string): DbRecord<'workout'>['SK'] {

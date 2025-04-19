@@ -1,7 +1,12 @@
+import { FavoriteWorkoutDbRecord } from './favorite-workout-db-record';
 import { SessionDbRecord } from './session-db-record';
 import { WorkoutDbRecord } from './workout-db-record';
 
-export type DbRecordType = WorkoutDbRecord['PK'] | SessionDbRecord['PK'];
+export type DbRecordType =
+  | FavoriteWorkoutDbRecord['PK']
+  | SessionDbRecord['PK']
+  | WorkoutDbRecord['PK'];
+
 export type DbRecord<TRecordType extends DbRecordType> = {
   PK: TRecordType;
 
@@ -13,4 +18,4 @@ export type DbRecord<TRecordType extends DbRecordType> = {
    * @format date-time
    */
   lastUpdated: string;
-} & (WorkoutDbRecord | SessionDbRecord);
+} & (FavoriteWorkoutDbRecord | SessionDbRecord | WorkoutDbRecord);

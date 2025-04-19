@@ -15,13 +15,13 @@ export const handler = apiHandler<WorkoutsDeleteResponse>(
 
     void (await WorkoutsService.instance.delete(id));
 
-    return Promise.resolve({
+    return {
       statusCode: 200,
       body: {
         success: true,
         data: undefined,
       },
-    });
+    };
   }
 );
 

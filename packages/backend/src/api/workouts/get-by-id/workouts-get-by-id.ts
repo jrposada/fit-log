@@ -9,7 +9,7 @@ export const handler = apiHandler<WorkoutsGetByIdResponse>(
 
     const workout = await WorkoutsService.instance.get(id);
 
-    return Promise.resolve({
+    return {
       statusCode: 200,
       body: {
         success: true,
@@ -32,7 +32,7 @@ export const handler = apiHandler<WorkoutsGetByIdResponse>(
           },
         },
       },
-    });
+    };
   }
 );
 

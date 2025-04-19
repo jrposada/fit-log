@@ -40,7 +40,7 @@ export const handler = apiHandler<WorkoutsPutResponse>(
     };
     void (await WorkoutsService.instance.put(record));
 
-    return Promise.resolve({
+    return {
       statusCode: 200,
       body: {
         success: true,
@@ -53,7 +53,7 @@ export const handler = apiHandler<WorkoutsPutResponse>(
           },
         },
       },
-    });
+    };
   }
 );
 

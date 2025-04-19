@@ -15,13 +15,13 @@ export const handler = apiHandler<SessionsDeleteResponse>(
 
     void (await SessionsService.instance.delete(id));
 
-    return Promise.resolve({
+    return {
       statusCode: 200,
       body: {
         success: true,
         data: undefined,
       },
-    });
+    };
   }
 );
 

@@ -32,7 +32,8 @@ export function query<TResponse>({
           },
         });
       }
-      return Promise.resolve({} as TResponse);
+      // FIXME: this causes undefined errors higher up.
+      return {} as TResponse;
     }
   };
 }

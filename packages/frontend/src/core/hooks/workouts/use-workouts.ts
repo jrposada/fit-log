@@ -1,12 +1,15 @@
 import { ApiResponse } from '@shared/models/api-response';
-import { WorkoutsGetResponse } from '@shared/models/workout';
+import { WorkoutsGetParams, WorkoutsGetResponse } from '@shared/models/workout';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import axios from 'axios';
 import { useAuth } from '../auth/use-auth';
 import { query } from '../query';
 
-export function useWorkouts() {
+type UseWorkoutsParams = Omit<WorkoutsGetParams, 'onlyFavorites'> & {
+  onlyFavorites?: boolean;
+};
+export function useWorkouts({ onlyFavorites }: UseWorkoutsParams = {}) {
   const location = useLocation();
   const navigate = useNavigate();
   const auth = useAuth();
@@ -16,7 +19,7 @@ export function useWorkouts() {
     queryFn: query({
       fn: async () => {
         const response = await axios.get<ApiResponse<WorkoutsGetResponse>>(
-          `${import.meta.env.VITE_API_BASE_URL}/workouts`,
+          `${import.meta.env.VITE_API_BASE_URL}/workouts?${onlyFavorites ? 'onlyFavorites' : ''}`,
           {
             headers: {
               Authorization: '',

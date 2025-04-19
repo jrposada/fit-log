@@ -9,7 +9,7 @@ export const handler = apiHandler<SessionsGetByIdResponse>(
 
     const session = await SessionsService.instance.get(id);
 
-    return Promise.resolve({
+    return {
       statusCode: 200,
       body: {
         success: true,
@@ -22,7 +22,7 @@ export const handler = apiHandler<SessionsGetByIdResponse>(
           },
         },
       },
-    });
+    };
   }
 );
 

@@ -12,6 +12,12 @@ export abstract class RestfulService<T extends DbRecordType> {
     this.db = new DynamoDBHelper(tableName);
   }
 
+  public async batchGet(ids: string[]): Promise<DbRecord<T>[]> {
+    return this.db.batchGet<DbRecord<T>>(
+      ids.map((id) => ({ PK: this.entity, SK: id }))
+    );
+  }
+
   public async delete(id: string): Promise<undefined> {
     return this.db.delete({ PK: this.entity, SK: id });
   }

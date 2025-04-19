@@ -34,7 +34,7 @@ export const handler = apiHandler<SessionsPutResponse>(
     };
     void (await SessionsService.instance.put(record));
 
-    return Promise.resolve({
+    return {
       statusCode: 200,
       body: {
         success: true,
@@ -47,7 +47,7 @@ export const handler = apiHandler<SessionsPutResponse>(
           },
         },
       },
-    });
+    };
   }
 );
 

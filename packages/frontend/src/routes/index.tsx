@@ -28,7 +28,7 @@ const PAPER_PROPS: PaperProps = {
 };
 
 const Index: FunctionComponent = () => {
-  const { data: workouts } = useWorkouts();
+  const { data: workouts } = useWorkouts({ onlyFavorites: true });
   const { data: sessions } = useSessions();
   const { push } = useModals();
 

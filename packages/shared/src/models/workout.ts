@@ -108,6 +108,13 @@ export type WorkoutsGetResponse = {
   lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
 
+export type WorkoutsGetParams = {
+  onlyFavorites?: string;
+};
+export const workoutsGetParamsSchema = z.object({
+  onlyFavorites: z.string().max(0).optional(),
+});
+
 /////////
 // PUT //
 /////////

@@ -14,8 +14,8 @@ export class SessionsService extends RestfulService<'session'> {
     return SessionsService.#instance;
   }
 
-  static getUserId(id: string): string {
-    const segments = id.split(`#`);
+  static getUserId(sk: string): string {
+    const segments = sk.split('#');
     assert(segments.length === 4);
     return segments[1];
   }
@@ -24,7 +24,7 @@ export class SessionsService extends RestfulService<'session'> {
     super(tableName, 'session');
   }
 
-  public calculateSkByWorkoutId(userId: string, workoutId: string): string {
+  public calculatePartialSk(userId: string, workoutId: string): string {
     return `${this.entity}#${userId}#${workoutId}#`;
   }
 

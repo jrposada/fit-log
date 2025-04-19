@@ -18,14 +18,11 @@ export const handler = apiHandler<SessionsGetResponse>(async ({ event }) => {
 
   const { items, lastEvaluatedKey } = await SessionsService.instance.getAll(
     userId && params.workoutId
-      ? SessionsService.instance.calculateSkByWorkoutId(
-          userId,
-          params.workoutId
-        )
+      ? SessionsService.instance.calculatePartialSk(userId, params.workoutId)
       : undefined
   );
 
-  return Promise.resolve({
+  return {
     statusCode: 200,
     body: {
       success: true,
@@ -39,7 +36,7 @@ export const handler = apiHandler<SessionsGetResponse>(async ({ event }) => {
         })),
       },
     },
-  });
+  };
 });
 
 function validateEvent(event: APIGatewayProxyEvent): {

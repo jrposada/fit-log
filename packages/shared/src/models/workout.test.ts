@@ -7,6 +7,8 @@ import {
   exerciseSchema,
   Workout,
   workoutSchema,
+  WorkoutsGetParams,
+  workoutsGetParamsSchema,
   WorkoutsPutRequest,
   workoutsPutRequestSchema,
 } from './workout';
@@ -17,6 +19,10 @@ export type ExerciseTest = Expect<
 
 export type WorkoutTest = Expect<
   IsTrue<IsEqual<Workout, z.infer<typeof workoutSchema>>>
+>;
+
+export type WorkoutsGetParamsTest = Expect<
+  IsTrue<IsEqual<WorkoutsGetParams, z.infer<typeof workoutsGetParamsSchema>>>
 >;
 
 export type WorkoutsPutRequestTest = Expect<
