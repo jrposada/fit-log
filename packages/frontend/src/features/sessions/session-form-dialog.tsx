@@ -116,7 +116,7 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
           </DialogContentText>
 
           <DatePicker
-            label={t('session.completed-at')}
+            label={t('session.completed_at')}
             {...completedAtRegister}
             value={completedAtValue}
             onChange={completedAtOnChange}

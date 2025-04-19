@@ -65,7 +65,7 @@ const WorkoutDetails: FunctionComponent = () => {
         {/* Workout sessions */}
         <Grid {...GRID_PROPS}>
           <Paper {...PAPER_PROPS}>
-            <Typography variant="h4">{t('workout.session-history')}</Typography>
+            <Typography variant="h4">{t('workout.session_history')}</Typography>
 
             {sessions.map((workout) => (
               <SessionCard key={workout.id} data={workout}></SessionCard>

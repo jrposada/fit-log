@@ -4,22 +4,28 @@
     "cancel": "Cancel",
     "create": "Create",
     "update": "Update",
-    "search-placeholder": "Search..."
+    "search_placeholder": "Search..."
+  },
+  "app_bar": {
+    "history": "History",
+    "home": "Home",
+    "settings": "Settings",
+    "workouts": "Workouts"
   },
   "dashboard": {
-    "create-workout": "New Workout",
-    "favorite-workouts": "Favorite Workouts",
-    "last-sessions": "Last Sessions",
+    "create_workout": "New Workout",
+    "favorite_workouts": "Favorite Workouts",
+    "last_sessions": "Last Sessions",
     "title": "FIT Log"
   },
   "exercise": {
     "description": "Exercise Description",
-    "intensity-unit": "Intensity Unit",
+    "intensity_unit": "Intensity Unit",
     "intensity": "Intensity",
     "name": "Exercise Name",
     "reps": "Reps",
-    "rest-between-reps": "Rest Between Reps",
-    "rest-between-sets": "Rest Between Sets",
+    "rest_between_reps": "Rest Between Reps",
+    "rest_between_sets": "Rest Between Sets",
     "sets": "Sets"
   },
   "login": {
@@ -29,12 +35,12 @@
     "username": "Username"
   },
   "session": {
-    "completed-at": "Workout Date",
+    "completed_at": "Workout Date",
     "create": "New Session",
     "update": "Update Session"
   },
   "units": {
-    "body-weight": "Body Weight",
+    "body_weight": "Body Weight",
     "kg": "kg",
     "percentage": "%",
     "seconds": "seconds",
@@ -42,12 +48,12 @@
     "weight": "Weight"
   },
   "workout": {
-    "add-exercise": "Add Exercise",
+    "add_exercise": "Add Exercise",
     "create": "New Workout",
     "description": "Workout Description",
     "exercises": "Exercises",
     "name": "Workout Name",
-    "session-history": "Sessions",
+    "session_history": "Sessions",
     "update": "Update Workout"
   }
 }

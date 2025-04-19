@@ -81,7 +81,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
         />
 
         <TextField
-          label={t('exercise.rest-between-sets')}
+          label={t('exercise.rest_between_sets')}
           type="number"
           {...register(`exercises.${index}.restBetweenSets` as const, {
             valueAsNumber: true,
@@ -112,7 +112,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
         />
 
         <TextField
-          label={t('exercise.rest-between-reps')}
+          label={t('exercise.rest_between_reps')}
           type="number"
           {...register(`exercises.${index}.restBetweenReps` as const, {
             valueAsNumber: true,
@@ -133,7 +133,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
 
         <TextField
           select
-          label={t('exercise.intensity-unit')}
+          label={t('exercise.intensity_unit')}
           {...register(`exercises.${index}.intensityUnit` as const)}
           {...textFieldProps}
           error={!!errors.exercises?.[index]?.intensityUnit}
@@ -142,7 +142,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
         >
           <MenuItem value="time">{t('units.time')}</MenuItem>
           <MenuItem value="weight">{t('units.weight')}</MenuItem>
-          <MenuItem value="body-weight">{t('units.body-weight')}</MenuItem>
+          <MenuItem value="body-weight">{t('units.body_weight')}</MenuItem>
         </TextField>
 
         <TextField

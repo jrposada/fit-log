@@ -143,7 +143,7 @@ const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
 
           <Box sx={{ mt: 2 }}>
             <Button variant="outlined" onClick={addExercise}>
-              {t('workout.add-exercise')}
+              {t('workout.add_exercise')}
             </Button>
           </Box>
         </DialogContent>

@@ -48,7 +48,7 @@ const Index: FunctionComponent = () => {
       >
         <Typography variant="h4">{t('dashboard.title')}</Typography>
         <Button variant="contained" startIcon={<Add />} onClick={createWorkout}>
-          {t('dashboard.create-workout')}
+          {t('dashboard.create_workout')}
         </Button>
       </Box>
 
@@ -57,7 +57,7 @@ const Index: FunctionComponent = () => {
         <Grid {...GRID_PROPS}>
           <Paper {...PAPER_PROPS}>
             <Typography variant="h6">
-              {t('dashboard.favorite-workouts')}
+              {t('dashboard.favorite_workouts')}
             </Typography>
 
             {workouts.map((workout) => (
@@ -69,7 +69,7 @@ const Index: FunctionComponent = () => {
         {/* Last sessions */}
         <Grid {...GRID_PROPS}>
           <Paper {...PAPER_PROPS}>
-            <Typography variant="h6">{t('dashboard.last-sessions')}</Typography>
+            <Typography variant="h6">{t('dashboard.last_sessions')}</Typography>
 
             {sessions.map((workout) => (
               <SessionCard key={workout.id} data={workout}></SessionCard>

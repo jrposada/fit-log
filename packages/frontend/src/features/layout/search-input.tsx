@@ -11,7 +11,7 @@ const SearchInput: FunctionComponent = () => {
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
-      <InputBase placeholder={t('actions.search-placeholder')} />
+      <InputBase placeholder={t('actions.search_placeholder')} />
     </Search>
   );
 };
