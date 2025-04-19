@@ -11,7 +11,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   component: () => (
     <>
       <AppBar />
-      <Box sx={{ paddingY: 1 }}>
+      <Box sx={{ paddingY: 2 }}>
         <Outlet />
       </Box>
     </>

@@ -1,4 +1,5 @@
 import {
+  Add,
   EventNote,
   FitnessCenter,
   Home,
@@ -7,6 +8,7 @@ import {
 } from '@mui/icons-material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import {
+  Button,
   Divider,
   Drawer,
   List,
@@ -14,6 +16,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
 } from '@mui/material';
 import MuiAppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
@@ -24,9 +27,12 @@ import { t } from 'i18next';
 import { FunctionComponent, useState } from 'react';
 import SearchInput from './search-input';
 import { useNavigate } from '@tanstack/react-router';
+import WorkoutFormDialog from '../workouts/workout-form-dialog';
+import { useModals } from '../../core/hooks/modals/use-modals';
 
 const AppBar: FunctionComponent = () => {
   const navigate = useNavigate();
+  const { push } = useModals();
 
   const [open, setOpen] = useState(false);
 
@@ -39,7 +45,7 @@ const AppBar: FunctionComponent = () => {
   };
 
   const goToWorkouts = () => {
-    console.log('TODO: go to workouts');
+    navigate({ to: '/workouts' });
   };
 
   const goToHistory = () => {
@@ -48,6 +54,12 @@ const AppBar: FunctionComponent = () => {
 
   const goToSettings = () => {
     console.log('TODO: go to settings');
+  };
+
+  const createWorkout = () => {
+    push({
+      node: <WorkoutFormDialog />,
+    });
   };
 
   return (
@@ -66,6 +78,8 @@ const AppBar: FunctionComponent = () => {
               <Menu />
             </IconButton>
 
+            <Typography variant="h6">{t('dashboard.title')}</Typography>
+
             {/* Search */}
             <SearchInput />
 
@@ -74,6 +88,15 @@ const AppBar: FunctionComponent = () => {
 
             {/* Actions */}
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              <Button
+                variant="text"
+                color="inherit"
+                startIcon={<Add />}
+                onClick={createWorkout}
+              >
+                {t('dashboard.create_workout')}
+              </Button>
+
               <IconButton
                 size="large"
                 aria-label="show 4 new mails"

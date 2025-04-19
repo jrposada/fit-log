@@ -1,7 +1,4 @@
-import { Add } from '@mui/icons-material';
 import {
-  Box,
-  Button,
   Container,
   Grid2 as Grid,
   Grid2Props as GridProps,
@@ -12,12 +9,10 @@ import {
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
-import { useModals } from '../core/hooks/modals/use-modals';
 import { useSessions } from '../core/hooks/sessions/use-sessions';
 import { useWorkouts } from '../core/hooks/workouts/use-workouts';
 import SessionCard from '../features/sessions/session-card';
 import WorkoutCard from '../features/workouts/workout-card';
-import WorkoutFormDialog from '../features/workouts/workout-form-dialog';
 
 const GRID_PROPS: GridProps = {
   size: { xs: 12, md: 6 },
@@ -30,28 +25,9 @@ const PAPER_PROPS: PaperProps = {
 const Index: FunctionComponent = () => {
   const { data: workouts } = useWorkouts({ onlyFavorites: true });
   const { data: sessions } = useSessions();
-  const { push } = useModals();
-
-  const createWorkout = () => {
-    push({
-      node: <WorkoutFormDialog />,
-    });
-  };
 
   return (
     <Container>
-      <Box
-        alignItems="center"
-        display="flex"
-        justifyContent="space-between"
-        my={2}
-      >
-        <Typography variant="h4">{t('dashboard.title')}</Typography>
-        <Button variant="contained" startIcon={<Add />} onClick={createWorkout}>
-          {t('dashboard.create_workout')}
-        </Button>
-      </Box>
-
       <Grid container spacing={2}>
         {/* Favorite workouts */}
         <Grid {...GRID_PROPS}>
