@@ -3,8 +3,9 @@
     "add": "Add",
     "cancel": "Cancel",
     "create": "Create",
-    "update": "Update",
-    "search_placeholder": "Search..."
+    "search_placeholder": "Search...",
+    "start": "Start",
+    "update": "Update"
   },
   "app_bar": {
     "history": "History",
@@ -54,6 +55,7 @@
     "exercises": "Exercises",
     "name": "Workout Name",
     "empty_favorites_warning": "No favorites yet",
+    "empty_sessions_warning": "No sessions yet",
     "create_suggestion": "Go to All Workouts and get started!",
     "session_history": "Sessions",
     "update": "Update Workout"

@@ -1,11 +1,12 @@
+import { FitnessCenter } from '@mui/icons-material';
 import {
-  Box,
   Button,
   Container,
   Grid2 as Grid,
   Grid2Props as GridProps,
   Paper,
   PaperProps,
+  Stack,
   Typography,
 } from '@mui/material';
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
@@ -46,15 +47,19 @@ const Index: FunctionComponent = () => {
             </Typography>
 
             {!workouts.length && (
-              <Box textAlign="center" m={1}>
-                <Typography variant="h4">
+              <Stack m={1} spacing={2} alignItems="center">
+                <FitnessCenter
+                  htmlColor="textSecondary"
+                  sx={{ fontSize: '6rem', color: 'text.secondary' }}
+                />
+                <Typography variant="h4" color="textSecondary">
                   {t('workout.empty_favorites_warning')}
                 </Typography>
-                <Typography variant="body1">
+                <Typography variant="body1" color="textSecondary">
                   {t('workout.create_suggestion')}
                 </Typography>
                 <Button onClick={goToWorkouts}>{t('actions.create')}</Button>
-              </Box>
+              </Stack>
             )}
 
             {workouts.map((workout) => (
@@ -67,6 +72,22 @@ const Index: FunctionComponent = () => {
         <Grid {...GRID_PROPS}>
           <Paper {...PAPER_PROPS}>
             <Typography variant="h6">{t('dashboard.last_sessions')}</Typography>
+
+            {!sessions.length && (
+              <Stack m={1} spacing={2} alignItems="center">
+                <FitnessCenter
+                  htmlColor="textSecondary"
+                  sx={{ fontSize: '6rem', color: 'text.secondary' }}
+                />
+                <Typography variant="h4" color="textSecondary">
+                  {t('workout.empty_sessions_warning')}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  {t('workout.create_suggestion')}
+                </Typography>
+                <Button onClick={goToWorkouts}>{t('actions.start')}</Button>
+              </Stack>
+            )}
 
             {sessions.map((session) => (
               <SessionCard key={session.id} session={session}></SessionCard>

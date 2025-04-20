@@ -1,6 +1,7 @@
 import {
   Card,
   CardActionArea,
+  CardActions,
   CardContent,
   CardHeader,
   Typography,
@@ -8,6 +9,7 @@ import {
 import { Session } from '@shared/models/session';
 import { FunctionComponent } from 'react';
 import { useModals } from '../../core/hooks/modals/use-modals';
+import SessionActions from './session-actions';
 import SessionFormDialog from './session-form-dialog';
 
 type SessionCardProps = {
@@ -38,6 +40,10 @@ const SessionCard: FunctionComponent<SessionCardProps> = ({ session }) => {
           </Typography>
         </CardContent>
       </CardActionArea>
+
+      <CardActions>
+        <SessionActions session={session} />
+      </CardActions>
     </Card>
   );
 };
