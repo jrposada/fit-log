@@ -37,7 +37,7 @@ const Index: FunctionComponent = () => {
             </Typography>
 
             {workouts.map((workout) => (
-              <WorkoutCard key={workout.id} data={workout}></WorkoutCard>
+              <WorkoutCard key={workout.id} workout={workout}></WorkoutCard>
             ))}
           </Paper>
         </Grid>
@@ -47,8 +47,8 @@ const Index: FunctionComponent = () => {
           <Paper {...PAPER_PROPS}>
             <Typography variant="h6">{t('dashboard.last_sessions')}</Typography>
 
-            {sessions.map((workout) => (
-              <SessionCard key={workout.id} data={workout}></SessionCard>
+            {sessions.map((session) => (
+              <SessionCard key={session.id} session={session}></SessionCard>
             ))}
           </Paper>
         </Grid>

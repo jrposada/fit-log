@@ -19,43 +19,78 @@ export const handler = apiHandler<WorkoutsGetResponse>(
     assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { params } = validateEvent(event);
+    const { userId } = authorizerContext;
 
     if (params.onlyFavorites) {
-      const { userId } = authorizerContext;
-
       const { items: favorites, lastEvaluatedKey } =
         await FavoriteWorkoutsService.instance.getAll(
           FavoriteWorkoutsService.instance.calculatePartialSk(userId)
         );
 
-      const items = await WorkoutsService.instance.batchGet(
-        favorites.map((item) =>
+      const workouts = await WorkoutsService.instance.batchGet(
+        favorites.map((favorite) =>
           WorkoutsService.instance.calculateSk(
             userId,
-            FavoriteWorkoutsService.getWorkoutUuid(item.SK)
+            FavoriteWorkoutsService.getWorkoutUuid(favorite.SK)
           )
         )
       );
 
       return {
         statusCode: 200,
-        body: calculateApiResponse(items, lastEvaluatedKey),
+        body: calculateApiResponse({
+          favoritesByWorkoutUuid: favorites.reduce<Record<string, true>>(
+            (reduced, favorite) => {
+              reduced[FavoriteWorkoutsService.getWorkoutUuid(favorite.SK)] =
+                true;
+              return reduced;
+            },
+            {}
+          ),
+          lastEvaluatedKey,
+          workouts,
+        }),
       };
     }
 
-    const { items, lastEvaluatedKey } = await WorkoutsService.instance.getAll();
+    const { items: workouts, lastEvaluatedKey } =
+      await WorkoutsService.instance.getAll();
+    const favorites = await FavoriteWorkoutsService.instance.batchGet(
+      workouts.map((workout) =>
+        FavoriteWorkoutsService.instance.calculateSk(
+          userId,
+          WorkoutsService.getWorkoutUuid(workout.SK)
+        )
+      )
+    );
 
     return {
       statusCode: 200,
-      body: calculateApiResponse(items, lastEvaluatedKey),
+      body: calculateApiResponse({
+        favoritesByWorkoutUuid: favorites.reduce<Record<string, true>>(
+          (reduced, favorite) => {
+            reduced[FavoriteWorkoutsService.getWorkoutUuid(favorite.SK)] = true;
+            return reduced;
+          },
+          {}
+        ),
+        lastEvaluatedKey,
+        workouts,
+      }),
     };
   }
 );
 
-function calculateApiResponse(
-  workouts: DbRecord<'workout'>[],
-  lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey']
-): ApiResponse<WorkoutsGetResponse> {
+type CalculateApiResponseParams = {
+  favoritesByWorkoutUuid: Record<string, true>;
+  lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
+  workouts: DbRecord<'workout'>[];
+};
+function calculateApiResponse({
+  favoritesByWorkoutUuid,
+  lastEvaluatedKey,
+  workouts,
+}: CalculateApiResponseParams): ApiResponse<WorkoutsGetResponse> {
   return {
     success: true,
     data: {
@@ -74,6 +109,8 @@ function calculateApiResponse(
           sort: exercise.sort,
         })),
         id: item.SK,
+        isFavorite:
+          favoritesByWorkoutUuid[WorkoutsService.getWorkoutUuid(item.SK)],
         name: item.name,
       })),
     },

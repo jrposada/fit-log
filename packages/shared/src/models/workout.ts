@@ -92,12 +92,16 @@ export type Workout = {
    * List of exercise.
    */
   exercises: Exercise[];
+
+  /** Whether workouts has been added to favorites by current user. */
+  isFavorite: boolean;
 };
 export const workoutSchema = z.object({
   id: z.string().nonempty(),
   name: z.string().nonempty(),
   description: z.string().nonempty(),
   exercises: z.array(exerciseSchema),
+  isFavorite: z.boolean(),
 });
 
 /////////
@@ -118,7 +122,7 @@ export const workoutsGetParamsSchema = z.object({
 /////////
 // PUT //
 /////////
-export type WorkoutsPutRequest = Omit<Workout, 'id'> & {
+export type WorkoutsPutRequest = Omit<Workout, 'id' | 'isFavorite'> & {
   /**
    * ID `workout#<user-id>#<workout-id>`.
    */

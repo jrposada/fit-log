@@ -12,17 +12,17 @@ import { FunctionComponent } from 'react';
 import WorkoutActions from './workout-actions';
 
 type WorkoutCardProps = {
-  data: Workout;
+  workout: Workout;
 };
 
-const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
+const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ workout }) => {
   const navigate = useNavigate();
 
   const goToDetails = () => {
     navigate({
       to: '/workouts/$workout-id',
       params: {
-        'workout-id': data.id,
+        'workout-id': workout.id,
       },
     });
   };
@@ -30,16 +30,16 @@ const WorkoutCard: FunctionComponent<WorkoutCardProps> = ({ data }) => {
   return (
     <Card>
       <CardActionArea onClick={goToDetails}>
-        <CardHeader title={data.name} />
+        <CardHeader title={workout.name} />
 
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            {data.description}
+            {workout.description}
           </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <WorkoutActions data={data} />
+        <WorkoutActions workout={workout} />
       </CardActions>
     </Card>
   );

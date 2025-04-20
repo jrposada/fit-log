@@ -41,7 +41,7 @@ const WorkoutDetails: FunctionComponent = () => {
       >
         <Typography variant="h4">{workout?.name}</Typography>
 
-        <Box>{!!workout && <WorkoutActions data={workout} />}</Box>
+        <Box>{!!workout && <WorkoutActions workout={workout} />}</Box>
       </Box>
       <Typography variant="body1">{workout?.description}</Typography>
 
@@ -68,7 +68,7 @@ const WorkoutDetails: FunctionComponent = () => {
             <Typography variant="h4">{t('workout.session_history')}</Typography>
 
             {sessions.map((workout) => (
-              <SessionCard key={workout.id} data={workout}></SessionCard>
+              <SessionCard key={workout.id} session={workout}></SessionCard>
             ))}
           </Paper>
         </Grid>

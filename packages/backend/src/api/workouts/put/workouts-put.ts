@@ -50,6 +50,7 @@ export const handler = apiHandler<WorkoutsPutResponse>(
             exercises: record.exercises,
             id: record.SK,
             name: record.name,
+            isFavorite: false,
           },
         },
       },

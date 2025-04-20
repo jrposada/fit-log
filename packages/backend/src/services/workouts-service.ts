@@ -20,6 +20,12 @@ export class WorkoutsService extends RestfulService<'workout'> {
     return segments[1];
   }
 
+  static getWorkoutUuid(sk: string): string {
+    const segments = sk.split('#');
+    assert(segments.length === 3);
+    return segments[2];
+  }
+
   private constructor(tableName: string) {
     super(tableName, 'workout');
   }

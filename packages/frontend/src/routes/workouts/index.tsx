@@ -11,7 +11,7 @@ const Index: FunctionComponent = () => {
     <Container>
       <Stack spacing={2}>
         {workouts.map((workout) => (
-          <WorkoutCard key={workout.id} data={workout}></WorkoutCard>
+          <WorkoutCard key={workout.id} workout={workout}></WorkoutCard>
         ))}
       </Stack>
     </Container>

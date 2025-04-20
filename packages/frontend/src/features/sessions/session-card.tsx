@@ -11,27 +11,30 @@ import { useModals } from '../../core/hooks/modals/use-modals';
 import SessionFormDialog from './session-form-dialog';
 
 type SessionCardProps = {
-  data: Session;
+  session: Session;
 };
 
-const SessionCard: FunctionComponent<SessionCardProps> = ({ data }) => {
+const SessionCard: FunctionComponent<SessionCardProps> = ({ session }) => {
   const { push } = useModals();
 
   // FIXME: do we go to workout or session details?
   const goToDetails = () => {
     push({
-      node: <SessionFormDialog session={data} />,
+      node: <SessionFormDialog session={session} />,
     });
   };
 
   return (
     <Card>
       <CardActionArea onClick={goToDetails}>
-        <CardHeader title={data.workoutName} subheader={data.completedAt} />
+        <CardHeader
+          title={session.workoutName}
+          subheader={session.completedAt}
+        />
 
         <CardContent>
           <Typography variant="body2" color="text.secondary">
-            {data.workoutDescription}
+            {session.workoutDescription}
           </Typography>
         </CardContent>
       </CardActionArea>

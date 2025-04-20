@@ -44,10 +44,10 @@ const textFieldProps: TextFieldProps = {
 };
 
 type WorkoutFormDialogProps = {
-  data?: Workout;
+  workout?: Workout;
 };
 const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
-  data,
+  workout,
 }) => {
   const { mutate: sendWorkoutsPut } = useWorkoutsPut();
   const { pop } = useModals();
@@ -55,7 +55,7 @@ const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const methods = useForm<WorkoutsPutRequest>({
-    defaultValues: data ?? {
+    defaultValues: workout ?? {
       description: '',
       exercises: [],
       name: '',
@@ -95,7 +95,7 @@ const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
         open={true}
       >
         <DialogTitle>
-          {data ? t('workout.update') : t('workout.create')}
+          {workout ? t('workout.update') : t('workout.create')}
         </DialogTitle>
 
         <IconButton
@@ -151,7 +151,7 @@ const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
         <DialogActions>
           <Button onClick={close}>{t('actions.cancel')}</Button>
           <Button variant="contained" type="submit" sx={{ ml: 2 }}>
-            {data ? t('actions.update') : t('actions.create')}
+            {workout ? t('actions.update') : t('actions.create')}
           </Button>
         </DialogActions>
       </Dialog>

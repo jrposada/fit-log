@@ -1,5 +1,4 @@
 import { assert } from '@shared/utils/assert';
-import { v4 as uuid } from 'uuid';
 import { DbRecord } from './aws/db-record';
 import { RestfulService } from './restful-service';
 
@@ -36,7 +35,10 @@ export class FavoriteWorkoutsService extends RestfulService<'favorite-workout'> 
     return `${this.entity}#${userId}#`;
   }
 
-  public newSk(userId: string): DbRecord<'favorite-workout'>['SK'] {
-    return `${this.entity}#${userId}#${uuid()}` as DbRecord<'favorite-workout'>['SK'];
+  public calculateSk(
+    userId: string,
+    workoutUuid: string
+  ): DbRecord<'favorite-workout'>['SK'] {
+    return `${this.entity}#${userId}#${workoutUuid}` as DbRecord<'favorite-workout'>['SK'];
   }
 }

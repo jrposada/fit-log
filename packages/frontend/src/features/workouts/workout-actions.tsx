@@ -6,36 +6,45 @@ import { FunctionComponent } from 'react';
 import { useModals } from '../../core/hooks/modals/use-modals';
 import { useWorkoutsDelete } from '../../core/hooks/workouts/use-workouts-delete';
 import WorkoutFormDialog from './workout-form-dialog';
+import { useFavoriteWorkoutsPut } from '../../core/hooks/favorite-workouts/use-favorite-workouts-put';
+import { useFavoriteWorkoutsDelete } from '../../core/hooks/favorite-workouts/use-favorite-workouts-delete';
 
 type WorkoutActionsProps = {
-  data: Workout;
+  workout: Workout;
 };
 
-const WorkoutActions: FunctionComponent<WorkoutActionsProps> = ({ data }) => {
+const WorkoutActions: FunctionComponent<WorkoutActionsProps> = ({
+  workout,
+}) => {
+  const { mutate: sendFavoriteWorkoutsDelete } = useFavoriteWorkoutsDelete();
+  const { mutate: sendFavoriteWorkoutsPut } = useFavoriteWorkoutsPut();
   const { mutate: sendWorkoutsDelete } = useWorkoutsDelete();
-  const navigate = useNavigate();
   const { push } = useModals();
+  const navigate = useNavigate();
 
   const startSession = () => {
     navigate({
       to: '/workouts/$workout-id/session',
       params: {
-        'workout-id': data.id,
+        'workout-id': workout.id,
       },
     });
   };
 
   const editWorkout = () => {
-    push({ node: <WorkoutFormDialog data={data} /> });
+    push({ node: <WorkoutFormDialog workout={workout} /> });
   };
 
   const deleteWorkout = () => {
-    sendWorkoutsDelete(data.id);
+    sendWorkoutsDelete(workout.id);
   };
 
   const toggleFavorite = () => {
-    // TODO: favorites
-    console.log('TODO: Toggle favorite', data);
+    if (workout.isFavorite) {
+      sendFavoriteWorkoutsDelete(workout.id);
+    } else {
+      sendFavoriteWorkoutsPut({ workoutId: workout.id });
+    }
   };
 
   return (
@@ -46,7 +55,7 @@ const WorkoutActions: FunctionComponent<WorkoutActionsProps> = ({ data }) => {
 
       <IconButton
         onClick={toggleFavorite}
-        // color={data.isFavorite ? 'primary' : 'default'}
+        color={workout.isFavorite ? 'primary' : 'default'}
       >
         <Favorite />
       </IconButton>
