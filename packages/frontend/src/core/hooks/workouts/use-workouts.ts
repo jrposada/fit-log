@@ -17,6 +17,7 @@ export function useWorkouts({ onlyFavorites }: UseWorkoutsParams = {}) {
   return useQuery({
     queryKey: ['workouts'],
     queryFn: query({
+      defaultResponse: [],
       fn: async () => {
         const response = await axios.get<ApiResponse<WorkoutsGetResponse>>(
           `${import.meta.env.VITE_API_BASE_URL}/workouts?${onlyFavorites ? 'onlyFavorites' : ''}`,

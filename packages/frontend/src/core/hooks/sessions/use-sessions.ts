@@ -18,6 +18,7 @@ export function useSessions(params: UseSessionsParams = {}) {
   return useQuery({
     queryKey: ['sessions', params],
     queryFn: query({
+      defaultResponse: [],
       fn: async () => {
         const response = await axios.get<ApiResponse<SessionsGetResponse>>(
           `${import.meta.env.VITE_API_BASE_URL}/sessions`,

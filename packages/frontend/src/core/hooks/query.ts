@@ -3,18 +3,20 @@ import { AxiosError } from 'axios';
 import { Auth } from './auth/auth-context';
 
 export type QueryParams<TResponse> = {
+  auth: Auth;
+  defaultResponse?: TResponse;
   fn: () => Promise<TResponse>;
   location: ParsedLocation<{
     redirect?: string | undefined;
   }>;
   navigate: UseNavigateResult<string>;
-  auth: Auth;
 };
 export function query<TResponse>({
+  auth,
+  defaultResponse,
   fn,
   location,
   navigate,
-  auth,
 }: QueryParams<TResponse>): () => Promise<TResponse> {
   return async () => {
     try {
@@ -32,8 +34,8 @@ export function query<TResponse>({
           },
         });
       }
-      // FIXME: this causes undefined errors higher up.
-      return {} as TResponse;
+
+      return defaultResponse ?? ({} as TResponse);
     }
   };
 }

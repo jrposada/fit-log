@@ -1,4 +1,6 @@
 import {
+  Box,
+  Button,
   Container,
   Grid2 as Grid,
   Grid2Props as GridProps,
@@ -6,7 +8,7 @@ import {
   PaperProps,
   Typography,
 } from '@mui/material';
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
 import { useSessions } from '../core/hooks/sessions/use-sessions';
@@ -25,6 +27,13 @@ const PAPER_PROPS: PaperProps = {
 const Index: FunctionComponent = () => {
   const { data: workouts } = useWorkouts({ onlyFavorites: true });
   const { data: sessions } = useSessions();
+  const navigate = useNavigate();
+
+  const goToWorkouts = () => {
+    navigate({
+      to: '/workouts',
+    });
+  };
 
   return (
     <Container>
@@ -35,6 +44,18 @@ const Index: FunctionComponent = () => {
             <Typography variant="h6">
               {t('dashboard.favorite_workouts')}
             </Typography>
+
+            {!workouts.length && (
+              <Box textAlign="center" m={1}>
+                <Typography variant="h4">
+                  {t('workout.empty_favorites_warning')}
+                </Typography>
+                <Typography variant="body1">
+                  {t('workout.create_suggestion')}
+                </Typography>
+                <Button onClick={goToWorkouts}>{t('actions.create')}</Button>
+              </Box>
+            )}
 
             {workouts.map((workout) => (
               <WorkoutCard key={workout.id} workout={workout}></WorkoutCard>

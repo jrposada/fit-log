@@ -53,6 +53,8 @@
     "description": "Workout Description",
     "exercises": "Exercises",
     "name": "Workout Name",
+    "empty_favorites_warning": "No favorites yet",
+    "create_suggestion": "Go to All Workouts and get started!",
     "session_history": "Sessions",
     "update": "Update Workout"
   }
