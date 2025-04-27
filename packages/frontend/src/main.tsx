@@ -14,9 +14,9 @@ import App from './app';
 import AuthProvider from './core/hooks/auth/auth-context-provider';
 import ModalsProvider from './core/hooks/modals/modals-context-provider';
 import './i18n';
+import DefaultSnackbar from './ui/snackbar/default-snackbar';
 import ErrorSnackbar from './ui/snackbar/error-snackbar';
 import InfoSnackbar from './ui/snackbar/info-snackbar';
-import Snackbar from './ui/snackbar/snackbar';
 import SuccessSnackbar from './ui/snackbar/success-snackbar';
 import WarningSnackbar from './ui/snackbar/warning-snackbar';
 
@@ -34,7 +34,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <SnackbarProvider
               maxSnack={3}
               Components={{
-                default: Snackbar,
+                default: DefaultSnackbar,
                 error: ErrorSnackbar,
                 info: InfoSnackbar,
                 success: SuccessSnackbar,

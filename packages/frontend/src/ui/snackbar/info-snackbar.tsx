@@ -1,25 +1,11 @@
-import { Snackbar } from '@mui/material';
-import { CustomContentProps } from 'notistack';
-import { forwardRef } from 'react';
-import SnackbarContent from './styled/snackbar-content';
+import { FunctionComponent } from 'react';
+import Snackbar, { SnackbarProps } from './snackbar';
 
-type InfoSnackbarProps = Omit<CustomContentProps, 'children'>;
+type InfoSnackbarProps = Omit<SnackbarProps, 'children'>;
 
-const InfoSnackbar = forwardRef<HTMLDivElement, InfoSnackbarProps>(
-  ({ action, id, ...props }, ref) => {
-    return (
-      <SnackbarContent
-        {...props}
-        action={typeof action === 'function' ? action(id) : action}
-        id={`${id}`}
-        ref={ref}
-        variant="info"
-      >
-        <Snackbar />;
-      </SnackbarContent>
-    );
-  }
-);
+const InfoSnackbar: FunctionComponent<InfoSnackbarProps> = (props) => {
+  return <Snackbar {...props} variant="info" />;
+};
 
 export default InfoSnackbar;
 export type { InfoSnackbarProps };

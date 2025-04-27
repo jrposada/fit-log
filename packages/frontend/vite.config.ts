@@ -29,5 +29,8 @@ export default defineConfig(({ mode }) => {
       react(),
       tsconfigPaths(),
     ],
+    resolve: {
+      conditions: ['mui-modern', 'module', 'browser', 'development|production'],
+    },
   });
 });
