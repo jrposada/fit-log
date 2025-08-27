@@ -1,0 +1,31 @@
+{
+  "name": "@jrposada/fit-log-dev-tools",
+  "version": "0.0.0",
+  "author": {
+    "email": "jrposada.dev@gmail.com",
+    "name": "Javier Rodriguez Posada"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jrposada/fit-log.git"
+  },
+  "engines": {
+    "node": "^20",
+    "npm": "^10"
+  },
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "lint:eslint": "eslint .",
+    "lint:format": "prettier . --check",
+    "lint:types": "tsc --noEmit",
+    "lint": "run-p lint:*"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "@types/uuid": "^10.0.0"
+  }
+}
