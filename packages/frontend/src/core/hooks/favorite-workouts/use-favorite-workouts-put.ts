@@ -1,7 +1,7 @@
 import { FavoriteWorkoutsPutRequest } from '@shared/models/favorite-workout';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import useSnackbar from '../../../ui/snackbar/use-snackbar';
+import { useToasts } from '../../../ui/toasts/use-toasts';
 
 type UseFavoriteWorkoutsPutParams = {
   onError?: (message: string) => void;
@@ -14,7 +14,7 @@ export function useFavoriteWorkoutsPut({
   onError,
   onSuccess,
 }: UseFavoriteWorkoutsPutParams = {}) {
-  const { enqueueAutoHideSnackbar } = useSnackbar();
+  const { push } = useToasts();
   const client = useQueryClient();
 
   return useMutation<
@@ -35,7 +35,7 @@ export function useFavoriteWorkoutsPut({
       );
     },
     onError: (message) => {
-      enqueueAutoHideSnackbar({
+      push({
         message: 'Could not add workout to favorites.',
         variant: 'error',
       });

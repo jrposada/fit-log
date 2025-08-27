@@ -3,7 +3,7 @@ import { IconButton } from '@mui/material';
 import { Workout } from '@shared/models/workout';
 import { useNavigate } from '@tanstack/react-router';
 import { FunctionComponent } from 'react';
-import { useModals } from '../../core/hooks/modals/use-modals';
+import { useModals } from '../../ui/modals/use-modals';
 import { useWorkoutsDelete } from '../../core/hooks/workouts/use-workouts-delete';
 import WorkoutFormDialog from './workout-form-dialog';
 import { useFavoriteWorkoutsPut } from '../../core/hooks/favorite-workouts/use-favorite-workouts-put';

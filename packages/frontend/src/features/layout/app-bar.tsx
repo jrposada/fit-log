@@ -28,7 +28,7 @@ import { FunctionComponent, useState } from 'react';
 import SearchInput from './search-input';
 import { useNavigate } from '@tanstack/react-router';
 import WorkoutFormDialog from '../workouts/workout-form-dialog';
-import { useModals } from '../../core/hooks/modals/use-modals';
+import { useModals } from '../../ui/modals/use-modals';
 
 const AppBar: FunctionComponent = () => {
   const navigate = useNavigate();

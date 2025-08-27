@@ -22,7 +22,7 @@ import {
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import { useModals } from '../../core/hooks/modals/use-modals';
+import { useModals } from '../../ui/modals/use-modals';
 import { useWorkoutsPut } from '../../core/hooks/workouts/use-workouts-put';
 import WorkoutExerciseForm from './workout-exercise-form';
 

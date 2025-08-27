@@ -23,7 +23,7 @@ import { t } from 'i18next';
 import moment from 'moment';
 import { FunctionComponent, useCallback, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useModals } from '../../core/hooks/modals/use-modals';
+import { useModals } from '../../ui/modals/use-modals';
 import { useSessionsPut } from '../../core/hooks/sessions/use-sessions-put';
 import { assert } from '@shared/utils/assert';
 

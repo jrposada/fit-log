@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import useSnackbar from '../../../ui/snackbar/use-snackbar';
+import { useToasts } from '../../../ui/toasts/use-toasts';
 
 type UseWorkoutsDeleteParams = {
   onError?: (message: string) => void;
@@ -13,7 +13,7 @@ export function useWorkoutsDelete({
   onError,
   onSuccess,
 }: UseWorkoutsDeleteParams = {}) {
-  const { enqueueAutoHideSnackbar } = useSnackbar();
+  const { push } = useToasts();
   const client = useQueryClient();
 
   return useMutation<void, string, UseWorkoutsDeleteMutationParams, unknown>({
@@ -28,7 +28,7 @@ export function useWorkoutsDelete({
       );
     },
     onError: (message) => {
-      enqueueAutoHideSnackbar({
+      push({
         message: 'Could not delete workout.',
         variant: 'error',
       });

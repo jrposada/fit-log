@@ -1,7 +1,7 @@
 import { SessionsPutRequest } from '@shared/models/session';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import useSnackbar from '../../../ui/snackbar/use-snackbar';
+import { useToasts } from '../../../ui/toasts/use-toasts';
 
 type UseSessionsPutParams = {
   onError?: (message: string) => void;
@@ -14,7 +14,7 @@ export function useSessionsPut({
   onError,
   onSuccess,
 }: UseSessionsPutParams = {}) {
-  const { enqueueAutoHideSnackbar } = useSnackbar();
+  const { push } = useToasts();
   const client = useQueryClient();
 
   return useMutation<void, string, UseSessionsPutMutationParams, unknown>({
@@ -30,7 +30,7 @@ export function useSessionsPut({
       );
     },
     onError: (message) => {
-      enqueueAutoHideSnackbar({
+      push({
         message: 'Could not create or update session.',
         variant: 'error',
       });

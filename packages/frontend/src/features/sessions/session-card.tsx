@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import { Session } from '@shared/models/session';
 import { FunctionComponent } from 'react';
-import { useModals } from '../../core/hooks/modals/use-modals';
+import { useModals } from '../../ui/modals/use-modals';
 import SessionActions from './session-actions';
 import SessionFormDialog from './session-form-dialog';
 

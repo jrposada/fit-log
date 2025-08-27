@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import useSnackbar from '../../../ui/snackbar/use-snackbar';
+import { useToasts } from '../../../ui/toasts/use-toasts';
 
 type UseFavoriteWorkoutsDeleteParams = {
   onError?: (message: string) => void;
@@ -13,7 +13,7 @@ export function useFavoriteWorkoutsDelete({
   onError,
   onSuccess,
 }: UseFavoriteWorkoutsDeleteParams = {}) {
-  const { enqueueAutoHideSnackbar } = useSnackbar();
+  const { push } = useToasts();
   const client = useQueryClient();
 
   return useMutation<
@@ -33,7 +33,7 @@ export function useFavoriteWorkoutsDelete({
       );
     },
     onError: (message) => {
-      enqueueAutoHideSnackbar({
+      push({
         message: 'Could not remove workout from favorites.',
         variant: 'error',
       });

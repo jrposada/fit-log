@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import useSnackbar from '../../../ui/snackbar/use-snackbar';
+import { useToasts } from '../../../ui/toasts/use-toasts';
 
 type UseUsersAuthorizeParams = {
   onError?: (message: string) => void;
@@ -16,7 +16,7 @@ export function useUsersAuthorize({
   onError,
   onSuccess,
 }: UseUsersAuthorizeParams = {}) {
-  const { enqueueAutoHideSnackbar } = useSnackbar();
+  const { push } = useToasts();
 
   return useMutation<void, string, UseUsersAuthorizeMutationParams, unknown>({
     mutationFn: async ({ email, password }) => {
@@ -31,7 +31,7 @@ export function useUsersAuthorize({
       );
     },
     onError: (message) => {
-      enqueueAutoHideSnackbar({
+      push({
         message: 'Incorrect username or password.',
         variant: 'error',
       });

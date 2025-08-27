@@ -1,7 +1,7 @@
 import { WorkoutsPutRequest } from '@shared/models/workout';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import useSnackbar from '../../../ui/snackbar/use-snackbar';
+import { useToasts } from '../../../ui/toasts/use-toasts';
 
 type UseWorkoutsPutParams = {
   onError?: (message: string) => void;
@@ -14,7 +14,7 @@ export function useWorkoutsPut({
   onError,
   onSuccess,
 }: UseWorkoutsPutParams = {}) {
-  const { enqueueAutoHideSnackbar } = useSnackbar();
+  const { push } = useToasts();
   const client = useQueryClient();
 
   return useMutation<void, string, UseWorkoutsPutMutationParams, unknown>({
@@ -30,7 +30,7 @@ export function useWorkoutsPut({
       );
     },
     onError: (message) => {
-      enqueueAutoHideSnackbar({
+      push({
         message: 'Could not create or update workout.',
         variant: 'error',
       });

@@ -16,7 +16,7 @@ import { useSessions } from '../core/hooks/sessions/use-sessions';
 import { useWorkouts } from '../core/hooks/workouts/use-workouts';
 import SessionCard from '../features/sessions/session-card';
 import WorkoutCard from '../features/workouts/workout-card';
-import useSnackbar from '../ui/snackbar/use-snackbar';
+import { useToasts } from '../ui/toasts/use-toasts';
 
 const GRID_PROPS: GridProps = {
   size: { xs: 12, md: 6 },
@@ -30,17 +30,25 @@ const Index: FunctionComponent = () => {
   const { data: workouts } = useWorkouts({ onlyFavorites: true });
   const { data: sessions } = useSessions();
   const navigate = useNavigate();
-  const { enqueueAutoHideSnackbar } = useSnackbar();
-
-  useEffect(() => {
-    enqueueAutoHideSnackbar({ message: 'Paco', variant: 'success' });
-  }, [enqueueAutoHideSnackbar]);
+  const { push } = useToasts();
 
   const goToWorkouts = () => {
     navigate({
       to: '/workouts',
     });
   };
+
+  useEffect(() => {
+    console.log('ey');
+    push({
+      message: 'Paco 1',
+      variant: 'success',
+    });
+    push({
+      message: 'Juan',
+      variant: 'error',
+    });
+  }, [push]);
 
   return (
     <Container>
