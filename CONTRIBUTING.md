@@ -50,6 +50,14 @@ VITE_PORT=3000
 VITE_API_BASE_URL=/api
 ```
 
+`packages/dev-tools/.env`
+```
+DB_LOCAL_ENDPOINT=http://localhost:3200
+TABLE_NAME=fit-log-development
+AWS_REGION=eu-west-3
+IS_OFFLINE=true
+```
+
 6.  Execute code locally `npm run dev`
 
 7. _(Once)_ Initialize local database

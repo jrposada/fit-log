@@ -18,7 +18,7 @@
     "packages/*"
   ],
   "scripts": {
-    "cli": "npm run start -w packages/dev-tools",
+    "cli": "npm run start -w packages/dev-tools --",
     "dev:backend": "npm run dev -w packages/backend",
     "dev:frontend": "npm run dev -w packages/frontend",
     "dev": "run-p dev:*"

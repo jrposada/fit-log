@@ -18,5 +18,5 @@ type Exercise = {
   restBetweenReps: number;
   restBetweenSets: number;
   sets: number;
-  sort: number;
+  sort: number; // TODO: do we need this?
 };

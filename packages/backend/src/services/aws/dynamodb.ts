@@ -28,7 +28,9 @@ export class DynamoDBHelper {
   private readonly documentClient: DynamoDBDocumentClient;
 
   constructor(private readonly tableName: string) {
-    assert(process.env.AWS_REGION);
+    assert(process.env.AWS_REGION, {
+      msg: 'Expected env variable `AWS_REGION` to be defined',
+    });
     const client = new DynamoDBClient({
       region: process.env.AWS_REGION,
       ...(process.env.IS_OFFLINE && {
