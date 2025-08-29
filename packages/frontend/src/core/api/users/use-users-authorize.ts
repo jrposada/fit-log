@@ -20,7 +20,7 @@ export function useUsersAuthorize({
 
   return useMutation<void, string, UseUsersAuthorizeMutationParams, unknown>({
     mutationFn: async ({ email, password }) => {
-      await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/users/authorize`,
         JSON.stringify({ email, password }),
         {
@@ -29,6 +29,10 @@ export function useUsersAuthorize({
           },
         }
       );
+
+      if (!response.data.success) {
+        throw new Error('Api error');
+      }
     },
     onError: (message) => {
       push({

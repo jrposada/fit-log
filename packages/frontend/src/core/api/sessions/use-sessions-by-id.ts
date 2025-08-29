@@ -3,7 +3,7 @@ import { SessionsGetByIdResponse } from '@shared/models/session';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import axios from 'axios';
-import { useAuth } from '../auth/use-auth';
+import { useAuth } from '../../hooks/auth/use-auth';
 import { query } from '../query';
 
 export function useSessionsById(id: string) {
@@ -23,6 +23,10 @@ export function useSessionsById(id: string) {
             },
           }
         );
+
+        if (!response.data.success) {
+          throw new Error('Api error');
+        }
 
         return response.data.data.session;
       },

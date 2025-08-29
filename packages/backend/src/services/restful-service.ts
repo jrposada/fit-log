@@ -1,6 +1,7 @@
 import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import { DbRecord, DbRecordType } from './aws/db-record';
 import { DynamoDBHelper } from './aws/dynamodb';
+import ResourceNotFound from '../infrastructure/not-found-error';
 
 export abstract class RestfulService<T extends DbRecordType> {
   private db: DynamoDBHelper;
@@ -23,16 +24,16 @@ export abstract class RestfulService<T extends DbRecordType> {
   }
 
   public async get(id: string): Promise<DbRecord<T>> {
-    const workout = await this.db.get<DbRecord<T>>({
+    const record = await this.db.get<DbRecord<T>>({
       PK: this.entity,
       SK: id,
     });
 
-    if (!workout) {
-      throw new Error('Not Found');
+    if (!record) {
+      throw new ResourceNotFound('');
     }
 
-    return workout;
+    return record;
   }
 
   public async getAll(sk?: string): Promise<{

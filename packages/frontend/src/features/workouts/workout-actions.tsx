@@ -4,10 +4,10 @@ import { Workout } from '@shared/models/workout';
 import { useNavigate } from '@tanstack/react-router';
 import { FunctionComponent } from 'react';
 import { useModals } from '../../ui/modals/use-modals';
-import { useWorkoutsDelete } from '../../core/hooks/workouts/use-workouts-delete';
+import { useWorkoutsDelete } from '../../core/api/workouts/use-workouts-delete';
 import WorkoutFormDialog from './workout-form-dialog';
-import { useFavoriteWorkoutsPut } from '../../core/hooks/favorite-workouts/use-favorite-workouts-put';
-import { useFavoriteWorkoutsDelete } from '../../core/hooks/favorite-workouts/use-favorite-workouts-delete';
+import { useFavoriteWorkoutsPut } from '../../core/api/favorite-workouts/use-favorite-workouts-put';
+import { useFavoriteWorkoutsDelete } from '../../core/api/favorite-workouts/use-favorite-workouts-delete';
 
 type WorkoutActionsProps = {
   workout: Workout;

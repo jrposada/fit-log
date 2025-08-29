@@ -4,6 +4,7 @@ import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
 import { FavoriteWorkoutsService } from '../../../services/favorite-workouts-service';
 import { assert } from '@shared/utils/assert';
+import ResourceNotFound from '../../../infrastructure/not-found-error';
 
 export const handler = apiHandler<WorkoutsGetByIdResponse>(
   async ({ authorizerContext, event }) => {
@@ -13,12 +14,20 @@ export const handler = apiHandler<WorkoutsGetByIdResponse>(
     const { userId } = authorizerContext;
 
     const workout = await WorkoutsService.instance.get(id);
-    const favorite = await FavoriteWorkoutsService.instance.get(
-      FavoriteWorkoutsService.instance.calculateSk(
-        userId,
-        WorkoutsService.getWorkoutUuid(id)
-      )
-    );
+    let isFavorite = false;
+    try {
+      void (await FavoriteWorkoutsService.instance.get(
+        FavoriteWorkoutsService.instance.calculateSk(
+          userId,
+          WorkoutsService.getWorkoutUuid(id)
+        )
+      ));
+      isFavorite = true;
+    } catch (error) {
+      if (!(error instanceof ResourceNotFound)) {
+        throw error;
+      }
+    }
 
     return {
       statusCode: 200,
@@ -39,7 +48,7 @@ export const handler = apiHandler<WorkoutsGetByIdResponse>(
               sort: exercise.sort,
             })),
             id: workout.SK,
-            isFavorite: Boolean(favorite),
+            isFavorite,
             name: workout.name,
           },
         },

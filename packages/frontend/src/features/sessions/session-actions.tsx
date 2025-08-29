@@ -2,7 +2,7 @@ import { Delete } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { FunctionComponent } from 'react';
 import { Session } from '@shared/models/session';
-import { useSessionsDelete } from '../../core/hooks/sessions/use-sessions-delete';
+import { useSessionsDelete } from '../../core/api/sessions/use-sessions-delete';
 
 type SessionActionsProps = {
   session: Session;

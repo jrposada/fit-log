@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent, useState } from 'react';
 import { useAuth } from '../../core/hooks/auth/use-auth';
-import { useUsersAuthorize } from '../../core/hooks/users/use-users-authorize';
+import { useUsersAuthorize } from '../../core/api/users/use-users-authorize';
 
 type LoginFormProps = {
   redirect: string;

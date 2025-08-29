@@ -12,8 +12,8 @@ import {
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
-import { useSessions } from '../core/hooks/sessions/use-sessions';
-import { useWorkouts } from '../core/hooks/workouts/use-workouts';
+import { useSessions } from '../core/api/sessions/use-sessions';
+import { useWorkouts } from '../core/api/workouts/use-workouts';
 import SessionCard from '../features/sessions/session-card';
 import WorkoutCard from '../features/workouts/workout-card';
 

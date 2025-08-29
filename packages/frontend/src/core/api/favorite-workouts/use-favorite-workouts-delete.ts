@@ -1,42 +1,44 @@
-import { FavoriteWorkoutsPutRequest } from '@shared/models/favorite-workout';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useToasts } from '../../../ui/toasts/use-toasts';
 
-type UseFavoriteWorkoutsPutParams = {
+type UseFavoriteWorkoutsDeleteParams = {
   onError?: (message: string) => void;
   onSuccess?: () => void;
 };
 
-type UseFavoriteWorkoutsPutMutationParams = FavoriteWorkoutsPutRequest;
+type UseFavoriteWorkoutsDeleteMutationParams = string;
 
-export function useFavoriteWorkoutsPut({
+export function useFavoriteWorkoutsDelete({
   onError,
   onSuccess,
-}: UseFavoriteWorkoutsPutParams = {}) {
+}: UseFavoriteWorkoutsDeleteParams = {}) {
   const { push } = useToasts();
   const client = useQueryClient();
 
   return useMutation<
     void,
     string,
-    UseFavoriteWorkoutsPutMutationParams,
+    UseFavoriteWorkoutsDeleteMutationParams,
     unknown
   >({
-    mutationFn: async (favorite) => {
-      await axios.put(
-        `${import.meta.env.VITE_API_BASE_URL}/favorite-workouts`,
-        JSON.stringify(favorite),
+    mutationFn: async (id) => {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/favorite-workouts/${encodeURIComponent(id)}`,
         {
           headers: {
             Authorization: '',
           },
         }
       );
+
+      if (!response.data.success) {
+        throw new Error('Api error');
+      }
     },
     onError: (message) => {
       push({
-        message: 'Could not add workout to favorites.',
+        message: 'Could not remove workout from favorites.',
         variant: 'error',
       });
       onError?.(message);

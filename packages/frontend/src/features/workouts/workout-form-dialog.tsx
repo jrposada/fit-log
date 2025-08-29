@@ -23,7 +23,7 @@ import { t } from 'i18next';
 import { FunctionComponent } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useModals } from '../../ui/modals/use-modals';
-import { useWorkoutsPut } from '../../core/hooks/workouts/use-workouts-put';
+import { useWorkoutsPut } from '../../core/api/workouts/use-workouts-put';
 import WorkoutExerciseForm from './workout-exercise-form';
 
 const defaultExercise: WorkoutsPutRequest['exercises'][number] = {

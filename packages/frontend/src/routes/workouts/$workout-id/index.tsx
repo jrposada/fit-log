@@ -12,8 +12,8 @@ import {
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { t } from 'i18next';
 import { FunctionComponent } from 'react';
-import { useSessions } from '../../../core/hooks/sessions/use-sessions';
-import { useWorkoutsById } from '../../../core/hooks/workouts/use-workouts-by-id';
+import { useSessions } from '../../../core/api/sessions/use-sessions';
+import { useWorkoutsById } from '../../../core/api/workouts/use-workouts-by-id';
 import SessionCard from '../../../features/sessions/session-card';
 import WorkoutActions from '../../../features/workouts/workout-actions';
 
@@ -27,8 +27,10 @@ const PAPER_PROPS: PaperProps = {
 
 const WorkoutDetails: FunctionComponent = () => {
   const { 'workout-id': workoutId } = Route.useParams();
-  const { data: workout } = useWorkoutsById(workoutId);
+  const { data: workout, status, error } = useWorkoutsById(workoutId);
   const { data: sessions } = useSessions({ workoutId });
+
+  console.log('status', { status, workout, error });
 
   return (
     <Container>
