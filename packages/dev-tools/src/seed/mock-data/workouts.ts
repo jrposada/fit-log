@@ -10,6 +10,8 @@ export function fakeWorkout(userId: string): DbRecord<'workout'> {
     lastUpdated: faker.date.recent().toISOString(),
     name: faker.lorem.words({ min: 1, max: 3 }),
     description: faker.lorem.paragraph(),
-    exercises: new Array(faker.number.int(10)).fill(fakeExercise()),
+    exercises: new Array(faker.number.int(10))
+      .fill({})
+      .map(() => fakeExercise()),
   };
 }
