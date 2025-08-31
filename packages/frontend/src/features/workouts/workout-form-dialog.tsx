@@ -19,12 +19,12 @@ import {
   WorkoutsPutRequest,
   workoutsPutRequestSchema,
 } from '@shared/models/workout';
-import { t } from 'i18next';
 import { FunctionComponent } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
 import { useModals } from '../../ui/modals/use-modals';
 import { useWorkoutsPut } from '../../core/api/workouts/use-workouts-put';
-import WorkoutExerciseForm from './workout-exercise-form';
+import ExerciseForm from '../exercise/exercise-form';
+import { useTranslation } from 'react-i18next';
 
 const defaultExercise: WorkoutsPutRequest['exercises'][number] = {
   description: '',
@@ -49,9 +49,11 @@ type WorkoutFormDialogProps = {
 const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
   workout,
 }) => {
-  const { mutate: sendWorkoutsPut } = useWorkoutsPut();
+  const { t } = useTranslation();
   const { pop } = useModals();
   const theme = useTheme();
+
+  const { mutate: sendWorkoutsPut } = useWorkoutsPut();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const methods = useForm<WorkoutsPutRequest>({
@@ -133,7 +135,7 @@ const WorkoutFormDialog: FunctionComponent<WorkoutFormDialogProps> = ({
           </Typography>
 
           {fields.map((field, index) => (
-            <WorkoutExerciseForm
+            <ExerciseForm
               key={field.id}
               index={index}
               remove={remove}

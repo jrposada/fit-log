@@ -1,7 +1,5 @@
 import {
   Box,
-  Card,
-  CardContent,
   Container,
   Grid,
   GridProps,
@@ -10,12 +8,13 @@ import {
   Typography,
 } from '@mui/material';
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { t } from 'i18next';
 import { FunctionComponent } from 'react';
 import { useSessions } from '../../../core/api/sessions/use-sessions';
 import { useWorkoutsById } from '../../../core/api/workouts/use-workouts-by-id';
 import SessionCard from '../../../features/sessions/session-card';
 import WorkoutActions from '../../../features/workouts/workout-actions';
+import ExerciseCard from '../../../features/exercise/exercise-card';
+import { useTranslation } from 'react-i18next';
 
 const GRID_PROPS: GridProps = {
   size: { xs: 12, md: 6 },
@@ -27,10 +26,10 @@ const PAPER_PROPS: PaperProps = {
 
 const WorkoutDetails: FunctionComponent = () => {
   const { 'workout-id': workoutId } = Route.useParams();
-  const { data: workout, status, error } = useWorkoutsById(workoutId);
-  const { data: sessions } = useSessions({ workoutId });
+  const { t } = useTranslation();
 
-  console.log('status', { status, workout, error });
+  const { data: workout } = useWorkoutsById(workoutId);
+  const { data: sessions } = useSessions({ workoutId });
 
   return (
     <Container>
@@ -52,14 +51,7 @@ const WorkoutDetails: FunctionComponent = () => {
         <Grid {...GRID_PROPS}>
           <Paper {...PAPER_PROPS}>
             {workout?.exercises.map((exercise, index) => (
-              <Card key={index} sx={{ marginBottom: 2 }}>
-                <CardContent>
-                  <Typography variant="h6">{exercise.name}</Typography>
-                  <Typography variant="body2">
-                    {exercise.description}
-                  </Typography>
-                </CardContent>
-              </Card>
+              <ExerciseCard key={index} exercise={exercise} />
             ))}
           </Paper>
         </Grid>

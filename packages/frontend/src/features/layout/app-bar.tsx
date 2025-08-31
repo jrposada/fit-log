@@ -23,15 +23,16 @@ import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
-import { t } from 'i18next';
 import { FunctionComponent, useState } from 'react';
 import SearchInput from './search-input';
 import { useNavigate } from '@tanstack/react-router';
 import WorkoutFormDialog from '../workouts/workout-form-dialog';
 import { useModals } from '../../ui/modals/use-modals';
+import { useTranslation } from 'react-i18next';
 
 const AppBar: FunctionComponent = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { push } = useModals();
 
   const [open, setOpen] = useState(false);

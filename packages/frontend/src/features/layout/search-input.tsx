@@ -1,11 +1,13 @@
 import SearchIcon from '@mui/icons-material/Search';
-import { t } from 'i18next';
 import { FunctionComponent } from 'react';
 import InputBase from './styled/input-base';
 import Search from './styled/search';
 import SearchIconWrapper from './styled/search-icon-wrapper';
+import { useTranslation } from 'react-i18next';
 
 const SearchInput: FunctionComponent = () => {
+  const { t } = useTranslation();
+
   return (
     <Search>
       <SearchIconWrapper>

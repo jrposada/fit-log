@@ -11,25 +11,28 @@ import {
   CardProps,
 } from '@mui/material';
 import { WorkoutsPutRequest } from '@shared/models/workout';
-import { t } from 'i18next';
 import { FunctionComponent } from 'react';
 import { UseFieldArrayRemove, useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { beautifyUnit } from '../../utils/beautify';
 
 const textFieldProps: TextFieldProps = {
   fullWidth: true,
   margin: 'normal',
 };
 
-type WorkoutExerciseFormProps = {
+type ExerciseFormProps = {
   index: number;
   remove: UseFieldArrayRemove;
   sx?: CardProps['sx'];
 };
-const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
+const ExerciseForm: FunctionComponent<ExerciseFormProps> = ({
   index,
   remove,
   sx,
 }) => {
+  const { t } = useTranslation();
+
   const {
     formState: { errors },
     register,
@@ -158,9 +161,7 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
             input: {
               endAdornment: (
                 <InputAdornment position="start">
-                  {intensityUnit === 'body-weight' && t('units.percentage')}
-                  {intensityUnit === 'time' && t('units.seconds')}
-                  {intensityUnit === 'weight' && t('units.kg')}
+                  {t(beautifyUnit(intensityUnit))}
                 </InputAdornment>
               ),
             },
@@ -171,4 +172,4 @@ const WorkoutExerciseForm: FunctionComponent<WorkoutExerciseFormProps> = ({
   );
 };
 
-export default WorkoutExerciseForm;
+export default ExerciseForm;

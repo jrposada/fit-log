@@ -11,7 +11,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { PickerValidDate } from '@mui/x-date-pickers';
 import { DatePicker, DatePickerProps } from '@mui/x-date-pickers/DatePicker';
 import {
   Session,
@@ -19,13 +18,13 @@ import {
   sessionsPutRequestSchema,
 } from '@shared/models/session';
 import { Workout } from '@shared/models/workout';
-import { t } from 'i18next';
 import moment from 'moment';
 import { FunctionComponent, useCallback, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useModals } from '../../ui/modals/use-modals';
 import { useSessionsPut } from '../../core/api/sessions/use-sessions-put';
 import { assert } from '@shared/utils/assert';
+import { useTranslation } from 'react-i18next';
 
 type SessionFormDialogProps = {
   session?: Session;
@@ -38,9 +37,11 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
 }) => {
   assert(session || workout, { msg: 'Session or workout must be defined.' });
 
-  const { mutate: sendSessionsPut } = useSessionsPut();
+  const { t } = useTranslation();
   const { pop } = useModals();
   const theme = useTheme();
+
+  const { mutate: sendSessionsPut } = useSessionsPut();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   const methods = useForm<SessionsPutRequest>({
@@ -72,7 +73,7 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
   );
 
   const completedAtOnChange = useCallback<
-    NonNullable<DatePickerProps<PickerValidDate, false>['onChange']>
+    NonNullable<DatePickerProps['onChange']>
   >(
     (value) => {
       // FIXME: review dates timezone and time picker hour.

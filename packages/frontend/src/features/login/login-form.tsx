@@ -1,15 +1,17 @@
 import { Button, TextField, Typography } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
-import { t } from 'i18next';
 import { FunctionComponent, useState } from 'react';
 import { useAuth } from '../../core/hooks/auth/use-auth';
 import { useUsersAuthorize } from '../../core/api/users/use-users-authorize';
+import { useTranslation } from 'react-i18next';
 
 type LoginFormProps = {
   redirect: string;
 };
 
 const LoginForm: FunctionComponent<LoginFormProps> = ({ redirect }) => {
+  const { t } = useTranslation();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 

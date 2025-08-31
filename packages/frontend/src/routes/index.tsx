@@ -10,12 +10,12 @@ import {
   Typography,
 } from '@mui/material';
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
-import { t } from 'i18next';
 import { FunctionComponent } from 'react';
 import { useSessions } from '../core/api/sessions/use-sessions';
 import { useWorkouts } from '../core/api/workouts/use-workouts';
 import SessionCard from '../features/sessions/session-card';
 import WorkoutCard from '../features/workouts/workout-card';
+import { useTranslation } from 'react-i18next';
 
 const GRID_PROPS: GridProps = {
   size: { xs: 12, md: 6 },
@@ -26,9 +26,11 @@ const PAPER_PROPS: PaperProps = {
 };
 
 const Index: FunctionComponent = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
   const { data: workouts } = useWorkouts({ onlyFavorites: true });
   const { data: sessions } = useSessions();
-  const navigate = useNavigate();
 
   const goToWorkouts = () => {
     navigate({
