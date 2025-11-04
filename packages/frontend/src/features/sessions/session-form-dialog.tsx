@@ -18,13 +18,14 @@ import {
   sessionsPutRequestSchema,
 } from '@shared/models/session';
 import { Workout } from '@shared/models/workout';
+import { assert } from '@shared/utils/assert';
 import moment from 'moment';
 import { FunctionComponent, useCallback, useMemo } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { useModals } from '../../ui/modals/use-modals';
-import { useSessionsPut } from '../../core/api/sessions/use-sessions-put';
-import { assert } from '@shared/utils/assert';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+
+import { useSessionsPut } from '../../core/api/sessions/use-sessions-put';
+import { useModals } from '../../ui/modals/use-modals';
 
 type SessionFormDialogProps = {
   session?: Session;
@@ -53,7 +54,7 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
     },
     resolver: zodResolver(sessionsPutRequestSchema),
   });
-  const { handleSubmit, register, watch, setValue } = methods;
+  const { handleSubmit, register, setValue } = methods;
   const submit = (data: SessionsPutRequest) => {
     sendSessionsPut(data);
 
@@ -64,9 +65,10 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
     pop();
   };
 
-  const completedAtRegister = register('completedAt');
-
-  const _completedAtValue = watch('completedAt');
+  const _completedAtValue = useWatch({
+    control: methods.control,
+    name: 'completedAt',
+  });
   const completedAtValue = useMemo(
     () => moment(_completedAtValue),
     [_completedAtValue]
@@ -118,7 +120,7 @@ const SessionFormDialog: FunctionComponent<SessionFormDialogProps> = ({
 
           <DatePicker
             label={t('session.completed_at')}
-            {...completedAtRegister}
+            {...register('completedAt')}
             value={completedAtValue}
             onChange={completedAtOnChange}
           />

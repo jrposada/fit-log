@@ -9,6 +9,7 @@ import {
 import { Workout } from '@shared/models/workout';
 import { useNavigate } from '@tanstack/react-router';
 import { FunctionComponent } from 'react';
+
 import WorkoutActions from './workout-actions';
 
 type WorkoutCardProps = {

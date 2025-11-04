@@ -19,48 +19,19 @@ export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 
 ## Getting started
 
-1.  Clone repository through ssh `git@github.com:jrposada/fit-log.git`
+1. Clone repository through ssh `git@github.com:jrposada/fit-log.git`
 
-2.  Install dependencies `npm i`
+2. Install dependencies `npm i && npx husky`
 
-3.  Setup husky `npx husky`
+3. Look for `.example.env` files. Create a new `.env` file for each of them and fill all the data.
 
-4. Map localhost to local.server.com (This is needed for cookie base authorization to work in development mode):
+4. Run app in development mode
 
 ```
-127.0.0.1        local.server.com
+npm run dev
 ```
 
-5. _(Once)_ Setup .env files
-
-`packages/backend/.env.development`
-```
-ALLOWED_ORIGIN=
-CLIENT_ID=<client-id>
-DB_LOCAL_ENDPOINT=http://localhost:3200
-TABLE_NAME=fit-log-development
-USER_POOL_ID=<user-pool-id>
-```
-
-`packages/frontend/.env.development`
-```
-VITE_BASE_PATH=
-VITE_PORT=3000
-
-VITE_API_BASE_URL=/api
-```
-
-`packages/dev-tools/.env`
-```
-DB_LOCAL_ENDPOINT=http://localhost:3200
-TABLE_NAME=fit-log-development
-AWS_REGION=eu-west-3
-IS_OFFLINE=true
-```
-
-6.  Execute code locally `npm run dev`
-
-7. _(Once)_ Initialize local database
+5. Initialize local database
 
 ```
 aws dynamodb create-table \

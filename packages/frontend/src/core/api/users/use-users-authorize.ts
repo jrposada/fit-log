@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
+
 import { useToasts } from '../../../ui/toasts/use-toasts';
 
 type UseUsersAuthorizeParams = {

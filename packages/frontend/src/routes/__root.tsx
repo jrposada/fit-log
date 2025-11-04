@@ -1,4 +1,5 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
+
 import { Auth } from '../core/hooks/auth/auth-context';
 import AppBar from '../features/layout/app-bar';
 import { Box } from '@mui/material';

@@ -3,12 +3,12 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CardProps,
   IconButton,
   InputAdornment,
   MenuItem,
   TextField,
   TextFieldProps,
-  CardProps,
 } from '@mui/material';
 import { WorkoutsPutRequest } from '@shared/models/workout';
 import { FunctionComponent } from 'react';

@@ -10,9 +10,10 @@ import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import { assert } from '@shared/utils/assert';
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
 import { FunctionComponent, useEffect, useState } from 'react';
-import { useModals } from '../../../ui/modals/use-modals';
+
 import { useWorkoutsById } from '../../../core/api/workouts/use-workouts-by-id';
 import SessionFormDialog from '../../../features/sessions/session-form-dialog';
+import { useModals } from '../../../ui/modals/use-modals';
 
 type State = {
   done: boolean;

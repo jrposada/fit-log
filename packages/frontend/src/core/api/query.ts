@@ -1,5 +1,6 @@
 import { ParsedLocation, UseNavigateResult } from '@tanstack/react-router';
 import { AxiosError } from 'axios';
+
 import { Auth } from '../hooks/auth/auth-context';
 
 export type QueryParams<TResponse> = {

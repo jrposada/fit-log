@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { v4 as uuid } from 'uuid';
+
 import { ModalInstance, Modals, ModalsContext } from './modals-context';
 
 const ModalsProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {

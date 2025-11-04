@@ -3,6 +3,7 @@ import { WorkoutsGetByIdResponse } from '@shared/models/workout';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import axios from 'axios';
+
 import { useAuth } from '../../hooks/auth/use-auth';
 import { query } from '../query';
 

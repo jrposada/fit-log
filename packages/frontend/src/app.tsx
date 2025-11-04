@@ -1,7 +1,8 @@
 import { RouterProvider } from '@tanstack/react-router';
-import { FunctionComponent, Suspense, lazy } from 'react';
-import { router } from './router';
+import { FunctionComponent, lazy, Suspense } from 'react';
+
 import { useAuth } from './core/hooks/auth/use-auth';
+import { router } from './router';
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === 'production'

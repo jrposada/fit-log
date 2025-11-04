@@ -21,10 +21,11 @@ import {
 } from '@shared/models/workout';
 import { FunctionComponent } from 'react';
 import { FormProvider, useFieldArray, useForm } from 'react-hook-form';
-import { useModals } from '../../ui/modals/use-modals';
-import { useWorkoutsPut } from '../../core/api/workouts/use-workouts-put';
-import ExerciseForm from '../exercise/exercise-form';
 import { useTranslation } from 'react-i18next';
+
+import { useWorkoutsPut } from '../../core/api/workouts/use-workouts-put';
+import { useModals } from '../../ui/modals/use-modals';
+import ExerciseForm from '../exercise/exercise-form';
 
 const defaultExercise: WorkoutsPutRequest['exercises'][number] = {
   description: '',

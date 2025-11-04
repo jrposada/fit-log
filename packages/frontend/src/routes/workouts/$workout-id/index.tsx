@@ -9,12 +9,13 @@ import {
 } from '@mui/material';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { FunctionComponent } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import { useSessions } from '../../../core/api/sessions/use-sessions';
 import { useWorkoutsById } from '../../../core/api/workouts/use-workouts-by-id';
+import ExerciseCard from '../../../features/exercise/exercise-card';
 import SessionCard from '../../../features/sessions/session-card';
 import WorkoutActions from '../../../features/workouts/workout-actions';
-import ExerciseCard from '../../../features/exercise/exercise-card';
-import { useTranslation } from 'react-i18next';
 
 const GRID_PROPS: GridProps = {
   size: { xs: 12, md: 6 },
