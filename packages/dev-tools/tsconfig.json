@@ -22,7 +22,7 @@
 
     "paths": {
       "@backend/*": ["../backend/src/services/*"],
-      "@shared/*": ["../shared/src/*"],
+      "@shared/*": ["../shared/src/*"]
     }
   },
   "include": ["src", "../shared/src"]

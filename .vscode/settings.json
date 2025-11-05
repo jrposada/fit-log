@@ -1,5 +1,11 @@
 {
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.fixAll.ts": "always"
+  },
   "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "modificationsIfAvailable",
+  "files.insertFinalNewline": true,
   "editor.rulers": [80],
   "i18n-ally.localesPaths": [
     "packages/frontend/src/localization"
@@ -7,5 +13,13 @@
   "i18n-ally.enabledFrameworks": [
     "react-i18next"
   ],
-  "i18n-ally.keystyle": "nested",
+  "i18n-ally.keystyle": "nested",  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
 }
