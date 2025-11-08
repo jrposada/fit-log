@@ -6,7 +6,9 @@ _This guide assumes you are using a Linux system like WSL or Ubuntu._
 
 2. _Recommended_ NVM.
 
-3. Docker.
+3. Android Studio and Android SDK.
+
+4. Docker.
 
 _For Mac_ You many need to manually add `docker` to `PATH` variable by adding the following to your profile file.
 
@@ -15,7 +17,25 @@ _For Mac_ You many need to manually add `docker` to `PATH` variable by adding th
 export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 ```
 
-4. [Configure AWS CLI](#configure-aws-cli)
+5. [Configure AWS CLI](#configure-aws-cli)
+
+6. _For WSL_ Extra Android Studio installation instructions.
+
+    1. Update ENV variables in your profile.
+
+    ```
+    # Android Studio
+    export ANDROID_HOME=/mnt/c/Users/jrpos/AppData/Local/Android/Sdk
+    export WSLENV=ANDROID_HOME/p
+    ```
+
+    2. Run setup script
+
+    ```
+    ./scripts/setup.sh
+    ```
+
+    3. Update Android Studio terminal to WSL's: Settings > Tools > Terminal > Shell Path
 
 ## Getting started
 
