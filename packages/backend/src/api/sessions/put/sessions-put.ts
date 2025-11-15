@@ -28,7 +28,7 @@ export const handler = apiHandler<SessionsPutResponse>(
         }) ??
         SessionsService.instance.newSk(userId, sessionPutData.workoutId!),
       completedAt: sessionPutData.completedAt,
-      lastUpdated: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       workoutDescription: sessionPutData.workoutDescription,
       workoutName: sessionPutData.workoutName,
     };

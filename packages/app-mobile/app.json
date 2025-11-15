@@ -13,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app requires access to the camera to take photos of boulder problems.",
+        "NSPhotoLibraryUsageDescription": "This app requires access to the photo library to select images of boulder problems."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,10 +25,24 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "This app requires access to the photo library to select images of boulder problems.",
+          "cameraPermission": "This app requires access to the camera to take photos of boulder problems."
+        }
+      ]
+    ]
   }
 }

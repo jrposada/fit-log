@@ -31,7 +31,7 @@ export const handler = apiHandler<WorkoutsPutResponse>(
         sets: exercise.sets,
         sort: exercise.sort,
       })),
-      lastUpdated: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       name: workoutPutData.name,
       PK: 'workout',
       SK:

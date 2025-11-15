@@ -1,8 +1,10 @@
-import { FavoriteWorkoutDbRecord } from './favorite-workout-db-record';
-import { SessionDbRecord } from './session-db-record';
-import { WorkoutDbRecord } from './workout-db-record';
+import { BoulderDbRecord } from './records/boulder-db-record';
+import { FavoriteWorkoutDbRecord } from './records/favorite-workout-db-record';
+import { SessionDbRecord } from './records/session-db-record';
+import { WorkoutDbRecord } from './records/workout-db-record';
 
 export type DbRecordType =
+  | BoulderDbRecord['PK']
   | FavoriteWorkoutDbRecord['PK']
   | SessionDbRecord['PK']
   | WorkoutDbRecord['PK'];
@@ -17,5 +19,10 @@ export type DbRecord<TRecordType extends DbRecordType> = {
    *
    * @format date-time
    */
-  lastUpdated: string;
-} & (FavoriteWorkoutDbRecord | SessionDbRecord | WorkoutDbRecord);
+  updatedAt: string;
+} & (
+  | BoulderDbRecord
+  | FavoriteWorkoutDbRecord
+  | SessionDbRecord
+  | WorkoutDbRecord
+);

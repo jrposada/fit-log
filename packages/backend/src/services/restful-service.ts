@@ -10,6 +10,7 @@ export abstract class RestfulService<T extends DbRecordType> {
     tableName: string,
     protected readonly entity: T
   ) {
+    // TODO: Improve. We should not create a new DynamoDBHelper for each service.
     this.db = new DynamoDBHelper(tableName);
   }
 

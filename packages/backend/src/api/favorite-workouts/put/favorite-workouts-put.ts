@@ -18,7 +18,7 @@ export const handler = apiHandler<FavoriteWorkoutsPutResponse>(
     const { userId } = authorizerContext;
 
     const record: DbRecord<'favorite-workout'> = {
-      lastUpdated: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       PK: 'favorite-workout',
       SK: FavoriteWorkoutsService.instance.calculateSk(
         userId,

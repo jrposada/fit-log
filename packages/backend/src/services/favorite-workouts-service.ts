@@ -31,8 +31,8 @@ export class FavoriteWorkoutsService extends RestfulService<'favorite-workout'> 
     super(tableName, 'favorite-workout');
   }
 
-  public calculatePartialSk(userId: string): string {
-    return `${this.entity}#${userId}#`;
+  public calculatePartialSk(userId?: string): string {
+    return [this.entity, userId].filter(Boolean).join('#');
   }
 
   public calculateSk(

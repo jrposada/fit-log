@@ -24,8 +24,8 @@ export class SessionsService extends RestfulService<'session'> {
     super(tableName, 'session');
   }
 
-  public calculatePartialSk(userId: string, workoutId: string): string {
-    return `${this.entity}#${userId}#${workoutId}#`;
+  public calculatePartialSk(userId?: string, workoutId?: string): string {
+    return [this.entity, userId, workoutId].filter(Boolean).join('#');
   }
 
   public newSk(userId: string, workoutId: string): DbRecord<'session'>['SK'] {

@@ -1,0 +1,21 @@
+BouldersGet:
+  handler: src/api/boulders/get/boulders-get.handler
+  role: ApiBouldersGetRole
+  timeout: 30
+  memorySize: 128
+  events:
+    - http:
+        path: api/boulders
+        method: get
+        cors: true
+        authorizer:
+          name: Authorizer
+          type: Request
+          resultTtlInSeconds: 0
+  environment:
+    ALLOWED_ORIGIN:
+      Fn::GetAtt:
+        - FrontendCloudFrontDistribution
+        - DomainName
+    TABLE_NAME:
+      Ref: DB

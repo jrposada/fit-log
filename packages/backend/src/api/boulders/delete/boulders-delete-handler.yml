@@ -1,0 +1,21 @@
+BouldersDelete:
+  handler: src/api/boulders/delete/boulders-delete.handler
+  role: ApiBouldersDeleteRole
+  timeout: 30
+  memorySize: 128
+  events:
+    - http:
+        path: api/boulders/{id}
+        method: delete
+        cors: true
+        authorizer:
+          name: Authorizer
+          type: Request
+          resultTtlInSeconds: 0
+  environment:
+    ALLOWED_ORIGIN:
+      Fn::GetAtt:
+        - FrontendCloudFrontDistribution
+        - DomainName
+    TABLE_NAME:
+      Ref: DB
