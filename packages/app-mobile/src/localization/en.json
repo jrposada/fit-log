@@ -1,0 +1,37 @@
+{
+  "boulder": {
+    "app_title": "Fit Log - Bouldering",
+    "create_button": "Create Boulder",
+    "empty_state": "Your saved boulder problems will appear here",
+    "editor_title": "Mark the Holds",
+    "editor_subtitle": "Tap on the image to add holds. Tap a hold to remove it.",
+    "holds_count": "Holds: {{count}}",
+    "holds_label": "{{count}} holds",
+    "image_picker_title": "Select Image Source",
+    "take_photo": "Take Photo",
+    "choose_from_library": "Choose from Library",
+    "camera_permission_required": "Camera permission required",
+    "library_permission_required": "Photo library permission required",
+    "permission_required_title": "Permission Required",
+    "camera_permission_message": "Please grant camera access to take photos.",
+    "library_permission_message": "Please grant photo library access to select images.",
+    "no_holds_title": "No Holds Added",
+    "no_holds_message": "Please add at least one hold before saving.",
+    "save_success_title": "Boulder Saved!",
+    "save_success_message": "Successfully saved boulder with {{count}} holds.",
+    "save_error_title": "Error",
+    "save_error_message": "Failed to save boulder. Please try again.",
+    "remove_hold_title": "Remove Hold",
+    "remove_hold_message": "Do you want to remove this hold?",
+    "screen_title_home": "Bouldering App",
+    "screen_title_select": "Select Image",
+    "screen_title_editor": "Create Boulder"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "ok": "OK",
+    "save": "Save",
+    "clear": "Clear"
+  }
+}

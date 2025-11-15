@@ -1,46 +1,12 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StatusBar } from 'expo-status-bar';
+import { I18nextProvider } from 'react-i18next';
 
-import BoulderEditorScreen from './src/screens/boulder-editor-screen';
-import HomeScreen from './src/screens/home-screen';
-import ImagePickerScreen from './src/screens/image-picker-screen';
-import { RootStackParamList } from './src/types/routes';
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
+import i18n from './src/i18n';
+import Navigation from './src/navigation';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <StatusBar style="auto" />
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#4CAF50',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}
-      >
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ title: 'Bouldering App' }}
-        />
-        <Stack.Screen
-          name="ImagePicker"
-          component={ImagePickerScreen}
-          options={{ title: 'Select Image' }}
-        />
-        <Stack.Screen
-          name="BoulderEditor"
-          component={BoulderEditorScreen}
-          options={{ title: 'Create Boulder' }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <I18nextProvider i18n={i18n}>
+      <Navigation />
+    </I18nextProvider>
   );
 }
