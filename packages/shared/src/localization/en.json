@@ -1,0 +1,95 @@
+{
+  "actions": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "create": "Create",
+    "ok": "OK",
+    "remove": "Remove",
+    "save": "Save",
+    "search_placeholder": "Search...",
+    "start": "Start",
+    "update": "Update"
+  },
+  "app_bar": {
+    "history": "History",
+    "home": "Home",
+    "settings": "Settings",
+    "workouts": "Workouts"
+  },
+  "boulder": {
+    "app_title": "Fit Log - Bouldering",
+    "camera_permission_message": "Please grant camera access to take photos.",
+    "camera_permission_required": "Camera permission required",
+    "choose_from_library": "Choose from Library",
+    "create_button": "Create Boulder",
+    "editor_subtitle": "Tap on the image to add holds. Tap a hold to remove it.",
+    "editor_title": "Mark the Holds",
+    "empty_state": "Your saved boulder problems will appear here",
+    "holds_count": "Holds: {{count}}",
+    "holds_label": "{{count}} holds",
+    "image_picker_title": "Select Image Source",
+    "library_permission_message": "Please grant photo library access to select images.",
+    "library_permission_required": "Photo library permission required",
+    "no_holds_message": "Please add at least one hold before saving.",
+    "no_holds_title": "No Holds Added",
+    "permission_required_title": "Permission Required",
+    "remove_hold_message": "Do you want to remove this hold?",
+    "remove_hold_title": "Remove Hold",
+    "save_error_message": "Failed to save boulder. Please try again.",
+    "save_error_title": "Error",
+    "save_success_message": "Successfully saved boulder with {{count}} holds.",
+    "save_success_title": "Boulder Saved!",
+    "screen_title_editor": "Create Boulder",
+    "screen_title_home": "Bouldering App",
+    "screen_title_select": "Select Image",
+    "take_photo": "Take Photo"
+  },
+  "dashboard": {
+    "create_suggestion": "Go to All Workouts and get started!",
+    "create_workout": "New Workout",
+    "empty_favorites_warning": "No favorites yet",
+    "empty_sessions_warning": "No sessions yet",
+    "favorite_workouts": "Favorite Workouts",
+    "last_sessions": "Last Sessions",
+    "title": "FIT Log"
+  },
+  "exercise": {
+    "description": "Exercise Description",
+    "intensity": "Intensity",
+    "intensity_unit": "Intensity Unit",
+    "name": "Exercise Name",
+    "reps": "Reps",
+    "rest_between_reps": "Rest Between Reps",
+    "rest_between_sets": "Rest Between Sets",
+    "sets": "Sets"
+  },
+  "login": {
+    "action": "Login",
+    "password": "Password",
+    "title": "Login",
+    "username": "Username"
+  },
+  "session": {
+    "completed_at": "Workout Date",
+    "create": "New Session",
+    "update": "Update Session"
+  },
+  "units": {
+    "body_weight": "Body Weight",
+    "kg": "kg",
+    "percentage": "%",
+    "seconds": "seconds",
+    "time": "Time",
+    "weight": "Weight"
+  },
+  "workout": {
+    "add_exercise": "Add Exercise",
+    "create": "New Workout",
+    "description": "Workout Description",
+    "exercises": "Exercises",
+    "name": "Workout Name",
+    "session_history": "Sessions",
+    "update": "Update Workout"
+  }
+}

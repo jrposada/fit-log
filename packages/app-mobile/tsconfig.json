@@ -3,14 +3,8 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@shared/*": [
-        "../shared/src/*"
-      ]
+      "@shared/*": ["../shared/src/*"]
     }
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "../shared/src"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "../shared/src"]
 }
