@@ -19,8 +19,7 @@
   ],
   "scripts": {
     "cli": "npm run start -w packages/dev-tools --",
-    "lint": "npm run lint -ws --if-present",
-    "dev": "run run dev -ws --if-present"
+    "lint": "npm run lint -ws --if-present"
   },
   "devDependencies": {
     "@babel/types": "^7.26.8",

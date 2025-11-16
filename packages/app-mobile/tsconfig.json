@@ -3,8 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
+      "@shared-react/*": ["../shared-react/src/*"],
       "@shared/*": ["../shared/src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "../shared/src"]
+  "include": ["src"],
+  "references": [{ "path": "../shared-react" }, { "path": "../shared" }]
 }

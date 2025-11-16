@@ -1,8 +1,10 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Boulder } from '@shared/models/boulder';
-import { FunctionComponent, useState } from 'react';
+import { useBoulders } from '@shared-react/api/boulders/use-boulders';
+import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   StyleSheet,
@@ -11,6 +13,7 @@ import {
   View,
 } from 'react-native';
 
+import { config } from '../config';
 import { RootStackParamList } from '../types/routes';
 
 type HomeScreenProps = {
@@ -19,7 +22,9 @@ type HomeScreenProps = {
 
 const HomeScreen: FunctionComponent<HomeScreenProps> = ({ navigation }) => {
   const { t } = useTranslation();
-  const [boulders] = useState<Boulder[]>([]);
+  const { data: boulders = [], isLoading } = useBoulders({
+    apiBaseUrl: config.apiBaseUrl,
+  });
 
   const handleCreateBoulder = () => {
     navigation.navigate('ImagePicker');
@@ -51,7 +56,11 @@ const HomeScreen: FunctionComponent<HomeScreenProps> = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
 
-      {boulders.length === 0 ? (
+      {isLoading ? (
+        <View style={styles.placeholder}>
+          <ActivityIndicator size="large" color="#4CAF50" />
+        </View>
+      ) : boulders.length === 0 ? (
         <View style={styles.placeholder}>
           <Text style={styles.placeholderText}>{t('boulder.empty_state')}</Text>
         </View>

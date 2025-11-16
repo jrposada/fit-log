@@ -1,6 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Hold } from '@shared/models/boulder';
+import { useBouldersPut } from '@shared-react/api/boulders/use-boulders-put';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,6 +16,7 @@ import {
   View,
 } from 'react-native';
 
+import { config } from '../config';
 import { RootStackParamList } from '../types/routes';
 
 type BoulderEditorScreenProps = {
@@ -36,6 +38,32 @@ const BoulderEditorScreen: FunctionComponent<BoulderEditorScreenProps> = ({
     height: 0,
     x: 0,
     y: 0,
+  });
+
+  const { mutate: saveBoulder, isPending } = useBouldersPut({
+    apiBaseUrl: config.apiBaseUrl,
+    onSuccess: () => {
+      Alert.alert(
+        t('boulder.save_success_title'),
+        t('boulder.save_success_message', { count: holds.length }),
+        [
+          {
+            text: t('actions.ok'),
+            onPress: () => {
+              navigation.navigate('Home');
+            },
+          },
+        ]
+      );
+    },
+    onError: (error) => {
+      console.error('Failed to save boulder:', error);
+      Alert.alert(
+        t('boulder.save_error_title'),
+        t('boulder.save_error_message'),
+        [{ text: t('actions.ok') }]
+      );
+    },
   });
 
   const handleImageLayout = (event: LayoutChangeEvent) => {
@@ -78,7 +106,7 @@ const BoulderEditorScreen: FunctionComponent<BoulderEditorScreenProps> = ({
     );
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (holds.length === 0) {
       Alert.alert(t('boulder.no_holds_title'), t('boulder.no_holds_message'), [
         { text: t('actions.ok') },
@@ -86,41 +114,12 @@ const BoulderEditorScreen: FunctionComponent<BoulderEditorScreenProps> = ({
       return;
     }
 
-    try {
-      // TODO: Implement API call to save boulder
-      // const response = await fetch(`${API_URL}/boulders`, {
-      //   method: 'PUT',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     Authorization: `Bearer ${token}`
-      //   },
-      //   body: JSON.stringify({
-      //     image: imageUri, // or convert to base64
-      //     holds,
-      //   })
-      // });
-
-      Alert.alert(
-        t('boulder.save_success_title'),
-        t('boulder.save_success_message', { count: holds.length }),
-        [
-          {
-            text: t('actions.ok'),
-            onPress: () => {
-              // Navigate back to home
-              navigation.navigate('Home');
-            },
-          },
-        ]
-      );
-    } catch (error) {
-      console.error('Failed to save boulder:', error);
-      Alert.alert(
-        t('boulder.save_error_title'),
-        t('boulder.save_error_message'),
-        [{ text: t('actions.ok') }]
-      );
-    }
+    saveBoulder({
+      image: imageUri,
+      holds,
+      name: 'New Boulder', // TODO: Add name input field
+      description: '', // TODO: Add description input field
+    });
   };
 
   return (
@@ -177,11 +176,14 @@ const BoulderEditorScreen: FunctionComponent<BoulderEditorScreenProps> = ({
         <TouchableOpacity
           style={[
             styles.saveButton,
-            holds.length === 0 && styles.saveButtonDisabled,
+            (holds.length === 0 || isPending) && styles.saveButtonDisabled,
           ]}
           onPress={handleSave}
+          disabled={isPending}
         >
-          <Text style={styles.saveButtonText}>{t('actions.save')}</Text>
+          <Text style={styles.saveButtonText}>
+            {isPending ? t('actions.saving') : t('actions.save')}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>

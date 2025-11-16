@@ -1,5 +1,5 @@
 {
-  "name": "@jrposada/fit-log-shared",
+  "name": "@jrposada/fit-log-shared-react",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -19,7 +19,11 @@
     "dev": "tsc --build --watch --preserveWatchOutput"
   },
   "dependencies": {
-    "@aws-sdk/lib-dynamodb": "^3.758.0",
-    "zod": "^3.24.2"
+    "@jrposada/fit-log-shared": "*",
+    "axios": "^1.13.2"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.90.5",
+    "react": "19.1.0"
   }
 }
