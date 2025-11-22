@@ -1,6 +1,5 @@
 import { ApiResponse } from '@shared/models/api-response';
 import { BouldersGetByIdResponse } from '@shared/models/boulder';
-// import { BouldersGetByIdResponse } from '@jrposada/fit-log-shared/models/boulder.js';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

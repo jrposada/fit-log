@@ -48,7 +48,7 @@ export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 4. Run app in development mode
 
 ```
-npm run dev
+npm -w packages/<app-name> run dev
 ```
 
 5. Initialize local database
