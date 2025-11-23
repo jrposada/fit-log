@@ -15,7 +15,7 @@ import { assert } from '@shared/utils/assert';
 import dotenv from 'dotenv';
 
 if (process.env.IS_OFFLINE) {
-  const env = dotenv.config({ path: '.env.development' }).parsed;
+  const env = dotenv.config({ path: '.env' }).parsed;
   Object.assign(process.env, env);
 }
 
