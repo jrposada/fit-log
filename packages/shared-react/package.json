@@ -16,14 +16,23 @@
     "npm": "^10"
   },
   "scripts": {
-    "dev": "tsc --build --watch --preserveWatchOutput"
+    "dev": "tsc --build --watch --preserveWatchOutput",
+    "lint:eslint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "lint:format": "prettier . --check",
+    "lint:types": "tsc --noEmit",
+    "lint": "run-p lint:*"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.90.5",
+    "react": "19.1.0"
   },
   "dependencies": {
     "@jrposada/fit-log-shared": "*",
     "axios": "^1.13.2"
   },
-  "peerDependencies": {
-    "@tanstack/react-query": "^5.90.5",
-    "react": "19.1.0"
+  "devDependencies": {
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "eslint-plugin-react": "^7.37.5"
   }
 }
