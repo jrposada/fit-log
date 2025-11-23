@@ -6,12 +6,12 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text } from 'react-native';
 
-import BoulderEditorScreen from '../screens/boulder-editor-screen';
+import ClimbingScreen from '../screens/climbing-screen';
 import HomeScreen from '../screens/home-screen';
-import ImagePickerScreen from '../screens/image-picker-screen';
+import TrainingScreen from '../screens/training-screen';
 import { RootStackParamList } from '../types/routes';
 
-const Stack = createBottomTabNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 const Navigation: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -20,7 +20,7 @@ const Navigation: FunctionComponent = () => {
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
-      <Stack.Navigator
+      <Tab.Navigator
         initialRouteName="Home"
         screenOptions={{
           headerStyle: {
@@ -33,24 +33,35 @@ const Navigation: FunctionComponent = () => {
           headerRight: () => (
             <Text style={styles.versionText}>{t('version', { version })}</Text>
           ),
+          tabBarActiveTintColor: '#4CAF50',
+          tabBarInactiveTintColor: '#999',
         }}
       >
-        <Stack.Screen
+        <Tab.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: t('boulder.screen_title_home') }}
+          options={{
+            title: t('home.title'),
+            tabBarIcon: () => <Text style={styles.tabIcon}>🏠</Text>,
+          }}
         />
-        <Stack.Screen
-          name="ImagePicker"
-          component={ImagePickerScreen}
-          options={{ title: t('boulder.screen_title_select') }}
+        <Tab.Screen
+          name="Climbing"
+          component={ClimbingScreen}
+          options={{
+            title: t('climbing.title'),
+            tabBarIcon: () => <Text style={styles.tabIcon}>🧗</Text>,
+          }}
         />
-        <Stack.Screen
-          name="BoulderEditor"
-          component={BoulderEditorScreen}
-          options={{ title: t('boulder.screen_title_editor') }}
+        <Tab.Screen
+          name="Training"
+          component={TrainingScreen}
+          options={{
+            title: t('training.title'),
+            tabBarIcon: () => <Text style={styles.tabIcon}>💪</Text>,
+          }}
         />
-      </Stack.Navigator>
+      </Tab.Navigator>
     </NavigationContainer>
   );
 };
@@ -61,6 +72,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginRight: 12,
     opacity: 0.8,
+  },
+  tabIcon: {
+    fontSize: 24,
   },
 });
 

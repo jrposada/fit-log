@@ -16,7 +16,6 @@ import {
   View,
 } from 'react-native';
 
-import { config } from '../config';
 import { RootStackParamList } from '../types/routes';
 
 type BoulderEditorScreenProps = {
@@ -41,7 +40,6 @@ const BoulderEditorScreen: FunctionComponent<BoulderEditorScreenProps> = ({
   });
 
   const { mutate: saveBoulder, isPending } = useBouldersPut({
-    apiBaseUrl: config.apiBaseUrl,
     onSuccess: () => {
       Alert.alert(
         t('boulder.save_success_title'),
@@ -115,7 +113,6 @@ const BoulderEditorScreen: FunctionComponent<BoulderEditorScreenProps> = ({
     }
 
     saveBoulder({
-      image: imageUri,
       holds,
       name: 'New Boulder', // TODO: Add name input field
       description: '', // TODO: Add description input field

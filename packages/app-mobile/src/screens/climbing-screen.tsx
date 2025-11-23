@@ -8,77 +8,61 @@ import {
   View,
 } from 'react-native';
 
-type DashboardCard = {
+type ClimbingCard = {
   id: string;
   title: string;
-  value: string;
+  description: string;
   icon: string;
   color: string;
 };
 
-const HomeScreen: FunctionComponent = () => {
+const ClimbingScreen: FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const dashboardCards: DashboardCard[] = [
+  const climbingCards: ClimbingCard[] = [
     {
       id: '1',
-      title: t('home.total_workouts'),
-      value: '42',
-      icon: '💪',
+      title: t('climbing.recent_boulders'),
+      description: t('climbing.recent_boulders_description'),
+      icon: '🧗‍♂️',
       color: '#4CAF50',
     },
     {
       id: '2',
-      title: t('home.this_week'),
-      value: '5',
-      icon: '📅',
+      title: t('climbing.log_new_boulder'),
+      description: t('climbing.log_new_boulder_description'),
+      icon: '📷',
       color: '#2196F3',
     },
     {
       id: '3',
-      title: t('home.current_streak'),
-      value: '7 days',
-      icon: '🔥',
+      title: t('climbing.progress_tracker'),
+      description: t('climbing.progress_tracker_description'),
+      icon: '📊',
       color: '#FF9800',
     },
     {
       id: '4',
-      title: t('home.total_time'),
-      value: '24h 30m',
-      icon: '⏱️',
+      title: t('climbing.favorite_routes'),
+      description: t('climbing.favorite_routes_description'),
+      icon: '⭐',
       color: '#9C27B0',
-    },
-    {
-      id: '5',
-      title: t('home.boulders_climbed'),
-      value: '128',
-      icon: '🧗',
-      color: '#F44336',
-    },
-    {
-      id: '6',
-      title: t('home.personal_best'),
-      value: 'V7',
-      icon: '🏆',
-      color: '#FFD700',
     },
   ];
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>{t('home.title')}</Text>
+      <Text style={styles.title}>{t('climbing.title')}</Text>
       <View style={styles.cardsContainer}>
-        {dashboardCards.map((card) => (
+        {climbingCards.map((card) => (
           <TouchableOpacity
             key={card.id}
-            style={[styles.card, { borderLeftColor: card.color }]}
+            style={[styles.card, { backgroundColor: card.color }]}
           >
             <Text style={styles.cardIcon}>{card.icon}</Text>
             <View style={styles.cardContent}>
               <Text style={styles.cardTitle}>{card.title}</Text>
-              <Text style={[styles.cardValue, { color: card.color }]}>
-                {card.value}
-              </Text>
+              <Text style={styles.cardDescription}>{card.description}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -104,20 +88,18 @@ const styles = StyleSheet.create({
     gap: 15,
   },
   card: {
-    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
-    borderLeftWidth: 4,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 3.84,
-    elevation: 3,
+    elevation: 4,
   },
   cardIcon: {
     fontSize: 40,
@@ -127,14 +109,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cardTitle: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
     marginBottom: 4,
   },
-  cardValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  cardDescription: {
+    fontSize: 14,
+    color: '#fff',
+    opacity: 0.9,
   },
 });
 
-export default HomeScreen;
+export default ClimbingScreen;
