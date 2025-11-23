@@ -1,6 +1,5 @@
 function getEnvVariable(key: string): string {
   // Try process.env first (Expo apps and Node.js environments)
-  console.log(process.env)
   if (
     typeof process !== 'undefined' &&
     process.env &&
