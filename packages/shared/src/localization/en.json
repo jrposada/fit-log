@@ -91,5 +91,6 @@
     "name": "Workout Name",
     "session_history": "Sessions",
     "update": "Update Workout"
-  }
+  },
+  "version": "API v{{version}}"
 }
