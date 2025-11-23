@@ -8,7 +8,7 @@
   "files.insertFinalNewline": true,
   "editor.rulers": [80],
   "i18n-ally.localesPaths": [
-    "packages/frontend/src/localization"
+    "packages/shared/src/localization"
   ],
   "i18n-ally.enabledFrameworks": [
     "react-i18next"
