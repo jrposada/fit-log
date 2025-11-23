@@ -3,19 +3,17 @@ import { BouldersGetByIdResponse } from '@shared/models/boulder';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
 type UseBouldersById = {
-  apiBaseUrl: string;
   id: string;
   onUnauthorized?: () => void;
 };
 
-export function useBouldersByid({
-  apiBaseUrl,
-  id,
-  onUnauthorized,
-}: UseBouldersById) {
+export function useBouldersByid({ id, onUnauthorized }: UseBouldersById) {
+  const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
+
   return useQuery({
     queryKey: ['boulders', { id }],
     queryFn: query({

@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { getEnvVariable } from '../../infrastructure/get-env-variable';
+
 type UseBouldersDeleteParams = {
-  apiBaseUrl: string;
   onError?: (message: string) => void;
   onSuccess?: () => void;
 };
@@ -10,11 +11,11 @@ type UseBouldersDeleteParams = {
 type UseBouldersDeleteMutationParams = string;
 
 export function useBouldersDelete({
-  apiBaseUrl,
   onError,
   onSuccess,
-}: UseBouldersDeleteParams) {
+}: UseBouldersDeleteParams = {}) {
   const client = useQueryClient();
+  const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
   return useMutation<void, string, UseBouldersDeleteMutationParams, unknown>({
     mutationFn: async (id) => {

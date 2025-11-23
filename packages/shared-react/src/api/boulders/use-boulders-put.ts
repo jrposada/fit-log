@@ -2,38 +2,36 @@ import { BouldersPutRequest } from '@shared/models/boulder';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { getEnvVariable } from '../../infrastructure/get-env-variable';
+
 type UseBouldersPutParams = {
-  apiBaseUrl: string;
   onError?: (message: string) => void;
   onSuccess?: () => void;
 };
 
 type UseBouldersPutMutationParams = BouldersPutRequest;
 
-export function useBouldersPut({
-  apiBaseUrl,
-  onError,
-  onSuccess,
-}: UseBouldersPutParams) {
+export function useBouldersPut({ onError, onSuccess }: UseBouldersPutParams) {
   const client = useQueryClient();
+  const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
   return useMutation<void, string, UseBouldersPutMutationParams, unknown>({
     mutationFn: async (boulder) => {
-      const response = await axios.put(
-        `${apiBaseUrl}/boulders`,
-        JSON.stringify(boulder),
-        {
-          headers: {
-            Authorization: '',
-          },
-        }
-      );
+      console.log('Putting boulder:', boulder);
+      const response = await axios.put(`${apiBaseUrl}/boulders`, boulder, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: '',
+        },
+      });
+      console.log('Boulder put response:', response);
 
       if (!response.data.success) {
         throw new Error('Api error');
       }
     },
     onError: (message) => {
+      console.error('Failed to put boulder:', JSON.stringify(message));
       onError?.(message);
     },
     onSuccess: () => {
