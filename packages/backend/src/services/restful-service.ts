@@ -37,7 +37,10 @@ export abstract class RestfulService<T extends DbRecordType> {
     return record;
   }
 
-  public async getAll(sk?: string): Promise<{
+  public async getAll(
+    sk?: string,
+    limit?: number
+  ): Promise<{
     items: DbRecord<T>[];
     lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
   }> {
@@ -49,6 +52,7 @@ export abstract class RestfulService<T extends DbRecordType> {
         ':PK': this.entity,
         ...(sk ? { ':SK': sk } : {}),
       },
+      ...(limit ? { Limit: limit } : {}),
     });
 
     return data;

@@ -1,18 +1,27 @@
-import { Climb, ClimbsGetResponse } from '@shared/models/climb';
+import {
+  Climb,
+  ClimbsGetParams,
+  climbsGetParamsSchema,
+  ClimbsGetResponse,
+} from '@shared/models/climb';
 import { ApiResponse } from '@shared/models/api-response';
 import { assert } from '@shared/utils/assert';
+import { APIGatewayProxyEvent } from 'aws-lambda';
 
 import { DbRecord } from '../../../services/aws/db-record';
 import { ClimbsService } from '../../../services/climbs-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<ClimbsGetResponse>(
-  async ({ authorizerContext }) => {
+  async ({ authorizerContext, event }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
+
+    const { params } = validateEvent(event);
 
     const { items: climbs, lastEvaluatedKey } =
       await ClimbsService.instance.getAll(
-        ClimbsService.instance.calculatePartialSk()
+        ClimbsService.instance.calculatePartialSk(),
+        params.limit
       );
 
     return {
@@ -24,6 +33,20 @@ export const handler = apiHandler<ClimbsGetResponse>(
     };
   }
 );
+
+function validateEvent(event: APIGatewayProxyEvent): {
+  params: ClimbsGetParams;
+} {
+  try {
+    const params = climbsGetParamsSchema.parse(
+      event.queryStringParameters ?? {}
+    );
+    return { params };
+  } catch (error) {
+    console.error(error);
+    throw new Error('Invalid request');
+  }
+}
 
 type CalculateApiResponseParams = {
   lastEvaluatedKey: Awaited<

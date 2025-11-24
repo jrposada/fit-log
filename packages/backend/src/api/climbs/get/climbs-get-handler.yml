@@ -7,6 +7,10 @@ ClimbsGet:
     - http:
         path: api/climbs
         method: get
+        request:
+          parameters:
+            querystrings:
+              limit: false
         cors: true
         authorizer:
           name: Authorizer

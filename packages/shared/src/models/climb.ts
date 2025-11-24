@@ -86,6 +86,13 @@ export const climbSchema = z.object({
 /////////
 // GET //
 /////////
+export type ClimbsGetParams = {
+  limit?: number;
+};
+export const climbsGetParamsSchema = z.object({
+  limit: z.coerce.number().int().positive().optional(),
+});
+
 export type ClimbsGetResponse = {
   climbs: Climb[];
   lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];

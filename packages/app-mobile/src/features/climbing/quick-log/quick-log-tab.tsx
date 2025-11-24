@@ -23,7 +23,7 @@ const locations = [
 const QuickLogTab: FunctionComponent = () => {
   const { t } = useTranslation();
   const [location, setLocation] = useState(locations[0]);
-  const { data: climbs = [], isLoading } = useClimbs();
+  const { data: climbs = [], isLoading } = useClimbs({ limit: 3 });
 
   const handleLog = (id: string) => {
     console.log('log route', id);

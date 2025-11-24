@@ -8,24 +8,28 @@ import { query } from '../query';
 
 type UseClimbsParams = {
   onUnauthorized?: () => void;
+  limit?: number;
 };
 
-function useClimbs({ onUnauthorized }: UseClimbsParams = {}) {
+function useClimbs({ onUnauthorized, limit }: UseClimbsParams = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
   return useQuery({
-    queryKey: ['climbs'],
+    queryKey: ['climbs', { limit }],
     queryFn: query({
       defaultResponse: [],
       fn: async () => {
-        const response = await axios.get<ApiResponse<ClimbsGetResponse>>(
-          `${apiBaseUrl}/climbs`,
-          {
-            headers: {
-              Authorization: '',
-            },
-          }
-        );
+        const params = new URLSearchParams();
+        if (limit) {
+          params.append('limit', limit.toString());
+        }
+
+        const url = `${apiBaseUrl}/climbs${params.toString() ? `?${params.toString()}` : ''}`;
+        const response = await axios.get<ApiResponse<ClimbsGetResponse>>(url, {
+          headers: {
+            Authorization: '',
+          },
+        });
 
         if (!response.data.success) {
           throw new Error('Api error');
