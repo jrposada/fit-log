@@ -29,7 +29,6 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
         onAddNew={onAddNew}
         placeholder={t('climbing.select_location')}
         searchPlaceholder={t('climbing.search_location')}
-        addNewPlaceholder={t('climbing.add_new_location')}
         addButtonLabel={t('actions.add')}
         closeButtonLabel={t('actions.close')}
         emptyStateMessage={t('climbing.no_locations_found')}

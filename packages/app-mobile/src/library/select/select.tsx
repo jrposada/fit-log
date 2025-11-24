@@ -20,7 +20,6 @@ export interface SelectProps {
   onAddNew?: (value: string) => void;
   placeholder?: string;
   searchPlaceholder?: string;
-  addNewPlaceholder?: string;
   addButtonLabel?: string;
   closeButtonLabel?: string;
   emptyStateMessage?: string;
@@ -34,7 +33,6 @@ function Select({
   onAddNew,
   placeholder = 'Select an option',
   searchPlaceholder = 'Search',
-  addNewPlaceholder = 'Add new option',
   addButtonLabel = 'Add',
   closeButtonLabel = 'Close',
   emptyStateMessage = 'No options found',
@@ -44,7 +42,6 @@ function Select({
 
   const [isModalVisible, setModalVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [newOption, setNewOption] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 200);
 
   const fuse = useMemo(
@@ -57,9 +54,18 @@ function Select({
     [options]
   );
 
-  const filteredOptions = debouncedSearchTerm
-    ? fuse.search(debouncedSearchTerm).map((result) => result.item)
+  const filteredOptions = debouncedSearchTerm.trim()
+    ? fuse
+        .search(debouncedSearchTerm.trim())
+        .map((result: { item: string }) => result.item)
     : options;
+
+  const hasExactMatch = options.some(
+    (option) =>
+      option.toLowerCase() === debouncedSearchTerm.trim().toLowerCase()
+  );
+  const showAddButton =
+    allowAddNew && onAddNew && debouncedSearchTerm.trim() && !hasExactMatch;
 
   // Scroll to selected option when modal opens
   useEffect(() => {
@@ -84,7 +90,6 @@ function Select({
   const closeModal = () => {
     setModalVisible(false);
     setSearchTerm('');
-    setNewOption('');
   };
 
   const handleSelectOption = (option: string) => {
@@ -92,21 +97,10 @@ function Select({
     closeModal();
   };
 
-  const handleAddOption = () => {
-    const trimmedValue = newOption.trim();
-    if (!trimmedValue) return;
-
-    if (options.includes(trimmedValue)) {
-      // If option already exists, just select it
-      onChange(trimmedValue);
-      closeModal();
-      return;
-    }
-
-    if (onAddNew) {
-      onAddNew(trimmedValue);
-      closeModal();
-    }
+  const handleAddNew = () => {
+    if (!onAddNew) return;
+    onAddNew(debouncedSearchTerm.trim());
+    closeModal();
   };
 
   return (
@@ -171,7 +165,7 @@ function Select({
               <View style={styles.emptyState}>
                 <Text style={styles.emptyStateText}>
                   {debouncedSearchTerm
-                    ? `No results for "${debouncedSearchTerm}"`
+                    ? `No results for "${debouncedSearchTerm.trim()}"`
                     : emptyStateMessage}
                 </Text>
               </View>
@@ -201,25 +195,12 @@ function Select({
         </Modal.Body>
 
         <Modal.Footer>
-          {allowAddNew && onAddNew && (
-            <View style={styles.addOptionContainer}>
-              <TextInput
-                style={styles.addOptionInput}
-                placeholder={addNewPlaceholder}
-                value={newOption}
-                onChangeText={setNewOption}
-              />
-              <TouchableOpacity
-                style={[
-                  styles.addOptionButton,
-                  !newOption.trim() && styles.addOptionButtonDisabled,
-                ]}
-                onPress={handleAddOption}
-                disabled={!newOption.trim()}
-              >
-                <Text style={styles.addOptionButtonText}>{addButtonLabel}</Text>
-              </TouchableOpacity>
-            </View>
+          {showAddButton && (
+            <TouchableOpacity style={styles.addButton} onPress={handleAddNew}>
+              <Text style={styles.addButtonText}>
+                {addButtonLabel} "{debouncedSearchTerm.trim()}"
+              </Text>
+            </TouchableOpacity>
           )}
 
           <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
@@ -303,33 +284,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#999',
   },
-  addOptionContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    gap: 8,
-  },
-  addOptionInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-  },
-  addOptionButton: {
+  addButton: {
     backgroundColor: '#2196F3',
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 20,
+    marginBottom: 12,
+    alignSelf: 'stretch',
   },
-  addOptionButtonDisabled: {
-    backgroundColor: '#ccc',
-  },
-  addOptionButtonText: {
+  addButtonText: {
     color: '#fff',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
+    textAlign: 'center',
   },
   closeButton: {
     alignSelf: 'center',
