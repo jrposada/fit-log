@@ -1,7 +1,7 @@
 import Bar, { type TabBarItem, type TabsBarProps } from './bar';
 import Content, { type TabContentItem, type TabsContentProps } from './content';
 
-export const Tabs = {
+export default {
   Bar,
   Content,
 };

@@ -1,0 +1,21 @@
+LocationsPut:
+  handler: src/api/locations/put/locations-put.handler
+  role: ApiLocationsPutRole
+  timeout: 30
+  memorySize: 128
+  events:
+    - http:
+        path: api/locations
+        method: put
+        cors: true
+        authorizer:
+          name: Authorizer
+          type: Request
+          resultTtlInSeconds: 0
+  environment:
+    ALLOWED_ORIGIN:
+      Fn::GetAtt:
+        - FrontendCloudFrontDistribution
+        - DomainName
+    TABLE_NAME:
+      Ref: DB

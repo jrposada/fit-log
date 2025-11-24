@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 
 import QuickLogTab from '../features/climbing/quick-log/quick-log-tab';
-import { TabBarItem, TabContentItem, Tabs } from '../library/tabs';
+import Tabs, { TabBarItem, TabContentItem } from '../library/tabs';
 
 type Tab = 'quick-log' | 'browse' | 'projects' | 'stats';
 

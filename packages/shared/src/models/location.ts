@@ -54,3 +54,32 @@ export type LocationsGetResponse = {
   locations: Location[];
   lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
+
+/////////
+// PUT //
+/////////
+export type LocationsPutRequest = Omit<
+  Location,
+  'id' | 'createdAt' | 'updatedAt'
+> & {
+  /**
+   * ID `location#<location-id>`.
+   */
+  id?: string;
+
+  /**
+   * Date when location was created in ISO 8601 format (UTC).
+   *
+   * @format date-time
+   */
+  createdAt?: string;
+};
+export const locationsPutRequestSchema = z.object({
+  id: z.string().optional(),
+  name: z.string().nonempty(),
+  createdAt: z.string().datetime().optional(),
+});
+
+export type LocationsPutResponse = {
+  location: Location;
+};
