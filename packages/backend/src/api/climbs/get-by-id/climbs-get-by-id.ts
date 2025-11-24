@@ -20,13 +20,14 @@ export const handler = apiHandler<ClimbsGetByIdResponse>(
         data: {
           climb: {
             id: climb.SK,
-            image: climb.image,
             holds: climb.holds.map((hold) => ({
               x: hold.x,
               y: hold.y,
             })),
             name: climb.name,
+            grade: climb.grade,
             description: climb.description,
+            sector: climb.sector,
             createdAt: climb.createdAt,
             updatedAt: climb.updatedAt,
           },

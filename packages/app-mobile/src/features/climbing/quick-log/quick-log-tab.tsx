@@ -1,16 +1,18 @@
+import { useClimbs } from '@shared-react/api/climbs/use-climbs';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import Separator from '../../../library/separator/separator';
+import ClimbCard from './climb-card';
 import LocationSelector from './location-selector';
-import RouteCard, { Route } from './route-card';
-
-const sampleRoutes: Route[] = [
-  { id: 'r1', grade: 'V4', name: 'Crimp City', section: 'Cave section' },
-  { id: 'r2', grade: 'V5', name: 'The Gaston', section: 'Corner wall' },
-  { id: 'r3', grade: 'V6', name: 'Roof Monster', section: 'Ceiling' },
-];
 
 const locations = [
   'Mesa Rim - Pacific Beach',
@@ -21,10 +23,19 @@ const locations = [
 const QuickLogTab: FunctionComponent = () => {
   const { t } = useTranslation();
   const [location, setLocation] = useState(locations[0]);
+  const { data: climbs = [], isLoading } = useClimbs();
 
   const handleLog = (id: string) => {
     console.log('log route', id);
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#2962ff" />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
@@ -34,15 +45,13 @@ const QuickLogTab: FunctionComponent = () => {
         onChange={setLocation}
       />
       <Separator />
-      <Text style={styles.sectionLabel}>
-        {t('climbing.recent_routes_here')}
-      </Text>
-      {sampleRoutes.map((route) => (
-        <RouteCard key={route.id} route={route} onLog={handleLog} />
+      <Text style={styles.sectionLabel}>{t('climbing.recent_climbs')}</Text>
+      {climbs.map((climb) => (
+        <ClimbCard key={climb.id} climb={climb} onLog={handleLog} />
       ))}
       <TouchableOpacity style={styles.customButton} activeOpacity={0.7}>
         <Text style={styles.customButtonText}>
-          + {t('climbing.log_custom_route')}
+          + {t('climbing.log_custom_climb')}
         </Text>
       </TouchableOpacity>
     </ScrollView>
@@ -56,6 +65,11 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     paddingBottom: 48,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   sectionLabel: {
     fontSize: 15,

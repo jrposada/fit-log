@@ -63,6 +63,14 @@ aws dynamodb create-table \
     --endpoint-url http://localhost:3200
 ```
 
+6. Seed local database with mock data (optional)
+
+```
+npm -w packages/dev-tools run start -- seed <user-id> --num-workouts 10 --num-climbs 15
+```
+
+Replace `<user-id>` with your test user ID. You can adjust the number of workouts and climbs as needed.
+
 ## Contributing
 
 1. Pull latest `beta` branch.

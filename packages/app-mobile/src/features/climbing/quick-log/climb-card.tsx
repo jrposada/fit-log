@@ -1,39 +1,33 @@
+import { Climb } from '@shared/models/climb';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export interface Route {
-  id: string;
-  grade: string;
-  name: string;
-  section: string;
-}
-
-export interface RouteCardProps {
-  route: Route;
+export interface ClimbCardProps {
+  climb: Climb;
   onLog: (id: string) => void;
 }
 
-const RouteCard: FunctionComponent<RouteCardProps> = ({ route, onLog }) => {
+const ClimbCard: FunctionComponent<ClimbCardProps> = ({ climb, onLog }) => {
   const { t } = useTranslation();
 
   const handlePress = () => {
-    onLog(route.id);
+    onLog(climb.id);
   };
 
   return (
     <View style={styles.card}>
       <View style={styles.topRow}>
         <Text style={styles.title}>
-          <Text style={{ color: beautifyGradeColor(route.grade) }}>
-            ● {route.grade}
+          <Text style={{ color: beautifyGradeColor(climb.grade) }}>
+            ● {climb.grade}
           </Text>{' '}
-          | {route.name}
+          | {climb.name}
         </Text>
       </View>
       <View style={styles.bottomRow}>
-        <Text style={styles.section}>{route.section}</Text>
+        <Text style={styles.sector}>{climb.sector}</Text>
         <TouchableOpacity
           style={styles.actionButton}
           onPress={handlePress}
@@ -72,7 +66,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  section: {
+  sector: {
     fontSize: 13,
     color: '#666',
   },
@@ -89,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RouteCard;
+export default ClimbCard;

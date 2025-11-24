@@ -44,9 +44,19 @@ export type Climb = {
   name: string;
 
   /**
+   * Grade of the climb (e.g., V0, V1, 5.10a)
+   */
+  grade: string;
+
+  /**
    * Description or notes
    */
   description?: string;
+
+  /**
+   * Sector
+   */
+  sector?: string;
 
   /**
    * Date when climb was created in ISO 8601 format (UTC).
@@ -66,7 +76,9 @@ export const climbSchema = z.object({
   id: z.string().nonempty(),
   holds: z.array(holdSchema),
   name: z.string().nonempty(),
+  grade: z.string().nonempty(),
   description: z.string().optional(),
+  sector: z.string().optional(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
@@ -99,7 +111,9 @@ export const climbsPutRequestSchema = z.object({
   id: z.string().optional(),
   holds: z.array(holdSchema),
   name: z.string().nonempty(),
+  grade: z.string().nonempty(),
   description: z.string().optional(),
+  sector: z.string().optional(),
   createdAt: z.string().datetime().optional(),
 });
 

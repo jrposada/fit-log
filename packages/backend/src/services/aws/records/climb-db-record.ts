@@ -6,7 +6,9 @@ export type ClimbDbRecord = {
 
   holds: Hold[];
   name: string;
+  grade: string;
   description?: string;
+  sector?: string;
   createdAt: string;
 };
 

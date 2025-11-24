@@ -42,13 +42,14 @@ function calculateApiResponse({
       lastEvaluatedKey,
       climbs: climbs.map<Climb>((item) => ({
         id: item.SK,
-        image: item.image,
         holds: item.holds.map((hold) => ({
           x: hold.x,
           y: hold.y,
         })),
         name: item.name,
+        grade: item.grade,
         description: item.description,
+        sector: item.sector,
         createdAt: item.createdAt,
         updatedAt: item.updatedAt,
       })),
