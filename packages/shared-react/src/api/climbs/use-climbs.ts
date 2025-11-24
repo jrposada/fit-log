@@ -1,25 +1,25 @@
 import { ApiResponse } from '@shared/models/api-response';
-import { BouldersGetByIdResponse } from '@shared/models/boulder';
+import { ClimbsGetResponse } from '@shared/models/climb';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
-type UseBouldersById = {
-  id: string;
+type UseClimbsParams = {
   onUnauthorized?: () => void;
 };
 
-export function useBouldersByid({ id, onUnauthorized }: UseBouldersById) {
+function useClimbs({ onUnauthorized }: UseClimbsParams = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
   return useQuery({
-    queryKey: ['boulders', { id }],
+    queryKey: ['climbs'],
     queryFn: query({
+      defaultResponse: [],
       fn: async () => {
-        const response = await axios.get<ApiResponse<BouldersGetByIdResponse>>(
-          `${apiBaseUrl}/boulders/${encodeURIComponent(id)}`,
+        const response = await axios.get<ApiResponse<ClimbsGetResponse>>(
+          `${apiBaseUrl}/climbs`,
           {
             headers: {
               Authorization: '',
@@ -31,9 +31,11 @@ export function useBouldersByid({ id, onUnauthorized }: UseBouldersById) {
           throw new Error('Api error');
         }
 
-        return response.data.data.boulder;
+        return response.data.data.climbs;
       },
       onUnauthorized,
     }),
   });
 }
+
+export { useClimbs };

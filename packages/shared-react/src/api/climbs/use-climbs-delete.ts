@@ -3,24 +3,21 @@ import axios from 'axios';
 
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 
-type UseBouldersDeleteParams = {
+type UseClimbsDeleteParams = {
   onError?: (message: string) => void;
   onSuccess?: () => void;
 };
 
-type UseBouldersDeleteMutationParams = string;
+type UseClimbsDeleteMutationParams = string;
 
-export function useBouldersDelete({
-  onError,
-  onSuccess,
-}: UseBouldersDeleteParams = {}) {
+function useClimbsDelete({ onError, onSuccess }: UseClimbsDeleteParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
-  return useMutation<void, string, UseBouldersDeleteMutationParams, unknown>({
+  return useMutation<void, string, UseClimbsDeleteMutationParams, unknown>({
     mutationFn: async (id) => {
       const response = await axios.delete(
-        `${apiBaseUrl}/boulders/${encodeURIComponent(id)}`,
+        `${apiBaseUrl}/climbs/${encodeURIComponent(id)}`,
         {
           headers: {
             Authorization: '',
@@ -37,9 +34,11 @@ export function useBouldersDelete({
     },
     onSuccess: () => {
       client.invalidateQueries({
-        queryKey: ['boulders'],
+        queryKey: ['climbs'],
       });
       onSuccess?.();
     },
   });
 }
+
+export { useClimbsDelete };

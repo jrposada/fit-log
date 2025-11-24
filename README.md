@@ -1,6 +1,6 @@
 # FIT Log
 
-App to track workouts.
+App to track workouts and climbing sessions.
 
 ## Create a new user
 

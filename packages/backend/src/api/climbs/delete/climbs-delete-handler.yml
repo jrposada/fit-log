@@ -1,12 +1,12 @@
-BouldersGet:
-  handler: src/api/boulders/get/boulders-get.handler
-  role: ApiBouldersGetRole
+ClimbsDelete:
+  handler: src/api/climbs/delete/climbs-delete.handler
+  role: ApiClimbsDeleteRole
   timeout: 30
   memorySize: 128
   events:
     - http:
-        path: api/boulders
-        method: get
+        path: api/climbs/{id}
+        method: delete
         cors: true
         authorizer:
           name: Authorizer

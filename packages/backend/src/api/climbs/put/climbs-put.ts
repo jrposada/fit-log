@@ -1,48 +1,46 @@
 import {
-  BouldersPutRequest,
-  bouldersPutRequestSchema,
-  BouldersPutResponse,
-} from '@shared/models/boulder';
+  ClimbsPutRequest,
+  climbsPutRequestSchema,
+  ClimbsPutResponse,
+} from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
 import { DbRecord } from '../../../services/aws/db-record';
-import { BouldersService } from '../../../services/boulders-service';
+import { ClimbsService } from '../../../services/climbs-service';
 import { apiHandler } from '../../api-utils';
 
-export const handler = apiHandler<BouldersPutResponse>(
+export const handler = apiHandler<ClimbsPutResponse>(
   async ({ authorizerContext, event }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { boulderPutData } = validateEvent(event);
+    const { climbPutData } = validateEvent(event);
     const { userId } = authorizerContext;
 
-    const record: DbRecord<'boulder'> = {
-      image: boulderPutData.image,
-      holds: boulderPutData.holds.map((hold) => ({
+    const record: DbRecord<'climb'> = {
+      holds: climbPutData.holds.map((hold) => ({
         x: hold.x,
         y: hold.y,
       })),
-      name: boulderPutData.name,
-      description: boulderPutData.description,
-      createdAt: boulderPutData.createdAt ?? new Date().toISOString(),
+      name: climbPutData.name,
+      description: climbPutData.description,
+      createdAt: climbPutData.createdAt ?? new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      PK: 'boulder',
+      PK: 'climb',
       SK:
-        (boulderPutData.id as DbRecord<'boulder'>['SK']) ??
-        BouldersService.instance.newSk(userId),
+        (climbPutData.id as DbRecord<'climb'>['SK']) ??
+        ClimbsService.instance.newSk(userId),
     };
 
-    void (await BouldersService.instance.put(record));
+    void (await ClimbsService.instance.put(record));
 
     return {
       statusCode: 200,
       body: {
         success: true,
         data: {
-          boulder: {
+          climb: {
             id: record.SK,
-            image: record.image,
             holds: record.holds,
             name: record.name,
             description: record.description,
@@ -56,7 +54,7 @@ export const handler = apiHandler<BouldersPutResponse>(
 );
 
 function validateEvent(event: APIGatewayProxyEvent): {
-  boulderPutData: BouldersPutRequest;
+  climbPutData: ClimbsPutRequest;
 } {
   if (!event.body) {
     throw new Error('Invalid request');
@@ -64,8 +62,8 @@ function validateEvent(event: APIGatewayProxyEvent): {
 
   try {
     const body = JSON.parse(event.body);
-    const boulderPutData = bouldersPutRequestSchema.parse(body);
-    return { boulderPutData };
+    const climbPutData = climbsPutRequestSchema.parse(body);
+    return { climbPutData };
   } catch {
     throw new Error('Invalid request');
   }

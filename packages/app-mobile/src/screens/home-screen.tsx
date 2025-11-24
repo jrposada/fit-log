@@ -50,7 +50,7 @@ const HomeScreen: FunctionComponent = () => {
     },
     {
       id: '5',
-      title: t('home.boulders_climbed'),
+      title: t('home.climbs_completed'),
       value: '128',
       icon: '🧗',
       color: '#F44336',

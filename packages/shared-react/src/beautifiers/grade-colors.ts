@@ -22,7 +22,7 @@ const GRADE_PALETTE: Record<string, string> = {
 const FALLBACK_COLOR = '#9E9E9E';
 
 /**
- * Maps a bouldering V-grade string to a stable HEX color.
+ * Maps a climb V-grade string to a stable HEX color.
  *
  * Accepted input formats:
  *  - Single grades (e.g. "V4", "v7") – case-insensitive.

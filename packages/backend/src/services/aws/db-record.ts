@@ -1,10 +1,10 @@
-import { BoulderDbRecord } from './records/boulder-db-record';
+import { ClimbDbRecord } from './records/climb-db-record';
 import { FavoriteWorkoutDbRecord } from './records/favorite-workout-db-record';
 import { SessionDbRecord } from './records/session-db-record';
 import { WorkoutDbRecord } from './records/workout-db-record';
 
 export type DbRecordType =
-  | BoulderDbRecord['PK']
+  | ClimbDbRecord['PK']
   | FavoriteWorkoutDbRecord['PK']
   | SessionDbRecord['PK']
   | WorkoutDbRecord['PK'];
@@ -21,7 +21,7 @@ export type DbRecord<TRecordType extends DbRecordType> = {
    */
   updatedAt: string;
 } & (
-  | BoulderDbRecord
+  | ClimbDbRecord
   | FavoriteWorkoutDbRecord
   | SessionDbRecord
   | WorkoutDbRecord

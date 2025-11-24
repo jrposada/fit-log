@@ -1,5 +1,5 @@
 Resources:
-  ApiBouldersGetRole:
+  ApiClimbsGetByIdRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -22,7 +22,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - dynamodb:Query
+                  - dynamodb:GetItem
                 Resource:
                   Fn::GetAtt:
                     - DB

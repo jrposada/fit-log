@@ -1,11 +1,11 @@
-BouldersGetById:
-  handler: src/api/boulders/get-by-id/boulders-get-by-id.handler
-  role: ApiBouldersGetByIdRole
+ClimbsGetById:
+  handler: src/api/climbs/get-by-id/climbs-get-by-id.handler
+  role: ApiClimbsGetByIdRole
   timeout: 30
   memorySize: 128
   events:
     - http:
-        path: api/boulders/{id}
+        path: api/climbs/{id}
         method: get
         request:
           parameters:

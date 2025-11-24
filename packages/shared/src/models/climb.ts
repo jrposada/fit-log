@@ -6,7 +6,7 @@ import z from 'zod';
 ////////////
 
 /**
- * Represents a hold position on a boulder problem.
+ * Represents a hold position on a climbing problem.
  */
 export type Hold = {
   /**
@@ -25,18 +25,13 @@ export const holdSchema = z.object({
 });
 
 /**
- * Represents a boulder problem.
+ * Represents a climbing problem.
  */
-export type Boulder = {
+export type Climb = {
   /**
-   * ID `boulder#<user-id>#<boulder-id>`.
+   * ID `climb#<user-id>#<climb-id>`.
    */
   id: string;
-
-  /**
-   * URI or base64 encoded image data.
-   */
-  image: string;
 
   /**
    * Array of holds marking the route
@@ -44,7 +39,7 @@ export type Boulder = {
   holds: Hold[];
 
   /**
-   * Name/title for the boulder
+   * Name/title for the climb
    */
   name: string;
 
@@ -54,22 +49,21 @@ export type Boulder = {
   description?: string;
 
   /**
-   * Date when boulder was created in ISO 8601 format (UTC).
+   * Date when climb was created in ISO 8601 format (UTC).
    *
    * @format date-time
    */
   createdAt: string;
 
   /**
-   * Date when boulder was last updated in ISO 8601 format (UTC).
+   * Date when climb was last updated in ISO 8601 format (UTC).
    *
    * @format date-time
    */
   updatedAt: string;
 };
-export const boulderSchema = z.object({
+export const climbSchema = z.object({
   id: z.string().nonempty(),
-  image: z.string().nonempty(),
   holds: z.array(holdSchema),
   name: z.string().nonempty(),
   description: z.string().optional(),
@@ -80,51 +74,47 @@ export const boulderSchema = z.object({
 /////////
 // GET //
 /////////
-export type BouldersGetResponse = {
-  boulders: Boulder[];
+export type ClimbsGetResponse = {
+  climbs: Climb[];
   lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
 
 /////////
 // PUT //
 /////////
-export type BouldersPutRequest = Omit<
-  Boulder,
-  'id' | 'createdAt' | 'updatedAt'
-> & {
+export type ClimbsPutRequest = Omit<Climb, 'id' | 'createdAt' | 'updatedAt'> & {
   /**
-   * ID `boulder#<user-id>#<boulder-id>`.
+   * ID `climb#<user-id>#<climb-id>`.
    */
   id?: string;
 
   /**
-   * Date when boulder was created in ISO 8601 format (UTC).
+   * Date when climb was created in ISO 8601 format (UTC).
    *
    * @format date-time
    */
   createdAt?: string;
 };
-export const bouldersPutRequestSchema = z.object({
+export const climbsPutRequestSchema = z.object({
   id: z.string().optional(),
-  image: z.string().nonempty(),
   holds: z.array(holdSchema),
   name: z.string().nonempty(),
   description: z.string().optional(),
   createdAt: z.string().datetime().optional(),
 });
 
-export type BouldersPutResponse = {
-  boulder: Boulder;
+export type ClimbsPutResponse = {
+  climb: Climb;
 };
 
 ////////////
 // DELETE //
 ////////////
-export type BouldersDeleteResponse = undefined;
+export type ClimbsDeleteResponse = undefined;
 
 ///////////////
 // GET by ID //
 ///////////////
-export type BouldersGetByIdResponse = {
-  boulder: Boulder;
+export type ClimbsGetByIdResponse = {
+  climb: Climb;
 };

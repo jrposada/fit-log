@@ -4,15 +4,15 @@ import { v4 as uuid } from 'uuid';
 import { DbRecord } from './aws/db-record';
 import { RestfulService } from './restful-service';
 
-export class BouldersService extends RestfulService<'boulder'> {
-  static #instance: BouldersService;
+export class ClimbsService extends RestfulService<'climb'> {
+  static #instance: ClimbsService;
   static get instance() {
-    if (!BouldersService.#instance) {
+    if (!ClimbsService.#instance) {
       assert(process.env.TABLE_NAME);
-      BouldersService.#instance = new BouldersService(process.env.TABLE_NAME);
+      ClimbsService.#instance = new ClimbsService(process.env.TABLE_NAME);
     }
 
-    return BouldersService.#instance;
+    return ClimbsService.#instance;
   }
 
   static getUserId(sk: string): string {
@@ -21,25 +21,25 @@ export class BouldersService extends RestfulService<'boulder'> {
     return segments[1];
   }
 
-  static getBoulderUuid(sk: string): string {
+  static getClimbUuid(sk: string): string {
     const segments = sk.split('#');
     assert(segments.length === 3);
     return segments[2];
   }
 
   private constructor(tableName: string) {
-    super(tableName, 'boulder');
+    super(tableName, 'climb');
   }
 
   public calculateSk(userId: string, uuid: string): string {
-    return `${this.entity}#${userId}#${uuid}` as DbRecord<'boulder'>['SK'];
+    return `${this.entity}#${userId}#${uuid}` as DbRecord<'climb'>['SK'];
   }
 
   public calculatePartialSk(userId?: string): string {
     return [this.entity, userId].filter(Boolean).join('#');
   }
 
-  public newSk(userId: string): DbRecord<'boulder'>['SK'] {
-    return `${this.entity}#${userId}#${uuid()}` as DbRecord<'boulder'>['SK'];
+  public newSk(userId: string): DbRecord<'climb'>['SK'] {
+    return `${this.entity}#${userId}#${uuid()}` as DbRecord<'climb'>['SK'];
   }
 }

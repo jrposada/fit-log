@@ -1,22 +1,22 @@
-import { BouldersDeleteResponse } from '@shared/models/boulder';
+import { ClimbsDeleteResponse } from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
-import { BouldersService } from '../../../services/boulders-service';
+import { ClimbsService } from '../../../services/climbs-service';
 import { apiHandler } from '../../api-utils';
 
-export const handler = apiHandler<BouldersDeleteResponse>(
+export const handler = apiHandler<ClimbsDeleteResponse>(
   async ({ authorizerContext, event }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { id } = validateEvent(event);
     const { userId } = authorizerContext;
 
-    assert(BouldersService.getUserId(id) === userId, {
+    assert(ClimbsService.getUserId(id) === userId, {
       msg: 'Unauthorized',
     });
 
-    void (await BouldersService.instance.delete(id));
+    void (await ClimbsService.instance.delete(id));
 
     return {
       statusCode: 200,

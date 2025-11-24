@@ -1,5 +1,5 @@
 Resources:
-  ApiBouldersPutRole:
+  ApiClimbsPutRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:

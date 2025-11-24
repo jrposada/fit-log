@@ -1,11 +1,11 @@
-BouldersPut:
-  handler: src/api/boulders/put/boulders-put.handler
-  role: ApiBouldersPutRole
+ClimbsPut:
+  handler: src/api/climbs/put/climbs-put.handler
+  role: ApiClimbsPutRole
   timeout: 30
   memorySize: 128
   events:
     - http:
-        path: api/boulders
+        path: api/climbs
         method: put
         cors: true
         authorizer:

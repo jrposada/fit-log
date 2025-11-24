@@ -15,8 +15,8 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "This app requires access to the camera to take photos of boulder problems.",
-        "NSPhotoLibraryUsageDescription": "This app requires access to the photo library to select images of boulder problems."
+        "NSCameraUsageDescription": "This app requires access to the camera to take photos of climbing problems.",
+        "NSPhotoLibraryUsageDescription": "This app requires access to the photo library to select images of climbing problems."
       }
     },
     "android": {
@@ -39,8 +39,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "This app requires access to the photo library to select images of boulder problems.",
-          "cameraPermission": "This app requires access to the camera to take photos of boulder problems."
+          "photosPermission": "This app requires access to the photo library to select images of climbing problems.",
+          "cameraPermission": "This app requires access to the camera to take photos of climbing problems."
         }
       ]
     ]

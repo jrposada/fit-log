@@ -1,25 +1,25 @@
-import { Boulder, BouldersGetResponse } from '@shared/models/boulder';
+import { Climb, ClimbsGetResponse } from '@shared/models/climb';
 import { ApiResponse } from '@shared/models/api-response';
 import { assert } from '@shared/utils/assert';
 
 import { DbRecord } from '../../../services/aws/db-record';
-import { BouldersService } from '../../../services/boulders-service';
+import { ClimbsService } from '../../../services/climbs-service';
 import { apiHandler } from '../../api-utils';
 
-export const handler = apiHandler<BouldersGetResponse>(
+export const handler = apiHandler<ClimbsGetResponse>(
   async ({ authorizerContext }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { items: boulders, lastEvaluatedKey } =
-      await BouldersService.instance.getAll(
-        BouldersService.instance.calculatePartialSk()
+    const { items: climbs, lastEvaluatedKey } =
+      await ClimbsService.instance.getAll(
+        ClimbsService.instance.calculatePartialSk()
       );
 
     return {
       statusCode: 200,
       body: calculateApiResponse({
         lastEvaluatedKey,
-        boulders,
+        climbs,
       }),
     };
   }
@@ -27,20 +27,20 @@ export const handler = apiHandler<BouldersGetResponse>(
 
 type CalculateApiResponseParams = {
   lastEvaluatedKey: Awaited<
-    ReturnType<typeof BouldersService.instance.getAll>
+    ReturnType<typeof ClimbsService.instance.getAll>
   >['lastEvaluatedKey'];
-  boulders: DbRecord<'boulder'>[];
+  climbs: DbRecord<'climb'>[];
 };
 
 function calculateApiResponse({
   lastEvaluatedKey,
-  boulders,
-}: CalculateApiResponseParams): ApiResponse<BouldersGetResponse> {
+  climbs,
+}: CalculateApiResponseParams): ApiResponse<ClimbsGetResponse> {
   return {
     success: true,
     data: {
       lastEvaluatedKey,
-      boulders: boulders.map<Boulder>((item) => ({
+      climbs: climbs.map<Climb>((item) => ({
         id: item.SK,
         image: item.image,
         holds: item.holds.map((hold) => ({

@@ -1,5 +1,5 @@
 Resources:
-  ApiBouldersGetByIdRole:
+  ApiClimbsDeleteRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -22,7 +22,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - dynamodb:GetItem
+                  - dynamodb:DeleteItem
                 Resource:
                   Fn::GetAtt:
                     - DB
