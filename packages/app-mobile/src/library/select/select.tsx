@@ -1,5 +1,7 @@
+import { useDebounce } from '@shared-react/hooks/use-debounce';
+import Fuse from 'fuse.js';
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -38,13 +40,44 @@ function Select({
   emptyStateMessage = 'No options found',
   allowAddNew = true,
 }: SelectProps): React.ReactElement {
+  const flatListRef = useRef<FlatList<string>>(null);
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [newOption, setNewOption] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 200);
 
-  const filteredOptions = options.filter((option) =>
-    option.toLowerCase().includes(searchTerm.toLowerCase())
+  const fuse = useMemo(
+    () =>
+      new Fuse(options, {
+        threshold: 0.4, // 0 = exact match, 1 = match anything
+        distance: 100, // Max distance for fuzzy matching
+        ignoreLocation: true, // Don't care where in the string the match is
+      }),
+    [options]
   );
+
+  const filteredOptions = debouncedSearchTerm
+    ? fuse.search(debouncedSearchTerm).map((result) => result.item)
+    : options;
+
+  // Scroll to selected option when modal opens
+  useEffect(() => {
+    if (isModalVisible && value && !debouncedSearchTerm) {
+      const timer = setTimeout(() => {
+        const selectedIndex = filteredOptions.indexOf(value);
+        if (selectedIndex !== -1 && flatListRef.current) {
+          flatListRef.current.scrollToIndex({
+            index: selectedIndex,
+            animated: true,
+            viewPosition: 0.5,
+          });
+        }
+      }, 150);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isModalVisible, value, debouncedSearchTerm, filteredOptions]);
 
   const openModal = () => setModalVisible(true);
 
@@ -90,17 +123,28 @@ function Select({
 
       <Modal.Root visible={isModalVisible} onClose={closeModal}>
         <Modal.Header>
-          <TextInput
-            style={styles.searchInput}
-            placeholder={searchPlaceholder}
-            value={searchTerm}
-            onChangeText={setSearchTerm}
-            autoFocus
-          />
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder={searchPlaceholder}
+              value={searchTerm}
+              onChangeText={setSearchTerm}
+              autoFocus
+            />
+            {searchTerm.length > 0 && (
+              <TouchableOpacity
+                style={styles.clearButton}
+                onPress={() => setSearchTerm('')}
+              >
+                <Text style={styles.clearButtonText}>✕</Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </Modal.Header>
 
         <Modal.Body>
           <FlatList
+            ref={flatListRef}
             data={filteredOptions}
             style={styles.listView}
             contentContainerStyle={styles.listContent}
@@ -125,14 +169,34 @@ function Select({
             )}
             ListEmptyComponent={
               <View style={styles.emptyState}>
-                <Text style={styles.emptyStateText}>{emptyStateMessage}</Text>
+                <Text style={styles.emptyStateText}>
+                  {debouncedSearchTerm
+                    ? `No results for "${debouncedSearchTerm}"`
+                    : emptyStateMessage}
+                </Text>
               </View>
             }
+            getItemLayout={(data, index) => ({
+              length: 48,
+              offset: 48 * index,
+              index,
+            })}
             initialNumToRender={10}
             maxToRenderPerBatch={10}
             windowSize={5}
             removeClippedSubviews={false}
             keyboardShouldPersistTaps="handled"
+            onScrollToIndexFailed={(info) => {
+              // Fallback: scroll to offset if index fails
+              const wait = new Promise((resolve) => setTimeout(resolve, 100));
+              wait.then(() => {
+                flatListRef.current?.scrollToIndex({
+                  index: info.index,
+                  animated: true,
+                  viewPosition: 0.5,
+                });
+              });
+            }}
           />
         </Modal.Body>
 
@@ -183,12 +247,29 @@ const styles = StyleSheet.create({
   placeholderText: {
     color: '#999',
   },
+  searchContainer: {
+    position: 'relative',
+  },
   searchInput: {
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
     padding: 12,
+    paddingRight: 40,
     fontSize: 16,
+  },
+  clearButton: {
+    position: 'absolute',
+    right: 8,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+  },
+  clearButtonText: {
+    fontSize: 20,
+    color: '#999',
+    fontWeight: '600',
   },
   listView: {
     height: 300,
@@ -197,8 +278,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   dropdownItem: {
-    paddingVertical: 12,
+    height: 48,
     paddingHorizontal: 16,
+    justifyContent: 'center',
     borderRadius: 6,
     marginBottom: 4,
   },

@@ -39,6 +39,7 @@
     "expo-image-picker": "^17.0.8",
     "expo-status-bar": "~3.0.8",
     "expo": "~54.0.25",
+    "fuse.js": "^7.1.0",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next": "^25.6.0",
     "react-hook-form": "^7.66.0",
