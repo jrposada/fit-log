@@ -9,6 +9,7 @@ import {
   QueryCommand,
   QueryCommandInput,
   QueryCommandOutput,
+  ScanCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { batch } from '@shared/utils';
 import { assert } from '@shared/utils/assert';
@@ -124,5 +125,22 @@ export class DynamoDBHelper {
       items: (response.Items as T[]) ?? [],
       lastEvaluatedKey: response.LastEvaluatedKey,
     };
+  }
+
+  async scan<T>(): Promise<T[]> {
+    let items: T[] = [];
+    let lastEvaluatedKey: Record<string, any> | undefined;
+
+    do {
+      const command = new ScanCommand({
+        TableName: this.tableName,
+        ExclusiveStartKey: lastEvaluatedKey,
+      });
+      const response = await this.documentClient.send(command);
+      items = items.concat((response.Items as T[]) ?? []);
+      lastEvaluatedKey = response.LastEvaluatedKey;
+    } while (lastEvaluatedKey);
+
+    return items;
   }
 }

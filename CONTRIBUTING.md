@@ -71,6 +71,12 @@ npm -w packages/dev-tools run start -- seed <user-id> --num-workouts 10 --num-cl
 
 Replace `<user-id>` with your test user ID. You can adjust the number of workouts and climbs as needed.
 
+To clear all data from the database:
+
+```
+npm -w packages/dev-tools run start -- nuke
+```
+
 ## Contributing
 
 1. Pull latest `beta` branch.
