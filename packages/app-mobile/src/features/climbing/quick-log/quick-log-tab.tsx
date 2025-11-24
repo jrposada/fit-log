@@ -7,27 +7,9 @@ import LocationSelector from './location-selector';
 import RouteCard, { Route } from './route-card';
 
 const sampleRoutes: Route[] = [
-  {
-    id: 'r1',
-    grade: 'V4',
-    name: 'Crimp City',
-    section: 'Cave section',
-    color: '#2e7d32',
-  },
-  {
-    id: 'r2',
-    grade: 'V5',
-    name: 'The Gaston',
-    section: 'Corner wall',
-    color: '#f9a825',
-  },
-  {
-    id: 'r3',
-    grade: 'V6',
-    name: 'Roof Monster',
-    section: 'Ceiling',
-    color: '#c62828',
-  },
+  { id: 'r1', grade: 'V4', name: 'Crimp City', section: 'Cave section' },
+  { id: 'r2', grade: 'V5', name: 'The Gaston', section: 'Corner wall' },
+  { id: 'r3', grade: 'V6', name: 'Roof Monster', section: 'Ceiling' },
 ];
 
 const locations = [

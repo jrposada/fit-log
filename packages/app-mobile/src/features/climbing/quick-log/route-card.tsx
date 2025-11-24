@@ -1,13 +1,13 @@
+import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export interface Route {
   id: string;
-  grade: string; // e.g. V4
+  grade: string;
   name: string;
-  section: string; // wall area
-  color: string; // UI color indicator
+  section: string;
 }
 
 export interface RouteCardProps {
@@ -26,8 +26,10 @@ const RouteCard: FunctionComponent<RouteCardProps> = ({ route, onLog }) => {
     <View style={styles.card}>
       <View style={styles.topRow}>
         <Text style={styles.title}>
-          <Text style={{ color: route.color }}>● {route.grade}</Text> |{' '}
-          {route.name}
+          <Text style={{ color: beautifyGradeColor(route.grade) }}>
+            ● {route.grade}
+          </Text>{' '}
+          | {route.name}
         </Text>
       </View>
       <View style={styles.bottomRow}>
