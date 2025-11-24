@@ -80,7 +80,7 @@ const AppBar: FunctionComponent = () => {
               <Menu />
             </IconButton>
 
-            <Typography variant="h6">{t('dashboard.title')}</Typography>
+            <Typography variant="h6">{t('home.title')}</Typography>
 
             {/* Search */}
             <SearchInput />
@@ -96,7 +96,7 @@ const AppBar: FunctionComponent = () => {
                 startIcon={<Add />}
                 onClick={createWorkout}
               >
-                {t('dashboard.create_workout')}
+                {t('home.create_workout')}
               </Button>
 
               <IconButton

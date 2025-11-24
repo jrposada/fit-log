@@ -45,9 +45,7 @@ const Index: FunctionComponent = () => {
         {/* Favorite workouts */}
         <Grid {...GRID_PROPS}>
           <Paper {...PAPER_PROPS}>
-            <Typography variant="h6">
-              {t('dashboard.favorite_workouts')}
-            </Typography>
+            <Typography variant="h6">{t('home.favorite_workouts')}</Typography>
 
             {!workouts.length && (
               <Stack m={1} spacing={2} alignItems="center">
@@ -74,7 +72,7 @@ const Index: FunctionComponent = () => {
         {/* Last sessions */}
         <Grid {...GRID_PROPS}>
           <Paper {...PAPER_PROPS}>
-            <Typography variant="h6">{t('dashboard.last_sessions')}</Typography>
+            <Typography variant="h6">{t('home.last_sessions')}</Typography>
 
             {!sessions.length && (
               <Stack m={1} spacing={2} alignItems="center">
