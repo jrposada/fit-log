@@ -58,7 +58,7 @@ export abstract class RestfulService<T extends DbRecordType> {
     return data;
   }
 
-  public async put(item: DbRecord<T>): Promise<undefined> {
+  public async put(item: DbRecord<T>): Promise<DbRecord<T>> {
     return this.db.put<DbRecord<T>>(item);
   }
 }

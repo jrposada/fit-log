@@ -20,6 +20,7 @@ export const handler = apiHandler<ClimbsGetByIdResponse>(
         data: {
           climb: {
             id: climb.SK,
+            location: climb.location,
             holds: climb.holds.map((hold) => ({
               x: hold.x,
               y: hold.y,

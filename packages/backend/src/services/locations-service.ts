@@ -4,36 +4,36 @@ import { v4 as uuid } from 'uuid';
 import { DbRecord } from './aws/db-record';
 import { RestfulService } from './restful-service';
 
-export class ClimbsService extends RestfulService<'climb'> {
-  static #instance: ClimbsService;
+export class LocationsService extends RestfulService<'location'> {
+  static #instance: LocationsService;
   static get instance() {
-    if (!ClimbsService.#instance) {
+    if (!LocationsService.#instance) {
       assert(process.env.TABLE_NAME);
-      ClimbsService.#instance = new ClimbsService(process.env.TABLE_NAME);
+      LocationsService.#instance = new LocationsService(process.env.TABLE_NAME);
     }
 
-    return ClimbsService.#instance;
+    return LocationsService.#instance;
   }
 
-  static getClimbUuid(sk: string): string {
+  static getLocationUuid(sk: string): string {
     const segments = sk.split('#');
     assert(segments.length === 2);
     return segments[1];
   }
 
   private constructor(tableName: string) {
-    super(tableName, 'climb');
+    super(tableName, 'location');
   }
 
   public calculateSk(uuid: string): string {
-    return `${this.entity}#${uuid}` as DbRecord<'climb'>['SK'];
+    return `${this.entity}#${uuid}` as DbRecord<'location'>['SK'];
   }
 
   public calculatePartialSk(): string {
     return this.entity;
   }
 
-  public newSk(): DbRecord<'climb'>['SK'] {
-    return `${this.entity}#${uuid()}` as DbRecord<'climb'>['SK'];
+  public newSk(): DbRecord<'location'>['SK'] {
+    return `${this.entity}#${uuid()}` as DbRecord<'location'>['SK'];
   }
 }

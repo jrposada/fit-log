@@ -29,9 +29,14 @@ export const holdSchema = z.object({
  */
 export type Climb = {
   /**
-   * ID `climb#<user-id>#<climb-id>`.
+   * ID `climb#<climb-id>`.
    */
   id: string;
+
+  /**
+   * Location ID location#<location-id>
+   */
+  location: string;
 
   /**
    * Array of holds marking the route
@@ -74,6 +79,7 @@ export type Climb = {
 };
 export const climbSchema = z.object({
   id: z.string().nonempty(),
+  location: z.string().nonempty(),
   holds: z.array(holdSchema),
   name: z.string().nonempty(),
   grade: z.string().nonempty(),
@@ -103,7 +109,7 @@ export type ClimbsGetResponse = {
 /////////
 export type ClimbsPutRequest = Omit<Climb, 'id' | 'createdAt' | 'updatedAt'> & {
   /**
-   * ID `climb#<user-id>#<climb-id>`.
+   * ID `climb#<climb-id>`.
    */
   id?: string;
 
@@ -116,6 +122,7 @@ export type ClimbsPutRequest = Omit<Climb, 'id' | 'createdAt' | 'updatedAt'> & {
 };
 export const climbsPutRequestSchema = z.object({
   id: z.string().optional(),
+  location: z.string().nonempty(),
   holds: z.array(holdSchema),
   name: z.string().nonempty(),
   grade: z.string().nonempty(),

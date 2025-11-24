@@ -15,9 +15,9 @@ export const handler = apiHandler<ClimbsPutResponse>(
     assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { climbPutData } = validateEvent(event);
-    const { userId } = authorizerContext;
 
     const record: DbRecord<'climb'> = {
+      location: climbPutData.location as DbRecord<'climb'>['location'],
       holds: climbPutData.holds.map((hold) => ({
         x: hold.x,
         y: hold.y,
@@ -31,7 +31,7 @@ export const handler = apiHandler<ClimbsPutResponse>(
       PK: 'climb',
       SK:
         (climbPutData.id as DbRecord<'climb'>['SK']) ??
-        ClimbsService.instance.newSk(userId),
+        ClimbsService.instance.newSk(),
     };
 
     void (await ClimbsService.instance.put(record));
@@ -43,6 +43,7 @@ export const handler = apiHandler<ClimbsPutResponse>(
         data: {
           climb: {
             id: record.SK,
+            location: record.location,
             holds: record.holds,
             name: record.name,
             grade: record.grade,

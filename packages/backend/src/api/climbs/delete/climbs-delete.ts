@@ -10,11 +10,6 @@ export const handler = apiHandler<ClimbsDeleteResponse>(
     assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { id } = validateEvent(event);
-    const { userId } = authorizerContext;
-
-    assert(ClimbsService.getUserId(id) === userId, {
-      msg: 'Unauthorized',
-    });
 
     void (await ClimbsService.instance.delete(id));
 

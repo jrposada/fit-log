@@ -1,0 +1,25 @@
+LocationsGet:
+  handler: src/api/locations/get/locations-get.handler
+  role: ApiLocationsGetRole
+  timeout: 30
+  memorySize: 128
+  events:
+    - http:
+        path: api/locations
+        method: get
+        request:
+          parameters:
+            querystrings:
+              limit: false
+        cors: true
+        authorizer:
+          name: Authorizer
+          type: Request
+          resultTtlInSeconds: 0
+  environment:
+    ALLOWED_ORIGIN:
+      Fn::GetAtt:
+        - FrontendCloudFrontDistribution
+        - DomainName
+    TABLE_NAME:
+      Ref: DB

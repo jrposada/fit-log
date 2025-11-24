@@ -104,12 +104,13 @@ export class DynamoDBHelper {
     return response.Item as T | undefined;
   }
 
-  async put<T extends { PK: string; SK: string }>(item: T): Promise<undefined> {
+  async put<T extends { PK: string; SK: string }>(item: T): Promise<T> {
     const command = new PutCommand({
       Item: item,
       TableName: this.tableName,
     });
     void (await this.documentClient.send(command));
+    return item;
   }
 
   async query<T>(params: Omit<QueryCommandInput, 'TableName'>): Promise<{

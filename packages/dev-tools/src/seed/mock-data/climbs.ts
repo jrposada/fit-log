@@ -30,15 +30,18 @@ function fakeHold() {
   };
 }
 
-export function fakeClimb(userId: string): DbRecord<'climb'> {
+export function fakeClimb(
+  locations: DbRecord<'location'>[]
+): DbRecord<'climb'> {
   const numHolds = faker.number.int({ min: 4, max: 12 });
   const holds = Array.from({ length: numHolds }, () => fakeHold());
 
   return {
     PK: 'climb',
-    SK: `climb#${userId}#${faker.string.uuid()}` as DbRecord<'climb'>['SK'],
+    SK: `climb#${faker.string.uuid()}` as DbRecord<'climb'>['SK'],
     updatedAt: faker.date.recent().toISOString(),
     createdAt: faker.date.recent({ days: 30 }).toISOString(),
+    location: faker.helpers.arrayElement(locations).SK,
     name: faker.word.words({ count: { min: 1, max: 3 } }),
     grade: faker.helpers.arrayElement(grades),
     description: faker.lorem.paragraph(),

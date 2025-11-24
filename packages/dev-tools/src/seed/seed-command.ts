@@ -4,38 +4,48 @@ import { assert } from '@shared/utils/assert';
 import { Settings } from '../register';
 import { fakeClimb } from './mock-data/climbs';
 import { fakeWorkout } from './mock-data/workouts';
+import { fakeLocation } from './mock-data/locations';
 
 type CommandSettings = Settings<
   string,
-  { numWorkouts: number; numClimbs: number }
+  { numWorkouts: number; numClimbs: number; numLocations: number }
 >;
 
 const action: CommandSettings['action'] = async (
   userId,
-  { numWorkouts, numClimbs }
+  { numWorkouts, numClimbs, numLocations }
 ) => {
   assert(process.env.TABLE_NAME, {
     msg: 'Expected env variable `TABLE_NAME` to be defined',
   });
   const db = new DynamoDBHelper(process.env.TABLE_NAME);
 
-  const promises = [];
-
   // Create workouts
+  const workoutPromises = [];
   for (let i = 0; i < numWorkouts; i += 1) {
     const workout = fakeWorkout(userId);
     console.log(`Workout created ${workout.SK}`);
-    promises.push(db.put(workout));
+    workoutPromises.push(db.put(workout));
   }
+  await Promise.all(workoutPromises);
+
+  // Create locations
+  const locationPromises = [];
+  for (let i = 0; i < numLocations; i += 1) {
+    const location = fakeLocation();
+    console.log(`Location created ${location.SK}`);
+    locationPromises.push(db.put(location));
+  }
+  const locations = await Promise.all(locationPromises);
 
   // Create climbs
+  const climbPromises = [];
   for (let i = 0; i < numClimbs; i += 1) {
-    const climb = fakeClimb(userId);
+    const climb = fakeClimb(locations);
     console.log(`Climb created ${climb.SK}`);
-    promises.push(db.put(climb));
+    climbPromises.push(db.put(climb));
   }
-
-  await Promise.all(promises);
+  await Promise.all(climbPromises);
 };
 
 const seedCommand: CommandSettings = {
@@ -52,6 +62,11 @@ const seedCommand: CommandSettings = {
     {
       flags: '--num-climbs <value>',
       description: 'Number of climbs to create',
+      type: 'number',
+    },
+    {
+      flags: '--num-locations <value>',
+      description: 'Number of locations to create',
       type: 'number',
     },
   ],

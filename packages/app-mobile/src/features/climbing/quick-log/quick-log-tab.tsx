@@ -1,4 +1,5 @@
 import { useClimbs } from '@shared-react/api/climbs/use-climbs';
+import { useLocations } from '@shared-react/api/locations/use-locations';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -14,22 +15,20 @@ import Separator from '../../../library/separator/separator';
 import ClimbCard from './climb-card';
 import LocationSelector from './location-selector';
 
-const locations = [
-  'Mesa Rim - Pacific Beach',
-  'Mesa Rim - Mission Valley',
-  'The Wall - Downtown',
-];
-
 const QuickLogTab: FunctionComponent = () => {
   const { t } = useTranslation();
-  const [location, setLocation] = useState(locations[0]);
-  const { data: climbs = [], isLoading } = useClimbs({ limit: 3 });
+  const { data: locations = [], isLoading: isLoadingLocations } =
+    useLocations();
+  const { data: climbs = [], isLoading: isLoadingClimbs } = useClimbs({
+    limit: 3,
+  });
+  const [location, setLocation] = useState<string>(locations[0]?.name ?? '');
 
   const handleLog = (id: string) => {
     console.log('log route', id);
   };
 
-  if (isLoading) {
+  if (isLoadingLocations || isLoadingClimbs) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#2962ff" />
@@ -40,7 +39,7 @@ const QuickLogTab: FunctionComponent = () => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <LocationSelector
-        locations={locations}
+        locations={locations.map(({ name }) => name)}
         value={location}
         onChange={setLocation}
       />

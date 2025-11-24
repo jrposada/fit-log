@@ -1,24 +1,24 @@
 import {
-  Climb,
-  ClimbsGetParams,
-  climbsGetParamsSchema,
-  ClimbsGetResponse,
-} from '@shared/models/climb';
+  Location,
+  LocationsGetParams,
+  locationsGetParamsSchema,
+  LocationsGetResponse,
+} from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
 import { APIGatewayProxyEvent } from 'aws-lambda';
 
-import { ClimbsService } from '../../../services/climbs-service';
+import { LocationsService } from '../../../services/locations-service';
 import { apiHandler } from '../../api-utils';
 
-export const handler = apiHandler<ClimbsGetResponse>(
+export const handler = apiHandler<LocationsGetResponse>(
   async ({ authorizerContext, event }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
     const { params } = validateEvent(event);
 
-    const { items: climbs, lastEvaluatedKey } =
-      await ClimbsService.instance.getAll(
-        ClimbsService.instance.calculatePartialSk(),
+    const { items: locations, lastEvaluatedKey } =
+      await LocationsService.instance.getAll(
+        LocationsService.instance.calculatePartialSk(),
         params.limit
       );
 
@@ -28,17 +28,9 @@ export const handler = apiHandler<ClimbsGetResponse>(
         success: true,
         data: {
           lastEvaluatedKey,
-          climbs: climbs.map<Climb>((item) => ({
+          locations: locations.map<Location>((item) => ({
             id: item.SK,
-            location: item.location,
-            holds: item.holds.map((hold) => ({
-              x: hold.x,
-              y: hold.y,
-            })),
             name: item.name,
-            grade: item.grade,
-            description: item.description,
-            sector: item.sector,
             createdAt: item.createdAt,
             updatedAt: item.updatedAt,
           })),
@@ -49,10 +41,10 @@ export const handler = apiHandler<ClimbsGetResponse>(
 );
 
 function validateEvent(event: APIGatewayProxyEvent): {
-  params: ClimbsGetParams;
+  params: LocationsGetParams;
 } {
   try {
-    const params = climbsGetParamsSchema.parse(
+    const params = locationsGetParamsSchema.parse(
       event.queryStringParameters ?? {}
     );
     return { params };
