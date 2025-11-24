@@ -2,6 +2,7 @@ import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 
+import QuickLogTab from '../features/climbing/quick-log/quick-log-tab';
 import { TabBarItem, TabContentItem, Tabs } from '../library/tabs';
 
 type Tab = 'quick-log' | 'browse' | 'projects' | 'stats';
@@ -14,11 +15,7 @@ const ClimbingScreen: FunctionComponent = () => {
     {
       id: 'quick-log',
       label: t('climbing.quick_log'),
-      content: (
-        <Text style={styles.placeholderText}>
-          {t('climbing.quick_log_content')}
-        </Text>
-      ),
+      content: <QuickLogTab />,
     },
     {
       id: 'browse',
