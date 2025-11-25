@@ -1,7 +1,7 @@
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { useClimbs } from '@shared-react/api/climbs/use-climbs';
 import { useLocations } from '@shared-react/api/locations/use-locations';
-import { useLocationsPut } from '@shared-react/api/locations/use-locations-put';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -23,14 +23,8 @@ const QuickLogTab: FunctionComponent = () => {
   const { data: climbs = [], isLoading: isLoadingClimbs } = useClimbs({
     limit: 3,
   });
-  const { mutate: createLocation } = useLocationsPut();
 
   const [location, setLocation] = useState<string>(locations[0]?.name ?? '');
-
-  const handleAddNewLocation = (newLocationName: string) => {
-    createLocation({ name: newLocationName });
-    setLocation(newLocationName);
-  };
 
   const handleLog = (id: string) => {
     console.log('log route', id);
@@ -50,7 +44,6 @@ const QuickLogTab: FunctionComponent = () => {
         locations={locations.map(({ name }) => name)}
         value={location}
         onChange={setLocation}
-        onAddNew={handleAddNewLocation}
       />
       <Separator />
       <Text style={styles.sectionLabel}>{t('climbing.recent_climbs')}</Text>
