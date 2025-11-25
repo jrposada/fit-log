@@ -63,10 +63,22 @@ aws dynamodb create-table \
     --endpoint-url http://localhost:3200
 ```
 
-6. Seed local database with mock data (optional)
+6. Initialize local S3 bucket
 
 ```
-npm -w packages/dev-tools run start -- seed <user-id> --num-workouts 10 --num-climbs 15
+aws s3api create-bucket \
+    --bucket fit-log-development-sector-images \
+    --create-bucket-configuration LocationConstraint=eu-west-3 \
+    --endpoint-url http://localhost:3366
+```
+
+7. Seed local database with mock data (optional)
+
+```
+npm -w packages/dev-tools run start -- seed <user-id> \
+    --num-workouts 10 \
+    --num-locations 3 \
+    --num-climbs 15
 ```
 
 Replace `<user-id>` with your test user ID. You can adjust the number of workouts and climbs as needed.

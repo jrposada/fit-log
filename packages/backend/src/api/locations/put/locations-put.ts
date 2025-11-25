@@ -18,6 +18,13 @@ export const handler = apiHandler<LocationsPutResponse>(
 
     const record: DbRecord<'location'> = {
       name: locationPutData.name,
+      description: locationPutData.description,
+      latitude: locationPutData.latitude,
+      longitude: locationPutData.longitude,
+      address: locationPutData.address,
+      placeName: locationPutData.placeName,
+      placeId: locationPutData.placeId,
+      lastUsedAt: locationPutData.lastUsedAt,
       createdAt: locationPutData.createdAt ?? new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       PK: 'location',
@@ -36,6 +43,13 @@ export const handler = apiHandler<LocationsPutResponse>(
           location: {
             id: record.SK,
             name: record.name,
+            description: record.description,
+            latitude: record.latitude,
+            longitude: record.longitude,
+            address: record.address,
+            placeName: record.placeName,
+            placeId: record.placeId,
+            lastUsedAt: record.lastUsedAt,
             createdAt: record.createdAt,
             updatedAt: record.updatedAt,
           },

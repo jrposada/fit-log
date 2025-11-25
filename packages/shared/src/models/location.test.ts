@@ -7,6 +7,8 @@ import {
   locationSchema,
   LocationsGetParams,
   locationsGetParamsSchema,
+  LocationsPutRequest,
+  locationsPutRequestSchema,
 } from './location';
 
 export type LocationTest = Expect<
@@ -15,4 +17,10 @@ export type LocationTest = Expect<
 
 export type LocationsGetParamsTest = Expect<
   IsTrue<IsEqual<LocationsGetParams, z.infer<typeof locationsGetParamsSchema>>>
+>;
+
+export type LocationsPutRequestTest = Expect<
+  IsTrue<
+    IsEqual<LocationsPutRequest, z.infer<typeof locationsPutRequestSchema>>
+  >
 >;

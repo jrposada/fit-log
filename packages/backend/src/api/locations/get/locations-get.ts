@@ -31,6 +31,13 @@ export const handler = apiHandler<LocationsGetResponse>(
           locations: locations.map<Location>((item) => ({
             id: item.SK,
             name: item.name,
+            description: item.description,
+            latitude: item.latitude,
+            longitude: item.longitude,
+            address: item.address,
+            placeName: item.placeName,
+            placeId: item.placeId,
+            lastUsedAt: item.lastUsedAt,
             createdAt: item.createdAt,
             updatedAt: item.updatedAt,
           })),

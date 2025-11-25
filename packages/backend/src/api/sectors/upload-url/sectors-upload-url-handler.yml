@@ -1,0 +1,25 @@
+SectorsUploadUrl:
+  handler: src/api/sectors/upload-url/sectors-upload-url.handler
+  role: ApiSectorsUploadUrlRole
+  timeout: 30
+  memorySize: 128
+  events:
+    - http:
+        path: api/sectors/upload-url
+        method: post
+        cors: true
+        authorizer:
+          name: Authorizer
+          type: Request
+          resultTtlInSeconds: 0
+  environment:
+    ALLOWED_ORIGIN:
+      Fn::GetAtt:
+        - FrontendCloudFrontDistribution
+        - DomainName
+    SECTOR_IMAGES_BUCKET:
+      Ref: SectorImagesBucket
+    SECTOR_IMAGES_CDN_DOMAIN:
+      Fn::GetAtt:
+        - SectorImagesCloudFrontDistribution
+        - DomainName

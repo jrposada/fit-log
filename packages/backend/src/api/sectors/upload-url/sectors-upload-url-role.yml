@@ -1,26 +1,32 @@
 Resources:
-  ApiLocationsPutRole:
+  ApiSectorsUploadUrlRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Effect: Allow
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
             Principal:
+              AWS:
+                Fn::Sub: arn:aws:iam::${AWS::AccountId}:root
               Service:
                 - lambda.amazonaws.com
-            Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: ApiLocationsPutPolicy
+        - PolicyName: S3Access
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
-                  - dynamodb:PutItem
+                  - s3:PutObject
                 Resource:
-                  Fn::GetAtt:
-                    - DB
-                    - Arn
+                  Fn::Sub:
+                    - ${bucketArn}/*
+                    - bucketArn:
+                        Fn::GetAtt:
+                          - SectorImagesBucket
+                          - Arn

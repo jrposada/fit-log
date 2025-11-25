@@ -1,8 +1,8 @@
 services:
   dynamodb-local:
-    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath ./data'
-    image: 'amazon/dynamodb-local:latest'
     container_name: dynamodb-local
+    image: 'amazon/dynamodb-local:latest'
+    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath ./data'
     ports:
       - '3200:8000'
     user: root
@@ -11,8 +11,8 @@ services:
     working_dir: /home/dynamodblocal
 
   dynamodb-admin:
-    image: aaronshaf/dynamodb-admin
     container_name: dynamodb-admin
+    image: aaronshaf/dynamodb-admin
     ports:
       - '8001:8001'
     environment:
@@ -20,6 +20,20 @@ services:
     depends_on:
       - dynamodb-local
 
+  s3-local:
+    container_name: s3-local
+    image: localstack/localstack:latest
+    ports:
+      - '3366:4566'  # LocalStack gateway
+      - '3310-3359:4510-4559'  # External services port range
+    environment:
+      - DEBUG=1
+    volumes:
+      - s3-data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+
 volumes:
   dynamodb-data:
+    external: false
+  s3-data:
     external: false
