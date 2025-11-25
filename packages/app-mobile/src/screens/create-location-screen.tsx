@@ -119,14 +119,6 @@ const CreateLocationScreen: FunctionComponent = () => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View style={styles.header}>
-        <Pressable onPress={handleCancel}>
-          <Text style={styles.headerButton}>Cancel</Text>
-        </Pressable>
-        <Text style={styles.headerTitle}>Create Location</Text>
-        <View style={styles.headerButtonPlaceholder} />
-      </View>
-
       <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.section}>
           <Text style={styles.label}>
@@ -264,6 +256,9 @@ const CreateLocationScreen: FunctionComponent = () => {
           <Text style={styles.saveButtonText}>
             {locationsPut.isPending ? 'Saving...' : 'Save Location'}
           </Text>
+        </Pressable>
+        <Pressable onPress={handleCancel}>
+          <Text style={styles.headerButton}>Cancel</Text>
         </Pressable>
       </View>
     </KeyboardAvoidingView>

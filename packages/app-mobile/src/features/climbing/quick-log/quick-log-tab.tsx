@@ -1,7 +1,6 @@
-import { RouteProp, useRoute } from '@react-navigation/native';
 import { useClimbs } from '@shared-react/api/climbs/use-climbs';
 import { useLocations } from '@shared-react/api/locations/use-locations';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,

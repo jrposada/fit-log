@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { useVersion } from '@shared-react/api/version/use-version';
 import { StatusBar } from 'expo-status-bar';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,38 +9,22 @@ import HomeScreen from '../screens/home-screen';
 import TrainingScreen from '../screens/training-screen';
 import { RootParamList } from '../types/routes';
 import ClimbingStack from './climbing-stack';
+import Header from './header';
 
 const Tab = createBottomTabNavigator<RootParamList>();
 
 const Root: FunctionComponent = () => {
   const { t } = useTranslation();
-  const { data: version } = useVersion();
 
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
-      <Tab.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#4CAF50',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          headerRight: () => (
-            <Text style={styles.versionText}>{t('version', { version })}</Text>
-          ),
-          tabBarActiveTintColor: '#4CAF50',
-          tabBarInactiveTintColor: '#999',
-        }}
-      >
+      <Tab.Navigator initialRouteName="Home">
         <Tab.Screen
           name="Home"
           component={HomeScreen}
           options={{
-            title: t('home.title'),
+            header: () => <Header title={t('home.title')} />,
             tabBarIcon: () => <Text style={styles.tabIcon}>🏠</Text>,
           }}
         />
@@ -58,7 +41,7 @@ const Root: FunctionComponent = () => {
           name="Training"
           component={TrainingScreen}
           options={{
-            title: t('training.title'),
+            header: () => <Header title={t('training.title')} />,
             tabBarIcon: () => <Text style={styles.tabIcon}>💪</Text>,
           }}
         />
@@ -68,12 +51,6 @@ const Root: FunctionComponent = () => {
 };
 
 const styles = StyleSheet.create({
-  versionText: {
-    fontSize: 11,
-    color: '#fff',
-    marginRight: 12,
-    opacity: 0.8,
-  },
   tabIcon: {
     fontSize: 24,
   },
