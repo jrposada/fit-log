@@ -24,8 +24,8 @@ services:
     container_name: s3-local
     image: localstack/localstack:latest
     ports:
-      - '3366:4566'  # LocalStack gateway
-      - '3310-3359:4510-4559'  # External services port range
+      - '3366:4566' # LocalStack gateway
+      - '3310-3359:4510-4559' # External services port range
     environment:
       - DEBUG=1
     volumes:

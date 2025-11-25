@@ -134,3 +134,15 @@ export const locationsPutRequestSchema = z.object({
 export type LocationsPutResponse = {
   location: Location;
 };
+
+////////////
+// DELETE //
+////////////
+export type LocationsDeleteResponse = undefined;
+
+///////////////
+// GET by ID //
+///////////////
+export type LocationsGetByIdResponse = {
+  location: Location;
+};

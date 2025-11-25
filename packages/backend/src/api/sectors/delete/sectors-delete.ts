@@ -15,7 +15,6 @@ export const handler = apiHandler<SectorsDeleteResponse>(
 
     const { params } = validateEvent(event);
 
-
     void (await SectorsService.instance.delete(params.id));
 
     return {
