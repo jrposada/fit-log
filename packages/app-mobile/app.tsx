@@ -3,7 +3,7 @@ import { I18nextProvider } from 'react-i18next';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import i18n from './src/i18n';
-import Navigation from './src/navigation';
+import Root from './src/navigation/root';
 
 const queryClient = new QueryClient();
 
@@ -12,7 +12,7 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <I18nextProvider i18n={i18n}>
         <SafeAreaProvider>
-          <Navigation />
+          <Root />
         </SafeAreaProvider>
       </I18nextProvider>
     </QueryClientProvider>

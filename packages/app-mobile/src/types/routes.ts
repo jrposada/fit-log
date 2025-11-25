@@ -1,5 +1,2 @@
-export type RootStackParamList = {
-  Home: undefined;
-  Climbing: undefined;
-  Training: undefined;
-};
+export * from './climbing';
+export * from './root';

@@ -6,14 +6,14 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text } from 'react-native';
 
-import ClimbingScreen from '../screens/climbing-screen';
 import HomeScreen from '../screens/home-screen';
 import TrainingScreen from '../screens/training-screen';
-import { RootStackParamList } from '../types/routes';
+import { RootParamList } from '../types/routes';
+import ClimbingStack from './climbing-stack';
 
-const Tab = createBottomTabNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootParamList>();
 
-const Navigation: FunctionComponent = () => {
+const Root: FunctionComponent = () => {
   const { t } = useTranslation();
   const { data: version } = useVersion();
 
@@ -47,10 +47,11 @@ const Navigation: FunctionComponent = () => {
         />
         <Tab.Screen
           name="Climbing"
-          component={ClimbingScreen}
+          component={ClimbingStack}
           options={{
             title: t('climbing.title'),
             tabBarIcon: () => <Text style={styles.tabIcon}>🧗</Text>,
+            headerShown: false,
           }}
         />
         <Tab.Screen
@@ -78,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Navigation;
+export default Root;
