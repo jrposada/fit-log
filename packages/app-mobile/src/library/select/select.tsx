@@ -13,6 +13,8 @@ import {
 
 import Modal from '../modal';
 
+type Mode = 'selecting' | 'creating';
+
 export interface SelectProps {
   options: string[];
   value: string;
@@ -24,6 +26,11 @@ export interface SelectProps {
   closeButtonLabel?: string;
   emptyStateMessage?: string;
   allowAddNew?: boolean;
+  renderCreateForm?: (props: {
+    initialValue: string;
+    onSave: (value: string) => void;
+    onCancel: () => void;
+  }) => React.ReactNode;
 }
 
 function Select({
@@ -37,10 +44,12 @@ function Select({
   closeButtonLabel = 'Close',
   emptyStateMessage = 'No options found',
   allowAddNew = true,
+  renderCreateForm,
 }: SelectProps): React.ReactElement {
   const flatListRef = useRef<FlatList<string>>(null);
 
   const [isModalVisible, setModalVisible] = useState(false);
+  const [modalMode, setModalMode] = useState<Mode>('selecting');
   const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 200);
 
@@ -89,6 +98,7 @@ function Select({
 
   const closeModal = () => {
     setModalVisible(false);
+    setModalMode('selecting');
     setSearchTerm('');
   };
 
@@ -97,10 +107,28 @@ function Select({
     closeModal();
   };
 
-  const handleAddNew = () => {
-    if (!onAddNew) return;
-    onAddNew(debouncedSearchTerm.trim());
+  const handleStartCreating = () => {
+    setModalMode('creating');
+  };
+
+  const handleCancelCreate = () => {
+    setModalMode('selecting');
+  };
+
+  const handleSaveNew = (newValue: string) => {
+    if (onAddNew) {
+      onAddNew(newValue);
+    }
     closeModal();
+  };
+
+  const handleAddNew = () => {
+    if (renderCreateForm) {
+      handleStartCreating();
+    } else if (onAddNew) {
+      onAddNew(debouncedSearchTerm.trim());
+      closeModal();
+    }
   };
 
   return (
@@ -115,98 +143,117 @@ function Select({
         </Text>
       </TouchableOpacity>
 
-      <Modal.Root visible={isModalVisible} onClose={closeModal}>
-        <Modal.Header>
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder={searchPlaceholder}
-              value={searchTerm}
-              onChangeText={setSearchTerm}
-              autoFocus
-            />
-            {searchTerm.length > 0 && (
-              <TouchableOpacity
-                style={styles.clearButton}
-                onPress={() => setSearchTerm('')}
-              >
-                <Text style={styles.clearButtonText}>✕</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </Modal.Header>
-
-        <Modal.Body>
-          <FlatList
-            ref={flatListRef}
-            data={filteredOptions}
-            style={styles.listView}
-            contentContainerStyle={styles.listContent}
-            keyExtractor={(item) => item}
-            renderItem={({ item: option }) => (
-              <TouchableOpacity
-                style={[
-                  styles.dropdownItem,
-                  option === value && styles.selectedItem,
-                ]}
-                onPress={() => handleSelectOption(option)}
-              >
-                <Text
-                  style={[
-                    styles.dropdownItemText,
-                    option === value && styles.selectedItemText,
-                  ]}
-                >
-                  {option}
-                </Text>
-              </TouchableOpacity>
-            )}
-            ListEmptyComponent={
-              <View style={styles.emptyState}>
-                <Text style={styles.emptyStateText}>
-                  {debouncedSearchTerm
-                    ? `No results for "${debouncedSearchTerm.trim()}"`
-                    : emptyStateMessage}
-                </Text>
+      <Modal.Root
+        visible={isModalVisible}
+        onClose={closeModal}
+        fullscreen={modalMode === 'creating'}
+      >
+        {modalMode === 'selecting' ? (
+          <>
+            <Modal.Header>
+              <View style={styles.searchContainer}>
+                <TextInput
+                  style={styles.searchInput}
+                  placeholder={searchPlaceholder}
+                  value={searchTerm}
+                  onChangeText={setSearchTerm}
+                  autoFocus
+                />
+                {searchTerm.length > 0 && (
+                  <TouchableOpacity
+                    style={styles.clearButton}
+                    onPress={() => setSearchTerm('')}
+                  >
+                    <Text style={styles.clearButtonText}>✕</Text>
+                  </TouchableOpacity>
+                )}
               </View>
-            }
-            getItemLayout={(data, index) => ({
-              length: 48,
-              offset: 48 * index,
-              index,
-            })}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            windowSize={5}
-            removeClippedSubviews={false}
-            keyboardShouldPersistTaps="handled"
-            onScrollToIndexFailed={(info) => {
-              // Fallback: scroll to offset if index fails
-              const wait = new Promise((resolve) => setTimeout(resolve, 100));
-              wait.then(() => {
-                flatListRef.current?.scrollToIndex({
-                  index: info.index,
-                  animated: true,
-                  viewPosition: 0.5,
-                });
-              });
-            }}
-          />
-        </Modal.Body>
+            </Modal.Header>
 
-        <Modal.Footer>
-          {showAddButton && (
-            <TouchableOpacity style={styles.addButton} onPress={handleAddNew}>
-              <Text style={styles.addButtonText}>
-                {addButtonLabel} "{debouncedSearchTerm.trim()}"
-              </Text>
-            </TouchableOpacity>
-          )}
+            <Modal.Body>
+              <FlatList
+                ref={flatListRef}
+                data={filteredOptions}
+                style={styles.listView}
+                contentContainerStyle={styles.listContent}
+                keyExtractor={(item) => item}
+                renderItem={({ item: option }) => (
+                  <TouchableOpacity
+                    style={[
+                      styles.dropdownItem,
+                      option === value && styles.selectedItem,
+                    ]}
+                    onPress={() => handleSelectOption(option)}
+                  >
+                    <Text
+                      style={[
+                        styles.dropdownItemText,
+                        option === value && styles.selectedItemText,
+                      ]}
+                    >
+                      {option}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                ListEmptyComponent={
+                  <View style={styles.emptyState}>
+                    <Text style={styles.emptyStateText}>
+                      {debouncedSearchTerm
+                        ? `No results for "${debouncedSearchTerm.trim()}"`
+                        : emptyStateMessage}
+                    </Text>
+                  </View>
+                }
+                getItemLayout={(data, index) => ({
+                  length: 48,
+                  offset: 48 * index,
+                  index,
+                })}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                windowSize={5}
+                removeClippedSubviews={false}
+                keyboardShouldPersistTaps="handled"
+                onScrollToIndexFailed={(info) => {
+                  // Fallback: scroll to offset if index fails
+                  const wait = new Promise((resolve) =>
+                    setTimeout(resolve, 100)
+                  );
+                  wait.then(() => {
+                    flatListRef.current?.scrollToIndex({
+                      index: info.index,
+                      animated: true,
+                      viewPosition: 0.5,
+                    });
+                  });
+                }}
+              />
+            </Modal.Body>
 
-          <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
-            <Text style={styles.closeButtonText}>{closeButtonLabel}</Text>
-          </TouchableOpacity>
-        </Modal.Footer>
+            <Modal.Footer>
+              {showAddButton && (
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={handleAddNew}
+                >
+                  <Text style={styles.addButtonText}>
+                    {addButtonLabel} "{debouncedSearchTerm}"
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
+                <Text style={styles.closeButtonText}>{closeButtonLabel}</Text>
+              </TouchableOpacity>
+            </Modal.Footer>
+          </>
+        ) : (
+          renderCreateForm?.({
+            initialValue: debouncedSearchTerm.trim(),
+            onSave: handleSaveNew,
+            onCancel: handleCancelCreate,
+          })
+        )}
       </Modal.Root>
     </View>
   );

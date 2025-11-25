@@ -67,6 +67,8 @@
   "climbing.search_location": "Search locations",
   "climbing.add_new_location": "Add new location",
   "climbing.no_locations_found": "No locations found",
+  "climbing.location_name": "Location Name",
+  "climbing.enter_location_name": "Enter location name",
   "climbing.log_action": "✓ Log",
   "climbing.project_action": "Project",
   "climbing.log_custom_climb": "Log Custom climb",

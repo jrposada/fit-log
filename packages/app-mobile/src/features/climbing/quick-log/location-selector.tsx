@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 
 import Select from '../../../library/select';
+import CreateLocationForm from './create-location-form';
 
 export interface LocationSelectorProps {
   locations: string[];
   value: string;
   onChange: (loc: string) => void;
-  onAddNew?: (location: string) => void;
+  onAddNew: (location: string) => void;
 }
 
 const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
@@ -32,7 +33,8 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
         addButtonLabel={t('actions.add')}
         closeButtonLabel={t('actions.close')}
         emptyStateMessage={t('climbing.no_locations_found')}
-        allowAddNew={!!onAddNew}
+        allowAddNew
+        renderCreateForm={(props) => <CreateLocationForm {...props} />}
       />
     </View>
   );

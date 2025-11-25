@@ -11,9 +11,15 @@ export interface ModalProps {
   visible: boolean;
   onClose: () => void;
   children: ReactNode;
+  fullscreen?: boolean;
 }
 
-function Modal({ visible, onClose, children }: ModalProps): React.ReactElement {
+function Modal({
+  visible,
+  onClose,
+  children,
+  fullscreen = false,
+}: ModalProps): React.ReactElement {
   return (
     <RNModal
       visible={visible}
@@ -23,11 +29,14 @@ function Modal({ visible, onClose, children }: ModalProps): React.ReactElement {
       hardwareAccelerated
     >
       <TouchableOpacity
-        style={styles.overlay}
+        style={fullscreen ? styles.overlayFullscreen : styles.overlay}
         activeOpacity={1}
         onPress={onClose}
       >
-        <View style={[styles.container]} onStartShouldSetResponder={() => true}>
+        <View
+          style={[fullscreen ? styles.containerFullscreen : styles.container]}
+          onStartShouldSetResponder={() => true}
+        >
           {children}
         </View>
       </TouchableOpacity>
@@ -42,6 +51,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
+  overlayFullscreen: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
   container: {
     width: '100%',
     maxHeight: '90%',
@@ -49,6 +64,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopEndRadius: 8,
     borderTopStartRadius: 8,
+    overflow: 'hidden',
+  },
+  containerFullscreen: {
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    backgroundColor: '#fff',
     overflow: 'hidden',
   },
 });
