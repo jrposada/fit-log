@@ -32,8 +32,24 @@ services:
       - s3-data:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
 
+  opensearch-local:
+    container_name: opensearch-local
+    image: opensearchproject/opensearch:latest
+    ports:
+      - '3400:9200' # REST API
+      - '3401:9600' # Performance Analyzer
+    environment:
+      - discovery.type=single-node
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+      - DISABLE_SECURITY_PLUGIN=true # Disable security for local development
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+    volumes:
+      - opensearch-data:/usr/share/opensearch/data
+
 volumes:
   dynamodb-data:
     external: false
   s3-data:
+    external: false
+  opensearch-data:
     external: false
