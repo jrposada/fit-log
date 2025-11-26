@@ -2,41 +2,6 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Backend: Dev",
-      "type": "shell",
-      "command": "npm",
-      "args": ["run", "dev"],
-      "options": {
-        "cwd": "${workspaceFolder}/packages/backend"
-      },
-      "isBackground": true,
-      "problemMatcher": {
-        "pattern": {
-          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-          "file": 1,
-          "line": 2,
-          "column": 3,
-          "severity": 4,
-          "message": 5
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": ".*Starting Offline.*",
-          "endsPattern": ".*Server ready.*|.*Offline listening.*"
-        }
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "focus": false,
-        "clear": true
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": false
-      }
-    },
-    {
       "label": "Shared: Build (Watch)",
       "type": "shell",
       "command": "npm",
@@ -113,10 +78,46 @@
         "focus": false,
         "clear": false
       },
+      "dependsOn": ["Shared: Build (Watch)"]
+    },
+    {
+      "label": "Backend: Dev",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "dev"],
+      "options": {
+        "cwd": "${workspaceFolder}/packages/backend"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*Starting Offline.*",
+          "endsPattern": ".*Server ready.*|.*Offline listening.*"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false,
+        "clear": true
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
       "runOptions": {
         "runOn": "folderOpen"
       },
-      "dependsOn": ["Shared: Build (Watch)"]
-    }
+      "dependsOn": ["Shared-React: Build (Watch)"]
+    },
   ]
 }
