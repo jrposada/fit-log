@@ -23,7 +23,7 @@ const QuickLogTab: FunctionComponent = () => {
     limit: 3,
   });
 
-  const [location, setLocation] = useState<string>(locations[0]?.name ?? '');
+  const [locationId, setLocationId] = useState<string>(locations[0]?.id ?? '');
 
   const handleLog = (id: string) => {
     console.log('log route', id);
@@ -40,9 +40,9 @@ const QuickLogTab: FunctionComponent = () => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <LocationSelector
-        locations={locations.map(({ name }) => name)}
-        value={location}
-        onChange={setLocation}
+        locations={locations}
+        value={locationId}
+        onChange={setLocationId}
       />
       <Separator />
       <Text style={styles.sectionLabel}>{t('climbing.recent_climbs')}</Text>

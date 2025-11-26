@@ -93,11 +93,11 @@ export const sectorSchema = z.object({
 // GET //
 /////////
 export type SectorsGetParams = {
-  locationUuid: string;
+  locationId: string;
 };
 
 export const sectorsGetParamsSchema = z.object({
-  locationUuid: z.string().nonempty(),
+  locationId: z.string().nonempty(),
 });
 
 export type SectorsGetResponse = {

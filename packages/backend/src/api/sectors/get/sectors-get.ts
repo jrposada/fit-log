@@ -9,6 +9,7 @@ import { APIGatewayProxyEvent } from 'aws-lambda';
 
 import { SectorsService } from '../../../services/sectors-service';
 import { apiHandler } from '../../api-utils';
+import { LocationsService } from '../../../services/locations-service';
 
 export const handler = apiHandler<SectorsGetResponse>(
   async ({ authorizerContext, event }) => {
@@ -16,8 +17,10 @@ export const handler = apiHandler<SectorsGetResponse>(
 
     const { params } = validateEvent(event);
 
+    const locationUuid = LocationsService.getLocationUuid(params.locationId);
+
     const { items: sectors, lastEvaluatedKey } =
-      await SectorsService.instance.getSectorsByLocation(params.locationUuid);
+      await SectorsService.instance.getSectorsByLocation(locationUuid);
 
     return {
       statusCode: 200,

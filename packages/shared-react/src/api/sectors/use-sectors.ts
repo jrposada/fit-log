@@ -7,20 +7,20 @@ import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
 type UseSectorsParams = {
-  locationUuid: string;
+  locationId: string;
   onUnauthorized?: () => void;
 };
 
-function useSectors({ locationUuid, onUnauthorized }: UseSectorsParams) {
+function useSectors({ locationId, onUnauthorized }: UseSectorsParams) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
   return useQuery({
-    queryKey: ['sectors', { locationUuid }],
+    queryKey: ['sectors', { locationId }],
     queryFn: query({
       defaultResponse: [],
       fn: async () => {
         const params = new URLSearchParams();
-        params.append('locationUuid', locationUuid);
+        params.append('locationId', locationId);
 
         const url = `${apiBaseUrl}/sectors?${params.toString()}`;
         const response = await axios.get<ApiResponse<SectorsGetResponse>>(url, {
@@ -37,7 +37,7 @@ function useSectors({ locationUuid, onUnauthorized }: UseSectorsParams) {
       },
       onUnauthorized,
     }),
-    enabled: !!locationUuid,
+    enabled: !!locationId,
   });
 }
 

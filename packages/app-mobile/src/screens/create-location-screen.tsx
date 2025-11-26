@@ -1,8 +1,9 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LocationsPutRequest } from '@shared/models/location';
+import { useLocationsById } from '@shared-react/api/locations/use-locations-by-id';
 import { useLocationsPut } from '@shared-react/api/locations/use-locations-put';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -45,6 +46,11 @@ interface SectorData {
 const CreateLocationScreen: FunctionComponent = () => {
   const navigation = useNavigation<CreateLocationNavigationProp>();
   const route = useRoute<CreateLocationRouteProp>();
+
+  const locationId = route.params?.locationId;
+  const isEditMode = !!locationId;
+  const initializedRef = useRef(false);
+
   const [name, setName] = useState(route.params?.initialName ?? '');
   const [description, setDescription] = useState('');
   const [locationData, setLocationData] = useState<LocationData | null>(null);
@@ -52,6 +58,39 @@ const CreateLocationScreen: FunctionComponent = () => {
   const [showMapPicker, setShowMapPicker] = useState(false);
   const [showSectorPicker, setShowSectorPicker] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  // Fetch existing location data if in edit mode
+  const { data: existingLocation, isLoading: isLoadingLocation } =
+    useLocationsById({
+      id: locationId || '',
+    });
+
+  // Pre-fill form when editing existing location (only once)
+  // This is a valid initialization use case - we only want to run this once when the data loads
+  useEffect(() => {
+    if (existingLocation && isEditMode && !initializedRef.current) {
+      // Batch all state updates together
+      const updates = () => {
+        setName(existingLocation.name);
+        setDescription(existingLocation.description || '');
+
+        if (
+          existingLocation.latitude !== undefined &&
+          existingLocation.longitude !== undefined
+        ) {
+          setLocationData({
+            latitude: existingLocation.latitude,
+            longitude: existingLocation.longitude,
+            address: existingLocation.address,
+            placeName: existingLocation.placeName,
+            placeId: existingLocation.placeId,
+          });
+        }
+        initializedRef.current = true;
+      };
+      updates();
+    }
+  }, [existingLocation, isEditMode]);
 
   const locationsPut = useLocationsPut({
     onSuccess: (data) => {
@@ -70,6 +109,7 @@ const CreateLocationScreen: FunctionComponent = () => {
     }
 
     const newLocationData: LocationsPutRequest = {
+      id: isEditMode ? locationId : undefined,
       name: name.trim(),
       description: description.trim() || undefined,
       latitude: locationData?.latitude,
@@ -249,12 +289,21 @@ const CreateLocationScreen: FunctionComponent = () => {
 
       <View style={styles.footer}>
         <Pressable
-          style={[styles.saveButton, !isValid && styles.saveButtonDisabled]}
+          style={[
+            styles.saveButton,
+            (!isValid || isLoadingLocation) && styles.saveButtonDisabled,
+          ]}
           onPress={handleSave}
-          disabled={!isValid || locationsPut.isPending}
+          disabled={!isValid || locationsPut.isPending || isLoadingLocation}
         >
           <Text style={styles.saveButtonText}>
-            {locationsPut.isPending ? 'Saving...' : 'Save Location'}
+            {isLoadingLocation
+              ? 'Loading...'
+              : locationsPut.isPending
+                ? 'Saving...'
+                : isEditMode
+                  ? 'Update Location'
+                  : 'Save Location'}
           </Text>
         </Pressable>
         <Pressable onPress={handleCancel}>

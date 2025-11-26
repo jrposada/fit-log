@@ -10,7 +10,7 @@ SectorsGet:
         request:
           parameters:
             querystrings:
-              locationUuid: true
+              locationId: true
         cors: true
         authorizer:
           name: Authorizer
