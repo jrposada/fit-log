@@ -41,4 +41,31 @@ export class OpenSearchHelper {
 
     return response.body as SearchResponse<T>;
   }
+
+  async indexDocument<T extends Record<string, unknown>>(
+    id: string,
+    document: T
+  ): Promise<void> {
+    await this.client.index({
+      index: this.indexName,
+      id,
+      body: document,
+      refresh: true,
+    });
+  }
+
+  async deleteDocument(id: string): Promise<void> {
+    try {
+      await this.client.delete({
+        index: this.indexName,
+        id,
+        refresh: true,
+      });
+    } catch (error) {
+      // Ignore 404 errors when deleting non-existent documents
+      if ((error as { statusCode?: number }).statusCode !== 404) {
+        throw error;
+      }
+    }
+  }
 }

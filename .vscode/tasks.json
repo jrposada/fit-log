@@ -115,7 +115,7 @@
         "isDefault": false
       },
       "runOptions": {
-        "runOn": "folderOpen"
+        // "runOn": "folderOpen"
       },
       "dependsOn": ["Shared-React: Build (Watch)"]
     },

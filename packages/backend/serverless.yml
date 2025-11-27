@@ -5,6 +5,7 @@ frameworkVersion: '3'
 plugins:
   - serverless-esbuild
   - serverless-offline
+  - serverless-dynamodb-stream
   - serverless-plugin-log-retention
   - serverless-prune-plugin
 
@@ -41,6 +42,15 @@ custom:
 
   serverless-offline:
     httpPort: 3100
+
+  # serverless-dynamodb-stream
+  dynamodb-stream:
+    endpoint: http://localhost:3200
+    region: ${self:provider.region}
+    accessKeyId: local
+    secretAccessKey: local
+    skipCacheInvalidation: false
+    readInterval: 500
 
 provider:
   deploymentBucket:

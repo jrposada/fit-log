@@ -1,0 +1,26 @@
+DynamoDBStreamProcessor:
+  handler: src/lambdas/dynamodb-stream/dynamodb-stream.handler
+  role: LambdaDynamoDBStreamRole
+  timeout: 60
+  memorySize: 256
+  events:
+    - stream:
+        type: dynamodb
+        arn:
+          Fn::GetAtt:
+            - DB
+            - StreamArn
+        batchSize: 100
+        startingPosition: LATEST
+        maximumRetryAttempts: 2
+        bisectBatchOnFunctionError: true
+        functionResponseType: ReportBatchItemFailures
+  environment:
+    OPENSEARCH_ENDPOINT:
+      Fn::Join:
+        - ''
+        - - 'https://'
+          - Fn::GetAtt:
+              - OpenSearchServiceDomain
+              - DomainEndpoint
+    AWS_REGION: ${self:provider.region}
