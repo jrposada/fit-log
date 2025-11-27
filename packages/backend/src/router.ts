@@ -1,45 +1,45 @@
 import { Router } from 'express';
 
 // Import all handlers
-import { handler as versionGet } from './api/version/get/version-get';
+import { handler as versionGet } from './api/version/version-get';
 
 // Workouts
-import { handler as workoutsGet } from './api/workouts/get/workouts-get';
-import { handler as workoutsGetById } from './api/workouts/get-by-id/workouts-get-by-id';
-import { handler as workoutsPut } from './api/workouts/put/workouts-put';
-import { handler as workoutsDelete } from './api/workouts/delete/workouts-delete';
+import { handler as workoutsGet } from './api/workouts/workouts-get';
+import { handler as workoutsGetById } from './api/workouts/workouts-get-by-id';
+import { handler as workoutsPut } from './api/workouts/workouts-put';
+import { handler as workoutsDelete } from './api/workouts/workouts-delete';
 
 // Sessions
-import { handler as sessionsGet } from './api/sessions/get/sessions-get';
-import { handler as sessionsGetById } from './api/sessions/get-by-id/sessions-get-by-id';
-import { handler as sessionsPut } from './api/sessions/put/sessions-put';
-import { handler as sessionsDelete } from './api/sessions/delete/sessions-delete';
+import { handler as sessionsGet } from './api/sessions/sessions-get';
+import { handler as sessionsGetById } from './api/sessions/sessions-get-by-id';
+import { handler as sessionsPut } from './api/sessions/sessions-put';
+import { handler as sessionsDelete } from './api/sessions/sessions-delete';
 
 // Favorite Workouts
-import { handler as favoriteWorkoutsPut } from './api/favorite-workouts/put/favorite-workouts-put';
-import { handler as favoriteWorkoutsDelete } from './api/favorite-workouts/delete/favorite-workouts-delete';
+import { handler as favoriteWorkoutsPut } from './api/favorite-workouts/favorite-workouts-put';
+import { handler as favoriteWorkoutsDelete } from './api/favorite-workouts/favorite-workouts-delete';
 
 // Users
-import { handler as usersPost } from './api/users/post/users-post';
-import { handler as usersAuthorize } from './api/users/authorize/users-authorize';
+import { handler as usersPost } from './api/users/users-post';
+import { handler as usersAuthorize } from './api/users/users-authorize';
 
 // Locations
-import { handler as locationsGet } from './api/locations/get/locations-get';
-import { handler as locationsGetById } from './api/locations/get-by-id/locations-get-by-id';
-import { handler as locationsPut } from './api/locations/put/locations-put';
-import { handler as locationsDelete } from './api/locations/delete/locations-delete';
+import { handler as locationsGet } from './api/locations/locations-get';
+import { handler as locationsGetById } from './api/locations/locations-get-by-id';
+import { handler as locationsPut } from './api/locations/locations-put';
+import { handler as locationsDelete } from './api/locations/locations-delete';
 
 // Sectors
-import { handler as sectorsGet } from './api/sectors/get/sectors-get';
-import { handler as sectorsPut } from './api/sectors/put/sectors-put';
-import { handler as sectorsDelete } from './api/sectors/delete/sectors-delete';
-import { handler as sectorsUploadUrl } from './api/sectors/upload-url/sectors-upload-url';
+import { handler as sectorsGet } from './api/sectors/sectors-get';
+import { handler as sectorsPut } from './api/sectors/sectors-put';
+import { handler as sectorsDelete } from './api/sectors/sectors-delete';
+import { handler as sectorsUploadUrl } from './api/sectors/sectors-upload-url';
 
 // Climbs
-import { handler as climbsGet } from './api/climbs/get/climbs-get';
-import { handler as climbsGetById } from './api/climbs/get-by-id/climbs-get-by-id';
-import { handler as climbsPut } from './api/climbs/put/climbs-put';
-import { handler as climbsDelete } from './api/climbs/delete/climbs-delete';
+import { handler as climbsGet } from './api/climbs/climbs-get';
+import { handler as climbsGetById } from './api/climbs/climbs-get-by-id';
+import { handler as climbsPut } from './api/climbs/climbs-put';
+import { handler as climbsDelete } from './api/climbs/climbs-delete';
 
 export const router = Router();
 
