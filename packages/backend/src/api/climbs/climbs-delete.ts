@@ -1,34 +1,19 @@
-import { ClimbsDeleteResponse } from '@shared/models/climb';
-import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
-
+import { ClimbsDeleteParams } from '@shared/models/climb';
 import { ClimbsService } from '../../services/climbs-service';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
 
-export const handler = apiHandler<ClimbsDeleteResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
+const handler = toApiResponse<ClimbsDeleteParams>(async (request) => {
+  const { id } = request.params;
 
-    const { id } = validateEvent(req);
+  void (await ClimbsService.instance.delete(id));
 
-    void (await ClimbsService.instance.delete(id));
+  return {
+    statusCode: 200,
+    body: {
+      success: true,
+      data: undefined,
+    },
+  };
+});
 
-    return {
-      statusCode: 200,
-      body: {
-        success: true,
-        data: undefined,
-      },
-    };
-  }
-);
-
-function validateEvent(req: Request): {
-  id: string;
-} {
-  if (!req.params?.id) {
-    throw new Error('Invalid request');
-  }
-
-  return { id: decodeURIComponent(req.params.id) };
-}
+export { handler };

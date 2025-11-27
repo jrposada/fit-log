@@ -1,6 +1,6 @@
 import { ApiResponse } from '@shared/models/api-response';
 import { Request, Response, NextFunction } from 'express';
-import { AuthorizerContext } from '../lambdas/authorizer/authorizer';
+import { ZodSchema } from 'zod';
 
 export function apiError<TError = unknown>(
   _error: TError,
@@ -14,37 +14,63 @@ export function apiError<TError = unknown>(
   return res.status(500).json(body);
 }
 
-type ApiHandlerParams<TData> = ({
-  authorizerContext,
-  req,
-  res,
-}: {
-  authorizerContext?: AuthorizerContext;
-  req: Request;
-  res: Response;
-}) => Promise<{
+export function requireAuth(req: Request, _res: Response, next: NextFunction) {
+  if (!req.user) {
+    throw new Error('Unauthorized');
+  }
+  next();
+}
+
+export function validateParams<TSchema extends ZodSchema>(schema: TSchema) {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      req.params = schema.parse(req.params);
+      next();
+    } catch (error) {
+      throw new Error('Invalid request parameters');
+    }
+  };
+}
+
+export function validateBody<TSchema extends ZodSchema>(schema: TSchema) {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      req.body = schema.parse(req.body);
+      next();
+    } catch (error) {
+      throw new Error('Invalid request body');
+    }
+  };
+}
+
+export function validateQuery<TSchema extends ZodSchema>(schema: TSchema) {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      req.query = schema.parse(req.query);
+      next();
+    } catch (error) {
+      throw new Error('Invalid query parameters');
+    }
+  };
+}
+
+// New middleware-based approach
+type ApiResponseResult<TData = unknown> = {
+  statusCode: number;
   body: ApiResponse<TData>;
   headers?: Record<string, string>;
-  statusCode: number;
-}>;
+};
 
-export function apiHandler<TData>(
-  handler: ApiHandlerParams<TData>
-): (req: Request, res: Response, next: NextFunction) => Promise<void> {
+export function toApiResponse<TParams = any, TQuery = any, TBody = any>(
+  handler: (
+    req: Request<TParams, any, TBody, TQuery>
+  ) => Promise<ApiResponseResult>
+) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let authorizerContext: AuthorizerContext | undefined;
-
-      // Extract auth context from request (will be set by auth middleware)
-      if (req.user) {
-        authorizerContext = req.user as AuthorizerContext;
-      }
-
-      const { body, statusCode, headers } = await handler({
-        req,
-        res,
-        authorizerContext,
-      });
+      const { statusCode, body, headers } = await handler(
+        req as Request<TParams, any, TBody, TQuery>
+      );
 
       // Set custom headers if provided
       if (headers) {
@@ -56,7 +82,7 @@ export function apiHandler<TData>(
       res.status(statusCode).json(body);
     } catch (error) {
       console.error(error);
-      apiError(error, res);
+      next(error);
     }
   };
 }

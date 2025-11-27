@@ -40,6 +40,8 @@ import { handler as climbsGet } from './api/climbs/climbs-get';
 import { handler as climbsGetById } from './api/climbs/climbs-get-by-id';
 import { handler as climbsPut } from './api/climbs/climbs-put';
 import { handler as climbsDelete } from './api/climbs/climbs-delete';
+import { requireAuth, validateParams } from './api/api-utils';
+import { climbsDeleteParamsSchema } from '@shared/models/climb';
 
 export const router = Router();
 
@@ -82,4 +84,9 @@ router.post('/sectors/upload-url', sectorsUploadUrl);
 router.get('/climbs', climbsGet);
 router.get('/climbs/:id', climbsGetById);
 router.put('/climbs', climbsPut);
-router.delete('/climbs/:id', climbsDelete);
+router.delete(
+  '/climbs/:id',
+  requireAuth,
+  validateParams(climbsDeleteParamsSchema),
+  climbsDelete
+);
