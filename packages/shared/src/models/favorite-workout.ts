@@ -25,4 +25,11 @@ export type FavoriteWorkoutsPutResponse = {
 ////////////
 // DELETE //
 ////////////
+export type FavoriteWorkoutsDeleteParams = {
+  id: string;
+};
+export const favoriteWorkoutsDeleteParamsSchema = z.object({
+  id: z.string().nonempty(),
+});
+
 export type FavoriteWorkoutsDeleteResponse = undefined;

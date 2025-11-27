@@ -1,20 +1,17 @@
 import {
   Location,
-  LocationsGetParams,
-  locationsGetParamsSchema,
+  LocationsGetQuery,
   LocationsGetResponse,
 } from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
-
 import { LocationsService } from '../../services/locations-service';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
 
-export const handler = apiHandler<LocationsGetResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
+const handler = toApiResponse<LocationsGetResponse, unknown, LocationsGetQuery>(
+  async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
 
-    const { params } = validateEvent(req);
+    const params = request.query;
 
     const { items: locations, lastEvaluatedKey } =
       await LocationsService.instance.getAll(
@@ -47,16 +44,4 @@ export const handler = apiHandler<LocationsGetResponse>(
   }
 );
 
-function validateEvent(req: Request): {
-  params: LocationsGetParams;
-} {
-  try {
-    const params = locationsGetParamsSchema.parse(
-      req.query ?? {}
-    );
-    return { params };
-  } catch (error) {
-    console.error(error);
-    throw new Error('Invalid request');
-  }
-}
+export { handler };

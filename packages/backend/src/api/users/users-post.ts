@@ -4,15 +4,21 @@ import {
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
+import { UsersPostRequest, UsersPostResponse } from '@shared/models/users';
 
 const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,
 });
 
-export const handler = apiHandler(async ({ req }) => {
-  const { email, password } = validateEvent(req);
+
+const handler = toApiResponse<
+  UsersPostResponse,
+  unknown,
+  unknown,
+  UsersPostRequest
+>(async (request) => {
+  const { email, password } = request.body;
   const { USER_POOL_ID } = process.env;
   assert(USER_POOL_ID);
 
@@ -47,26 +53,4 @@ export const handler = apiHandler(async ({ req }) => {
   };
 });
 
-function validateEvent(req: Request): {
-  email: string;
-  password: string;
-} {
-  if (!req.body) {
-    throw new Error('Invalid request');
-  }
-
-  try {
-    const body = req.body;
-
-    if (!body.email || !body.password) {
-      throw new Error('Invalid request');
-    }
-
-    return {
-      email: body.email,
-      password: body.password,
-    };
-  } catch {
-    throw new Error('Invalid request');
-  }
-}
+export { handler };

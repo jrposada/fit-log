@@ -37,17 +37,17 @@ export const sessionSchema = z.object({
 /////////
 // GET //
 /////////
+export type SessionsGetQuery = {
+  workoutId?: string;
+};
+export const sessionsGetQuerySchema = z.object({
+  workoutId: z.string().nonempty().optional(),
+});
+
 export type SessionsGetResponse = {
   sessions: Session[];
   lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
-
-export type SessionsGetParams = {
-  workoutId?: string;
-};
-export const sessionsGetParamsSchema = z.object({
-  workoutId: z.string().nonempty().optional(),
-});
 
 /////////
 // PUT //
@@ -78,11 +78,23 @@ export type SessionsPutResponse = {
 ////////////
 // DELETE //
 ////////////
+export type SessionsDeleteParams = {
+  id: string;
+};
+export const sessionsDeleteParamsSchema = z.object({
+  id: z.string().nonempty(),
+});
 export type SessionsDeleteResponse = undefined;
 
 ///////////////
 // GET by ID //
 ///////////////
+export type SessionsGetByIdParams = {
+  id: string;
+};
+export const sessionsGetByIdParamsSchema = z.object({
+  id: z.string().nonempty(),
+});
 export type SessionsGetByIdResponse = {
   session: Session;
 };

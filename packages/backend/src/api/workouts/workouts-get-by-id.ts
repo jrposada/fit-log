@@ -1,17 +1,20 @@
-import { Exercise, WorkoutsGetByIdResponse } from '@shared/models/workout';
-import { Request } from 'express';
+import {
+  Exercise,
+  WorkoutsGetByIdParams,
+  WorkoutsGetByIdResponse,
+} from '@shared/models/workout';
 import { WorkoutsService } from '../../services/workouts-service';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
 import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
 import { assert } from '@shared/utils/assert';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 
-export const handler = apiHandler<WorkoutsGetByIdResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
+const handler = toApiResponse<WorkoutsGetByIdResponse, WorkoutsGetByIdParams>(
+  async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
 
-    const { id } = validateEvent(req);
-    const { userId } = authorizerContext;
+    const { id } = request.params;
+    const { userId } = request.user;
 
     const workout = await WorkoutsService.instance.get(id);
     let isFavorite = false;
@@ -57,12 +60,4 @@ export const handler = apiHandler<WorkoutsGetByIdResponse>(
   }
 );
 
-function validateEvent(req: Request): {
-  id: string;
-} {
-  if (!req.params?.id) {
-    throw new Error('Invalid request');
-  }
-
-  return { id: decodeURIComponent(req.params.id) };
-}
+export { handler };

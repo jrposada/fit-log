@@ -92,10 +92,10 @@ export const climbSchema = z.object({
 /////////
 // GET //
 /////////
-export type ClimbsGetParams = {
+export type ClimbsGetQuery = {
   limit?: number;
 };
-export const climbsGetParamsSchema = z.object({
+export const climbsGetQuerySchema = z.object({
   limit: z.coerce.number().int().positive().optional(),
 });
 
@@ -150,6 +150,13 @@ export type ClimbsDeleteResponse = undefined;
 ///////////////
 // GET by ID //
 ///////////////
+export type ClimbsGetByIdParams = {
+  id: string;
+};
+export const climbsGetByIdParamsSchema = z.object({
+  id: z.string().nonempty(),
+});
+
 export type ClimbsGetByIdResponse = {
   climb: Climb;
 };

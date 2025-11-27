@@ -1,40 +1,35 @@
-import { FavoriteWorkoutsDeleteResponse } from '@shared/models/favorite-workout';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
 import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
 import { WorkoutsService } from '../../services/workouts-service';
+import {
+  FavoriteWorkoutsDeleteParams,
+  FavoriteWorkoutsDeleteResponse,
+} from '@shared/models/favorite-workout';
 
-export const handler = apiHandler<FavoriteWorkoutsDeleteResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
+const handler = toApiResponse<
+  FavoriteWorkoutsDeleteResponse,
+  FavoriteWorkoutsDeleteParams
+>(async (request) => {
+  assert(request.user, { msg: 'Unauthorized' });
 
-    const { workoutId } = validateEvent(req);
-    const { userId } = authorizerContext;
+  const workoutId = request.params.id;
+  const { userId } = request.user;
 
-    void (await FavoriteWorkoutsService.instance.delete(
-      FavoriteWorkoutsService.instance.calculateSk(
-        userId,
-        WorkoutsService.getWorkoutUuid(workoutId)
-      )
-    ));
+  void (await FavoriteWorkoutsService.instance.delete(
+    FavoriteWorkoutsService.instance.calculateSk(
+      userId,
+      WorkoutsService.getWorkoutUuid(workoutId)
+    )
+  ));
 
-    return {
-      statusCode: 200,
-      body: {
-        success: true,
-        data: undefined,
-      },
-    };
-  }
-);
+  return {
+    statusCode: 200,
+    body: {
+      success: true,
+      data: undefined,
+    },
+  };
+});
 
-function validateEvent(req: Request): {
-  workoutId: string;
-} {
-  if (!req.params?.id) {
-    throw new Error('Invalid request');
-  }
-
-  return { workoutId: decodeURIComponent(req.params.id) };
-}
+export { handler };

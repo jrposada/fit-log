@@ -87,10 +87,10 @@ export const locationSchema = z.object({
 /////////
 // GET //
 /////////
-export type LocationsGetParams = {
+export type LocationsGetQuery = {
   limit?: number;
 };
-export const locationsGetParamsSchema = z.object({
+export const locationsGetQuerySchema = z.object({
   limit: z.coerce.number().int().positive().optional(),
 });
 
@@ -138,11 +138,24 @@ export type LocationsPutResponse = {
 ////////////
 // DELETE //
 ////////////
+export type LocationsDeleteParams = {
+  id: string;
+};
+export const locationsDeleteParamsSchema = z.object({
+  id: z.string().nonempty(),
+});
 export type LocationsDeleteResponse = undefined;
 
 ///////////////
 // GET by ID //
 ///////////////
+export type LocationsGetByIdParams = {
+  id: string;
+};
+export const locationsGetByIdParamsSchema = z.object({
+  id: z.string().nonempty(),
+});
+
 export type LocationsGetByIdResponse = {
   location: Location;
 };

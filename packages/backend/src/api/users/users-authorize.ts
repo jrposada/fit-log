@@ -3,9 +3,12 @@ import {
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
 import dotenv from 'dotenv';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
+import {
+  UsersAuthorizeRequest,
+  UsersAuthorizeResponse,
+} from '@shared/models/users';
 
 if (process.env.IS_OFFLINE) {
   const env = dotenv.config({ path: '.env' }).parsed;
@@ -17,8 +20,14 @@ const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,
 });
 
-export const handler = apiHandler(async ({ req }) => {
-  const { email, password } = validateEvent(req);
+
+const handler = toApiResponse<
+  UsersAuthorizeResponse,
+  unknown,
+  unknown,
+  UsersAuthorizeRequest
+>(async (request) => {
+  const { email, password } = request.body;
 
   if (process.env.IS_OFFLINE) {
     return {
@@ -65,26 +74,4 @@ export const handler = apiHandler(async ({ req }) => {
   };
 });
 
-function validateEvent(req: Request): {
-  email: string;
-  password: string;
-} {
-  if (!req.body) {
-    throw new Error('Invalid request');
-  }
-
-  try {
-    const body = req.body;
-
-    if (!body.email || !body.password) {
-      throw new Error('Invalid request');
-    }
-
-    return {
-      email: body.email,
-      password: body.password,
-    };
-  } catch {
-    throw new Error('Invalid request');
-  }
-}
+export { handler };

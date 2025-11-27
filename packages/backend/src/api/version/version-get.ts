@@ -1,11 +1,13 @@
 import pkg from '../../../package.json';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
 
-export const handler = apiHandler<string>(() => {
+const handler = toApiResponse(async () => {
   const version = pkg.version;
 
-  return Promise.resolve({
+  return {
     statusCode: 200,
     body: { success: true, data: version },
-  });
+  };
 });
+
+export { handler };

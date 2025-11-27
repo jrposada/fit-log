@@ -1,21 +1,18 @@
 import {
   Sector,
-  SectorsGetParams,
-  sectorsGetParamsSchema,
+  SectorsGetQuery,
   SectorsGetResponse,
 } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
-
 import { SectorsService } from '../../services/sectors-service';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
 import { LocationsService } from '../../services/locations-service';
 
-export const handler = apiHandler<SectorsGetResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
+const handler = toApiResponse<SectorsGetResponse, unknown, SectorsGetQuery>(
+  async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
 
-    const { params } = validateEvent(req);
+    const params = request.query;
 
     const locationUuid = LocationsService.getLocationUuid(params.locationId);
 
@@ -50,14 +47,4 @@ export const handler = apiHandler<SectorsGetResponse>(
   }
 );
 
-function validateEvent(req: Request): {
-  params: SectorsGetParams;
-} {
-  try {
-    const params = sectorsGetParamsSchema.parse(req.query ?? {});
-    return { params };
-  } catch (error) {
-    console.error(error);
-    throw new Error('Invalid request');
-  }
-}
+export { handler };

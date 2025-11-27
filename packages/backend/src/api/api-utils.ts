@@ -26,7 +26,7 @@ export function validateParams<TSchema extends ZodSchema>(schema: TSchema) {
     try {
       req.params = schema.parse(req.params);
       next();
-    } catch (error) {
+    } catch {
       throw new Error('Invalid request parameters');
     }
   };
@@ -37,7 +37,7 @@ export function validateBody<TSchema extends ZodSchema>(schema: TSchema) {
     try {
       req.body = schema.parse(req.body);
       next();
-    } catch (error) {
+    } catch {
       throw new Error('Invalid request body');
     }
   };
@@ -48,7 +48,7 @@ export function validateQuery<TSchema extends ZodSchema>(schema: TSchema) {
     try {
       req.query = schema.parse(req.query);
       next();
-    } catch (error) {
+    } catch {
       throw new Error('Invalid query parameters');
     }
   };
@@ -61,15 +61,20 @@ type ApiResponseResult<TData = unknown> = {
   headers?: Record<string, string>;
 };
 
-export function toApiResponse<TParams = any, TQuery = any, TBody = any>(
+export function toApiResponse<
+  TData,
+  TParams = unknown,
+  TQuery = unknown,
+  TBody = unknown,
+>(
   handler: (
-    req: Request<TParams, any, TBody, TQuery>
-  ) => Promise<ApiResponseResult>
+    req: Request<TParams, unknown, TBody, TQuery>
+  ) => Promise<ApiResponseResult<TData>>
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { statusCode, body, headers } = await handler(
-        req as Request<TParams, any, TBody, TQuery>
+        req as Request<TParams, unknown, TBody, TQuery>
       );
 
       // Set custom headers if provided

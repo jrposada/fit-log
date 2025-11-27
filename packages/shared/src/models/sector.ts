@@ -92,31 +92,17 @@ export const sectorSchema = z.object({
 /////////
 // GET //
 /////////
-export type SectorsGetParams = {
+export type SectorsGetQuery = {
   locationId: string;
 };
 
-export const sectorsGetParamsSchema = z.object({
+export const sectorsGetQuerySchema = z.object({
   locationId: z.string().nonempty(),
 });
 
 export type SectorsGetResponse = {
   sectors: Sector[];
   lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
-};
-
-//////////////
-// GET BY ID //
-///////////////
-export type SectorsByIdGetParams = {
-  id: string;
-};
-export const sectorsByIdGetParamsSchema = z.object({
-  id: z.string().nonempty(),
-});
-
-export type SectorsByIdGetResponse = {
-  sector: Sector;
 };
 
 /////////
@@ -191,6 +177,20 @@ export const sectorsDeleteParamsSchema = z.object({
 
 export type SectorsDeleteResponse = {
   success: true;
+};
+
+//////////////
+// GET BY ID //
+///////////////
+export type SectorsByIdGetParams = {
+  id: string;
+};
+export const sectorsByIdGetParamsSchema = z.object({
+  id: z.string().nonempty(),
+});
+
+export type SectorsByIdGetResponse = {
+  sector: Sector;
 };
 
 ///////////////////

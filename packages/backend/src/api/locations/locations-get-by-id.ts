@@ -1,15 +1,16 @@
-import { LocationsGetByIdResponse } from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
-
 import { LocationsService } from '../../services/locations-service';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
+import {
+  LocationsGetByIdParams,
+  LocationsGetByIdResponse,
+} from '@shared/models/location';
 
-export const handler = apiHandler<LocationsGetByIdResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
+const handler = toApiResponse<LocationsGetByIdResponse, LocationsGetByIdParams>(
+  async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
 
-    const { id } = validateEvent(req);
+    const { id } = request.params;
 
     const location = await LocationsService.instance.get(id);
 
@@ -37,12 +38,4 @@ export const handler = apiHandler<LocationsGetByIdResponse>(
   }
 );
 
-function validateEvent(req: Request): {
-  id: string;
-} {
-  if (!req.params?.id) {
-    throw new Error('Invalid request');
-  }
-
-  return { id: req.params.id };
-}
+export { handler };

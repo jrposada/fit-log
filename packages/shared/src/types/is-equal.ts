@@ -19,7 +19,7 @@
  */
 export type Canonicalize<T> = T extends object
   ? {
-      [K in keyof T]: {} extends Pick<T, K>
+      [K in keyof T]: object extends Pick<T, K>
         ? Canonicalize<T[K]> | undefined
         : Canonicalize<T[K]>;
     }

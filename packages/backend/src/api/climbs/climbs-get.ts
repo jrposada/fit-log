@@ -1,25 +1,18 @@
-import {
-  Climb,
-  ClimbsGetParams,
-  climbsGetParamsSchema,
-  ClimbsGetResponse,
-} from '@shared/models/climb';
+import { Climb, ClimbsGetQuery, ClimbsGetResponse } from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
-
 import { ClimbsService } from '../../services/climbs-service';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
 
-export const handler = apiHandler<ClimbsGetResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
+const handler = toApiResponse<ClimbsGetResponse, unknown, ClimbsGetQuery>(
+  async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
 
-    const { params } = validateEvent(req);
+    const query = request.query;
 
     const { items: climbs, lastEvaluatedKey } =
       await ClimbsService.instance.getAll(
         ClimbsService.instance.calculatePartialSk(),
-        params.limit
+        query.limit
       );
 
     return {
@@ -48,14 +41,4 @@ export const handler = apiHandler<ClimbsGetResponse>(
   }
 );
 
-function validateEvent(req: Request): {
-  params: ClimbsGetParams;
-} {
-  try {
-    const params = climbsGetParamsSchema.parse(req.query ?? {});
-    return { params };
-  } catch (error) {
-    console.error(error);
-    throw new Error('Invalid request');
-  }
-}
+export { handler };

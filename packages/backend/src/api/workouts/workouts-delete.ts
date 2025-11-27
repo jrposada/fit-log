@@ -1,15 +1,18 @@
-import { WorkoutsDeleteResponse } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
 import { WorkoutsService } from '../../services/workouts-service';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
+import {
+  WorkoutsDeleteParams,
+  WorkoutsDeleteResponse,
+} from '@shared/models/workout';
 
-export const handler = apiHandler<WorkoutsDeleteResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { id } = validateEvent(req);
-    const { userId } = authorizerContext;
+const handler = toApiResponse<WorkoutsDeleteResponse, WorkoutsDeleteParams>(
+  async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
+
+    const { id } = request.params;
+    const { userId } = request.user;
 
     assert(WorkoutsService.getUserId(id) === userId, { msg: 'Unauthorized' });
 
@@ -25,12 +28,4 @@ export const handler = apiHandler<WorkoutsDeleteResponse>(
   }
 );
 
-function validateEvent(req: Request): {
-  id: string;
-} {
-  if (!req.params?.id) {
-    throw new Error('Invalid request');
-  }
-
-  return { id: decodeURIComponent(req.params.id) };
-}
+export { handler };

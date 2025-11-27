@@ -1,27 +1,25 @@
 import {
   Exercise,
   Workout,
-  WorkoutsGetParams,
-  workoutsGetParamsSchema,
+  WorkoutsGetQuery,
   WorkoutsGetResponse,
 } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
 import { DbRecord } from '../../services/aws/db-record';
 import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
 import { WorkoutsService } from '../../services/workouts-service';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
 import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import { ApiResponse } from '@shared/models/api-response';
 
-export const handler = apiHandler<WorkoutsGetResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
+const handler = toApiResponse<WorkoutsGetResponse, unknown, WorkoutsGetQuery>(
+  async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
 
-    const { params } = validateEvent(req);
-    const { userId } = authorizerContext;
+    const query = request.query;
+    const { userId } = request.user;
 
-    if (params.onlyFavorites) {
+    if (query.onlyFavorites) {
       const { items: favorites, lastEvaluatedKey } =
         await FavoriteWorkoutsService.instance.getAll(
           FavoriteWorkoutsService.instance.calculatePartialSk(userId)
@@ -90,7 +88,10 @@ function calculateApiResponse({
   favoritesByWorkoutUuid,
   lastEvaluatedKey,
   workouts,
-}: CalculateApiResponseParams): ApiResponse<WorkoutsGetResponse> {
+}: CalculateApiResponseParams): ApiResponse<{
+  lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
+  workouts: Workout[];
+}> {
   return {
     success: true,
     data: {
@@ -117,19 +118,4 @@ function calculateApiResponse({
   };
 }
 
-function validateEvent(req: Request): {
-  params: Omit<WorkoutsGetParams, 'onlyFavorites'> & { onlyFavorites: boolean };
-} {
-  try {
-    const params = workoutsGetParamsSchema.parse(req.query ?? {});
-    return {
-      params: {
-        ...params,
-        onlyFavorites: Object.keys(params).includes('onlyFavorites'),
-      },
-    };
-  } catch (error) {
-    console.error(error);
-    throw new Error('Invalid request');
-  }
-}
+export { handler };

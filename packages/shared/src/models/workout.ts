@@ -107,17 +107,17 @@ export const workoutSchema = z.object({
 /////////
 // GET //
 /////////
+export type WorkoutsGetQuery = {
+  onlyFavorites?: boolean;
+};
+export const workoutsGetQuerySchema = z.object({
+  onlyFavorites: z.boolean().optional(),
+});
+
 export type WorkoutsGetResponse = {
   workouts: Workout[];
   lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
-
-export type WorkoutsGetParams = {
-  onlyFavorites?: string;
-};
-export const workoutsGetParamsSchema = z.object({
-  onlyFavorites: z.string().max(0).optional(),
-});
 
 /////////
 // PUT //
@@ -142,11 +142,24 @@ export type WorkoutsPutResponse = {
 ////////////
 // DELETE //
 ////////////
+export type WorkoutsDeleteParams = {
+  id: string;
+};
+export const workoutsDeleteParamsSchema = z.object({
+  id: z.string().nonempty(),
+});
 export type WorkoutsDeleteResponse = undefined;
 
 ///////////////
 // GET by ID //
 ///////////////
+export type WorkoutsGetByIdParams = {
+  id: string;
+};
+export const workoutsGetByIdParamsSchema = z.object({
+  id: z.string().nonempty(),
+});
+
 export type WorkoutsGetByIdResponse = {
   workout: Workout;
 };

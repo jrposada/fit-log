@@ -16,7 +16,11 @@
     "npm": "^10"
   },
   "scripts": {
-    "dev": "tsc --build --watch --preserveWatchOutput"
+    "dev": "tsc --build --watch --preserveWatchOutput",
+    "lint:eslint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "lint:format": "prettier . --check",
+    "lint:types": "tsc --noEmit",
+    "lint": "run-p lint:*"
   },
   "dependencies": {
     "@aws-sdk/lib-dynamodb": "^3.758.0",

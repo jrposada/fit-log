@@ -1,15 +1,16 @@
-import { ClimbsGetByIdResponse } from '@shared/models/climb';
+import {
+  ClimbsGetByIdParams,
+  ClimbsGetByIdResponse,
+} from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
-
 import { ClimbsService } from '../../services/climbs-service';
-import { apiHandler } from '../api-utils';
+import { toApiResponse } from '../api-utils';
 
-export const handler = apiHandler<ClimbsGetByIdResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
+const handler = toApiResponse<ClimbsGetByIdResponse, ClimbsGetByIdParams>(
+  async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
 
-    const { id } = validateEvent(req);
+    const { id } = request.params;
 
     const climb = await ClimbsService.instance.get(id);
 
@@ -38,12 +39,4 @@ export const handler = apiHandler<ClimbsGetByIdResponse>(
   }
 );
 
-function validateEvent(req: Request): {
-  id: string;
-} {
-  if (!req.params?.id) {
-    throw new Error('Invalid request');
-  }
-
-  return { id: req.params.id };
-}
+export { handler };

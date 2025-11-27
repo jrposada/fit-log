@@ -13,7 +13,11 @@
   "i18n-ally.enabledFrameworks": [
     "react-i18next"
   ],
-  "i18n-ally.keystyle": "nested",  "[javascript]": {
+  "i18n-ally.keystyle": "nested",
+  "eslint.workingDirectories": [
+    { "pattern": "packages/*/" }
+  ],
+  "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascriptreact]": {

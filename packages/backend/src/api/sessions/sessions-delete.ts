@@ -1,15 +1,17 @@
-import { SessionsDeleteResponse } from '@shared/models/session';
 import { assert } from '@shared/utils/assert';
-import { Request } from 'express';
+import { toApiResponse } from '../api-utils';
 import { SessionsService } from '../../services/sessions-service';
-import { apiHandler } from '../api-utils';
+import {
+  SessionsDeleteParams,
+  SessionsDeleteResponse,
+} from '@shared/models/session';
 
-export const handler = apiHandler<SessionsDeleteResponse>(
-  async ({ authorizerContext, req }) => {
-    assert(authorizerContext, { msg: 'Unauthorized' });
+const handler = toApiResponse<SessionsDeleteResponse, SessionsDeleteParams>(
+  async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
 
-    const { id } = validateEvent(req);
-    const { userId } = authorizerContext;
+    const { id } = request.params;
+    const { userId } = request.user;
 
     assert(SessionsService.getUserId(id) === userId, { msg: 'Unauthorized' });
 
@@ -25,12 +27,4 @@ export const handler = apiHandler<SessionsDeleteResponse>(
   }
 );
 
-function validateEvent(req: Request): {
-  id: string;
-} {
-  if (!req.params?.id) {
-    throw new Error('Invalid request');
-  }
-
-  return { id: decodeURIComponent(req.params.id) };
-}
+export { handler };
