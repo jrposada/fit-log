@@ -6,8 +6,12 @@ import { IsTrue } from '../types/is-true';
 import {
   Session,
   sessionSchema,
-  SessionsGetParams,
-  sessionsGetParamsSchema,
+  SessionsDeleteParams,
+  sessionsDeleteParamsSchema,
+  SessionsGetByIdParams,
+  sessionsGetByIdParamsSchema,
+  SessionsGetQuery,
+  sessionsGetQuerySchema,
   SessionsPutRequest,
   sessionsPutRequestSchema,
 } from './session';
@@ -16,10 +20,22 @@ export type SessionTest = Expect<
   IsTrue<IsEqual<Session, z.infer<typeof sessionSchema>>>
 >;
 
-export type SessionsGetParamsTest = Expect<
-  IsTrue<IsEqual<SessionsGetParams, z.infer<typeof sessionsGetParamsSchema>>>
+export type SessionsGetQueryTest = Expect<
+  IsTrue<IsEqual<SessionsGetQuery, z.infer<typeof sessionsGetQuerySchema>>>
 >;
 
 export type SessionsPutRequestTest = Expect<
   IsTrue<IsEqual<SessionsPutRequest, z.infer<typeof sessionsPutRequestSchema>>>
+>;
+
+export type SessionsDeleteParamsTest = Expect<
+  IsTrue<
+    IsEqual<SessionsDeleteParams, z.infer<typeof sessionsDeleteParamsSchema>>
+  >
+>;
+
+export type SessionsGetByIdParamsTest = Expect<
+  IsTrue<
+    IsEqual<SessionsGetByIdParams, z.infer<typeof sessionsGetByIdParamsSchema>>
+  >
 >;

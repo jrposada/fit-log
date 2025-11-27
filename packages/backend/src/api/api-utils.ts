@@ -1,5 +1,5 @@
 import { ApiResponse } from '@shared/models/api-response';
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { ZodSchema } from 'zod';
 
 function apiError<TError = unknown>(_error: TError, res: Response) {
@@ -51,7 +51,6 @@ export function validateQuery<TSchema extends ZodSchema>(schema: TSchema) {
   };
 }
 
-// New middleware-based approach
 type ApiResponseResult<TData = unknown> = {
   statusCode: number;
   body: ApiResponse<TData>;

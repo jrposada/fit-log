@@ -4,8 +4,9 @@ import {
 } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
 import { v4 as uuid } from 'uuid';
-import { toApiResponse } from '../api-utils';
+
 import { S3Helper } from '../../services/aws/s3';
+import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<
   SectorUploadUrlResponse,

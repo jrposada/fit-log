@@ -4,6 +4,7 @@ import {
   LocationsGetResponse,
 } from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
+
 import { LocationsService } from '../../services/locations-service';
 import { toApiResponse } from '../api-utils';
 

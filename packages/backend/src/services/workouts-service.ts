@@ -1,5 +1,6 @@
 import { assert } from '@shared/utils/assert';
 import { v4 as uuid } from 'uuid';
+
 import { DbRecord } from './aws/db-record';
 import { RestfulService } from './restful-service';
 

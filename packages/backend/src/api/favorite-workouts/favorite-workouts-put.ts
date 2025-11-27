@@ -3,13 +3,15 @@ import {
   FavoriteWorkoutsPutResponse,
 } from '@shared/models/favorite-workout';
 import { assert } from '@shared/utils/assert';
+
 import { DbRecord } from '../../services/aws/db-record';
 import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
-import { toApiResponse } from '../api-utils';
 import { WorkoutsService } from '../../services/workouts-service';
+import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<
   FavoriteWorkoutsPutResponse,
+  unknown,
   unknown,
   FavoriteWorkoutsPutRequest
 >(async (request) => {

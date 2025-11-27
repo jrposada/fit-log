@@ -23,8 +23,10 @@
     "noUncheckedSideEffectImports": true,
 
     "paths": {
+      "@shared-react/*": ["../shared-react/src/*"],
       "@shared/*": ["../shared/src/*"]
     }
   },
-  "include": ["src", "../shared/src"]
+  "include": ["src"],
+  "references": [{ "path": "../shared-react" }, { "path": "../shared" }]
 }

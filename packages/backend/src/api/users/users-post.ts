@@ -3,14 +3,14 @@ import {
   AdminSetUserPasswordCommand,
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { assert } from '@shared/utils/assert';
-import { toApiResponse } from '../api-utils';
 import { UsersPostRequest, UsersPostResponse } from '@shared/models/users';
+import { assert } from '@shared/utils/assert';
+
+import { toApiResponse } from '../api-utils';
 
 const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,
 });
-
 
 const handler = toApiResponse<
   UsersPostResponse,

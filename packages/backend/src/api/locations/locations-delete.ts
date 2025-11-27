@@ -1,10 +1,11 @@
-import { assert } from '@shared/utils/assert';
-import { LocationsService } from '../../services/locations-service';
-import { toApiResponse } from '../api-utils';
 import {
   LocationsDeleteParams,
   LocationsDeleteResponse,
 } from '@shared/models/location';
+import { assert } from '@shared/utils/assert';
+
+import { LocationsService } from '../../services/locations-service';
+import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<LocationsDeleteResponse, LocationsDeleteParams>(
   async (request) => {

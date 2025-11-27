@@ -4,9 +4,10 @@ import {
   SectorsGetResponse,
 } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
+
+import { LocationsService } from '../../services/locations-service';
 import { SectorsService } from '../../services/sectors-service';
 import { toApiResponse } from '../api-utils';
-import { LocationsService } from '../../services/locations-service';
 
 const handler = toApiResponse<SectorsGetResponse, unknown, SectorsGetQuery>(
   async (request) => {

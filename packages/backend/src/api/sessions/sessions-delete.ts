@@ -1,10 +1,11 @@
-import { assert } from '@shared/utils/assert';
-import { toApiResponse } from '../api-utils';
-import { SessionsService } from '../../services/sessions-service';
 import {
   SessionsDeleteParams,
   SessionsDeleteResponse,
 } from '@shared/models/session';
+import { assert } from '@shared/utils/assert';
+
+import { SessionsService } from '../../services/sessions-service';
+import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<SessionsDeleteResponse, SessionsDeleteParams>(
   async (request) => {

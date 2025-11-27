@@ -6,8 +6,12 @@ import { IsTrue } from '../types/is-true';
 import {
   Location,
   locationSchema,
-  LocationsGetParams,
-  locationsGetParamsSchema,
+  LocationsDeleteParams,
+  locationsDeleteParamsSchema,
+  LocationsGetByIdParams,
+  locationsGetByIdParamsSchema,
+  LocationsGetQuery,
+  locationsGetQuerySchema,
   LocationsPutRequest,
   locationsPutRequestSchema,
 } from './location';
@@ -16,12 +20,27 @@ export type LocationTest = Expect<
   IsTrue<IsEqual<Location, z.infer<typeof locationSchema>>>
 >;
 
-export type LocationsGetParamsTest = Expect<
-  IsTrue<IsEqual<LocationsGetParams, z.infer<typeof locationsGetParamsSchema>>>
+export type LocationsGetQueryTest = Expect<
+  IsTrue<IsEqual<LocationsGetQuery, z.infer<typeof locationsGetQuerySchema>>>
 >;
 
 export type LocationsPutRequestTest = Expect<
   IsTrue<
     IsEqual<LocationsPutRequest, z.infer<typeof locationsPutRequestSchema>>
+  >
+>;
+
+export type LocationsDeleteParamsTest = Expect<
+  IsTrue<
+    IsEqual<LocationsDeleteParams, z.infer<typeof locationsDeleteParamsSchema>>
+  >
+>;
+
+export type LocationsGetByIdParamsTest = Expect<
+  IsTrue<
+    IsEqual<
+      LocationsGetByIdParams,
+      z.infer<typeof locationsGetByIdParamsSchema>
+    >
   >
 >;

@@ -3,11 +3,12 @@ import {
   WorkoutsGetByIdParams,
   WorkoutsGetByIdResponse,
 } from '@shared/models/workout';
+import { assert } from '@shared/utils/assert';
+
+import ResourceNotFound from '../../infrastructure/not-found-error';
+import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
 import { WorkoutsService } from '../../services/workouts-service';
 import { toApiResponse } from '../api-utils';
-import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
-import { assert } from '@shared/utils/assert';
-import ResourceNotFound from '../../infrastructure/not-found-error';
 
 const handler = toApiResponse<WorkoutsGetByIdResponse, WorkoutsGetByIdParams>(
   async (request) => {

@@ -6,6 +6,12 @@ import { IsTrue } from '../types/is-true';
 import {
   Climb,
   climbSchema,
+  ClimbsDeleteParams,
+  climbsDeleteParamsSchema,
+  ClimbsGetByIdParams,
+  climbsGetByIdParamsSchema,
+  ClimbsGetQuery,
+  climbsGetQuerySchema,
   ClimbsPutRequest,
   climbsPutRequestSchema,
   Hold,
@@ -20,6 +26,20 @@ export type ClimbTest = Expect<
   IsTrue<IsEqual<Climb, z.infer<typeof climbSchema>>>
 >;
 
+export type ClimbsGetQueryTest = Expect<
+  IsTrue<IsEqual<ClimbsGetQuery, z.infer<typeof climbsGetQuerySchema>>>
+>;
+
 export type ClimbsPutRequestTest = Expect<
   IsTrue<IsEqual<ClimbsPutRequest, z.infer<typeof climbsPutRequestSchema>>>
+>;
+
+export type ClimbsDeleteParamsTest = Expect<
+  IsTrue<IsEqual<ClimbsDeleteParams, z.infer<typeof climbsDeleteParamsSchema>>>
+>;
+
+export type ClimbsGetByIdParamsTest = Expect<
+  IsTrue<
+    IsEqual<ClimbsGetByIdParams, z.infer<typeof climbsGetByIdParamsSchema>>
+  >
 >;

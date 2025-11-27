@@ -8,8 +8,12 @@ import {
   exerciseSchema,
   Workout,
   workoutSchema,
-  WorkoutsGetParams,
-  workoutsGetParamsSchema,
+  WorkoutsDeleteParams,
+  workoutsDeleteParamsSchema,
+  WorkoutsGetByIdParams,
+  workoutsGetByIdParamsSchema,
+  WorkoutsGetQuery,
+  workoutsGetQuerySchema,
   WorkoutsPutRequest,
   workoutsPutRequestSchema,
 } from './workout';
@@ -22,10 +26,22 @@ export type WorkoutTest = Expect<
   IsTrue<IsEqual<Workout, z.infer<typeof workoutSchema>>>
 >;
 
-export type WorkoutsGetParamsTest = Expect<
-  IsTrue<IsEqual<WorkoutsGetParams, z.infer<typeof workoutsGetParamsSchema>>>
+export type WorkoutsGetQueryTest = Expect<
+  IsTrue<IsEqual<WorkoutsGetQuery, z.infer<typeof workoutsGetQuerySchema>>>
 >;
 
 export type WorkoutsPutRequestTest = Expect<
   IsTrue<IsEqual<WorkoutsPutRequest, z.infer<typeof workoutsPutRequestSchema>>>
+>;
+
+export type WorkoutsDeleteParamsTest = Expect<
+  IsTrue<
+    IsEqual<WorkoutsDeleteParams, z.infer<typeof workoutsDeleteParamsSchema>>
+  >
+>;
+
+export type WorkoutsGetByIdParamsTest = Expect<
+  IsTrue<
+    IsEqual<WorkoutsGetByIdParams, z.infer<typeof workoutsGetByIdParamsSchema>>
+  >
 >;

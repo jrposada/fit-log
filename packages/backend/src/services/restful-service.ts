@@ -1,7 +1,8 @@
 import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
+
+import ResourceNotFound from '../infrastructure/not-found-error';
 import { DbRecord, DbRecordType } from './aws/db-record';
 import { DynamoDBHelper } from './aws/dynamodb';
-import ResourceNotFound from '../infrastructure/not-found-error';
 
 export abstract class RestfulService<T extends DbRecordType> {
   private db: DynamoDBHelper;

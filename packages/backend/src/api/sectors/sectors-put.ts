@@ -1,5 +1,6 @@
 import { SectorsPutRequest, SectorsPutResponse } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
+
 import { DbRecord } from '../../services/aws/db-record';
 import { SectorsService } from '../../services/sectors-service';
 import { toApiResponse } from '../api-utils';

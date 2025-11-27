@@ -130,7 +130,7 @@ export class DynamoDBHelper {
 
   async scan<T>(): Promise<T[]> {
     let items: T[] = [];
-    let lastEvaluatedKey: Record<string, any> | undefined;
+    let lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 
     do {
       const command = new ScanCommand({

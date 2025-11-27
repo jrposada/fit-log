@@ -2,13 +2,14 @@ import {
   AdminInitiateAuthCommand,
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { assert } from '@shared/utils/assert';
-import dotenv from 'dotenv';
-import { toApiResponse } from '../api-utils';
 import {
   UsersAuthorizeRequest,
   UsersAuthorizeResponse,
 } from '@shared/models/users';
+import { assert } from '@shared/utils/assert';
+import dotenv from 'dotenv';
+
+import { toApiResponse } from '../api-utils';
 
 if (process.env.IS_OFFLINE) {
   const env = dotenv.config({ path: '.env' }).parsed;
@@ -19,7 +20,6 @@ assert(process.env.AWS_REGION);
 const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,
 });
-
 
 const handler = toApiResponse<
   UsersAuthorizeResponse,

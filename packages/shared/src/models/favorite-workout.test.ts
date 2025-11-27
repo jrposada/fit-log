@@ -6,6 +6,8 @@ import { IsTrue } from '../types/is-true';
 import {
   FavoriteWorkout,
   favoriteWorkoutSchema,
+  FavoriteWorkoutsDeleteParams,
+  favoriteWorkoutsDeleteParamsSchema,
   FavoriteWorkoutsPutRequest,
   favoriteWorkoutsPutRequestSchema,
 } from './favorite-workout';
@@ -19,6 +21,15 @@ export type FavoriteWorkoutsPutRequestTest = Expect<
     IsEqual<
       FavoriteWorkoutsPutRequest,
       z.infer<typeof favoriteWorkoutsPutRequestSchema>
+    >
+  >
+>;
+
+export type FavoriteWorkoutsDeleteParamsTest = Expect<
+  IsTrue<
+    IsEqual<
+      FavoriteWorkoutsDeleteParams,
+      z.infer<typeof favoriteWorkoutsDeleteParamsSchema>
     >
   >
 >;

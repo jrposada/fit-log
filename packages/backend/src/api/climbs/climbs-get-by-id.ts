@@ -3,6 +3,7 @@ import {
   ClimbsGetByIdResponse,
 } from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
+
 import { ClimbsService } from '../../services/climbs-service';
 import { toApiResponse } from '../api-utils';
 

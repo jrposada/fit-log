@@ -3,6 +3,7 @@ import {
   SessionsPutResponse,
 } from '@shared/models/session';
 import { assert } from '@shared/utils/assert';
+
 import { DbRecord } from '../../services/aws/db-record';
 import { SessionsService } from '../../services/sessions-service';
 import { toApiResponse } from '../api-utils';

@@ -1,3 +1,4 @@
+import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import { assert } from '@shared/utils/assert';
 import { v4 as uuid } from 'uuid';
 
@@ -51,7 +52,7 @@ export class SectorsService extends RestfulService<'sector'> {
     limit?: number
   ): Promise<{
     items: DbRecord<'sector'>[];
-    lastEvaluatedKey: any;
+    lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
   }> {
     const result = await this.getAll(
       this.calculatePartialSk(locationUuid),

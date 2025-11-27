@@ -3,6 +3,7 @@ import {
   LocationsPutResponse,
 } from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
+
 import { DbRecord } from '../../services/aws/db-record';
 import { LocationsService } from '../../services/locations-service';
 import { toApiResponse } from '../api-utils';

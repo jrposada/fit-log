@@ -1,4 +1,5 @@
 import { assert } from '@shared/utils/assert';
+
 import { DbRecord } from './aws/db-record';
 import { RestfulService } from './restful-service';
 

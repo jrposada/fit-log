@@ -3,9 +3,9 @@ import {
   PutObjectCommandInput,
   S3Client,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { assert } from '@shared/utils/assert';
 import dotenv from 'dotenv';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 if (process.env.IS_OFFLINE) {
   const env = dotenv.config({ path: '.env' }).parsed;

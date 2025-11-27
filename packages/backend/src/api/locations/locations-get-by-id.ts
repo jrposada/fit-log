@@ -1,10 +1,11 @@
-import { assert } from '@shared/utils/assert';
-import { LocationsService } from '../../services/locations-service';
-import { toApiResponse } from '../api-utils';
 import {
   LocationsGetByIdParams,
   LocationsGetByIdResponse,
 } from '@shared/models/location';
+import { assert } from '@shared/utils/assert';
+
+import { LocationsService } from '../../services/locations-service';
+import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<LocationsGetByIdResponse, LocationsGetByIdParams>(
   async (request) => {

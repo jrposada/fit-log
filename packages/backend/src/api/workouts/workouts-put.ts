@@ -3,6 +3,7 @@ import {
   WorkoutsPutResponse,
 } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
+
 import { DbRecord } from '../../services/aws/db-record';
 import { WorkoutsService } from '../../services/workouts-service';
 import { toApiResponse } from '../api-utils';

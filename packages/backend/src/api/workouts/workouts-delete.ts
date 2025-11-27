@@ -1,11 +1,11 @@
-import { assert } from '@shared/utils/assert';
-import { WorkoutsService } from '../../services/workouts-service';
-import { toApiResponse } from '../api-utils';
 import {
   WorkoutsDeleteParams,
   WorkoutsDeleteResponse,
 } from '@shared/models/workout';
+import { assert } from '@shared/utils/assert';
 
+import { WorkoutsService } from '../../services/workouts-service';
+import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<WorkoutsDeleteResponse, WorkoutsDeleteParams>(
   async (request) => {

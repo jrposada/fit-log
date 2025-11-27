@@ -1,47 +1,32 @@
+import { climbsDeleteParamsSchema } from '@shared/models/climb';
 import { Router } from 'express';
 
-// Import all handlers
-import { handler as versionGet } from './api/version/version-get';
-
-// Workouts
-import { handler as workoutsGet } from './api/workouts/workouts-get';
-import { handler as workoutsGetById } from './api/workouts/workouts-get-by-id';
-import { handler as workoutsPut } from './api/workouts/workouts-put';
-import { handler as workoutsDelete } from './api/workouts/workouts-delete';
-
-// Sessions
-import { handler as sessionsGet } from './api/sessions/sessions-get';
-import { handler as sessionsGetById } from './api/sessions/sessions-get-by-id';
-import { handler as sessionsPut } from './api/sessions/sessions-put';
-import { handler as sessionsDelete } from './api/sessions/sessions-delete';
-
-// Favorite Workouts
-import { handler as favoriteWorkoutsPut } from './api/favorite-workouts/favorite-workouts-put';
-import { handler as favoriteWorkoutsDelete } from './api/favorite-workouts/favorite-workouts-delete';
-
-// Users
-import { handler as usersPost } from './api/users/users-post';
-import { handler as usersAuthorize } from './api/users/users-authorize';
-
-// Locations
-import { handler as locationsGet } from './api/locations/locations-get';
-import { handler as locationsGetById } from './api/locations/locations-get-by-id';
-import { handler as locationsPut } from './api/locations/locations-put';
-import { handler as locationsDelete } from './api/locations/locations-delete';
-
-// Sectors
-import { handler as sectorsGet } from './api/sectors/sectors-get';
-import { handler as sectorsPut } from './api/sectors/sectors-put';
-import { handler as sectorsDelete } from './api/sectors/sectors-delete';
-import { handler as sectorsUploadUrl } from './api/sectors/sectors-upload-url';
-
-// Climbs
+import { requireAuth, validateParams } from './api/api-utils';
+import { handler as climbsDelete } from './api/climbs/climbs-delete';
 import { handler as climbsGet } from './api/climbs/climbs-get';
 import { handler as climbsGetById } from './api/climbs/climbs-get-by-id';
 import { handler as climbsPut } from './api/climbs/climbs-put';
-import { handler as climbsDelete } from './api/climbs/climbs-delete';
-import { requireAuth, validateParams } from './api/api-utils';
-import { climbsDeleteParamsSchema } from '@shared/models/climb';
+import { handler as favoriteWorkoutsDelete } from './api/favorite-workouts/favorite-workouts-delete';
+import { handler as favoriteWorkoutsPut } from './api/favorite-workouts/favorite-workouts-put';
+import { handler as locationsDelete } from './api/locations/locations-delete';
+import { handler as locationsGet } from './api/locations/locations-get';
+import { handler as locationsGetById } from './api/locations/locations-get-by-id';
+import { handler as locationsPut } from './api/locations/locations-put';
+import { handler as sectorsDelete } from './api/sectors/sectors-delete';
+import { handler as sectorsGet } from './api/sectors/sectors-get';
+import { handler as sectorsPut } from './api/sectors/sectors-put';
+import { handler as sectorsUploadUrl } from './api/sectors/sectors-upload-url';
+import { handler as sessionsDelete } from './api/sessions/sessions-delete';
+import { handler as sessionsGet } from './api/sessions/sessions-get';
+import { handler as sessionsGetById } from './api/sessions/sessions-get-by-id';
+import { handler as sessionsPut } from './api/sessions/sessions-put';
+import { handler as usersAuthorize } from './api/users/users-authorize';
+import { handler as usersPost } from './api/users/users-post';
+import { handler as versionGet } from './api/version/version-get';
+import { handler as workoutsDelete } from './api/workouts/workouts-delete';
+import { handler as workoutsGet } from './api/workouts/workouts-get';
+import { handler as workoutsGetById } from './api/workouts/workouts-get-by-id';
+import { handler as workoutsPut } from './api/workouts/workouts-put';
 
 export const router = Router();
 

@@ -2,6 +2,7 @@ import {
   SessionsGetByIdParams,
   SessionsGetByIdResponse,
 } from '@shared/models/session';
+
 import { SessionsService } from '../../services/sessions-service';
 import { toApiResponse } from '../api-utils';
 

@@ -1,5 +1,6 @@
 import { ClimbsPutRequest, ClimbsPutResponse } from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
+
 import { DbRecord } from '../../services/aws/db-record';
 import { ClimbsService } from '../../services/climbs-service';
 import { toApiResponse } from '../api-utils';

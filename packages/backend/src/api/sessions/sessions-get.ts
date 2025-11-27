@@ -3,11 +3,12 @@ import {
   SessionsGetQuery,
   SessionsGetResponse,
 } from '@shared/models/session';
-import { SessionsService } from '../../services/sessions-service';
-import { toApiResponse } from '../api-utils';
-import { WorkoutsService } from '../../services/workouts-service';
 
-const handler = toApiResponse<SessionsGetResponse, SessionsGetQuery>(
+import { SessionsService } from '../../services/sessions-service';
+import { WorkoutsService } from '../../services/workouts-service';
+import { toApiResponse } from '../api-utils';
+
+const handler = toApiResponse<SessionsGetResponse, unknown, SessionsGetQuery>(
   async (request) => {
     const params = request.query;
 

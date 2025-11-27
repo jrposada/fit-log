@@ -1,11 +1,12 @@
-import { assert } from '@shared/utils/assert';
-import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
-import { toApiResponse } from '../api-utils';
-import { WorkoutsService } from '../../services/workouts-service';
 import {
   FavoriteWorkoutsDeleteParams,
   FavoriteWorkoutsDeleteResponse,
 } from '@shared/models/favorite-workout';
+import { assert } from '@shared/utils/assert';
+
+import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
+import { WorkoutsService } from '../../services/workouts-service';
+import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<
   FavoriteWorkoutsDeleteResponse,

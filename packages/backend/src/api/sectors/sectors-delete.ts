@@ -3,6 +3,7 @@ import {
   SectorsDeleteResponse,
 } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
+
 import { SectorsService } from '../../services/sectors-service';
 import { toApiResponse } from '../api-utils';
 
