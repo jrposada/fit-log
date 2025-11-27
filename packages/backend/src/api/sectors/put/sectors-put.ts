@@ -4,17 +4,17 @@ import {
   SectorsPutResponse,
 } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 
 import { DbRecord } from '../../../services/aws/db-record';
 import { SectorsService } from '../../../services/sectors-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<SectorsPutResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { sectorPutData } = validateEvent(event);
+    const { sectorPutData } = validateEvent(req);
 
     const record: DbRecord<'sector'> = {
       name: sectorPutData.name,
@@ -61,15 +61,15 @@ export const handler = apiHandler<SectorsPutResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   sectorPutData: SectorsPutRequest;
 } {
-  if (!event.body) {
+  if (!req.body) {
     throw new Error('Invalid request');
   }
 
   try {
-    const body = JSON.parse(event.body);
+    const body = req.body;
     const sectorPutData = sectorsPutRequestSchema.parse(body);
     return { sectorPutData };
   } catch {

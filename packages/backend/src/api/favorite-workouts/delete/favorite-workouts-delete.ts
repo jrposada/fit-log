@@ -1,15 +1,15 @@
 import { FavoriteWorkoutsDeleteResponse } from '@shared/models/favorite-workout';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { FavoriteWorkoutsService } from '../../../services/favorite-workouts-service';
 import { apiHandler } from '../../api-utils';
 import { WorkoutsService } from '../../../services/workouts-service';
 
 export const handler = apiHandler<FavoriteWorkoutsDeleteResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { workoutId } = validateEvent(event);
+    const { workoutId } = validateEvent(req);
     const { userId } = authorizerContext;
 
     void (await FavoriteWorkoutsService.instance.delete(
@@ -29,12 +29,12 @@ export const handler = apiHandler<FavoriteWorkoutsDeleteResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   workoutId: string;
 } {
-  if (!event.pathParameters?.workoutId) {
+  if (!req.params?.id) {
     throw new Error('Invalid request');
   }
 
-  return { workoutId: decodeURIComponent(event.pathParameters.workoutId) };
+  return { workoutId: decodeURIComponent(req.params.id) };
 }

@@ -4,16 +4,16 @@ import {
   SessionsPutResponse,
 } from '@shared/models/session';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { DbRecord } from '../../../services/aws/db-record';
 import { SessionsService } from '../../../services/sessions-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<SessionsPutResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { sessionPutData } = validateEvent(event);
+    const { sessionPutData } = validateEvent(req);
     const { userId } = authorizerContext;
 
     if (!sessionPutData.id) {
@@ -51,16 +51,15 @@ export const handler = apiHandler<SessionsPutResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   sessionPutData: SessionsPutRequest;
 } {
-  if (!event.body) {
+  if (!req.body) {
     throw new Error('Invalid request');
   }
 
   try {
-    const body = JSON.parse(event.body);
-    const sessionPutData = sessionsPutRequestSchema.parse(body);
+    const sessionPutData = sessionsPutRequestSchema.parse(req.body);
     return { sessionPutData };
   } catch (error) {
     console.error(error);

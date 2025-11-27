@@ -4,15 +4,15 @@ import {
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { apiHandler } from '../../api-utils';
 
 const cognito = new CognitoIdentityProviderClient({
   region: process.env.AWS_REGION,
 });
 
-export const handler = apiHandler(async ({ event }) => {
-  const { email, password } = validateEvent(event);
+export const handler = apiHandler(async ({ req }) => {
+  const { email, password } = validateEvent(req);
   const { USER_POOL_ID } = process.env;
   assert(USER_POOL_ID);
 
@@ -47,16 +47,16 @@ export const handler = apiHandler(async ({ event }) => {
   };
 });
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   email: string;
   password: string;
 } {
-  if (!event.body) {
+  if (!req.body) {
     throw new Error('Invalid request');
   }
 
   try {
-    const body = JSON.parse(event.body);
+    const body = req.body;
 
     if (!body.email || !body.password) {
       throw new Error('Invalid request');

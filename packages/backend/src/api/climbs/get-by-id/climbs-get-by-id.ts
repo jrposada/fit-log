@@ -1,15 +1,15 @@
 import { ClimbsGetByIdResponse } from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 
 import { ClimbsService } from '../../../services/climbs-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<ClimbsGetByIdResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { id } = validateEvent(event);
+    const { id } = validateEvent(req);
 
     const climb = await ClimbsService.instance.get(id);
 
@@ -38,12 +38,12 @@ export const handler = apiHandler<ClimbsGetByIdResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   id: string;
 } {
-  if (!event.pathParameters?.id) {
+  if (!req.params?.id) {
     throw new Error('Invalid request');
   }
 
-  return { id: event.pathParameters.id };
+  return { id: req.params.id };
 }

@@ -1,86 +1,62 @@
 import { ApiResponse } from '@shared/models/api-response';
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { Request, Response, NextFunction } from 'express';
 import { AuthorizerContext } from '../lambdas/authorizer/authorizer';
 
 export function apiError<TError = unknown>(
-  _error: TError
-): APIGatewayProxyResult {
+  _error: TError,
+  res: Response
+): Response {
   const body: ApiResponse = {
     data: undefined,
     success: false,
   };
 
-  return apiResponse({
-    body: JSON.stringify(body),
-    statusCode: 500,
-  });
+  return res.status(500).json(body);
 }
 
 type ApiHandlerParams<TData> = ({
   authorizerContext,
-  event,
+  req,
+  res,
 }: {
   authorizerContext?: AuthorizerContext;
-  event: APIGatewayProxyEvent;
+  req: Request;
+  res: Response;
 }) => Promise<{
   body: ApiResponse<TData>;
-  headers?: ApiResponseParams['headers'];
-  multiValueHeaders?: ApiResponseParams['multiValueHeaders'];
+  headers?: Record<string, string>;
   statusCode: number;
 }>;
+
 export function apiHandler<TData>(
   handler: ApiHandlerParams<TData>
-): (event: APIGatewayProxyEvent) => Promise<APIGatewayProxyResult> {
-  return async (event: APIGatewayProxyEvent) => {
+): (req: Request, res: Response, next: NextFunction) => Promise<void> {
+  return async (req: Request, res: Response, next: NextFunction) => {
     try {
       let authorizerContext: AuthorizerContext | undefined;
 
-      if (event.requestContext.authorizer?.userId) {
-        authorizerContext = {
-          userId: event.requestContext.authorizer?.userId,
-          username: event.requestContext.authorizer?.username,
-        };
+      // Extract auth context from request (will be set by auth middleware)
+      if (req.user) {
+        authorizerContext = req.user as AuthorizerContext;
       }
 
-      const { body, statusCode, headers, multiValueHeaders } = await handler({
-        event,
+      const { body, statusCode, headers } = await handler({
+        req,
+        res,
         authorizerContext,
       });
-      return apiResponse({
-        body: JSON.stringify(body),
-        headers,
-        multiValueHeaders,
-        statusCode,
-      });
+
+      // Set custom headers if provided
+      if (headers) {
+        Object.entries(headers).forEach(([key, value]) => {
+          res.setHeader(key, value);
+        });
+      }
+
+      res.status(statusCode).json(body);
     } catch (error) {
       console.error(error);
-      return apiError(error);
+      apiError(error, res);
     }
   };
-}
-
-type ApiResponseParams = {
-  body?: string;
-  headers?: APIGatewayProxyResult['headers'];
-  multiValueHeaders?: APIGatewayProxyResult['multiValueHeaders'];
-  statusCode: number;
-};
-export function apiResponse({
-  body,
-  headers,
-  multiValueHeaders,
-  statusCode,
-}: ApiResponseParams): APIGatewayProxyResult {
-  const response: APIGatewayProxyResult = {
-    body: body ?? '',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': `https://${process.env.ALLOWED_ORIGIN!}`,
-      'Access-Control-Allow-Credentials': true,
-    },
-    multiValueHeaders,
-    statusCode,
-  };
-  return response;
 }

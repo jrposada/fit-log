@@ -5,17 +5,17 @@ import {
   SectorsGetResponse,
 } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 
 import { SectorsService } from '../../../services/sectors-service';
 import { apiHandler } from '../../api-utils';
 import { LocationsService } from '../../../services/locations-service';
 
 export const handler = apiHandler<SectorsGetResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { params } = validateEvent(event);
+    const { params } = validateEvent(req);
 
     const locationUuid = LocationsService.getLocationUuid(params.locationId);
 
@@ -50,13 +50,11 @@ export const handler = apiHandler<SectorsGetResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   params: SectorsGetParams;
 } {
   try {
-    const params = sectorsGetParamsSchema.parse(
-      event.queryStringParameters ?? {}
-    );
+    const params = sectorsGetParamsSchema.parse(req.query ?? {});
     return { params };
   } catch (error) {
     console.error(error);

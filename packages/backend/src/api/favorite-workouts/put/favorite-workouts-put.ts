@@ -4,17 +4,17 @@ import {
   FavoriteWorkoutsPutResponse,
 } from '@shared/models/favorite-workout';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { DbRecord } from '../../../services/aws/db-record';
 import { FavoriteWorkoutsService } from '../../../services/favorite-workouts-service';
 import { apiHandler } from '../../api-utils';
 import { WorkoutsService } from '../../../services/workouts-service';
 
 export const handler = apiHandler<FavoriteWorkoutsPutResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { favoriteWorkoutPutData } = validateEvent(event);
+    const { favoriteWorkoutPutData } = validateEvent(req);
     const { userId } = authorizerContext;
 
     const record: DbRecord<'favorite-workout'> = {
@@ -41,16 +41,15 @@ export const handler = apiHandler<FavoriteWorkoutsPutResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   favoriteWorkoutPutData: FavoriteWorkoutsPutRequest;
 } {
-  if (!event.body) {
+  if (!req.body) {
     throw new Error('Invalid request');
   }
 
   try {
-    const body = JSON.parse(event.body);
-    const favoriteWorkoutPutData = favoriteWorkoutsPutRequestSchema.parse(body);
+    const favoriteWorkoutPutData = favoriteWorkoutsPutRequestSchema.parse(req.body);
     return { favoriteWorkoutPutData };
   } catch {
     throw new Error('Invalid request');

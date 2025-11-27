@@ -5,16 +5,16 @@ import {
   LocationsGetResponse,
 } from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 
 import { LocationsService } from '../../../services/locations-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<LocationsGetResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { params } = validateEvent(event);
+    const { params } = validateEvent(req);
 
     const { items: locations, lastEvaluatedKey } =
       await LocationsService.instance.getAll(
@@ -47,12 +47,12 @@ export const handler = apiHandler<LocationsGetResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   params: LocationsGetParams;
 } {
   try {
     const params = locationsGetParamsSchema.parse(
-      event.queryStringParameters ?? {}
+      req.query ?? {}
     );
     return { params };
   } catch (error) {

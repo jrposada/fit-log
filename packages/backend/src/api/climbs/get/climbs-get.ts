@@ -5,16 +5,16 @@ import {
   ClimbsGetResponse,
 } from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 
 import { ClimbsService } from '../../../services/climbs-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<ClimbsGetResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { params } = validateEvent(event);
+    const { params } = validateEvent(req);
 
     const { items: climbs, lastEvaluatedKey } =
       await ClimbsService.instance.getAll(
@@ -48,13 +48,11 @@ export const handler = apiHandler<ClimbsGetResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   params: ClimbsGetParams;
 } {
   try {
-    const params = climbsGetParamsSchema.parse(
-      event.queryStringParameters ?? {}
-    );
+    const params = climbsGetParamsSchema.parse(req.query ?? {});
     return { params };
   } catch (error) {
     console.error(error);

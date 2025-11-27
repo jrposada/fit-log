@@ -1,6 +1,8 @@
 {
   "name": "@jrposada/fit-log-dev-tools",
   "version": "0.0.0",
+  "private": true,
+  "type": "module",
   "author": {
     "email": "jrposada.dev@gmail.com",
     "name": "Javier Rodriguez Posada"

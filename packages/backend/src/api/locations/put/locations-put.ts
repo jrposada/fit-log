@@ -4,17 +4,17 @@ import {
   LocationsPutResponse,
 } from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 
 import { DbRecord } from '../../../services/aws/db-record';
 import { LocationsService } from '../../../services/locations-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<LocationsPutResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { locationPutData } = validateEvent(event);
+    const { locationPutData } = validateEvent(req);
 
     const record: DbRecord<'location'> = {
       name: locationPutData.name,
@@ -59,15 +59,15 @@ export const handler = apiHandler<LocationsPutResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   locationPutData: LocationsPutRequest;
 } {
-  if (!event.body) {
+  if (!req.body) {
     throw new Error('Invalid request');
   }
 
   try {
-    const body = JSON.parse(event.body);
+    const body = req.body;
     const locationPutData = locationsPutRequestSchema.parse(body);
     return { locationPutData };
   } catch {

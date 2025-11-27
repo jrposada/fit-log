@@ -6,7 +6,7 @@ import {
   WorkoutsGetResponse,
 } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { DbRecord } from '../../../services/aws/db-record';
 import { FavoriteWorkoutsService } from '../../../services/favorite-workouts-service';
 import { WorkoutsService } from '../../../services/workouts-service';
@@ -15,10 +15,10 @@ import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import { ApiResponse } from '@shared/models/api-response';
 
 export const handler = apiHandler<WorkoutsGetResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { params } = validateEvent(event);
+    const { params } = validateEvent(req);
     const { userId } = authorizerContext;
 
     if (params.onlyFavorites) {
@@ -117,13 +117,11 @@ function calculateApiResponse({
   };
 }
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   params: Omit<WorkoutsGetParams, 'onlyFavorites'> & { onlyFavorites: boolean };
 } {
   try {
-    const params = workoutsGetParamsSchema.parse(
-      event.queryStringParameters ?? {}
-    );
+    const params = workoutsGetParamsSchema.parse(req.query ?? {});
     return {
       params: {
         ...params,

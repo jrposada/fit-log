@@ -1,14 +1,14 @@
 import { WorkoutsDeleteResponse } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<WorkoutsDeleteResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { id } = validateEvent(event);
+    const { id } = validateEvent(req);
     const { userId } = authorizerContext;
 
     assert(WorkoutsService.getUserId(id) === userId, { msg: 'Unauthorized' });
@@ -25,12 +25,12 @@ export const handler = apiHandler<WorkoutsDeleteResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   id: string;
 } {
-  if (!event.pathParameters?.id) {
+  if (!req.params?.id) {
     throw new Error('Invalid request');
   }
 
-  return { id: decodeURIComponent(event.pathParameters.id) };
+  return { id: decodeURIComponent(req.params.id) };
 }

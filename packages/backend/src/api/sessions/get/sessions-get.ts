@@ -6,11 +6,11 @@ import {
 } from '@shared/models/session';
 import { SessionsService } from '../../../services/sessions-service';
 import { apiHandler } from '../../api-utils';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { WorkoutsService } from '../../../services/workouts-service';
 
-export const handler = apiHandler<SessionsGetResponse>(async ({ event }) => {
-  const { params } = validateEvent(event);
+export const handler = apiHandler<SessionsGetResponse>(async ({ req }) => {
+  const { params } = validateEvent(req);
 
   const userId = params.workoutId
     ? WorkoutsService.getUserId(params.workoutId)
@@ -39,13 +39,11 @@ export const handler = apiHandler<SessionsGetResponse>(async ({ event }) => {
   };
 });
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   params: SessionsGetParams;
 } {
   try {
-    const params = sessionsGetParamsSchema.parse(
-      event.queryStringParameters ?? {}
-    );
+    const params = sessionsGetParamsSchema.parse(req.query ?? {});
     return { params };
   } catch (error) {
     console.error(error);

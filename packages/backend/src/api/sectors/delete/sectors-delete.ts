@@ -4,16 +4,16 @@ import {
   SectorsDeleteResponse,
 } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 
 import { SectorsService } from '../../../services/sectors-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<SectorsDeleteResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { params } = validateEvent(event);
+    const { params } = validateEvent(req);
 
     void (await SectorsService.instance.delete(params.id));
 
@@ -29,11 +29,11 @@ export const handler = apiHandler<SectorsDeleteResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   params: SectorsDeleteParams;
 } {
   try {
-    const params = sectorsDeleteParamsSchema.parse(event.pathParameters ?? {});
+    const params = sectorsDeleteParamsSchema.parse(req.params ?? {});
     return { params };
   } catch (error) {
     console.error(error);

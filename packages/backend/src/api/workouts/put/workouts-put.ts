@@ -4,16 +4,16 @@ import {
   WorkoutsPutResponse,
 } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { DbRecord } from '../../../services/aws/db-record';
 import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<WorkoutsPutResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { workoutPutData } = validateEvent(event);
+    const { workoutPutData } = validateEvent(req);
     const { userId } = authorizerContext;
 
     const record: DbRecord<'workout'> = {
@@ -58,16 +58,15 @@ export const handler = apiHandler<WorkoutsPutResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   workoutPutData: WorkoutsPutRequest;
 } {
-  if (!event.body) {
+  if (!req.body) {
     throw new Error('Invalid request');
   }
 
   try {
-    const body = JSON.parse(event.body);
-    const workoutPutData = workoutsPutRequestSchema.parse(body);
+    const workoutPutData = workoutsPutRequestSchema.parse(req.body);
     return { workoutPutData };
   } catch {
     throw new Error('Invalid request');

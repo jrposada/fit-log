@@ -4,18 +4,18 @@ import {
   SectorUploadUrlResponse,
 } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { v4 as uuid } from 'uuid';
 
 import { apiHandler } from '../../api-utils';
 import { S3Helper } from '../../../services/aws/s3';
 
 export const handler = apiHandler<SectorUploadUrlResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
     assert(process.env.SECTOR_IMAGES_BUCKET, { msg: 'Bucket not configured' });
 
-    const { uploadData } = validateEvent(event);
+    const { uploadData } = validateEvent(req);
 
     const fileId = uuid();
     const fileExtension = uploadData.fileName.split('.').pop() || 'jpg';
@@ -46,15 +46,15 @@ export const handler = apiHandler<SectorUploadUrlResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   uploadData: SectorUploadUrlRequest;
 } {
-  if (!event.body) {
+  if (!req.body) {
     throw new Error('Invalid request');
   }
 
   try {
-    const body = JSON.parse(event.body);
+    const body = req.body;
     const uploadData = sectorUploadUrlRequestSchema.parse(body);
     return { uploadData };
   } catch {

@@ -1,37 +1,35 @@
 import { SessionsGetByIdResponse } from '@shared/models/session';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { SessionsService } from '../../../services/sessions-service';
 import { apiHandler } from '../../api-utils';
 
-export const handler = apiHandler<SessionsGetByIdResponse>(
-  async ({ event }) => {
-    const { id } = validateEvent(event);
+export const handler = apiHandler<SessionsGetByIdResponse>(async ({ req }) => {
+  const { id } = validateEvent(req);
 
-    const session = await SessionsService.instance.get(id);
+  const session = await SessionsService.instance.get(id);
 
-    return {
-      statusCode: 200,
-      body: {
-        success: true,
-        data: {
-          session: {
-            completedAt: session.completedAt,
-            id: session.SK,
-            workoutDescription: session.workoutDescription,
-            workoutName: session.workoutName,
-          },
+  return {
+    statusCode: 200,
+    body: {
+      success: true,
+      data: {
+        session: {
+          completedAt: session.completedAt,
+          id: session.SK,
+          workoutDescription: session.workoutDescription,
+          workoutName: session.workoutName,
         },
       },
-    };
-  }
-);
+    },
+  };
+});
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   id: string;
 } {
-  if (!event.pathParameters?.id) {
+  if (!req.params?.id) {
     throw new Error('Invalid request');
   }
 
-  return { id: decodeURIComponent(event.pathParameters.id) };
+  return { id: decodeURIComponent(req.params.id) };
 }

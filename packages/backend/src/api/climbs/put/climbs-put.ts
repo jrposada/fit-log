@@ -4,17 +4,17 @@ import {
   ClimbsPutResponse,
 } from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 
 import { DbRecord } from '../../../services/aws/db-record';
 import { ClimbsService } from '../../../services/climbs-service';
 import { apiHandler } from '../../api-utils';
 
 export const handler = apiHandler<ClimbsPutResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { climbPutData } = validateEvent(event);
+    const { climbPutData } = validateEvent(req);
 
     const record: DbRecord<'climb'> = {
       location: climbPutData.location as DbRecord<'climb'>['location'],
@@ -58,15 +58,15 @@ export const handler = apiHandler<ClimbsPutResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   climbPutData: ClimbsPutRequest;
 } {
-  if (!event.body) {
+  if (!req.body) {
     throw new Error('Invalid request');
   }
 
   try {
-    const body = JSON.parse(event.body);
+    const body = req.body;
     const climbPutData = climbsPutRequestSchema.parse(body);
     return { climbPutData };
   } catch {

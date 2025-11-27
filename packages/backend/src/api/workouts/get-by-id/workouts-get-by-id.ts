@@ -1,5 +1,5 @@
 import { Exercise, WorkoutsGetByIdResponse } from '@shared/models/workout';
-import { APIGatewayProxyEvent } from 'aws-lambda';
+import { Request } from 'express';
 import { WorkoutsService } from '../../../services/workouts-service';
 import { apiHandler } from '../../api-utils';
 import { FavoriteWorkoutsService } from '../../../services/favorite-workouts-service';
@@ -7,10 +7,10 @@ import { assert } from '@shared/utils/assert';
 import ResourceNotFound from '../../../infrastructure/not-found-error';
 
 export const handler = apiHandler<WorkoutsGetByIdResponse>(
-  async ({ authorizerContext, event }) => {
+  async ({ authorizerContext, req }) => {
     assert(authorizerContext, { msg: 'Unauthorized' });
 
-    const { id } = validateEvent(event);
+    const { id } = validateEvent(req);
     const { userId } = authorizerContext;
 
     const workout = await WorkoutsService.instance.get(id);
@@ -57,12 +57,12 @@ export const handler = apiHandler<WorkoutsGetByIdResponse>(
   }
 );
 
-function validateEvent(event: APIGatewayProxyEvent): {
+function validateEvent(req: Request): {
   id: string;
 } {
-  if (!event.pathParameters?.id) {
+  if (!req.params?.id) {
     throw new Error('Invalid request');
   }
 
-  return { id: decodeURIComponent(event.pathParameters.id) };
+  return { id: decodeURIComponent(req.params.id) };
 }
