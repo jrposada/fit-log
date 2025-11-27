@@ -1,7 +1,49 @@
-import { climbsDeleteParamsSchema } from '@shared/models/climb';
+import {
+  climbsDeleteParamsSchema,
+  climbsGetByIdParamsSchema,
+  climbsGetQuerySchema,
+  climbsPutRequestSchema,
+} from '@shared/models/climb';
+import {
+  favoriteWorkoutsDeleteParamsSchema,
+  favoriteWorkoutsPutRequestSchema,
+} from '@shared/models/favorite-workout';
+import {
+  locationsDeleteParamsSchema,
+  locationsGetByIdParamsSchema,
+  locationsGetQuerySchema,
+  locationsPutRequestSchema,
+} from '@shared/models/location';
+import {
+  sectorsDeleteParamsSchema,
+  sectorsGetQuerySchema,
+  sectorsPutRequestSchema,
+  sectorUploadUrlRequestSchema,
+} from '@shared/models/sector';
+import {
+  sessionsDeleteParamsSchema,
+  sessionsGetByIdParamsSchema,
+  sessionsGetQuerySchema,
+  sessionsPutRequestSchema,
+} from '@shared/models/session';
+import {
+  usersAuthorizeRequestSchema,
+  usersPostRequestSchema,
+} from '@shared/models/users';
+import {
+  workoutsDeleteParamsSchema,
+  workoutsGetByIdParamsSchema,
+  workoutsGetQuerySchema,
+  workoutsPutRequestSchema,
+} from '@shared/models/workout';
 import { Router } from 'express';
 
-import { requireAuth, validateParams } from './api/api-utils';
+import {
+  requireAuth,
+  validateBody,
+  validateParams,
+  validateQuery,
+} from './api/api-utils';
 import { handler as climbsDelete } from './api/climbs/climbs-delete';
 import { handler as climbsGet } from './api/climbs/climbs-get';
 import { handler as climbsGetById } from './api/climbs/climbs-get-by-id';
@@ -34,41 +76,144 @@ export const router = Router();
 router.get('/version', versionGet);
 
 // Workouts
-router.get('/workouts', workoutsGet);
-router.get('/workouts/:id', workoutsGetById);
-router.put('/workouts', workoutsPut);
-router.delete('/workouts/:id', workoutsDelete);
+router.get(
+  '/workouts',
+  requireAuth,
+  validateQuery(workoutsGetQuerySchema),
+  workoutsGet
+);
+router.get(
+  '/workouts/:id',
+  requireAuth,
+  validateParams(workoutsGetByIdParamsSchema),
+  workoutsGetById
+);
+router.put(
+  '/workouts',
+  requireAuth,
+  validateBody(workoutsPutRequestSchema),
+  workoutsPut
+);
+router.delete(
+  '/workouts/:id',
+  requireAuth,
+  validateParams(workoutsDeleteParamsSchema),
+  workoutsDelete
+);
 
 // Sessions
-router.get('/sessions', sessionsGet);
-router.get('/sessions/:id', sessionsGetById);
-router.put('/sessions', sessionsPut);
-router.delete('/sessions/:id', sessionsDelete);
+router.get('/sessions', validateQuery(sessionsGetQuerySchema), sessionsGet);
+router.get(
+  '/sessions/:id',
+  validateParams(sessionsGetByIdParamsSchema),
+  sessionsGetById
+);
+router.put(
+  '/sessions',
+  requireAuth,
+  validateBody(sessionsPutRequestSchema),
+  sessionsPut
+);
+router.delete(
+  '/sessions/:id',
+  requireAuth,
+  validateParams(sessionsDeleteParamsSchema),
+  sessionsDelete
+);
 
 // Favorite Workouts
-router.put('/favorite-workouts', favoriteWorkoutsPut);
-router.delete('/favorite-workouts/:id', favoriteWorkoutsDelete);
+router.put(
+  '/favorite-workouts',
+  requireAuth,
+  validateBody(favoriteWorkoutsPutRequestSchema),
+  favoriteWorkoutsPut
+);
+router.delete(
+  '/favorite-workouts/:id',
+  requireAuth,
+  validateParams(favoriteWorkoutsDeleteParamsSchema),
+  favoriteWorkoutsDelete
+);
 
 // Users
-router.post('/users', usersPost);
-router.post('/users/authorize', usersAuthorize);
+router.post('/users', validateBody(usersPostRequestSchema), usersPost);
+router.post(
+  '/users/authorize',
+  validateBody(usersAuthorizeRequestSchema),
+  usersAuthorize
+);
 
 // Locations
-router.get('/locations', locationsGet);
-router.get('/locations/:id', locationsGetById);
-router.put('/locations', locationsPut);
-router.delete('/locations/:id', locationsDelete);
+router.get(
+  '/locations',
+  requireAuth,
+  validateQuery(locationsGetQuerySchema),
+  locationsGet
+);
+router.get(
+  '/locations/:id',
+  requireAuth,
+  validateParams(locationsGetByIdParamsSchema),
+  locationsGetById
+);
+router.put(
+  '/locations',
+  requireAuth,
+  validateBody(locationsPutRequestSchema),
+  locationsPut
+);
+router.delete(
+  '/locations/:id',
+  requireAuth,
+  validateParams(locationsDeleteParamsSchema),
+  locationsDelete
+);
 
 // Sectors
-router.get('/sectors', sectorsGet);
-router.put('/sectors', sectorsPut);
-router.delete('/sectors/:id', sectorsDelete);
-router.post('/sectors/upload-url', sectorsUploadUrl);
+router.get(
+  '/sectors',
+  requireAuth,
+  validateQuery(sectorsGetQuerySchema),
+  sectorsGet
+);
+router.put(
+  '/sectors',
+  requireAuth,
+  validateBody(sectorsPutRequestSchema),
+  sectorsPut
+);
+router.delete(
+  '/sectors/:id',
+  requireAuth,
+  validateParams(sectorsDeleteParamsSchema),
+  sectorsDelete
+);
+router.post(
+  '/sectors/upload-url',
+  requireAuth,
+  validateBody(sectorUploadUrlRequestSchema),
+  sectorsUploadUrl
+);
 
 // Climbs
-router.get('/climbs', climbsGet);
-router.get('/climbs/:id', climbsGetById);
-router.put('/climbs', climbsPut);
+router.get(
+  '/climbs',
+  requireAuth,
+  validateQuery(climbsGetQuerySchema),
+  climbsGet
+);
+router.get(
+  '/climbs/:id',
+  requireAuth,
+  validateParams(climbsGetByIdParamsSchema),
+  climbsGetById
+);
+router.put(
+  '/climbs',
+  requireAuth,
+  validateBody(climbsPutRequestSchema),
+  climbsPut
+);
 router.delete(
   '/climbs/:id',
   requireAuth,
