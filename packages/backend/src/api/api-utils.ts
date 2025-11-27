@@ -2,16 +2,13 @@ import { ApiResponse } from '@shared/models/api-response';
 import { Request, Response, NextFunction } from 'express';
 import { ZodSchema } from 'zod';
 
-export function apiError<TError = unknown>(
-  _error: TError,
-  res: Response
-): Response {
+function apiError<TError = unknown>(_error: TError, res: Response) {
   const body: ApiResponse = {
     data: undefined,
     success: false,
   };
 
-  return res.status(500).json(body);
+  res.status(500).json(body);
 }
 
 export function requireAuth(req: Request, _res: Response, next: NextFunction) {
@@ -71,7 +68,7 @@ export function toApiResponse<
     req: Request<TParams, unknown, TBody, TQuery>
   ) => Promise<ApiResponseResult<TData>>
 ) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response) => {
     try {
       const { statusCode, body, headers } = await handler(
         req as Request<TParams, unknown, TBody, TQuery>
@@ -86,8 +83,7 @@ export function toApiResponse<
 
       res.status(statusCode).json(body);
     } catch (error) {
-      console.error(error);
-      next(error);
+      apiError(error, res);
     }
   };
 }
