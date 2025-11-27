@@ -5,7 +5,7 @@ import {
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
 import dotenv from 'dotenv';
-import { apiHandler } from '../../api-utils';
+import { apiHandler } from '../api-utils';
 
 if (process.env.IS_OFFLINE) {
   const env = dotenv.config({ path: '.env' }).parsed;

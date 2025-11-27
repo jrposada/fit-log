@@ -7,9 +7,9 @@ import {
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
 
-import { SectorsService } from '../../../services/sectors-service';
-import { apiHandler } from '../../api-utils';
-import { LocationsService } from '../../../services/locations-service';
+import { SectorsService } from '../../services/sectors-service';
+import { apiHandler } from '../api-utils';
+import { LocationsService } from '../../services/locations-service';
 
 export const handler = apiHandler<SectorsGetResponse>(
   async ({ authorizerContext, req }) => {

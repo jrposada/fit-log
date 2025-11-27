@@ -1,7 +1,7 @@
 import { SessionsGetByIdResponse } from '@shared/models/session';
 import { Request } from 'express';
-import { SessionsService } from '../../../services/sessions-service';
-import { apiHandler } from '../../api-utils';
+import { SessionsService } from '../../services/sessions-service';
+import { apiHandler } from '../api-utils';
 
 export const handler = apiHandler<SessionsGetByIdResponse>(async ({ req }) => {
   const { id } = validateEvent(req);

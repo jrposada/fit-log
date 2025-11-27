@@ -1,8 +1,8 @@
 import { WorkoutsDeleteResponse } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
-import { WorkoutsService } from '../../../services/workouts-service';
-import { apiHandler } from '../../api-utils';
+import { WorkoutsService } from '../../services/workouts-service';
+import { apiHandler } from '../api-utils';
 
 export const handler = apiHandler<WorkoutsDeleteResponse>(
   async ({ authorizerContext, req }) => {

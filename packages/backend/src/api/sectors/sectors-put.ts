@@ -6,9 +6,9 @@ import {
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
 
-import { DbRecord } from '../../../services/aws/db-record';
-import { SectorsService } from '../../../services/sectors-service';
-import { apiHandler } from '../../api-utils';
+import { DbRecord } from '../../services/aws/db-record';
+import { SectorsService } from '../../services/sectors-service';
+import { apiHandler } from '../api-utils';
 
 export const handler = apiHandler<SectorsPutResponse>(
   async ({ authorizerContext, req }) => {

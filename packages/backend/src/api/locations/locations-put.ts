@@ -6,9 +6,9 @@ import {
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
 
-import { DbRecord } from '../../../services/aws/db-record';
-import { LocationsService } from '../../../services/locations-service';
-import { apiHandler } from '../../api-utils';
+import { DbRecord } from '../../services/aws/db-record';
+import { LocationsService } from '../../services/locations-service';
+import { apiHandler } from '../api-utils';
 
 export const handler = apiHandler<LocationsPutResponse>(
   async ({ authorizerContext, req }) => {

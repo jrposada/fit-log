@@ -7,8 +7,8 @@ import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
 import { v4 as uuid } from 'uuid';
 
-import { apiHandler } from '../../api-utils';
-import { S3Helper } from '../../../services/aws/s3';
+import { apiHandler } from '../api-utils';
+import { S3Helper } from '../../services/aws/s3';
 
 export const handler = apiHandler<SectorUploadUrlResponse>(
   async ({ authorizerContext, req }) => {

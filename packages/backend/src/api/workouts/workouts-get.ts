@@ -7,10 +7,10 @@ import {
 } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
-import { DbRecord } from '../../../services/aws/db-record';
-import { FavoriteWorkoutsService } from '../../../services/favorite-workouts-service';
-import { WorkoutsService } from '../../../services/workouts-service';
-import { apiHandler } from '../../api-utils';
+import { DbRecord } from '../../services/aws/db-record';
+import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
+import { WorkoutsService } from '../../services/workouts-service';
+import { apiHandler } from '../api-utils';
 import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import { ApiResponse } from '@shared/models/api-response';
 

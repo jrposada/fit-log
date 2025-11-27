@@ -5,10 +5,10 @@ import {
 } from '@shared/models/favorite-workout';
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
-import { DbRecord } from '../../../services/aws/db-record';
-import { FavoriteWorkoutsService } from '../../../services/favorite-workouts-service';
-import { apiHandler } from '../../api-utils';
-import { WorkoutsService } from '../../../services/workouts-service';
+import { DbRecord } from '../../services/aws/db-record';
+import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
+import { apiHandler } from '../api-utils';
+import { WorkoutsService } from '../../services/workouts-service';
 
 export const handler = apiHandler<FavoriteWorkoutsPutResponse>(
   async ({ authorizerContext, req }) => {

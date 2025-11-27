@@ -4,10 +4,10 @@ import {
   sessionsGetParamsSchema,
   SessionsGetResponse,
 } from '@shared/models/session';
-import { SessionsService } from '../../../services/sessions-service';
-import { apiHandler } from '../../api-utils';
+import { SessionsService } from '../../services/sessions-service';
+import { apiHandler } from '../api-utils';
 import { Request } from 'express';
-import { WorkoutsService } from '../../../services/workouts-service';
+import { WorkoutsService } from '../../services/workouts-service';
 
 export const handler = apiHandler<SessionsGetResponse>(async ({ req }) => {
   const { params } = validateEvent(req);

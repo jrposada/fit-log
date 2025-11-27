@@ -7,8 +7,8 @@ import {
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
 
-import { ClimbsService } from '../../../services/climbs-service';
-import { apiHandler } from '../../api-utils';
+import { ClimbsService } from '../../services/climbs-service';
+import { apiHandler } from '../api-utils';
 
 export const handler = apiHandler<ClimbsGetResponse>(
   async ({ authorizerContext, req }) => {

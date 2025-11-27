@@ -1,10 +1,10 @@
 import { Exercise, WorkoutsGetByIdResponse } from '@shared/models/workout';
 import { Request } from 'express';
-import { WorkoutsService } from '../../../services/workouts-service';
-import { apiHandler } from '../../api-utils';
-import { FavoriteWorkoutsService } from '../../../services/favorite-workouts-service';
+import { WorkoutsService } from '../../services/workouts-service';
+import { apiHandler } from '../api-utils';
+import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
 import { assert } from '@shared/utils/assert';
-import ResourceNotFound from '../../../infrastructure/not-found-error';
+import ResourceNotFound from '../../infrastructure/not-found-error';
 
 export const handler = apiHandler<WorkoutsGetByIdResponse>(
   async ({ authorizerContext, req }) => {

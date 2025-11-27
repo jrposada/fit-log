@@ -5,9 +5,9 @@ import {
 } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
-import { DbRecord } from '../../../services/aws/db-record';
-import { WorkoutsService } from '../../../services/workouts-service';
-import { apiHandler } from '../../api-utils';
+import { DbRecord } from '../../services/aws/db-record';
+import { WorkoutsService } from '../../services/workouts-service';
+import { apiHandler } from '../api-utils';
 
 export const handler = apiHandler<WorkoutsPutResponse>(
   async ({ authorizerContext, req }) => {

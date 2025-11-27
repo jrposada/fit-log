@@ -2,8 +2,8 @@ import { LocationsDeleteResponse } from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
 
-import { LocationsService } from '../../../services/locations-service';
-import { apiHandler } from '../../api-utils';
+import { LocationsService } from '../../services/locations-service';
+import { apiHandler } from '../api-utils';
 
 export const handler = apiHandler<LocationsDeleteResponse>(
   async ({ authorizerContext, req }) => {

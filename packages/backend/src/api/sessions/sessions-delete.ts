@@ -1,8 +1,8 @@
 import { SessionsDeleteResponse } from '@shared/models/session';
 import { assert } from '@shared/utils/assert';
 import { Request } from 'express';
-import { SessionsService } from '../../../services/sessions-service';
-import { apiHandler } from '../../api-utils';
+import { SessionsService } from '../../services/sessions-service';
+import { apiHandler } from '../api-utils';
 
 export const handler = apiHandler<SessionsDeleteResponse>(
   async ({ authorizerContext, req }) => {
