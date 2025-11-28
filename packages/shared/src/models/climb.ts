@@ -61,7 +61,7 @@ export type Climb = {
   /**
    * Grade of the climb (e.g., V0, V1, 5.10a)
    */
-  grade: ClimbGrade;
+  grade: string;
 
   /**
    * Description or notes
