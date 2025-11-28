@@ -4,8 +4,10 @@ import {
 } from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
 
-import { ClimbsService } from '../../services/climbs-service';
+import ResourceNotFound from '../../infrastructure/not-found-error';
+import { Climb } from '../../models/climb';
 import { toApiResponse } from '../api-utils';
+import { toApiClimb } from './climbs-mapper';
 
 const handler = toApiResponse<ClimbsGetByIdResponse, ClimbsGetByIdParams>(
   async (request) => {
@@ -13,27 +15,18 @@ const handler = toApiResponse<ClimbsGetByIdResponse, ClimbsGetByIdParams>(
 
     const { id } = request.params;
 
-    const climb = await ClimbsService.instance.get(id);
+    const climb = await Climb.findById(id);
+
+    if (!climb) {
+      throw new ResourceNotFound(`Climb with id ${id} not found`);
+    }
 
     return {
       statusCode: 200,
       body: {
         success: true,
         data: {
-          climb: {
-            id: climb.SK,
-            location: climb.location,
-            holds: climb.holds.map((hold) => ({
-              x: hold.x,
-              y: hold.y,
-            })),
-            name: climb.name,
-            grade: climb.grade,
-            description: climb.description,
-            sector: climb.sector,
-            createdAt: climb.createdAt,
-            updatedAt: climb.updatedAt,
-          },
+          climb: toApiClimb(climb),
         },
       },
     };

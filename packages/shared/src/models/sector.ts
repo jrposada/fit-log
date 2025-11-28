@@ -1,4 +1,3 @@
-import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import z from 'zod';
 
 ////////////
@@ -10,7 +9,7 @@ import z from 'zod';
  */
 export type Sector = {
   /**
-   * ID `sector#<location-id>#<sector-id>`.
+   * ID
    */
   id: string;
 
@@ -25,39 +24,34 @@ export type Sector = {
   description?: string;
 
   /**
-   * S3 URL to the sector image
-   */
-  imageUrl: string;
-
-  /**
-   * S3 URL to the thumbnail image
-   */
-  thumbnailUrl: string;
-
-  /**
-   * Image width in pixels
-   */
-  imageWidth: number;
-
-  /**
-   * Image height in pixels
-   */
-  imageHeight: number;
-
-  /**
-   * Image file size in bytes
-   */
-  imageFileSize: number;
-
-  /**
-   * Sort order for display
-   */
-  sortOrder: number;
-
-  /**
    * Whether this is the primary sector for the location
    */
-  isPrimary?: boolean;
+  isPrimary: boolean;
+
+  /**
+   * Location latitude
+   */
+  latitude: number;
+
+  /**
+   * Location longitude
+   */
+  longitude: number;
+
+  /**
+   * Google Maps place ID
+   */
+  googleMapsId?: string;
+
+  /**
+   * Sector's images
+   */
+  images: string[];
+
+  /**
+   * Sector's climbs
+   */
+  climbs: string[];
 
   /**
    * Date when sector was created in ISO 8601 format (UTC).
@@ -78,13 +72,15 @@ export const sectorSchema = z.object({
   id: z.string().nonempty(),
   name: z.string().min(1).max(50),
   description: z.string().max(200).optional(),
-  imageUrl: z.string().url(),
-  thumbnailUrl: z.string().url(),
-  imageWidth: z.number().int().positive(),
-  imageHeight: z.number().int().positive(),
-  imageFileSize: z.number().int().positive(),
-  sortOrder: z.number().int(),
-  isPrimary: z.boolean().optional(),
+  isPrimary: z.boolean(),
+
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  googleMapsId: z.string().optional(),
+
+  images: z.array(z.string().nonempty()),
+  climbs: z.array(z.string().nonempty()),
+
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
@@ -92,35 +88,18 @@ export const sectorSchema = z.object({
 /////////
 // GET //
 /////////
-export type SectorsGetQuery = {
-  locationId: string;
-};
-
-export const sectorsGetQuerySchema = z.object({
-  locationId: z.string().nonempty(),
-});
-
-export type SectorsGetResponse = {
-  sectors: Sector[];
-  lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
-};
 
 /////////
 // PUT //
 /////////
 export type SectorsPutRequest = Omit<
   Sector,
-  'id' | 'createdAt' | 'updatedAt' | 'imageUrl' | 'thumbnailUrl'
+  'id' | 'createdAt' | 'updatedAt'
 > & {
   /**
-   * ID `sector#<location-id>#<sector-id>`.
+   * ID
    */
   id?: string;
-
-  /**
-   * UUID of the location this sector belongs to
-   */
-  locationUuid: string;
 
   /**
    * Date when sector was created in ISO 8601 format (UTC).
@@ -128,36 +107,21 @@ export type SectorsPutRequest = Omit<
    * @format date-time
    */
   createdAt?: string;
-
-  /**
-   * Base64 encoded image data (for upload)
-   */
-  imageData?: string;
-
-  /**
-   * Image URL (when updating without changing image)
-   */
-  imageUrl?: string;
-
-  /**
-   * Thumbnail URL (when updating without changing image)
-   */
-  thumbnailUrl?: string;
 };
 
 export const sectorsPutRequestSchema = z.object({
   id: z.string().optional(),
-  locationUuid: z.string().nonempty(),
   name: z.string().min(1).max(50),
   description: z.string().max(200).optional(),
-  imageData: z.string().optional(),
-  imageUrl: z.string().optional(),
-  thumbnailUrl: z.string().optional(),
-  imageWidth: z.number().int().positive(),
-  imageHeight: z.number().int().positive(),
-  imageFileSize: z.number().int().positive(),
-  sortOrder: z.number().int(),
-  isPrimary: z.boolean().optional(),
+  isPrimary: z.boolean(),
+
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+  googleMapsId: z.string().optional(),
+
+  images: z.array(z.string().nonempty()),
+  climbs: z.array(z.string().nonempty()),
+
   createdAt: z.string().datetime().optional(),
 });
 
@@ -182,14 +146,14 @@ export type SectorsDeleteResponse = {
 //////////////
 // GET BY ID //
 ///////////////
-export type SectorsByIdGetParams = {
+export type SectorsGetByIdParams = {
   id: string;
 };
-export const sectorsByIdGetParamsSchema = z.object({
+export const sectorsGetByIdParamsSchema = z.object({
   id: z.string().nonempty(),
 });
 
-export type SectorsByIdGetResponse = {
+export type SectorsGetByIdResponse = {
   sector: Sector;
 };
 

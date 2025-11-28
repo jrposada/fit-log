@@ -1,4 +1,3 @@
-import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import z from 'zod';
 
 ////////////
@@ -46,7 +45,6 @@ export const sessionsGetQuerySchema = z.object({
 
 export type SessionsGetResponse = {
   sessions: Session[];
-  lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
 
 /////////

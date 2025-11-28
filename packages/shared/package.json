@@ -23,7 +23,6 @@
     "lint": "run-p lint:*"
   },
   "dependencies": {
-    "@aws-sdk/lib-dynamodb": "^3.758.0",
     "zod": "^3.24.2"
   }
 }

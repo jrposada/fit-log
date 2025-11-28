@@ -3,10 +3,11 @@ import {
   LocationsPutResponse,
 } from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
+import { Types } from 'mongoose';
 
-import { DbRecord } from '../../services/aws/db-record';
-import { LocationsService } from '../../services/locations-service';
+import { Location } from '../../models/location';
 import { toApiResponse } from '../api-utils';
+import { toApiLocation } from './locations-mapper';
 
 const handler = toApiResponse<
   LocationsPutResponse,
@@ -18,43 +19,33 @@ const handler = toApiResponse<
 
   const locationPutData = request.body;
 
-  const record: DbRecord<'location'> = {
+  const location = new Location({
+    _id: new Types.ObjectId(locationPutData.id),
     name: locationPutData.name,
     description: locationPutData.description,
+
     latitude: locationPutData.latitude,
     longitude: locationPutData.longitude,
-    address: locationPutData.address,
-    placeName: locationPutData.placeName,
-    placeId: locationPutData.placeId,
-    lastUsedAt: locationPutData.lastUsedAt,
-    createdAt: locationPutData.createdAt ?? new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    PK: 'location',
-    SK:
-      (locationPutData.id as DbRecord<'location'>['SK']) ??
-      LocationsService.instance.newSk(),
-  };
+    googleMapsId: locationPutData.googleMapsId,
 
-  void (await LocationsService.instance.put(record));
+    sectors: locationPutData.sectors.map(
+      (sectorId) => new Types.ObjectId(sectorId)
+    ),
+
+    createdAt: locationPutData.createdAt
+      ? new Date(locationPutData.createdAt)
+      : new Date(),
+    updatedAt: new Date(),
+  });
+
+  await location.save();
 
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        location: {
-          id: record.SK,
-          name: record.name,
-          description: record.description,
-          latitude: record.latitude,
-          longitude: record.longitude,
-          address: record.address,
-          placeName: record.placeName,
-          placeId: record.placeId,
-          lastUsedAt: record.lastUsedAt,
-          createdAt: record.createdAt,
-          updatedAt: record.updatedAt,
-        },
+        location: toApiLocation(location),
       },
     },
   };

@@ -5,13 +5,11 @@ import { IsEqual } from '../types/is-equal';
 import { IsTrue } from '../types/is-true';
 import {
   Sector,
-  SectorsByIdGetParams,
-  sectorsByIdGetParamsSchema,
   sectorSchema,
   SectorsDeleteParams,
   sectorsDeleteParamsSchema,
-  SectorsGetQuery,
-  sectorsGetQuerySchema,
+  SectorsGetByIdParams,
+  sectorsGetByIdParamsSchema,
   SectorsPutRequest,
   sectorsPutRequestSchema,
   SectorUploadUrlRequest,
@@ -20,10 +18,6 @@ import {
 
 export type SectorTest = Expect<
   IsTrue<IsEqual<Sector, z.infer<typeof sectorSchema>>>
->;
-
-export type SectorsGetQueryTest = Expect<
-  IsTrue<IsEqual<SectorsGetQuery, z.infer<typeof sectorsGetQuerySchema>>>
 >;
 
 export type SectorsPutRequestTest = Expect<
@@ -36,9 +30,9 @@ export type SectorsDeleteParamsTest = Expect<
   >
 >;
 
-export type SectorsByIdGetParamsTest = Expect<
+export type SectorsGetByIdParamsTest = Expect<
   IsTrue<
-    IsEqual<SectorsByIdGetParams, z.infer<typeof sectorsByIdGetParamsSchema>>
+    IsEqual<SectorsGetByIdParams, z.infer<typeof sectorsGetByIdParamsSchema>>
   >
 >;
 

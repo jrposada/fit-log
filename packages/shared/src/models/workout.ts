@@ -1,4 +1,3 @@
-import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import z from 'zod';
 
 ////////////
@@ -116,7 +115,6 @@ export const workoutsGetQuerySchema = z.object({
 
 export type WorkoutsGetResponse = {
   workouts: Workout[];
-  lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
 
 /////////

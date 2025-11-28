@@ -1,9 +1,10 @@
 import { SectorsPutRequest, SectorsPutResponse } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
+import { Types } from 'mongoose';
 
-import { DbRecord } from '../../services/aws/db-record';
-import { SectorsService } from '../../services/sectors-service';
+import { Sector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
+import { toApiSector } from './sectors-mapper';
 
 const handler = toApiResponse<
   SectorsPutResponse,
@@ -15,45 +16,33 @@ const handler = toApiResponse<
 
   const sectorPutData = request.body;
 
-  const record: DbRecord<'sector'> = {
+  const sector = new Sector({
+    _id: new Types.ObjectId(sectorPutData.id),
     name: sectorPutData.name,
     description: sectorPutData.description,
-    imageUrl: sectorPutData.imageUrl || '',
-    thumbnailUrl: sectorPutData.thumbnailUrl || '',
-    imageWidth: sectorPutData.imageWidth,
-    imageHeight: sectorPutData.imageHeight,
-    imageFileSize: sectorPutData.imageFileSize,
-    sortOrder: sectorPutData.sortOrder,
     isPrimary: sectorPutData.isPrimary,
-    createdAt: sectorPutData.createdAt ?? new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    PK: 'sector',
-    SK:
-      (sectorPutData.id as DbRecord<'sector'>['SK']) ??
-      SectorsService.instance.newSk(sectorPutData.locationUuid),
-  };
 
-  void (await SectorsService.instance.put(record));
+    latitude: sectorPutData.latitude,
+    longitude: sectorPutData.longitude,
+    googleMapsId: sectorPutData.googleMapsId,
+
+    images: sectorPutData.images.map((imageId) => new Types.ObjectId(imageId)),
+    climbs: sectorPutData.climbs.map((climbId) => new Types.ObjectId(climbId)),
+
+    createdAt: sectorPutData.createdAt
+      ? new Date(sectorPutData.createdAt)
+      : new Date(),
+    updatedAt: new Date(),
+  });
+
+  await sector.save();
 
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        sector: {
-          id: record.SK,
-          name: record.name,
-          description: record.description,
-          imageUrl: record.imageUrl,
-          thumbnailUrl: record.thumbnailUrl,
-          imageWidth: record.imageWidth,
-          imageHeight: record.imageHeight,
-          imageFileSize: record.imageFileSize,
-          sortOrder: record.sortOrder,
-          isPrimary: record.isPrimary,
-          createdAt: record.createdAt,
-          updatedAt: record.updatedAt,
-        },
+        sector: toApiSector(sector),
       },
     },
   };

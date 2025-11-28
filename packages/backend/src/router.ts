@@ -12,7 +12,6 @@ import {
 } from '@shared/models/location';
 import {
   sectorsDeleteParamsSchema,
-  sectorsGetQuerySchema,
   sectorsPutRequestSchema,
   sectorUploadUrlRequestSchema,
 } from '@shared/models/sector';
@@ -49,7 +48,6 @@ import { handler as locationsGet } from './api/locations/locations-get';
 import { handler as locationsGetById } from './api/locations/locations-get-by-id';
 import { handler as locationsPut } from './api/locations/locations-put';
 import { handler as sectorsDelete } from './api/sectors/sectors-delete';
-import { handler as sectorsGet } from './api/sectors/sectors-get';
 import { handler as sectorsPut } from './api/sectors/sectors-put';
 import { handler as sectorsUploadUrl } from './api/sectors/sectors-upload-url';
 import { handler as sessionsDelete } from './api/sessions/sessions-delete';
@@ -150,12 +148,6 @@ router.delete(
 );
 
 // Sectors
-router.get(
-  '/sectors',
-  requireAuth,
-  validateQuery(sectorsGetQuerySchema),
-  sectorsGet
-);
 router.put(
   '/sectors',
   requireAuth,

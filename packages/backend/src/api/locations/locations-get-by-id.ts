@@ -4,8 +4,10 @@ import {
 } from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
 
-import { LocationsService } from '../../services/locations-service';
+import ResourceNotFound from '../../infrastructure/not-found-error';
+import { Location } from '../../models/location';
 import { toApiResponse } from '../api-utils';
+import { toApiLocation } from './locations-mapper';
 
 const handler = toApiResponse<LocationsGetByIdResponse, LocationsGetByIdParams>(
   async (request) => {
@@ -13,26 +15,18 @@ const handler = toApiResponse<LocationsGetByIdResponse, LocationsGetByIdParams>(
 
     const { id } = request.params;
 
-    const location = await LocationsService.instance.get(id);
+    const location = await Location.findById(id);
+
+    if (!location) {
+      throw new ResourceNotFound(`Location with id ${id} not found`);
+    }
 
     return {
       statusCode: 200,
       body: {
         success: true,
         data: {
-          location: {
-            id: location.SK,
-            name: location.name,
-            description: location.description,
-            latitude: location.latitude,
-            longitude: location.longitude,
-            address: location.address,
-            placeName: location.placeName,
-            placeId: location.placeId,
-            lastUsedAt: location.lastUsedAt,
-            createdAt: location.createdAt,
-            updatedAt: location.updatedAt,
-          },
+          location: toApiLocation(location),
         },
       },
     };
@@ -40,3 +34,4 @@ const handler = toApiResponse<LocationsGetByIdResponse, LocationsGetByIdParams>(
 );
 
 export { handler };
+

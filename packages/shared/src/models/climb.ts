@@ -1,4 +1,3 @@
-import { QueryCommandOutput } from '@aws-sdk/lib-dynamodb';
 import z from 'zod';
 
 ////////////
@@ -29,19 +28,9 @@ export const holdSchema = z.object({
  */
 export type Climb = {
   /**
-   * ID `climb#<climb-id>`.
+   * ID
    */
   id: string;
-
-  /**
-   * Location ID location#<location-id>
-   */
-  location: string;
-
-  /**
-   * Array of holds marking the route
-   */
-  holds: Hold[];
 
   /**
    * Name/title for the climb
@@ -59,9 +48,24 @@ export type Climb = {
   description?: string;
 
   /**
+   * Array of holds marking the route
+   */
+  holds: Hold[];
+
+  /**
+   * Image
+   */
+  image: string;
+
+  /**
+   * Location
+   */
+  location: string;
+
+  /**
    * Sector
    */
-  sector?: string;
+  sector: string;
 
   /**
    * Date when climb was created in ISO 8601 format (UTC).
@@ -79,12 +83,15 @@ export type Climb = {
 };
 export const climbSchema = z.object({
   id: z.string().nonempty(),
-  location: z.string().nonempty(),
-  holds: z.array(holdSchema),
   name: z.string().nonempty(),
   grade: z.string().nonempty(),
   description: z.string().optional(),
-  sector: z.string().optional(),
+  holds: z.array(holdSchema),
+
+  image: z.string().nonempty(),
+  location: z.string().nonempty(),
+  sector: z.string().nonempty(),
+
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
@@ -101,7 +108,6 @@ export const climbsGetQuerySchema = z.object({
 
 export type ClimbsGetResponse = {
   climbs: Climb[];
-  lastEvaluatedKey: QueryCommandOutput['LastEvaluatedKey'];
 };
 
 /////////
@@ -109,7 +115,7 @@ export type ClimbsGetResponse = {
 /////////
 export type ClimbsPutRequest = Omit<Climb, 'id' | 'createdAt' | 'updatedAt'> & {
   /**
-   * ID `climb#<climb-id>`.
+   * ID
    */
   id?: string;
 
@@ -122,12 +128,15 @@ export type ClimbsPutRequest = Omit<Climb, 'id' | 'createdAt' | 'updatedAt'> & {
 };
 export const climbsPutRequestSchema = z.object({
   id: z.string().optional(),
-  location: z.string().nonempty(),
-  holds: z.array(holdSchema),
   name: z.string().nonempty(),
   grade: z.string().nonempty(),
   description: z.string().optional(),
-  sector: z.string().optional(),
+  holds: z.array(holdSchema),
+
+  image: z.string().nonempty(),
+  location: z.string().nonempty(),
+  sector: z.string().nonempty(),
+
   createdAt: z.string().datetime().optional(),
 });
 

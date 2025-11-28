@@ -1,13 +1,13 @@
 import { ClimbsDeleteParams, ClimbsDeleteResponse } from '@shared/models/climb';
 
-import { ClimbsService } from '../../services/climbs-service';
+import { Climb } from '../../models/climb';
 import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<ClimbsDeleteResponse, ClimbsDeleteParams>(
   async (request) => {
     const { id } = request.params;
 
-    void (await ClimbsService.instance.delete(id));
+    await Climb.deleteOne({ _id: id });
 
     return {
       statusCode: 200,

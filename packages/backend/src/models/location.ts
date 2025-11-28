@@ -1,4 +1,4 @@
-import { Document, model, ObjectId, Schema, WithTimestamps } from 'mongoose';
+import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
 export interface ILocation extends WithTimestamps<Document> {
   //////////
@@ -14,7 +14,7 @@ export interface ILocation extends WithTimestamps<Document> {
   ////////////////
   // References //
   ////////////////
-  sectors: ObjectId[];
+  sectors: Types.ObjectId[];
 }
 
 const locationSchema = new Schema<ILocation>(

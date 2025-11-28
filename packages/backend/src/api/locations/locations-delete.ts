@@ -4,7 +4,7 @@ import {
 } from '@shared/models/location';
 import { assert } from '@shared/utils/assert';
 
-import { LocationsService } from '../../services/locations-service';
+import { Location } from '../../models/location';
 import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<LocationsDeleteResponse, LocationsDeleteParams>(
@@ -13,7 +13,7 @@ const handler = toApiResponse<LocationsDeleteResponse, LocationsDeleteParams>(
 
     const { id } = request.params;
 
-    void (await LocationsService.instance.delete(id));
+    await Location.deleteOne({ _id: id });
 
     return {
       statusCode: 200,

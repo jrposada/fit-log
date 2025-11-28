@@ -1,26 +1,32 @@
 import {
-  SectorsDeleteParams,
-  SectorsDeleteResponse,
+  SectorsGetByIdParams,
+  SectorsGetByIdResponse,
 } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
 
+import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Sector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
+import { toApiSector } from './sectors-mapper';
 
-const handler = toApiResponse<SectorsDeleteResponse, SectorsDeleteParams>(
+const handler = toApiResponse<SectorsGetByIdResponse, SectorsGetByIdParams>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 
     const { id } = request.params;
 
-    await Sector.deleteOne({ _id: id });
+    const sector = await Sector.findById(id);
+
+    if (!sector) {
+      throw new ResourceNotFound(`Sector with id ${id} not found`);
+    }
 
     return {
       statusCode: 200,
       body: {
         success: true,
         data: {
-          success: true,
+          sector: toApiSector(sector),
         },
       },
     };

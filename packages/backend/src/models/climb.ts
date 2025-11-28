@@ -12,7 +12,7 @@ export interface IClimb extends WithTimestamps<Document> {
   name: string;
   grade: string;
   description?: string;
-  holds?: IHold[];
+  holds: IHold[];
 
   ////////////////
   // References //
