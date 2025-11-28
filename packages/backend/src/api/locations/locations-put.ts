@@ -6,6 +6,7 @@ import { assert } from '@shared/utils/assert';
 import { Types } from 'mongoose';
 
 import { Location } from '../../models/location';
+import { upsertDocument } from '../../utils/upsert-document';
 import { toApiResponse } from '../api-utils';
 import { toApiLocation } from './locations-mapper';
 
@@ -19,8 +20,7 @@ const handler = toApiResponse<
 
   const locationPutData = request.body;
 
-  const location = new Location({
-    _id: new Types.ObjectId(locationPutData.id),
+  const location = await upsertDocument(Location, locationPutData.id, {
     name: locationPutData.name,
     description: locationPutData.description,
 
@@ -31,14 +31,7 @@ const handler = toApiResponse<
     sectors: locationPutData.sectors.map(
       (sectorId) => new Types.ObjectId(sectorId)
     ),
-
-    createdAt: locationPutData.createdAt
-      ? new Date(locationPutData.createdAt)
-      : new Date(),
-    updatedAt: new Date(),
   });
-
-  await location.save();
 
   return {
     statusCode: 200,

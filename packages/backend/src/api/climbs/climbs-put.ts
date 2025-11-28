@@ -1,9 +1,11 @@
 import { ClimbsPutRequest, ClimbsPutResponse } from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
+import { ObjectId, Types } from 'mongoose';
 
-import { DbRecord } from '../../services/aws/db-record';
-import { ClimbsService } from '../../services/climbs-service';
+import { Climb } from '../../models/climb';
+import { upsertDocument } from '../../utils/upsert-document';
 import { toApiResponse } from '../api-utils';
+import { toApiClimb } from './climbs-mapper';
 
 const handler = toApiResponse<
   ClimbsPutResponse,
@@ -15,42 +17,23 @@ const handler = toApiResponse<
 
   const climbPutData = request.body;
 
-  const record: DbRecord<'climb'> = {
-    location: climbPutData.location as DbRecord<'climb'>['location'],
-    holds: climbPutData.holds.map((hold) => ({
-      x: hold.x,
-      y: hold.y,
-    })),
+  const climb = await upsertDocument(Climb, climbPutData.id, {
     name: climbPutData.name,
     grade: climbPutData.grade,
     description: climbPutData.description,
-    sector: climbPutData.sector,
-    createdAt: climbPutData.createdAt ?? new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    PK: 'climb',
-    SK:
-      (climbPutData.id as DbRecord<'climb'>['SK']) ??
-      ClimbsService.instance.newSk(),
-  };
+    holds: climbPutData.holds,
 
-  void (await ClimbsService.instance.put(record));
+    image: new Types.ObjectId(climbPutData.image) as unknown as ObjectId,
+    sector: new Types.ObjectId(climbPutData.sector) as unknown as ObjectId,
+    location: new Types.ObjectId(climbPutData.location) as unknown as ObjectId,
+  });
 
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        climb: {
-          id: record.SK,
-          location: record.location,
-          holds: record.holds,
-          name: record.name,
-          grade: record.grade,
-          description: record.description,
-          sector: record.sector,
-          createdAt: record.createdAt,
-          updatedAt: record.updatedAt,
-        },
+        climb: toApiClimb(climb),
       },
     },
   };

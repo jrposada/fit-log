@@ -1,8 +1,9 @@
 import { SectorsPutRequest, SectorsPutResponse } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
-import { Types } from 'mongoose';
+import { ObjectId, Types } from 'mongoose';
 
 import { Sector } from '../../models/sector';
+import { upsertDocument } from '../../utils/upsert-document';
 import { toApiResponse } from '../api-utils';
 import { toApiSector } from './sectors-mapper';
 
@@ -16,8 +17,7 @@ const handler = toApiResponse<
 
   const sectorPutData = request.body;
 
-  const sector = new Sector({
-    _id: new Types.ObjectId(sectorPutData.id),
+  const sector = await upsertDocument(Sector, sectorPutData.id, {
     name: sectorPutData.name,
     description: sectorPutData.description,
     isPrimary: sectorPutData.isPrimary,
@@ -26,16 +26,13 @@ const handler = toApiResponse<
     longitude: sectorPutData.longitude,
     googleMapsId: sectorPutData.googleMapsId,
 
-    images: sectorPutData.images.map((imageId) => new Types.ObjectId(imageId)),
-    climbs: sectorPutData.climbs.map((climbId) => new Types.ObjectId(climbId)),
-
-    createdAt: sectorPutData.createdAt
-      ? new Date(sectorPutData.createdAt)
-      : new Date(),
-    updatedAt: new Date(),
+    images: sectorPutData.images.map(
+      (imageId) => new Types.ObjectId(imageId)
+    ) as unknown as ObjectId[],
+    climbs: sectorPutData.climbs.map(
+      (climbId) => new Types.ObjectId(climbId)
+    ) as unknown as ObjectId[],
   });
-
-  await sector.save();
 
   return {
     statusCode: 200,
