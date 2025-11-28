@@ -55,12 +55,10 @@ import { handler as workoutsDelete } from './api/workouts/workouts-delete';
 import { handler as workoutsGet } from './api/workouts/workouts-get';
 import { handler as workoutsGetById } from './api/workouts/workouts-get-by-id';
 import { handler as workoutsPut } from './api/workouts/workouts-put';
-import {
-  requireAuth,
-  validateBody,
-  validateParams,
-  validateQuery,
-} from './middleware';
+import { authenticateKeycloak } from './middleware/auth';
+import { validateBody } from './middleware/validate-body';
+import { validateParams } from './middleware/validate-params';
+import { validateQuery } from './middleware/validate-query';
 
 export const router = Router();
 
@@ -70,25 +68,25 @@ router.get('/version', versionGet);
 // Workouts
 router.get(
   '/workouts',
-  requireAuth,
+  authenticateKeycloak,
   validateQuery(workoutsGetQuerySchema),
   workoutsGet
 );
 router.get(
   '/workouts/:id',
-  requireAuth,
+  authenticateKeycloak,
   validateParams(workoutsGetByIdParamsSchema),
   workoutsGetById
 );
 router.put(
   '/workouts',
-  requireAuth,
+  authenticateKeycloak,
   validateBody(workoutsPutRequestSchema),
   workoutsPut
 );
 router.delete(
   '/workouts/:id',
-  requireAuth,
+  authenticateKeycloak,
   validateParams(workoutsDeleteParamsSchema),
   workoutsDelete
 );
@@ -102,13 +100,13 @@ router.get(
 );
 router.put(
   '/sessions',
-  requireAuth,
+  authenticateKeycloak,
   validateBody(sessionsPutRequestSchema),
   sessionsPut
 );
 router.delete(
   '/sessions/:id',
-  requireAuth,
+  authenticateKeycloak,
   validateParams(sessionsDeleteParamsSchema),
   sessionsDelete
 );
@@ -124,25 +122,25 @@ router.post(
 // Locations
 router.get(
   '/locations',
-  requireAuth,
+  authenticateKeycloak,
   validateQuery(locationsGetQuerySchema),
   locationsGet
 );
 router.get(
   '/locations/:id',
-  requireAuth,
+  authenticateKeycloak,
   validateParams(locationsGetByIdParamsSchema),
   locationsGetById
 );
 router.put(
   '/locations',
-  requireAuth,
+  authenticateKeycloak,
   validateBody(locationsPutRequestSchema),
   locationsPut
 );
 router.delete(
   '/locations/:id',
-  requireAuth,
+  authenticateKeycloak,
   validateParams(locationsDeleteParamsSchema),
   locationsDelete
 );
@@ -150,19 +148,19 @@ router.delete(
 // Sectors
 router.put(
   '/sectors',
-  requireAuth,
+  authenticateKeycloak,
   validateBody(sectorsPutRequestSchema),
   sectorsPut
 );
 router.delete(
   '/sectors/:id',
-  requireAuth,
+  authenticateKeycloak,
   validateParams(sectorsDeleteParamsSchema),
   sectorsDelete
 );
 router.post(
   '/sectors/upload-url',
-  requireAuth,
+  authenticateKeycloak,
   validateBody(sectorUploadUrlRequestSchema),
   sectorsUploadUrl
 );
@@ -170,25 +168,25 @@ router.post(
 // Climbs
 router.get(
   '/climbs',
-  requireAuth,
+  authenticateKeycloak,
   validateQuery(climbsGetQuerySchema),
   climbsGet
 );
 router.get(
   '/climbs/:id',
-  requireAuth,
+  authenticateKeycloak,
   validateParams(climbsGetByIdParamsSchema),
   climbsGetById
 );
 router.put(
   '/climbs',
-  requireAuth,
+  authenticateKeycloak,
   validateBody(climbsPutRequestSchema),
   climbsPut
 );
 router.delete(
   '/climbs/:id',
-  requireAuth,
+  authenticateKeycloak,
   validateParams(climbsDeleteParamsSchema),
   climbsDelete
 );

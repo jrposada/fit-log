@@ -1,9 +1,9 @@
-import { AuthorizerContext } from './lambdas/authorizer/authorizer';
+import { IUser } from '../models/user';
 
 declare global {
   namespace Express {
     interface Request {
-      user?: AuthorizerContext;
+      user?: IUser;
     }
   }
 }
