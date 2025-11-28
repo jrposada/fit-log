@@ -1,24 +1,13 @@
 services:
-  dynamodb-local:
-    container_name: dynamodb-local
-    image: 'amazon/dynamodb-local:latest'
-    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath ./data'
+  database:
+    container_name: database
+    image: 'mongo:latest'
     ports:
-      - '3200:8000'
-    user: root
-    volumes:
-      - dynamodb-data:/home/dynamodblocal/data
-    working_dir: /home/dynamodblocal
-
-  dynamodb-admin:
-    container_name: dynamodb-admin
-    image: aaronshaf/dynamodb-admin
-    ports:
-      - '8001:8001'
+      - '3200:27017'
     environment:
-      DYNAMO_ENDPOINT: http://dynamodb-local:8000
-    depends_on:
-      - dynamodb-local
+      - MONGO_INITDB_DATABASE=fit-log
+    volumes:
+      - mongodb-data:/data/db
 
   s3-local:
     container_name: s3-local
@@ -47,7 +36,7 @@ services:
       - opensearch-data:/usr/share/opensearch/data
 
 volumes:
-  dynamodb-data:
+  mongodb-data:
     external: false
   s3-data:
     external: false
