@@ -5,10 +5,6 @@ import {
   climbsPutRequestSchema,
 } from '@shared/models/climb';
 import {
-  favoriteWorkoutsDeleteParamsSchema,
-  favoriteWorkoutsPutRequestSchema,
-} from '@shared/models/favorite-workout';
-import {
   locationsDeleteParamsSchema,
   locationsGetByIdParamsSchema,
   locationsGetQuerySchema,
@@ -48,8 +44,6 @@ import { handler as climbsDelete } from './api/climbs/climbs-delete';
 import { handler as climbsGet } from './api/climbs/climbs-get';
 import { handler as climbsGetById } from './api/climbs/climbs-get-by-id';
 import { handler as climbsPut } from './api/climbs/climbs-put';
-import { handler as favoriteWorkoutsDelete } from './api/favorite-workouts/favorite-workouts-delete';
-import { handler as favoriteWorkoutsPut } from './api/favorite-workouts/favorite-workouts-put';
 import { handler as locationsDelete } from './api/locations/locations-delete';
 import { handler as locationsGet } from './api/locations/locations-get';
 import { handler as locationsGetById } from './api/locations/locations-get-by-id';
@@ -119,20 +113,6 @@ router.delete(
   requireAuth,
   validateParams(sessionsDeleteParamsSchema),
   sessionsDelete
-);
-
-// Favorite Workouts
-router.put(
-  '/favorite-workouts',
-  requireAuth,
-  validateBody(favoriteWorkoutsPutRequestSchema),
-  favoriteWorkoutsPut
-);
-router.delete(
-  '/favorite-workouts/:id',
-  requireAuth,
-  validateParams(favoriteWorkoutsDeleteParamsSchema),
-  favoriteWorkoutsDelete
 );
 
 // Users
