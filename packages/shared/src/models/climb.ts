@@ -139,13 +139,6 @@ export type ClimbsPutRequest = Omit<Climb, 'id' | 'createdAt' | 'updatedAt'> & {
    * ID
    */
   id?: string;
-
-  /**
-   * Date when climb was created in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
-  createdAt?: string;
 };
 export const climbsPutRequestSchema = z.object({
   id: z.string().optional(),
@@ -157,8 +150,6 @@ export const climbsPutRequestSchema = z.object({
   image: z.string().nonempty(),
   location: z.string().nonempty(),
   sector: z.string().nonempty(),
-
-  createdAt: z.string().datetime().optional(),
 });
 
 export type ClimbsPutResponse = {

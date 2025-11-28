@@ -89,18 +89,14 @@ export type LocationsGetResponse = {
 /////////
 // PUT //
 /////////
-export type LocationsPutRequest = Omit<Location, 'id' | 'createdAt' | 'updatedAt'> & {
+export type LocationsPutRequest = Omit<
+  Location,
+  'id' | 'createdAt' | 'updatedAt'
+> & {
   /**
    * ID
    */
   id?: string;
-
-  /**
-   * Date when location was created in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
-  createdAt?: string;
 };
 export const locationsPutRequestSchema = z.object({
   id: z.string().optional(),
@@ -112,8 +108,6 @@ export const locationsPutRequestSchema = z.object({
   googleMapsId: z.string().optional(),
 
   sectors: z.array(z.string()),
-
-  createdAt: z.string().datetime().optional(),
 });
 
 export type LocationsPutResponse = {

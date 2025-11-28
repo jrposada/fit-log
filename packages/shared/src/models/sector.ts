@@ -100,13 +100,6 @@ export type SectorsPutRequest = Omit<
    * ID
    */
   id?: string;
-
-  /**
-   * Date when sector was created in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
-  createdAt?: string;
 };
 
 export const sectorsPutRequestSchema = z.object({
@@ -121,8 +114,6 @@ export const sectorsPutRequestSchema = z.object({
 
   images: z.array(z.string().nonempty()),
   climbs: z.array(z.string().nonempty()),
-
-  createdAt: z.string().datetime().optional(),
 });
 
 export type SectorsPutResponse = {

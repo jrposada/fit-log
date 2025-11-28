@@ -63,19 +63,10 @@ export type SessionsPutRequest = Omit<
    * ID.
    */
   id?: string;
-
-  /**
-   * Date when climb was created in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
-  createdAt?: string;
 };
 export const sessionsPutRequestSchema = z.object({
   id: z.string().optional(),
   completedAt: z.string().datetime(),
-
-  createdAt: z.string().datetime().optional(),
 });
 
 export type SessionsPutResponse = {

@@ -1,6 +1,6 @@
 import { SectorsPutRequest, SectorsPutResponse } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 import { Sector } from '../../models/sector';
 import { upsertDocument } from '../../utils/upsert-document';
@@ -26,12 +26,8 @@ const handler = toApiResponse<
     longitude: sectorPutData.longitude,
     googleMapsId: sectorPutData.googleMapsId,
 
-    images: sectorPutData.images.map(
-      (imageId) => new Types.ObjectId(imageId)
-    ) as unknown as ObjectId[],
-    climbs: sectorPutData.climbs.map(
-      (climbId) => new Types.ObjectId(climbId)
-    ) as unknown as ObjectId[],
+    images: sectorPutData.images.map((imageId) => new Types.ObjectId(imageId)),
+    climbs: sectorPutData.climbs.map((climbId) => new Types.ObjectId(climbId)),
   });
 
   return {

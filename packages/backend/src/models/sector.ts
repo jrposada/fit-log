@@ -1,4 +1,4 @@
-import { Document, model, ObjectId, Schema, WithTimestamps } from 'mongoose';
+import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
 export interface ISector extends WithTimestamps<Document> {
   //////////
@@ -15,8 +15,8 @@ export interface ISector extends WithTimestamps<Document> {
   ////////////////
   // References //
   ////////////////
-  images: ObjectId[];
-  climbs: ObjectId[];
+  images: Types.ObjectId[];
+  climbs: Types.ObjectId[];
 }
 
 const sectorSchema = new Schema<ISector>(
