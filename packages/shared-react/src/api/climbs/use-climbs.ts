@@ -1,17 +1,12 @@
 import { ApiResponse } from '@shared/models/api-response';
-import { ClimbsGetResponse } from '@shared/models/climb';
+import { ClimbsGetQuery, ClimbsGetResponse } from '@shared/models/climb';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
-type UseClimbsParams = {
-  onUnauthorized?: () => void;
-  limit?: number;
-};
-
-function useClimbs({ onUnauthorized, limit }: UseClimbsParams = {}) {
+function useClimbs({ limit }: ClimbsGetQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
   return useQuery({
@@ -37,7 +32,6 @@ function useClimbs({ onUnauthorized, limit }: UseClimbsParams = {}) {
 
         return response.data.data.climbs;
       },
-      onUnauthorized,
     }),
   });
 }

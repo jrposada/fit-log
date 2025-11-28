@@ -1,17 +1,15 @@
 import { ApiResponse } from '@shared/models/api-response';
-import { LocationsGetResponse } from '@shared/models/location';
+import {
+  LocationsGetQuery,
+  LocationsGetResponse,
+} from '@shared/models/location';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
-type UseLocationsParams = {
-  onUnauthorized?: () => void;
-  limit?: number;
-};
-
-function useLocations({ onUnauthorized, limit }: UseLocationsParams = {}) {
+function useLocations({ limit }: LocationsGetQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
   return useQuery({
@@ -40,7 +38,6 @@ function useLocations({ onUnauthorized, limit }: UseLocationsParams = {}) {
 
         return response.data.data.locations;
       },
-      onUnauthorized,
     }),
   });
 }

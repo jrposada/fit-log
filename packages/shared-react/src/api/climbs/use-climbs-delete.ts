@@ -1,3 +1,4 @@
+import { ClimbsDeleteParams, ClimbsDeleteResponse } from '@shared/models/climb';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -8,37 +9,37 @@ type UseClimbsDeleteParams = {
   onSuccess?: () => void;
 };
 
-type UseClimbsDeleteMutationParams = string;
-
 function useClimbsDelete({ onError, onSuccess }: UseClimbsDeleteParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
-  return useMutation<void, string, UseClimbsDeleteMutationParams, unknown>({
-    mutationFn: async (id) => {
-      const response = await axios.delete(
-        `${apiBaseUrl}/climbs/${encodeURIComponent(id)}`,
-        {
-          headers: {
-            Authorization: '',
-          },
-        }
-      );
+  return useMutation<ClimbsDeleteResponse, string, ClimbsDeleteParams, unknown>(
+    {
+      mutationFn: async ({ id }) => {
+        const response = await axios.delete(
+          `${apiBaseUrl}/climbs/${encodeURIComponent(id)}`,
+          {
+            headers: {
+              Authorization: '',
+            },
+          }
+        );
 
-      if (!response.data.success) {
-        throw new Error('Api error');
-      }
-    },
-    onError: (message) => {
-      onError?.(message);
-    },
-    onSuccess: () => {
-      client.invalidateQueries({
-        queryKey: ['climbs'],
-      });
-      onSuccess?.();
-    },
-  });
+        if (!response.data.success) {
+          throw new Error('Api error');
+        }
+      },
+      onError: (message) => {
+        onError?.(message);
+      },
+      onSuccess: () => {
+        client.invalidateQueries({
+          queryKey: ['climbs'],
+        });
+        onSuccess?.();
+      },
+    }
+  );
 }
 
 export { useClimbsDelete };

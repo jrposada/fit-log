@@ -8,10 +8,9 @@ import { query } from '../query';
 
 type UseClimbsById = {
   id: string;
-  onUnauthorized?: () => void;
 };
 
-function useClimbsById({ id, onUnauthorized }: UseClimbsById) {
+function useClimbsById({ id }: UseClimbsById) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
   return useQuery({
@@ -33,7 +32,6 @@ function useClimbsById({ id, onUnauthorized }: UseClimbsById) {
 
         return response.data.data.climb;
       },
-      onUnauthorized,
     }),
   });
 }

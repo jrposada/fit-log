@@ -1,4 +1,7 @@
-import { Location, LocationsPutRequest } from '@shared/models/location';
+import {
+  LocationsPutRequest,
+  LocationsPutResponse,
+} from '@shared/models/location';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -6,16 +9,19 @@ import { getEnvVariable } from '../../infrastructure/get-env-variable';
 
 type UseLocationsPutParams = {
   onError?: (message: string) => void;
-  onSuccess?: (location: Location) => void;
+  onSuccess?: (location: LocationsPutResponse['location']) => void;
 };
-
-type UseLocationsPutMutationParams = LocationsPutRequest;
 
 function useLocationsPut({ onError, onSuccess }: UseLocationsPutParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
-  return useMutation<Location, string, UseLocationsPutMutationParams, unknown>({
+  return useMutation<
+    LocationsPutResponse['location'],
+    string,
+    LocationsPutRequest,
+    unknown
+  >({
     mutationFn: async (location) => {
       const response = await axios.put(`${apiBaseUrl}/locations`, location, {
         headers: {

@@ -1,4 +1,4 @@
-import { ClimbsPutRequest } from '@shared/models/climb';
+import { ClimbsPutRequest, ClimbsPutResponse } from '@shared/models/climb';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -9,13 +9,16 @@ type UseClimbsPutParams = {
   onSuccess?: () => void;
 };
 
-type UseClimbsPutMutationParams = ClimbsPutRequest;
-
 function useClimbsPut({ onError, onSuccess }: UseClimbsPutParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
-  return useMutation<void, string, UseClimbsPutMutationParams, unknown>({
+  return useMutation<
+    ClimbsPutResponse['climb'],
+    string,
+    ClimbsPutRequest,
+    unknown
+  >({
     mutationFn: async (climb) => {
       console.log('Putting climb:', climb);
       const response = await axios.put(`${apiBaseUrl}/climbs`, climb, {
@@ -29,6 +32,8 @@ function useClimbsPut({ onError, onSuccess }: UseClimbsPutParams = {}) {
       if (!response.data.success) {
         throw new Error('Api error');
       }
+
+      return response.data.data.climb;
     },
     onError: (message) => {
       console.error('Failed to put climb:', JSON.stringify(message));

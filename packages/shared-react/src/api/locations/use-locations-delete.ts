@@ -1,3 +1,7 @@
+import {
+  LocationsDeleteParams,
+  LocationsDeleteResponse,
+} from '@shared/models/location';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -8,8 +12,6 @@ type UseLocationsDeleteParams = {
   onSuccess?: () => void;
 };
 
-type UseLocationsDeleteMutationParams = string;
-
 function useLocationsDelete({
   onError,
   onSuccess,
@@ -17,8 +19,13 @@ function useLocationsDelete({
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
-  return useMutation<void, string, UseLocationsDeleteMutationParams, unknown>({
-    mutationFn: async (id) => {
+  return useMutation<
+    LocationsDeleteResponse,
+    string,
+    LocationsDeleteParams,
+    unknown
+  >({
+    mutationFn: async ({ id }) => {
       const response = await axios.delete(
         `${apiBaseUrl}/locations/${encodeURIComponent(id)}`,
         {

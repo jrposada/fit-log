@@ -19,9 +19,7 @@ const handler = toApiResponse<SectorsDeleteResponse, SectorsDeleteParams>(
       statusCode: 200,
       body: {
         success: true,
-        data: {
-          success: true,
-        },
+        data: undefined,
       },
     };
   }

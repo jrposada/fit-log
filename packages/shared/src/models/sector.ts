@@ -139,9 +139,7 @@ export const sectorsDeleteParamsSchema = z.object({
   id: z.string().nonempty(),
 });
 
-export type SectorsDeleteResponse = {
-  success: true;
-};
+export type SectorsDeleteResponse = undefined;
 
 //////////////
 // GET BY ID //
