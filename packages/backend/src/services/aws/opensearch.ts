@@ -2,12 +2,6 @@ import { Client } from '@opensearch-project/opensearch';
 import type { SearchResponse } from '@opensearch-project/opensearch/api/types';
 import { AwsSigv4Signer } from '@opensearch-project/opensearch/aws';
 import { assert } from '@shared/utils/assert';
-import dotenv from 'dotenv';
-
-if (process.env.IS_OFFLINE) {
-  const env = dotenv.config({ path: '.env' }).parsed;
-  Object.assign(process.env, env);
-}
 
 export class OpenSearchHelper {
   private readonly client: Client;
@@ -22,12 +16,10 @@ export class OpenSearchHelper {
 
     this.client = new Client({
       node: process.env.OPENSEARCH_ENDPOINT,
-      ...(process.env.IS_OFFLINE
-        ? {}
-        : AwsSigv4Signer({
-            region: process.env.AWS_REGION,
-            service: 'es',
-          })),
+      ...AwsSigv4Signer({
+        region: process.env.AWS_REGION,
+        service: 'es',
+      }),
     });
   }
 

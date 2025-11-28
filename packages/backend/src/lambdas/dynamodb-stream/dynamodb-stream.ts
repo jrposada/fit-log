@@ -1,14 +1,9 @@
 import { AttributeValue } from '@aws-sdk/client-dynamodb';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
 import { DynamoDBRecord, DynamoDBStreamEvent } from 'aws-lambda';
-import dotenv from 'dotenv';
 
 import { OpenSearchHelper } from '../../services/aws/opensearch';
 
-if (process.env.IS_OFFLINE) {
-  const env = dotenv.config({ path: '.env' }).parsed;
-  Object.assign(process.env, env);
-}
 
 interface DynamoDBItem {
   PK: string;

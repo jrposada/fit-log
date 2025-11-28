@@ -6,12 +6,6 @@ import {
   APIGatewayProxyEvent,
   StatementEffect,
 } from 'aws-lambda';
-import dotenv from 'dotenv';
-
-if (process.env.IS_OFFLINE) {
-  const env = dotenv.config({ path: '.env' }).parsed;
-  Object.assign(process.env, env);
-}
 
 assert(process.env.CLIENT_ID, { msg: 'CLIENT_ID must be defined' });
 assert(process.env.USER_POOL_ID, { msg: 'USER_POOL_ID must be defined' });
@@ -25,19 +19,6 @@ const verifier = CognitoJwtVerifier.create({
 export const handler = async (
   event: APIGatewayProxyEvent & APIGatewayAuthorizerEvent
 ): Promise<APIGatewayAuthorizerResult> => {
-  if (process.env.IS_OFFLINE) {
-    console.info('Running in OFFLINE mode. AUTHORIZATION IS DISABLED!');
-
-    return generateAllowPolicy({
-      resource: event.methodArn,
-      principalId: 'offline-user',
-      context: {
-        userId: 'offline-user',
-        username: 'offline',
-      },
-    });
-  }
-
   try {
     const accessToken = getAccessTokenFromCookies(event.headers.Cookie);
 

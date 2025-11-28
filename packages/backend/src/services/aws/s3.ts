@@ -5,12 +5,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { assert } from '@shared/utils/assert';
-import dotenv from 'dotenv';
 
-if (process.env.IS_OFFLINE) {
-  const env = dotenv.config({ path: '.env' }).parsed;
-  Object.assign(process.env, env);
-}
 
 export class S3Helper {
   private readonly s3Client: S3Client;
@@ -25,9 +20,7 @@ export class S3Helper {
 
     this.s3Client = new S3Client({
       region: process.env.AWS_REGION,
-      ...(process.env.IS_OFFLINE && {
-        endpoint: process.env.S3_LOCAL_ENDPOINT,
-      }),
+      endpoint: process.env.S3_LOCAL_ENDPOINT,
     });
     this.bucketName = bucketName;
   }
