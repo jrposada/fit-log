@@ -1,39 +1,30 @@
-import {
-  Session,
-  SessionsGetQuery,
-  SessionsGetResponse,
-} from '@shared/models/session';
+import { SessionsGetQuery, SessionsGetResponse } from '@shared/models/session';
+import { assert } from '@shared/utils/assert';
 
-import { SessionsService } from '../../services/sessions-service';
-import { WorkoutsService } from '../../services/workouts-service';
+import { Session } from '../../models/session';
 import { toApiResponse } from '../api-utils';
+import { toApiSession } from './sessions-mapper';
 
 const handler = toApiResponse<SessionsGetResponse, unknown, SessionsGetQuery>(
   async (request) => {
-    const params = request.query;
+    assert(request.user, { msg: 'Unauthorized' });
 
-    const userId = params.workoutId
-      ? WorkoutsService.getUserId(params.workoutId)
-      : undefined;
+    const { limit } = request.query;
 
-    const { items, lastEvaluatedKey } = await SessionsService.instance.getAll(
-      userId && params.workoutId
-        ? SessionsService.instance.calculatePartialSk(userId, params.workoutId)
-        : undefined
-    );
+    const query = Session.find();
+
+    if (limit) {
+      query.limit(limit);
+    }
+
+    const sessions = await query.exec();
 
     return {
       statusCode: 200,
       body: {
         success: true,
         data: {
-          lastEvaluatedKey,
-          sessions: items.map<Session>((item) => ({
-            completedAt: item.completedAt,
-            id: item.SK,
-            workoutDescription: item.workoutDescription,
-            workoutName: item.workoutName,
-          })),
+          sessions: sessions.map(toApiSession),
         },
       },
     };

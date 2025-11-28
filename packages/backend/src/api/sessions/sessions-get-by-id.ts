@@ -2,27 +2,31 @@ import {
   SessionsGetByIdParams,
   SessionsGetByIdResponse,
 } from '@shared/models/session';
+import { assert } from '@shared/utils/assert';
 
-import { SessionsService } from '../../services/sessions-service';
+import ResourceNotFound from '../../infrastructure/not-found-error';
+import { Session } from '../../models/session';
 import { toApiResponse } from '../api-utils';
+import { toApiSession } from './sessions-mapper';
 
 const handler = toApiResponse<SessionsGetByIdResponse, SessionsGetByIdParams>(
   async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
+
     const { id } = request.params;
 
-    const session = await SessionsService.instance.get(id);
+    const session = await Session.findById(id);
+
+    if (!session) {
+      throw new ResourceNotFound(`Session with id ${id} not found`);
+    }
 
     return {
       statusCode: 200,
       body: {
         success: true,
         data: {
-          session: {
-            completedAt: session.completedAt,
-            id: session.SK,
-            workoutDescription: session.workoutDescription,
-            workoutName: session.workoutName,
-          },
+          session: toApiSession(session),
         },
       },
     };

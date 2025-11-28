@@ -4,9 +4,12 @@ import {
 } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
 
+import { Workout } from '../../models/workout';
 import { DbRecord } from '../../services/aws/db-record';
 import { WorkoutsService } from '../../services/workouts-service';
+import { upsertDocument } from '../../utils/upsert-document';
 import { toApiResponse } from '../api-utils';
+import { toApiWorkout } from './workouts-mapper';
 
 const handler = toApiResponse<
   WorkoutsPutResponse,
@@ -17,9 +20,8 @@ const handler = toApiResponse<
   assert(request.user, { msg: 'Unauthorized' });
 
   const workoutPutData = request.body;
-  const { userId } = request.user;
 
-  const record: DbRecord<'workout'> = {
+  const workout = await upsertDocument(Workout, workoutPutData.id, {
     description: workoutPutData.description,
     exercises: workoutPutData.exercises.map<
       DbRecord<'workout'>['exercises'][number]
@@ -40,21 +42,14 @@ const handler = toApiResponse<
     SK:
       (workoutPutData.id as DbRecord<'workout'>['SK']) ??
       WorkoutsService.instance.newSk(userId),
-  };
-  void (await WorkoutsService.instance.put(record));
+  });
 
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        workout: {
-          description: record.description,
-          exercises: record.exercises,
-          id: record.SK,
-          name: record.name,
-          isFavorite: false,
-        },
+        workout: toApiWorkout(workout),
       },
     },
   };

@@ -4,7 +4,7 @@ import {
 } from '@shared/models/session';
 import { assert } from '@shared/utils/assert';
 
-import { SessionsService } from '../../services/sessions-service';
+import { Session } from '../../models/session';
 import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<SessionsDeleteResponse, SessionsDeleteParams>(
@@ -12,11 +12,8 @@ const handler = toApiResponse<SessionsDeleteResponse, SessionsDeleteParams>(
     assert(request.user, { msg: 'Unauthorized' });
 
     const { id } = request.params;
-    const { userId } = request.user;
 
-    assert(SessionsService.getUserId(id) === userId, { msg: 'Unauthorized' });
-
-    void (await SessionsService.instance.delete(id));
+    await Session.deleteOne({ _id: id });
 
     return {
       statusCode: 200,

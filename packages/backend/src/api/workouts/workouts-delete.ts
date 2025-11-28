@@ -4,7 +4,7 @@ import {
 } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
 
-import { WorkoutsService } from '../../services/workouts-service';
+import { Workout } from '../../models/workout';
 import { toApiResponse } from '../api-utils';
 
 const handler = toApiResponse<WorkoutsDeleteResponse, WorkoutsDeleteParams>(
@@ -12,11 +12,8 @@ const handler = toApiResponse<WorkoutsDeleteResponse, WorkoutsDeleteParams>(
     assert(request.user, { msg: 'Unauthorized' });
 
     const { id } = request.params;
-    const { userId } = request.user;
 
-    assert(WorkoutsService.getUserId(id) === userId, { msg: 'Unauthorized' });
-
-    void (await WorkoutsService.instance.delete(id));
+    await Workout.deleteOne({ _id: id });
 
     return {
       statusCode: 200,

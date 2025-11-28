@@ -1,36 +1,24 @@
 import {
-  Exercise,
   WorkoutsGetByIdParams,
   WorkoutsGetByIdResponse,
 } from '@shared/models/workout';
 import { assert } from '@shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error';
-import { FavoriteWorkoutsService } from '../../services/favorite-workouts-service';
-import { WorkoutsService } from '../../services/workouts-service';
+import { Workout } from '../../models/workout';
 import { toApiResponse } from '../api-utils';
+import { toApiWorkout } from './workouts-mapper';
 
 const handler = toApiResponse<WorkoutsGetByIdResponse, WorkoutsGetByIdParams>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 
     const { id } = request.params;
-    const { userId } = request.user;
 
-    const workout = await WorkoutsService.instance.get(id);
-    let isFavorite = false;
-    try {
-      void (await FavoriteWorkoutsService.instance.get(
-        FavoriteWorkoutsService.instance.calculateSk(
-          userId,
-          WorkoutsService.getWorkoutUuid(id)
-        )
-      ));
-      isFavorite = true;
-    } catch (error) {
-      if (!(error instanceof ResourceNotFound)) {
-        throw error;
-      }
+    const workout = await Workout.findById(id);
+
+    if (!workout) {
+      throw new ResourceNotFound(`Workout with id ${id} not found`);
     }
 
     return {
@@ -38,23 +26,7 @@ const handler = toApiResponse<WorkoutsGetByIdResponse, WorkoutsGetByIdParams>(
       body: {
         success: true,
         data: {
-          workout: {
-            description: workout.description,
-            exercises: workout.exercises.map<Exercise>((exercise) => ({
-              description: exercise.description,
-              intensity: exercise.intensity,
-              intensityUnit: exercise.intensityUnit,
-              name: exercise.name,
-              reps: exercise.reps,
-              restBetweenReps: exercise.restBetweenReps,
-              restBetweenSets: exercise.restBetweenSets,
-              sets: exercise.sets,
-              sort: exercise.sort,
-            })),
-            id: workout.SK,
-            isFavorite,
-            name: workout.name,
-          },
+          workout: toApiWorkout(workout),
         },
       },
     };

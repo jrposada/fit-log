@@ -4,9 +4,10 @@ import {
 } from '@shared/models/session';
 import { assert } from '@shared/utils/assert';
 
-import { DbRecord } from '../../services/aws/db-record';
-import { SessionsService } from '../../services/sessions-service';
+import { Session } from '../../models/session';
+import { upsertDocument } from '../../utils/upsert-document';
 import { toApiResponse } from '../api-utils';
+import { toApiSession } from './sessions-mapper';
 
 const handler = toApiResponse<
   SessionsPutResponse,
@@ -17,34 +18,17 @@ const handler = toApiResponse<
   assert(request.user, { msg: 'Unauthorized' });
 
   const sessionPutData = request.body;
-  const { userId } = request.user;
 
-  const record: DbRecord<'session'> = {
-    completedAt: sessionPutData.completedAt,
-    updatedAt: new Date().toISOString(),
-    workoutDescription: sessionPutData.workoutDescription,
-    workoutName: sessionPutData.workoutName,
-    PK: 'session',
-    SK:
-      (sessionPutData.id as DbRecord<'session'>['SK']) ??
-      assert(sessionPutData.workoutId, {
-        msg: 'Workout ID is required when creating new sessions.',
-      }) ??
-      SessionsService.instance.newSk(userId, sessionPutData.workoutId!),
-  };
-  void (await SessionsService.instance.put(record));
+  const session = await upsertDocument(Session, sessionPutData.id, {
+    completedAt: new Date(sessionPutData.completedAt),
+  });
 
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        session: {
-          completedAt: record.completedAt,
-          id: record.SK,
-          workoutDescription: record.workoutDescription,
-          workoutName: record.workoutName,
-        },
+        session: toApiSession(session),
       },
     },
   };

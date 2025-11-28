@@ -5,42 +5,47 @@ import z from 'zod';
 ////////////
 export type Session = {
   /**
-   * ID `session#<user-id>#<workout-id>#<session-id>`.
+   * ID.
    */
   id: string;
 
   /**
-   * Date when session was logged in ISO 8601 format (UTC).
+   * Date when session was completed.
    *
    * @format date-time
    */
   completedAt: string;
 
   /**
-   * Workout name when this session was logged.
+   * Date when climb was created in ISO 8601 format (UTC).
+   *
+   * @format date-time
    */
-  workoutName: string;
+  createdAt: string;
 
   /**
-   * Workout description when this session was logged.
+   * Date when climb was last updated in ISO 8601 format (UTC).
+   *
+   * @format date-time
    */
-  workoutDescription: string;
+  updatedAt: string;
 };
 export const sessionSchema = z.object({
-  completedAt: z.string().datetime(),
   id: z.string().nonempty(),
-  workoutDescription: z.string().nonempty(),
-  workoutName: z.string().nonempty(),
+  completedAt: z.string().datetime(),
+
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
 });
 
 /////////
 // GET //
 /////////
 export type SessionsGetQuery = {
-  workoutId?: string;
+  limit?: number;
 };
 export const sessionsGetQuerySchema = z.object({
-  workoutId: z.string().nonempty().optional(),
+  limit: z.number().int().positive().optional(),
 });
 
 export type SessionsGetResponse = {
@@ -50,23 +55,27 @@ export type SessionsGetResponse = {
 /////////
 // PUT //
 /////////
-export type SessionsPutRequest = Omit<Session, 'id' | 'workoutId'> & {
+export type SessionsPutRequest = Omit<
+  Session,
+  'id' | 'createdAt' | 'updatedAt'
+> & {
   /**
    * ID.
    */
   id?: string;
 
   /**
-   * Related workout ID.
+   * Date when climb was created in ISO 8601 format (UTC).
+   *
+   * @format date-time
    */
-  workoutId?: string;
+  createdAt?: string;
 };
 export const sessionsPutRequestSchema = z.object({
-  completedAt: z.string().datetime(),
   id: z.string().optional(),
-  workoutDescription: z.string().nonempty(),
-  workoutId: z.string().optional(),
-  workoutName: z.string().nonempty(),
+  completedAt: z.string().datetime(),
+
+  createdAt: z.string().datetime().optional(),
 });
 
 export type SessionsPutResponse = {
@@ -82,6 +91,7 @@ export type SessionsDeleteParams = {
 export const sessionsDeleteParamsSchema = z.object({
   id: z.string().nonempty(),
 });
+
 export type SessionsDeleteResponse = undefined;
 
 ///////////////
@@ -93,6 +103,7 @@ export type SessionsGetByIdParams = {
 export const sessionsGetByIdParamsSchema = z.object({
   id: z.string().nonempty(),
 });
+
 export type SessionsGetByIdResponse = {
   session: Session;
 };
