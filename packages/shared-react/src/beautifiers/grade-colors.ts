@@ -1,4 +1,6 @@
-const GRADE_PALETTE: Record<string, string> = {
+import { ClimbGrade } from '@shared/models/climb';
+
+const GRADE_PALETTE: Record<ClimbGrade, string> = {
   V0: '#B9F6CA',
   V1: '#A5F2B8',
   V2: '#90EEA6',
