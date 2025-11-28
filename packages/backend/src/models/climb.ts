@@ -1,4 +1,4 @@
-import { Document, model, ObjectId, Schema, WithTimestamps } from 'mongoose';
+import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
 export interface IHold {
   x: number;
@@ -17,9 +17,9 @@ export interface IClimb extends WithTimestamps<Document> {
   ////////////////
   // References //
   ////////////////
-  image: ObjectId;
-  location: ObjectId;
-  sector: ObjectId;
+  image: Types.ObjectId;
+  location: Types.ObjectId;
+  sector: Types.ObjectId;
 }
 
 const holdSchema = new Schema<IHold>(
@@ -62,15 +62,20 @@ const climbSchema = new Schema<IClimb>(
     ////////////////
     // References //
     ////////////////
+    image: {
+      type: Schema.Types.ObjectId,
+      ref: 'Image',
+      required: true,
+    },
     location: {
       type: Schema.Types.ObjectId,
       ref: 'Location',
       required: true,
-      index: true,
     },
     sector: {
-      type: String,
-      required: false,
+      type: Schema.Types.ObjectId,
+      ref: 'Sector',
+      required: true,
     },
   },
   {

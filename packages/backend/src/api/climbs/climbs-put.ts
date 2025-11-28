@@ -1,6 +1,6 @@
 import { ClimbsPutRequest, ClimbsPutResponse } from '@shared/models/climb';
 import { assert } from '@shared/utils/assert';
-import { ObjectId, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
 import { Climb } from '../../models/climb';
 import { upsertDocument } from '../../utils/upsert-document';
@@ -23,9 +23,9 @@ const handler = toApiResponse<
     description: climbPutData.description,
     holds: climbPutData.holds,
 
-    image: new Types.ObjectId(climbPutData.image) as unknown as ObjectId,
-    sector: new Types.ObjectId(climbPutData.sector) as unknown as ObjectId,
-    location: new Types.ObjectId(climbPutData.location) as unknown as ObjectId,
+    image: new Types.ObjectId(climbPutData.image),
+    sector: new Types.ObjectId(climbPutData.sector),
+    location: new Types.ObjectId(climbPutData.location),
   });
 
   return {
