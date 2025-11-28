@@ -33,12 +33,6 @@ import {
 } from '@shared/models/workout';
 import { Router } from 'express';
 
-import {
-  requireAuth,
-  validateBody,
-  validateParams,
-  validateQuery,
-} from './api/api-utils';
 import { handler as climbsDelete } from './api/climbs/climbs-delete';
 import { handler as climbsGet } from './api/climbs/climbs-get';
 import { handler as climbsGetById } from './api/climbs/climbs-get-by-id';
@@ -61,6 +55,12 @@ import { handler as workoutsDelete } from './api/workouts/workouts-delete';
 import { handler as workoutsGet } from './api/workouts/workouts-get';
 import { handler as workoutsGetById } from './api/workouts/workouts-get-by-id';
 import { handler as workoutsPut } from './api/workouts/workouts-put';
+import {
+  requireAuth,
+  validateBody,
+  validateParams,
+  validateQuery,
+} from './middleware';
 
 export const router = Router();
 

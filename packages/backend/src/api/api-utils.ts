@@ -1,6 +1,5 @@
 import { ApiResponse } from '@shared/models/api-response';
-import { NextFunction, Request, Response } from 'express';
-import { ZodSchema } from 'zod';
+import { Request, Response } from 'express';
 
 function apiError<TError = unknown>(_error: TError, res: Response) {
   const body: ApiResponse = {
@@ -9,46 +8,6 @@ function apiError<TError = unknown>(_error: TError, res: Response) {
   };
 
   res.status(500).json(body);
-}
-
-export function requireAuth(req: Request, _res: Response, next: NextFunction) {
-  if (!req.user) {
-    throw new Error('Unauthorized');
-  }
-  next();
-}
-
-export function validateParams<TSchema extends ZodSchema>(schema: TSchema) {
-  return (req: Request, _res: Response, next: NextFunction) => {
-    try {
-      req.params = schema.parse(req.params);
-      next();
-    } catch {
-      throw new Error('Invalid request parameters');
-    }
-  };
-}
-
-export function validateBody<TSchema extends ZodSchema>(schema: TSchema) {
-  return (req: Request, _res: Response, next: NextFunction) => {
-    try {
-      req.body = schema.parse(req.body);
-      next();
-    } catch {
-      throw new Error('Invalid request body');
-    }
-  };
-}
-
-export function validateQuery<TSchema extends ZodSchema>(schema: TSchema) {
-  return (req: Request, _res: Response, next: NextFunction) => {
-    try {
-      req.query = schema.parse(req.query);
-      next();
-    } catch {
-      throw new Error('Invalid query parameters');
-    }
-  };
 }
 
 type ApiResponseResult<TData = unknown> = {
