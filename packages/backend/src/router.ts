@@ -22,10 +22,6 @@ import {
   sessionsPutRequestSchema,
 } from '@shared/models/session';
 import {
-  usersAuthorizeRequestSchema,
-  usersPostRequestSchema,
-} from '@shared/models/users';
-import {
   workoutsDeleteParamsSchema,
   workoutsGetByIdParamsSchema,
   workoutsGetQuerySchema,
@@ -48,8 +44,6 @@ import { handler as sessionsDelete } from './api/sessions/sessions-delete';
 import { handler as sessionsGet } from './api/sessions/sessions-get';
 import { handler as sessionsGetById } from './api/sessions/sessions-get-by-id';
 import { handler as sessionsPut } from './api/sessions/sessions-put';
-import { handler as usersAuthorize } from './api/users/users-authorize';
-import { handler as usersPost } from './api/users/users-post';
 import { handler as versionGet } from './api/version/version-get';
 import { handler as workoutsDelete } from './api/workouts/workouts-delete';
 import { handler as workoutsGet } from './api/workouts/workouts-get';
@@ -111,13 +105,7 @@ router.delete(
   sessionsDelete
 );
 
-// Users
-router.post('/users', validateBody(usersPostRequestSchema), usersPost);
-router.post(
-  '/users/authorize',
-  validateBody(usersAuthorizeRequestSchema),
-  usersAuthorize
-);
+
 
 // Locations
 router.get(
