@@ -9,9 +9,11 @@ const handler = toApiResponse<ClimbsGetResponse, unknown, ClimbsGetQuery>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 
-    const { limit } = request.query;
+    const { limit, locationId } = request.query;
 
-    const query = Climb.find();
+    const query = Climb.find({
+      ...(locationId ? { location: locationId } : {}),
+    });
 
     if (limit) {
       query.limit(limit);

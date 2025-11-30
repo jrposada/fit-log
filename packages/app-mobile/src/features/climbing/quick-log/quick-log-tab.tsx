@@ -1,5 +1,4 @@
 import { useClimbs } from '@shared-react/api/climbs/use-climbs';
-import { useLocations } from '@shared-react/api/locations/use-locations';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,19 +16,19 @@ import LocationSelector from './location-selector';
 
 const QuickLogTab: FunctionComponent = () => {
   const { t } = useTranslation();
-  const { data: locations = [], isLoading: isLoadingLocations } =
-    useLocations();
+
+  const [locationId, setLocationId] = useState<string>('');
+
   const { data: climbs = [], isLoading: isLoadingClimbs } = useClimbs({
     limit: 3,
+    locationId,
   });
-
-  const [locationId, setLocationId] = useState<string>(locations[0]?.id ?? '');
 
   const handleLog = (id: string) => {
     console.log('log route', id);
   };
 
-  if (isLoadingLocations || isLoadingClimbs) {
+  if (isLoadingClimbs) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#2962ff" />
@@ -39,11 +38,7 @@ const QuickLogTab: FunctionComponent = () => {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <LocationSelector
-        locations={locations}
-        value={locationId}
-        onChange={setLocationId}
-      />
+      <LocationSelector value={locationId} onChange={setLocationId} />
       <Separator />
       <Text style={styles.sectionLabel}>{t('climbing.recent_climbs')}</Text>
       {climbs.map((climb) => (

@@ -11,13 +11,6 @@ export interface IExercise {
   sets: number;
   sort: number;
 }
-
-export interface IWorkout extends WithTimestamps<Document> {
-  name: string;
-  description: string;
-  exercises: IExercise[];
-}
-
 const exerciseSchema = new Schema<IExercise>(
   {
     description: {
@@ -61,6 +54,11 @@ const exerciseSchema = new Schema<IExercise>(
   { _id: false }
 );
 
+export interface IWorkout extends WithTimestamps<Document> {
+  name: string;
+  description: string;
+  exercises: IExercise[];
+}
 const workoutSchema = new Schema<IWorkout>(
   {
     name: {

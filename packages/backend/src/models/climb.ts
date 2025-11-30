@@ -83,8 +83,6 @@ const climbSchema = new Schema<IClimb>(
   }
 );
 
-// Index for querying climbs by location
-// climbSchema.index({ locationId: 1 });
-// climbSchema.index({ locationId: 1, grade: 1 });
+climbSchema.index({ location: 1 });
 
 export const Climb = model<IClimb>('Climb', climbSchema);

@@ -1,5 +1,7 @@
 import z from 'zod';
 
+import { Sector } from './sector';
+
 ////////////
 // Models //
 ////////////
@@ -41,7 +43,7 @@ export type Location = {
   /**
    * Sectors associated with this location
    */
-  sectors: string[];
+  sectors: Sector[];
 
   /**
    * Date when location was created in ISO 8601 format (UTC).

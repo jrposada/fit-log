@@ -122,9 +122,11 @@ export const climbSchema = z.object({
 /////////
 export type ClimbsGetQuery = {
   limit?: number;
+  locationId?: string;
 };
 export const climbsGetQuerySchema = z.object({
   limit: z.coerce.number().int().positive().optional(),
+  locationId: z.string().optional(),
 });
 
 export type ClimbsGetResponse = {

@@ -1,11 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Location } from '@shared/models/location';
-import { useClimbs } from '@shared-react/api/climbs/use-climbs';
-import { useSectors } from '@shared-react/api/sectors/use-sectors';
+import { useLocations } from '@shared-react/api/locations/use-locations';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import Select from '../../../library/select';
 import { ClimbingParamList } from '../../../types/routes';
@@ -16,29 +20,29 @@ type LocationSelectorNavigationProp = NativeStackNavigationProp<
 >;
 
 export interface LocationSelectorProps {
-  locations: Location[];
   value: string;
   onChange: (locationId: string) => void;
 }
 
 const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
-  locations,
   value,
   onChange,
 }) => {
   const { t } = useTranslation();
   const navigation = useNavigation<LocationSelectorNavigationProp>();
-  const { data: allClimbs = [] } = useClimbs();
+
+  const { data: locations = [], isLoading: isLoadingLocations } =
+    useLocations();
 
   const selectedLocation = locations.find((loc) => loc.id === value);
 
-  const { data: sectors = [] } = useSectors({
-    locationId: selectedLocation?.id || '',
-  });
-
-  const climbsForLocation = useMemo(
-    () => allClimbs.filter((climb) => climb.location === selectedLocation?.id),
-    [allClimbs, selectedLocation?.id]
+  const numSectors = useMemo(
+    () => selectedLocation?.sectors.length ?? 0,
+    [selectedLocation]
+  );
+  const numClimbs = useMemo(
+    () => selectedLocation?.sectors.flatMap(({ climbs }) => climbs).length ?? 0,
+    [selectedLocation]
   );
 
   const handleAddNew = (newLocationName: string) => {
@@ -53,22 +57,13 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
     }
   };
 
-  const renderSelectedValue = () => {
-    if (!selectedLocation) {
-      return null;
-    }
-
+  if (isLoadingLocations) {
     return (
-      <View style={styles.selectedContainer}>
-        <View style={styles.selectedTextContainer}>
-          <Text style={styles.selectedStats}>
-            {t('climbing.climbs_count', { count: climbsForLocation.length })} •{' '}
-            {t('climbing.sectors_count', { count: sectors.length })}
-          </Text>
-        </View>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#2962ff" />
       </View>
     );
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -102,13 +97,28 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
         />
       </View>
       {selectedLocation && (
-        <View style={styles.infoContainer}>{renderSelectedValue()}</View>
+        <View style={styles.infoContainer}>
+          <View style={styles.selectedContainer}>
+            <View style={styles.selectedTextContainer}>
+              <Text style={styles.selectedStats}>
+                {t('climbing.climbs_count', { count: numClimbs })} •{' '}
+                {t('climbing.sectors_count', { count: numSectors })}
+              </Text>
+            </View>
+          </View>
+        </View>
       )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
   container: {
     marginBottom: 16,
   },

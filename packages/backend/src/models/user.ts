@@ -14,7 +14,6 @@ export interface IUser extends WithTimestamps<Document> {
   // References //
   ////////////////
 }
-
 const userSchema = new Schema<IUser>(
   {
     keycloakId: {
@@ -43,8 +42,5 @@ const userSchema = new Schema<IUser>(
     timestamps: true,
   }
 );
-
-// Index for querying users by Keycloak ID
-userSchema.index({ keycloakId: 1 });
 
 export const User = model<IUser>('User', userSchema);

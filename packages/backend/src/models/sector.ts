@@ -18,7 +18,6 @@ export interface ISector extends WithTimestamps<Document> {
   images: Types.ObjectId[];
   climbs: Types.ObjectId[];
 }
-
 const sectorSchema = new Schema<ISector>(
   {
     //////////
