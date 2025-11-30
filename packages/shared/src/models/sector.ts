@@ -101,7 +101,6 @@ export type SectorsPutRequest = Omit<
    */
   id?: string;
 };
-
 export const sectorsPutRequestSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(1).max(50),

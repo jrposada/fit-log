@@ -1,6 +1,11 @@
 import z from 'zod';
 
-import { Sector } from './sector';
+import {
+  Sector,
+  sectorSchema,
+  SectorsPutRequest,
+  sectorsPutRequestSchema,
+} from './sector';
 
 ////////////
 // Models //
@@ -68,7 +73,7 @@ export const locationSchema = z.object({
   longitude: z.number().min(-180).max(180),
   googleMapsId: z.string().optional(),
 
-  sectors: z.array(z.string()),
+  sectors: z.array(sectorSchema),
 
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
@@ -93,12 +98,17 @@ export type LocationsGetResponse = {
 /////////
 export type LocationsPutRequest = Omit<
   Location,
-  'id' | 'createdAt' | 'updatedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'sectors'
 > & {
   /**
    * ID
    */
   id?: string;
+
+  /**
+   * Sectors
+   */
+  sectors: SectorsPutRequest[];
 };
 export const locationsPutRequestSchema = z.object({
   id: z.string().optional(),
@@ -109,7 +119,7 @@ export const locationsPutRequestSchema = z.object({
   longitude: z.number().min(-180).max(180),
   googleMapsId: z.string().optional(),
 
-  sectors: z.array(z.string()),
+  sectors: z.array(sectorsPutRequestSchema),
 });
 
 export type LocationsPutResponse = {

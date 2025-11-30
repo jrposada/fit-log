@@ -1,9 +1,11 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { LocationsPutRequest } from '@shared/models/location';
+import { locationsPutRequestSchema } from '@shared/models/location';
 import { useLocationsById } from '@shared-react/api/locations/use-locations-by-id';
 import { useLocationsPut } from '@shared-react/api/locations/use-locations-put';
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import {
   Alert,
   KeyboardAvoidingView,
@@ -12,11 +14,13 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
+import { z } from 'zod';
 
-import MapPicker from '../library/map-picker';
+import FormLocationPicker from '../library/form/form-location-picker';
+import FormTextArea from '../library/form/form-text-area';
+import FormTextInput from '../library/form/form-text-input';
 import SectorImagePicker from '../library/sector-image-picker';
 import { ClimbingParamList } from '../types/climbing';
 
@@ -26,22 +30,8 @@ type CreateLocationNavigationProp = NativeStackNavigationProp<
 >;
 
 type CreateLocationRouteProp = RouteProp<ClimbingParamList, 'CreateLocation'>;
-interface LocationData {
-  latitude: number;
-  longitude: number;
-  address?: string;
-  placeName?: string;
-  placeId?: string;
-}
 
-interface SectorData {
-  name: string;
-  description?: string;
-  imageUri: string;
-  imageWidth: number;
-  imageHeight: number;
-  imageFileSize: number;
-}
+type FormData = z.infer<typeof locationsPutRequestSchema>;
 
 const CreateLocationScreen: FunctionComponent = () => {
   const navigation = useNavigation<CreateLocationNavigationProp>();
@@ -51,50 +41,29 @@ const CreateLocationScreen: FunctionComponent = () => {
   const isEditMode = !!locationId;
   const initializedRef = useRef(false);
 
-  const [name, setName] = useState(route.params?.initialName ?? '');
-  const [description, setDescription] = useState('');
-  const [locationData, setLocationData] = useState<LocationData | null>(null);
-  const [sectors, setSectors] = useState<SectorData[]>([]);
-  const [showMapPicker, setShowMapPicker] = useState(false);
-  const [showSectorPicker, setShowSectorPicker] = useState(false);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const methods = useForm<FormData>({
+    resolver: zodResolver(locationsPutRequestSchema),
+    defaultValues: {
+      name: route.params?.initialName ?? '',
+      sectors: [],
+    },
+  });
+  const {
+    handleSubmit,
+    formState: { isDirty, isValid },
+    reset,
+  } = methods;
+  const sectors = useWatch({ control: methods.control, name: 'sectors' }) || [];
 
-  // Fetch existing location data if in edit mode
+  const [showSectorPicker, setShowSectorPicker] = useState(false);
+
   const { data: existingLocation, isLoading: isLoadingLocation } =
     useLocationsById({
       id: locationId || '',
     });
 
-  // Pre-fill form when editing existing location (only once)
-  // This is a valid initialization use case - we only want to run this once when the data loads
-  useEffect(() => {
-    if (existingLocation && isEditMode && !initializedRef.current) {
-      // Batch all state updates together
-      const updates = () => {
-        setName(existingLocation.name);
-        setDescription(existingLocation.description || '');
-
-        if (
-          existingLocation.latitude !== undefined &&
-          existingLocation.longitude !== undefined
-        ) {
-          setLocationData({
-            latitude: existingLocation.latitude,
-            longitude: existingLocation.longitude,
-            address: existingLocation.address,
-            placeName: existingLocation.placeName,
-            placeId: existingLocation.placeId,
-          });
-        }
-        initializedRef.current = true;
-      };
-      updates();
-    }
-  }, [existingLocation, isEditMode]);
-
   const locationsPut = useLocationsPut({
     onSuccess: (data) => {
-      setHasUnsavedChanges(false);
       navigation.navigate('ClimbingMain', { newLocationId: data.id });
     },
     onError: (error) => {
@@ -102,28 +71,17 @@ const CreateLocationScreen: FunctionComponent = () => {
     },
   });
 
-  const handleSave = () => {
-    if (!name.trim()) {
-      Alert.alert('Error', 'Location name is required');
-      return;
-    }
-
-    const newLocationData: LocationsPutRequest = {
+  const onSubmit = (data: FormData) => {
+    const newLocationData = {
+      ...data,
       id: isEditMode ? locationId : undefined,
-      name: name.trim(),
-      description: description.trim() || undefined,
-      latitude: locationData?.latitude,
-      longitude: locationData?.longitude,
-      address: locationData?.address,
-      placeName: locationData?.placeName,
-      placeId: locationData?.placeId,
     };
 
     locationsPut.mutate(newLocationData);
   };
 
   const handleCancel = () => {
-    if (hasUnsavedChanges) {
+    if (isDirty) {
       Alert.alert(
         'Unsaved Changes',
         'Are you sure you want to discard your changes?',
@@ -141,176 +99,121 @@ const CreateLocationScreen: FunctionComponent = () => {
     }
   };
 
-  const handleNameChange = (text: string) => {
-    setName(text);
-    setHasUnsavedChanges(true);
-  };
-
-  const handleDescriptionChange = (text: string) => {
-    setDescription(text);
-    setHasUnsavedChanges(true);
-  };
-
-  const isValid = name.trim().length > 0 && name.length <= 100;
-  const descriptionLength = description.length;
+  // Pre-fill form when editing existing location (only once)
+  useEffect(() => {
+    if (existingLocation && isEditMode && !initializedRef.current) {
+      reset({
+        id: existingLocation.id,
+        name: existingLocation.name,
+        description: existingLocation.description,
+        latitude: existingLocation.latitude,
+        longitude: existingLocation.longitude,
+        googleMapsId: existingLocation.googleMapsId,
+        sectors: existingLocation.sectors,
+      });
+      initializedRef.current = true;
+    }
+  }, [existingLocation, isEditMode, reset]);
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
-        <View style={styles.section}>
-          <Text style={styles.label}>
-            Location Name <Text style={styles.required}>*</Text>
-          </Text>
-          <TextInput
-            style={[
-              styles.input,
-              !isValid && name.length > 0 && styles.inputError,
-            ]}
-            value={name}
-            onChangeText={handleNameChange}
-            placeholder="Enter location name"
-            maxLength={100}
-            autoFocus
-          />
-          <Text style={styles.helperText}>{name.length}/100 characters</Text>
-          {!isValid && name.length > 0 && (
-            <Text style={styles.errorText}>
-              {name.trim().length === 0
-                ? 'Location name is required'
-                : 'Name cannot exceed 100 characters'}
+    <FormProvider {...methods}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
+          <View style={styles.section}>
+            <FormTextInput
+              name="name"
+              label="Location Name"
+              placeholder="Enter location name"
+              maxLength={100}
+              required
+              showCharacterCount
+              autoFocus
+            />
+          </View>
+
+          <View style={styles.section}>
+            <FormTextArea
+              name="description"
+              label="Description (optional)"
+              placeholder="Add a description..."
+              maxLength={500}
+              numberOfLines={4}
+            />
+          </View>
+
+          <View style={styles.section}>
+            <FormLocationPicker />
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>
+              📸 Sectors & Walls (optional)
             </Text>
-          )}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.label}>Description (optional)</Text>
-          <TextInput
-            style={[styles.input, styles.textArea]}
-            value={description}
-            onChangeText={handleDescriptionChange}
-            placeholder="Add a description..."
-            multiline
-            numberOfLines={4}
-            maxLength={500}
-            textAlignVertical="top"
-          />
-          <Text
-            style={[
-              styles.helperText,
-              descriptionLength > 500 && styles.errorText,
-            ]}
-          >
-            {descriptionLength}/500 characters
-          </Text>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📍 Location (optional)</Text>
-          {locationData ? (
-            <View style={styles.locationCard}>
-              <View style={styles.locationCardContent}>
-                <Text style={styles.locationAddress}>
-                  📍 {locationData.address || 'Location set'}
-                </Text>
-                <Text style={styles.locationCoords}>
-                  {locationData.latitude.toFixed(4)},{' '}
-                  {locationData.longitude.toFixed(4)}
-                </Text>
+            <Text style={styles.sectionDescription}>
+              Add photos of different areas to reference later
+            </Text>
+            {sectors.length > 0 && (
+              <View style={styles.sectorsList}>
+                {sectors.map((sector, index) => (
+                  <View key={sector.id || index} style={styles.sectorItem}>
+                    <Text style={styles.sectorIcon}>📷</Text>
+                    <Text style={styles.sectorText}>{sector.name}</Text>
+                  </View>
+                ))}
               </View>
-              <Pressable onPress={() => setShowMapPicker(true)}>
-                <Text style={styles.changeButton}>Change</Text>
-              </Pressable>
-            </View>
-          ) : (
+            )}
             <Pressable
-              style={styles.mapPlaceholder}
-              onPress={() => setShowMapPicker(true)}
+              style={styles.addSectorButton}
+              onPress={() => setShowSectorPicker(true)}
             >
-              <Text style={styles.mapPlaceholderIcon}>📍</Text>
-              <Text style={styles.mapPlaceholderText}>
-                Tap to set pin on map
+              <Text style={styles.addSectorButtonText}>
+                {sectors.length > 0
+                  ? '+ Add Another Sector'
+                  : '+ Add First Sector/Wall'}
               </Text>
             </Pressable>
-          )}
-        </View>
+          </View>
 
-        <MapPicker
-          visible={showMapPicker}
-          initialLocation={locationData || undefined}
-          onConfirm={(data) => {
-            setLocationData(data);
-            setShowMapPicker(false);
-            setHasUnsavedChanges(true);
-          }}
-          onCancel={() => setShowMapPicker(false)}
-        />
+          <SectorImagePicker
+            visible={showSectorPicker}
+            initialSectorNumber={sectors.length + 1}
+            onSave={() => {
+              // TODO: Handle sector creation - sectors in API are just string IDs
+              // For now, just close the picker
+              setShowSectorPicker(false);
+            }}
+            onCancel={() => setShowSectorPicker(false)}
+          />
+        </ScrollView>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>📸 Sectors & Walls (optional)</Text>
-          <Text style={styles.sectionDescription}>
-            Add photos of different areas to reference later
-          </Text>
-          {sectors.length > 0 && (
-            <View style={styles.sectorsList}>
-              {sectors.map((sector, index) => (
-                <View key={index} style={styles.sectorItem}>
-                  <Text style={styles.sectorIcon}>📷</Text>
-                  <Text style={styles.sectorText}>{sector.name}</Text>
-                </View>
-              ))}
-            </View>
-          )}
+        <View style={styles.footer}>
           <Pressable
-            style={styles.addSectorButton}
-            onPress={() => setShowSectorPicker(true)}
+            style={[
+              styles.saveButton,
+              (!isValid || isLoadingLocation) && styles.saveButtonDisabled,
+            ]}
+            onPress={handleSubmit(onSubmit)}
+            disabled={!isValid || locationsPut.isPending || isLoadingLocation}
           >
-            <Text style={styles.addSectorButtonText}>
-              {sectors.length > 0
-                ? '+ Add Another Sector'
-                : '+ Add First Sector/Wall'}
+            <Text style={styles.saveButtonText}>
+              {isLoadingLocation
+                ? 'Loading...'
+                : locationsPut.isPending
+                  ? 'Saving...'
+                  : isEditMode
+                    ? 'Update Location'
+                    : 'Save Location'}
             </Text>
           </Pressable>
+          <Pressable onPress={handleCancel}>
+            <Text style={styles.headerButton}>Cancel</Text>
+          </Pressable>
         </View>
-
-        <SectorImagePicker
-          visible={showSectorPicker}
-          initialSectorNumber={sectors.length + 1}
-          onSave={(sectorData) => {
-            setSectors([...sectors, sectorData]);
-            setShowSectorPicker(false);
-            setHasUnsavedChanges(true);
-          }}
-          onCancel={() => setShowSectorPicker(false)}
-        />
-      </ScrollView>
-
-      <View style={styles.footer}>
-        <Pressable
-          style={[
-            styles.saveButton,
-            (!isValid || isLoadingLocation) && styles.saveButtonDisabled,
-          ]}
-          onPress={handleSave}
-          disabled={!isValid || locationsPut.isPending || isLoadingLocation}
-        >
-          <Text style={styles.saveButtonText}>
-            {isLoadingLocation
-              ? 'Loading...'
-              : locationsPut.isPending
-                ? 'Saving...'
-                : isEditMode
-                  ? 'Update Location'
-                  : 'Save Location'}
-          </Text>
-        </Pressable>
-        <Pressable onPress={handleCancel}>
-          <Text style={styles.headerButton}>Cancel</Text>
-        </Pressable>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </FormProvider>
   );
 };
 
@@ -349,40 +252,6 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 16,
   },
-  label: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#000',
-    marginBottom: 8,
-  },
-  required: {
-    color: '#ff3b30',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    color: '#000',
-    backgroundColor: '#fff',
-  },
-  inputError: {
-    borderColor: '#ff3b30',
-  },
-  textArea: {
-    minHeight: 100,
-  },
-  helperText: {
-    fontSize: 12,
-    color: '#999',
-    marginTop: 4,
-  },
-  errorText: {
-    fontSize: 12,
-    color: '#ff3b30',
-    marginTop: 4,
-  },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '500',
@@ -393,49 +262,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 12,
-  },
-  mapPlaceholder: {
-    borderWidth: 2,
-    borderColor: '#e0e0e0',
-    borderStyle: 'dashed',
-    borderRadius: 12,
-    padding: 32,
-    alignItems: 'center',
-    backgroundColor: '#fafafa',
-  },
-  mapPlaceholderIcon: {
-    fontSize: 48,
-    marginBottom: 8,
-  },
-  mapPlaceholderText: {
-    fontSize: 16,
-    color: '#666',
-  },
-  locationCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 12,
-    padding: 16,
-    backgroundColor: '#fff',
-  },
-  locationCardContent: {
-    flex: 1,
-  },
-  locationAddress: {
-    fontSize: 16,
-    color: '#007AFF',
-    marginBottom: 4,
-  },
-  locationCoords: {
-    fontSize: 12,
-    color: '#999',
-  },
-  changeButton: {
-    fontSize: 16,
-    color: '#007AFF',
-    fontWeight: '500',
   },
   addSectorButton: {
     borderWidth: 2,
