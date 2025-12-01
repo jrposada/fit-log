@@ -44,12 +44,12 @@ export type Sector = {
   googleMapsId?: string;
 
   /**
-   * Sector's images
+   * Sector's images ID
    */
   images: string[];
 
   /**
-   * Sector's climbs
+   * Sector's climbs ID
    */
   climbs: string[];
 

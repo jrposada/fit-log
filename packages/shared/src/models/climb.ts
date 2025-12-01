@@ -1,9 +1,5 @@
 import z from 'zod';
 
-////////////
-// Models //
-////////////
-
 export type ClimbGrade =
   | 'V0'
   | 'V1'
@@ -24,6 +20,10 @@ export type ClimbGrade =
   | 'V16'
   | 'V17'
   | (string & {});
+
+////////////
+// Models //
+////////////
 
 /**
  * Represents a hold position on a climbing problem.
