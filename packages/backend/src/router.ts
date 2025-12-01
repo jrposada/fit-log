@@ -12,6 +12,7 @@ import {
 } from '@shared/models/location';
 import {
   sectorsBatchDeleteRequestSchema,
+  sectorsBatchPutRequestSchema,
   sectorsDeleteParamsSchema,
   sectorsPutRequestSchema,
   sectorUploadUrlRequestSchema,
@@ -39,6 +40,7 @@ import { handler as locationsGet } from './api/locations/locations-get';
 import { handler as locationsGetById } from './api/locations/locations-get-by-id';
 import { handler as locationsPut } from './api/locations/locations-put';
 import { handler as sectorsBatchDelete } from './api/sectors/sectors-batch-delete';
+import { handler as sectorsBatchPut } from './api/sectors/sectors-batch-put';
 import { handler as sectorsDelete } from './api/sectors/sectors-delete';
 import { handler as sectorsPut } from './api/sectors/sectors-put';
 import { handler as sectorsUploadUrl } from './api/sectors/sectors-upload-url';
@@ -139,6 +141,12 @@ router.put(
   authenticateKeycloak,
   validateBody(sectorsPutRequestSchema),
   sectorsPut
+);
+router.put(
+  '/sectors/batch',
+  authenticateKeycloak,
+  validateBody(sectorsBatchPutRequestSchema),
+  sectorsBatchPut
 );
 router.delete(
   '/sectors/:id',

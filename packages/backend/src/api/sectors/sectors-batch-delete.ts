@@ -10,6 +10,7 @@ import { toApiResponse } from '../api-utils';
 const handler = toApiResponse<
   SectorsBatchDeleteResponse,
   never,
+  never,
   SectorsBatchDeleteRequest
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });

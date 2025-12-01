@@ -119,6 +119,20 @@ export type SectorsPutResponse = {
   sector: Sector;
 };
 
+////////////////////
+// BATCH PUT //
+////////////////////
+export type SectorsBatchPutRequest = {
+  sectors: SectorsPutRequest[];
+};
+export const sectorsBatchPutRequestSchema = z.object({
+  sectors: z.array(sectorsPutRequestSchema).min(1),
+});
+
+export type SectorsBatchPutResponse = {
+  sectors: Sector[];
+};
+
 ////////////
 // DELETE //
 ////////////
