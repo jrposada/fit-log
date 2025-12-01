@@ -1,6 +1,6 @@
 import { createFileRoute, redirect, useSearch } from '@tanstack/react-router';
 import { FunctionComponent } from 'react';
-import { z } from 'zod';
+import z from 'zod';
 
 import LoginForm from '../features/login/login-form';
 import { Route as dashboardRoute } from './index';

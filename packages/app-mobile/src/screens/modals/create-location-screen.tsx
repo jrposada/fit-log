@@ -1,8 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { locationsPutRequestSchema } from '@shared/models/location';
-import { sectorsPutRequestSchema } from '@shared/models/sector';
 import { useLocationsById } from '@shared-react/api/locations/use-locations-by-id';
 import { useLocationsPut } from '@shared-react/api/locations/use-locations-put';
 import { useSectorsBatchDelete } from '@shared-react/api/sectors/use-sectors-batch-delete';
@@ -20,8 +18,9 @@ import {
   Text,
   View,
 } from 'react-native';
-import { z } from 'zod';
 
+import type { FormData } from '../../features/climbing/form-location';
+import { formDataSchema } from '../../features/climbing/form-location';
 import FormLocationSectors from '../../features/climbing/form-location-sectors';
 import FormMapPointPicker from '../../library/form/form-map-point-picker';
 import FormTextArea from '../../library/form/form-text-area';
@@ -34,18 +33,6 @@ type CreateLocationNavigationProp = NativeStackNavigationProp<
 >;
 
 type CreateLocationRouteProp = RouteProp<ClimbingParamList, 'CreateLocation'>;
-
-const formDataSchema = locationsPutRequestSchema
-  .omit({ sectors: true })
-  .extend({
-    sectors: z.array(
-      sectorsPutRequestSchema.extend({
-        _status: z.enum(['new', 'updated', 'deleted']).optional(),
-        _tempId: z.string().optional(),
-      })
-    ),
-  });
-type FormData = z.infer<typeof formDataSchema>;
 
 const CreateLocationScreen: FunctionComponent = () => {
   const { t } = useTranslation();

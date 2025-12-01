@@ -1,13 +1,24 @@
+import { SectorsPutRequest } from '@shared/models/sector';
 import { FunctionComponent, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import SectorImagePicker from './sector-image-picker';
+import FormTextArea from '../../library/form/form-text-area';
+import FormTextInput from '../../library/form/form-text-input';
+import { FormData } from './form-location';
+import SectorImagePicker, {
+  SectorImagePickerProps,
+} from './sector-image-picker';
+
+type SectorWithChanges = SectorsPutRequest & {
+  _status?: 'new' | 'updated' | 'deleted';
+  _tempId?: string;
+};
 
 const FormLocationSectors: FunctionComponent = () => {
   const { t } = useTranslation();
-  const { control, setValue } = useFormContext();
+  const { control, setValue } = useFormContext<FormData>();
   const sectors = useWatch({ control, name: 'sectors' }) || [];
 
   const [showSectorPicker, setShowSectorPicker] = useState(false);
@@ -17,7 +28,24 @@ const FormLocationSectors: FunctionComponent = () => {
   const tempIdCounter = useRef(0);
 
   const handleAddSector = () => {
-    setEditingSectorIndex(null);
+    const updatedSectors = [...sectors];
+
+    tempIdCounter.current += 1;
+    const newSector: SectorWithChanges = {
+      isPrimary: false,
+      name: '',
+      latitude: 0,
+      longitude: 0,
+      images: [], // Will be populated after image upload
+      climbs: [],
+      _tempId: `temp-${tempIdCounter.current}`,
+      _status: 'new',
+    };
+
+    updatedSectors.push(newSector);
+
+    setValue('sectors', updatedSectors, { shouldDirty: true });
+    setEditingSectorIndex(updatedSectors.length - 1);
     setShowSectorPicker(true);
   };
 
@@ -27,78 +55,35 @@ const FormLocationSectors: FunctionComponent = () => {
   };
 
   const handleDeleteSector = (index: number) => {
-    Alert.alert(
-      t('climbing.delete_sector'),
-      t('climbing.delete_sector_message'),
-      [
-        { text: t('climbing.cancel'), style: 'cancel' },
-        {
-          text: t('climbing.delete'),
-          style: 'destructive',
-          onPress: () => {
-            const updatedSectors = [...sectors];
-            const sector = updatedSectors[index];
-
-            // If sector has an ID (existing sector), mark as deleted
-            if (sector.id) {
-              updatedSectors[index] = {
-                ...sector,
-                _status: 'deleted' as const,
-              };
-            } else {
-              // If it's a new sector without ID, just remove it
-              updatedSectors.splice(index, 1);
-            }
-
-            setValue('sectors', updatedSectors, { shouldDirty: true });
-          },
-        },
-      ]
-    );
-  };
-
-  const handleSaveSector = (sectorData: {
-    name: string;
-    description?: string;
-    imageUri: string;
-    imageWidth: number;
-    imageHeight: number;
-    imageFileSize: number;
-  }) => {
     const updatedSectors = [...sectors];
+    const sector = updatedSectors[index];
 
-    tempIdCounter.current += 1;
-    const newSector: SectorWithChanges = {
-      name: sectorData.name,
-      description: sectorData.description,
-      isPrimary: false,
-      latitude: 0, // TODO: Get from form or default location
-      longitude: 0, // TODO: Get from form or default location
-      images: [], // Will be populated after image upload
-      climbs: [],
-      _tempId: `temp-${tempIdCounter.current}`,
-      _status: editingSectorIndex !== null ? 'updated' : 'new',
-    };
-
-    // If editing existing sector, preserve the ID
-    if (editingSectorIndex !== null) {
-      const existingSector = updatedSectors[editingSectorIndex];
-      if (existingSector.id) {
-        newSector.id = existingSector.id;
-      }
-      updatedSectors[editingSectorIndex] = newSector;
+    if (sector.id) {
+      updatedSectors[index] = {
+        ...sector,
+        _status: 'deleted' as const,
+      };
     } else {
-      updatedSectors.push(newSector);
+      updatedSectors.splice(index, 1);
     }
 
     setValue('sectors', updatedSectors, { shouldDirty: true });
-    setShowSectorPicker(false);
     setEditingSectorIndex(null);
+    setShowSectorPicker(false);
   };
 
-  const visibleSectors = sectors.filter(
-    (sector: SectorWithChanges) => sector._status !== 'deleted'
-  );
+  const handleImagePick: SectorImagePickerProps['onPick'] = (imageData) => {
+    if (editingSectorIndex === null) {
+      return;
+    }
+
+    const updatedSectors = [...sectors];
+
+    const existingSector = updatedSectors[editingSectorIndex];
+    existingSector.images = [...existingSector.images, imageData];
+
+    setValue('sectors', updatedSectors, { shouldDirty: true });
+  };
 
   return (
     <>
@@ -109,9 +94,9 @@ const FormLocationSectors: FunctionComponent = () => {
         {t('climbing.sectors_description')}
       </Text>
 
-      {visibleSectors.length > 0 && (
+      {sectors.length > 0 && (
         <View style={styles.sectorsList}>
-          {visibleSectors.map((sector: SectorWithChanges, index: number) => {
+          {sectors.map((sector: SectorWithChanges, index: number) => {
             const actualIndex = sectors.indexOf(sector);
             return (
               <View
@@ -119,14 +104,22 @@ const FormLocationSectors: FunctionComponent = () => {
                 style={styles.sectorItem}
               >
                 <View style={styles.sectorMainContent}>
-                  <Text style={styles.sectorIcon}>📷</Text>
                   <View style={styles.sectorTextContainer}>
-                    <Text style={styles.sectorText}>{sector.name}</Text>
-                    {sector.description && (
-                      <Text style={styles.sectorDescription}>
-                        {sector.description}
-                      </Text>
-                    )}
+                    <FormTextInput
+                      name={`sectors.${actualIndex}.name`}
+                      label={t('climbing.sector_name')}
+                      placeholder={t('climbing.enter_sector_name')}
+                      maxLength={100}
+                      required
+                      showCharacterCount
+                    />
+                    <FormTextArea
+                      name={`sectors.${actualIndex}.description`}
+                      label={t('climbing.description_optional')}
+                      placeholder={t('climbing.add_description')}
+                      maxLength={500}
+                      numberOfLines={4}
+                    />
                   </View>
                 </View>
                 <View style={styles.sectorActions}>
@@ -157,7 +150,7 @@ const FormLocationSectors: FunctionComponent = () => {
 
       <Pressable style={styles.addSectorButton} onPress={handleAddSector}>
         <Text style={styles.addSectorButtonText}>
-          {visibleSectors.length > 0
+          {sectors.length > 0
             ? t('climbing.add_another_sector')
             : t('climbing.add_first_sector')}
         </Text>
@@ -165,8 +158,7 @@ const FormLocationSectors: FunctionComponent = () => {
 
       <SectorImagePicker
         visible={showSectorPicker}
-        initialSectorNumber={visibleSectors.length + 1}
-        onSave={handleSaveSector}
+        onPick={handleImagePick}
         onCancel={() => {
           setShowSectorPicker(false);
           setEditingSectorIndex(null);
@@ -214,17 +206,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 8,
   },
-  sectorIcon: {
-    fontSize: 24,
-    marginRight: 12,
-  },
   sectorTextContainer: {
     flex: 1,
-  },
-  sectorText: {
-    fontSize: 16,
-    color: '#000',
-    fontWeight: '500',
   },
   sectorDescription: {
     fontSize: 14,
@@ -256,4 +239,3 @@ const styles = StyleSheet.create({
 });
 
 export default FormLocationSectors;
-export { FormLocationSectorsSchema };
