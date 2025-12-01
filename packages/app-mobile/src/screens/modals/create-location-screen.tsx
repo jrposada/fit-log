@@ -1,10 +1,12 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { SectorsPutRequest } from '@shared/models/sector';
+import { locationsPutRequestSchema } from '@shared/models/location';
+import { sectorsPutRequestSchema } from '@shared/models/sector';
 import { useLocationsById } from '@shared-react/api/locations/use-locations-by-id';
 import { useLocationsPut } from '@shared-react/api/locations/use-locations-put';
 import { useSectorsBatchDelete } from '@shared-react/api/sectors/use-sectors-batch-delete';
-import { useSectorsPut } from '@shared-react/api/sectors/use-sectors-put';
+import { useSectorsBatchPut } from '@shared-react/api/sectors/use-sectors-batch-put';
 import { FunctionComponent, useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -18,9 +20,10 @@ import {
   Text,
   View,
 } from 'react-native';
+import { z } from 'zod';
 
+import FormSectorsManager from '../../features/climbing/form-sectors-manager';
 import FormLocationPicker from '../../library/form/form-location-picker';
-import FormSectorsManager from '../../library/form/form-sectors-manager';
 import FormTextArea from '../../library/form/form-text-area';
 import FormTextInput from '../../library/form/form-text-input';
 import { ClimbingParamList } from '../../types/climbing';
@@ -32,21 +35,17 @@ type CreateLocationNavigationProp = NativeStackNavigationProp<
 
 type CreateLocationRouteProp = RouteProp<ClimbingParamList, 'CreateLocation'>;
 
-export interface SectorWithChanges extends SectorsPutRequest {
-  _status?: 'new' | 'updated' | 'deleted';
-  _tempId?: string;
-}
-
-// Extended form data to include sector objects with tracking info
-interface FormDataInternal {
-  id?: string;
-  name: string;
-  description?: string;
-  latitude: number;
-  longitude: number;
-  googleMapsId?: string;
-  sectors: SectorWithChanges[];
-}
+const formDataSchema = locationsPutRequestSchema
+  .omit({ sectors: true })
+  .extend({
+    sectors: z.array(
+      sectorsPutRequestSchema.extend({
+        _status: z.enum(['new', 'updated', 'deleted']).optional(),
+        _tempId: z.string().optional(),
+      })
+    ),
+  });
+type FormData = z.infer<typeof formDataSchema>;
 
 const CreateLocationScreen: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -57,7 +56,8 @@ const CreateLocationScreen: FunctionComponent = () => {
   const isEditMode = !!locationId;
   const initializedRef = useRef(false);
 
-  const methods = useForm<FormDataInternal>({
+  const methods = useForm<FormData>({
+    resolver: zodResolver(formDataSchema),
     defaultValues: {
       name: route.params?.initialName ?? '',
       sectors: [],
@@ -85,7 +85,7 @@ const CreateLocationScreen: FunctionComponent = () => {
       );
     },
   });
-  const sectorsPut = useSectorsPut({
+  const sectorsBatchPut = useSectorsBatchPut({
     onError: (error) => {
       Alert.alert(
         t('climbing.error'),
@@ -102,15 +102,13 @@ const CreateLocationScreen: FunctionComponent = () => {
     },
   });
 
-  const onSubmit = async (data: FormDataInternal) => {
-    // Process sectors: delete, then create/update
+  const onSubmit = async (data: FormData) => {
     const sectorsToDelete = data.sectors.filter(
       (s) => s._status === 'deleted' && s.id
     );
     const sectorsToSave = data.sectors.filter((s) => s._status !== 'deleted');
 
     try {
-      // Batch delete sectors that were marked for deletion
       if (sectorsToDelete.length > 0) {
         const idsToDelete = sectorsToDelete
           .map((s) => s.id)
@@ -121,19 +119,20 @@ const CreateLocationScreen: FunctionComponent = () => {
         }
       }
 
-      // Save new/updated sectors
-      const savedSectorIds: string[] = [];
-      for (const sector of sectorsToSave) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { _status, _tempId, ...sectorData } = sector;
+      let savedSectorIds: string[] = [];
+      if (sectorsToSave.length > 0) {
+        const sectorsData = sectorsToSave.map((sector) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { _status, _tempId, ...sectorData } = sector;
+          return sectorData;
+        });
 
-        await sectorsPut.mutateAsync(sectorData);
-        if (sector.id) {
-          savedSectorIds.push(sector.id);
-        }
+        const result = await sectorsBatchPut.mutateAsync({
+          sectors: sectorsData,
+        });
+        savedSectorIds = result.sectors.map((s) => s.id);
       }
 
-      // Build the final location data with sector IDs
       const locationData = {
         id: isEditMode ? locationId : undefined,
         name: data.name,
@@ -143,7 +142,6 @@ const CreateLocationScreen: FunctionComponent = () => {
         googleMapsId: data.googleMapsId,
         sectors: savedSectorIds,
       };
-
       locationsPut.mutate(locationData);
     } catch (error) {
       Alert.alert(
@@ -175,8 +173,6 @@ const CreateLocationScreen: FunctionComponent = () => {
   // Pre-fill form when editing existing location (only once)
   useEffect(() => {
     if (existingLocation && isEditMode && !initializedRef.current) {
-      // For now, just initialize with empty sectors array
-      // TODO: Load actual sector data if needed for editing
       reset({
         id: existingLocation.id,
         name: existingLocation.name,
@@ -184,6 +180,7 @@ const CreateLocationScreen: FunctionComponent = () => {
         latitude: existingLocation.latitude,
         longitude: existingLocation.longitude,
         googleMapsId: existingLocation.googleMapsId,
+        // FIXME: load actual sectors
         sectors: [],
       });
       initializedRef.current = true;
