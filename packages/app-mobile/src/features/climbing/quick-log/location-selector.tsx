@@ -41,7 +41,7 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
     [selectedLocation]
   );
   const numClimbs = useMemo(
-    () => selectedLocation?.sectors.flatMap(({ climbs }) => climbs).length ?? 0,
+    () => selectedLocation?.sectors.length ?? 0,
     [selectedLocation]
   );
 
