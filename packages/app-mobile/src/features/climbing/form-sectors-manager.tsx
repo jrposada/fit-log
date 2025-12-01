@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import SectorImagePicker from './sector-image-picker';
-import { SectorWithChanges } from './types';
 
 const FormSectorsManager: FunctionComponent = () => {
   const { t } = useTranslation();

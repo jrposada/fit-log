@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 
-import Separator from '../../../library/separator';
+import Separator from '../../library/separator';
 import ClimbCard from './climb-card';
 import LocationSelector from './location-selector';
 

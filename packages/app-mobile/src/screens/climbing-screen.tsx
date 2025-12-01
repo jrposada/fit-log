@@ -2,7 +2,7 @@ import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 
-import QuickLogTab from '../features/climbing/quick-log/quick-log-tab';
+import QuickLogTab from '../features/climbing/quick-log-tab';
 import Tabs, { TabBarItem, TabContentItem } from '../library/tabs';
 
 type Tab = 'quick-log' | 'browse' | 'projects' | 'stats';

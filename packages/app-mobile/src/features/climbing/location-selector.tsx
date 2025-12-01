@@ -11,8 +11,8 @@ import {
   View,
 } from 'react-native';
 
-import Select from '../../../library/select';
-import { ClimbingParamList } from '../../../types/routes';
+import Select from '../../library/select';
+import { ClimbingParamList } from '../../types/routes';
 
 type LocationSelectorNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,
