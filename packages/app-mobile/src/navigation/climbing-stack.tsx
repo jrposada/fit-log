@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ClimbingScreen from '../screens/climbing-screen';
-import CreateLocationScreen from '../screens/create-location-screen';
+import CreateLocationScreen from '../screens/modals/create-location-screen';
 import { ClimbingParamList } from '../types/routes';
 import Header from './header';
 
