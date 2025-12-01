@@ -18,14 +18,14 @@ interface LocationData {
   placeId?: string;
 }
 
-interface MapPickerProps {
+interface MapPointPickerProps {
   visible: boolean;
   initialLocation?: LocationData;
   onConfirm: (location: LocationData) => void;
   onCancel: () => void;
 }
 
-const MapPicker: FunctionComponent<MapPickerProps> = ({
+const MapPointPicker: FunctionComponent<MapPointPickerProps> = ({
   visible,
   initialLocation,
   onConfirm,
@@ -268,4 +268,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MapPicker;
+export default MapPointPicker;

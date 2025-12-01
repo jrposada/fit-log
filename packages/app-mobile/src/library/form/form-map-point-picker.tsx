@@ -3,14 +3,25 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import MapPicker from '../../library/map-picker';
+import MapPointPicker from '../../library/map-point-picker';
 
-const FormLocationPicker: FunctionComponent = () => {
+interface FormMapPointPickerProps {
+  latitudeName: string;
+  longitudeName: string;
+  googleMapsIdName: string;
+}
+
+const FormMapPointPicker: FunctionComponent<FormMapPointPickerProps> = ({
+  latitudeName,
+  longitudeName,
+  googleMapsIdName,
+}) => {
   const { t } = useTranslation();
   const { control, setValue } = useFormContext();
 
-  const latitude = useWatch({ control, name: 'latitude' });
-  const longitude = useWatch({ control, name: 'longitude' });
+  const latitude = useWatch({ control, name: latitudeName });
+  const longitude = useWatch({ control, name: longitudeName });
+
   const [showMapPicker, setShowMapPicker] = useState(false);
 
   const hasLocation = latitude !== undefined && longitude !== undefined;
@@ -48,14 +59,14 @@ const FormLocationPicker: FunctionComponent = () => {
         </Pressable>
       )}
 
-      <MapPicker
+      <MapPointPicker
         visible={showMapPicker}
         initialLocation={hasLocation ? { latitude, longitude } : undefined}
         onConfirm={(data) => {
-          setValue('latitude', data.latitude, { shouldDirty: true });
-          setValue('longitude', data.longitude, { shouldDirty: true });
+          setValue(latitudeName, data.latitude, { shouldDirty: true });
+          setValue(longitudeName, data.longitude, { shouldDirty: true });
           if (data.placeId) {
-            setValue('googleMapsId', data.placeId, { shouldDirty: true });
+            setValue(googleMapsIdName, data.placeId, { shouldDirty: true });
           }
           setShowMapPicker(false);
         }}
@@ -117,4 +128,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FormLocationPicker;
+export default FormMapPointPicker;

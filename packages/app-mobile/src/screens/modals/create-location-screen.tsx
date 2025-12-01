@@ -22,8 +22,8 @@ import {
 } from 'react-native';
 import { z } from 'zod';
 
-import FormSectorsManager from '../../features/climbing/form-sectors-manager';
-import FormLocationPicker from '../../library/form/form-location-picker';
+import FormLocationSectors from '../../features/climbing/form-location-sectors';
+import FormMapPointPicker from '../../library/form/form-map-point-picker';
 import FormTextArea from '../../library/form/form-text-area';
 import FormTextInput from '../../library/form/form-text-input';
 import { ClimbingParamList } from '../../types/climbing';
@@ -216,12 +216,15 @@ const CreateLocationScreen: FunctionComponent = () => {
             />
           </View>
 
-          <View style={styles.section}>
-            <FormLocationPicker />
-          </View>
+          <View style={styles.section}></View>
+          <FormMapPointPicker
+            latitudeName="latitude"
+            longitudeName="longitude"
+            googleMapsIdName="googleMapsId"
+          />
 
           <View style={styles.section}>
-            <FormSectorsManager />
+            <FormLocationSectors />
           </View>
         </ScrollView>
 

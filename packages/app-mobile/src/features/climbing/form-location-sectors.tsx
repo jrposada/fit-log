@@ -5,7 +5,7 @@ import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import SectorImagePicker from './sector-image-picker';
 
-const FormSectorsManager: FunctionComponent = () => {
+const FormLocationSectors: FunctionComponent = () => {
   const { t } = useTranslation();
   const { control, setValue } = useFormContext();
   const sectors = useWatch({ control, name: 'sectors' }) || [];
@@ -255,4 +255,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FormSectorsManager;
+export default FormLocationSectors;
+export { FormLocationSectorsSchema };
