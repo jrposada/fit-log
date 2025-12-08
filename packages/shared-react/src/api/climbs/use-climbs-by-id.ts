@@ -33,6 +33,7 @@ function useClimbsById({ id }: UseClimbsById) {
         return response.data.data.climb;
       },
     }),
+    enabled: !!id,
   });
 }
 

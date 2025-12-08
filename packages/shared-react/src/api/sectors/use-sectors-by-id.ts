@@ -32,6 +32,7 @@ function useSectorsById({ id }: SectorsGetByIdParams) {
         return response.data.data.sector;
       },
     }),
+    enabled: !!id,
   });
 }
 

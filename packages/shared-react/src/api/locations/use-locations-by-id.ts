@@ -32,6 +32,7 @@ function useLocationsById({ id }: LocationsGetByIdParams) {
         return response.data.data.location;
       },
     }),
+    enabled: !!id,
   });
 }
 
