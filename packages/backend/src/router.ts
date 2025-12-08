@@ -15,7 +15,6 @@ import {
   sectorsBatchPutRequestSchema,
   sectorsDeleteParamsSchema,
   sectorsPutRequestSchema,
-  sectorUploadUrlRequestSchema,
 } from '@shared/models/sector';
 import {
   sessionsDeleteParamsSchema,
@@ -44,7 +43,6 @@ import { handler as sectorsBatchDelete } from './api/sectors/sectors-batch-delet
 import { handler as sectorsBatchPut } from './api/sectors/sectors-batch-put';
 import { handler as sectorsDelete } from './api/sectors/sectors-delete';
 import { handler as sectorsPut } from './api/sectors/sectors-put';
-import { handler as sectorsUploadUrl } from './api/sectors/sectors-upload-url';
 import { handler as sessionsDelete } from './api/sessions/sessions-delete';
 import { handler as sessionsGet } from './api/sessions/sessions-get';
 import { handler as sessionsGetById } from './api/sessions/sessions-get-by-id';
@@ -161,12 +159,6 @@ router.delete(
   authenticateKeycloak,
   validateBody(sectorsBatchDeleteRequestSchema),
   sectorsBatchDelete
-);
-router.post(
-  '/sectors/upload-url',
-  authenticateKeycloak,
-  validateBody(sectorUploadUrlRequestSchema),
-  sectorsUploadUrl
 );
 
 // Images

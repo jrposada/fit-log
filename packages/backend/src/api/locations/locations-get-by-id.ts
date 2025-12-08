@@ -34,4 +34,3 @@ const handler = toApiResponse<LocationsGetByIdResponse, LocationsGetByIdParams>(
 );
 
 export { handler };
-

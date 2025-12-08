@@ -172,24 +172,3 @@ export const sectorsGetByIdParamsSchema = z.object({
 export type SectorsGetByIdResponse = {
   sector: Sector;
 };
-
-///////////////////
-// UPLOAD URL //
-///////////////////
-export type SectorUploadUrlRequest = {
-  locationUuid: string;
-  fileName: string;
-  fileType: string;
-};
-
-export const sectorUploadUrlRequestSchema = z.object({
-  locationUuid: z.string().nonempty(),
-  fileName: z.string().nonempty(),
-  fileType: z.string().nonempty(),
-});
-
-export type SectorUploadUrlResponse = {
-  uploadUrl: string;
-  imageUrl: string;
-  thumbnailUrl: string;
-};

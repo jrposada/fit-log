@@ -7,13 +7,13 @@ import { upsertDocument } from '../../utils/upsert-document';
 import { toApiResponse } from '../api-utils';
 import { toApiImage } from './images-mapper';
 
-const imageProcessor = new ImageProcessor();
 
 const handler = toApiResponse<ImagesPutResponse, unknown, unknown, void>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
     assert(request.file, { msg: 'No file uploaded' });
 
+    const imageProcessor = new ImageProcessor();
     const processedImage = await imageProcessor.processImage(request.file.path);
 
     const image = await upsertDocument(Image, undefined, {

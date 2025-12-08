@@ -12,8 +12,6 @@ import {
   sectorsGetByIdParamsSchema,
   SectorsPutRequest,
   sectorsPutRequestSchema,
-  SectorUploadUrlRequest,
-  sectorUploadUrlRequestSchema,
 } from './sector';
 
 export type SectorTest = Expect<
@@ -33,14 +31,5 @@ export type SectorsDeleteParamsTest = Expect<
 export type SectorsGetByIdParamsTest = Expect<
   IsTrue<
     IsEqual<SectorsGetByIdParams, z.infer<typeof sectorsGetByIdParamsSchema>>
-  >
->;
-
-export type SectorUploadUrlRequestTest = Expect<
-  IsTrue<
-    IsEqual<
-      SectorUploadUrlRequest,
-      z.infer<typeof sectorUploadUrlRequestSchema>
-    >
   >
 >;
