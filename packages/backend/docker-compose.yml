@@ -9,18 +9,6 @@ services:
     volumes:
       - mongodb-data:/data/db
 
-  s3-local:
-    container_name: s3-local
-    image: localstack/localstack:latest
-    ports:
-      - '3366:4566' # LocalStack gateway
-      - '3310-3359:4510-4559' # External services port range
-    environment:
-      - DEBUG=1
-    volumes:
-      - s3-data:/var/lib/localstack
-      - /var/run/docker.sock:/var/run/docker.sock
-
   opensearch-local:
     container_name: opensearch-local
     image: opensearchproject/opensearch:latest

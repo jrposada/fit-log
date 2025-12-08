@@ -1,1 +1,3 @@
 .esbuild
+.data
+!.data/.gitkeep

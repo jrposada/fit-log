@@ -35,6 +35,7 @@ import { handler as climbsDelete } from './api/climbs/climbs-delete';
 import { handler as climbsGet } from './api/climbs/climbs-get';
 import { handler as climbsGetById } from './api/climbs/climbs-get-by-id';
 import { handler as climbsPut } from './api/climbs/climbs-put';
+import { handler as imagesPut } from './api/images/images-put';
 import { handler as locationsDelete } from './api/locations/locations-delete';
 import { handler as locationsGet } from './api/locations/locations-get';
 import { handler as locationsGetById } from './api/locations/locations-get-by-id';
@@ -54,6 +55,7 @@ import { handler as workoutsGet } from './api/workouts/workouts-get';
 import { handler as workoutsGetById } from './api/workouts/workouts-get-by-id';
 import { handler as workoutsPut } from './api/workouts/workouts-put';
 import { authenticateKeycloak } from './middleware/auth';
+import { upload } from './middleware/upload';
 import { validateBody } from './middleware/validate-body';
 import { validateParams } from './middleware/validate-params';
 import { validateQuery } from './middleware/validate-query';
@@ -166,6 +168,9 @@ router.post(
   validateBody(sectorUploadUrlRequestSchema),
   sectorsUploadUrl
 );
+
+// Images
+router.put('/images', authenticateKeycloak, upload.single('image'), imagesPut);
 
 // Climbs
 router.get(

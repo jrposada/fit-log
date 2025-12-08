@@ -4,23 +4,30 @@ import express from 'express';
 
 import { connectToDatabase, disconnectFromDatabase } from './database';
 import { router } from './router';
+import { FilesService } from './services/files';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3100;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+async function main() {
+  await FilesService.ensureDirectories();
 
-// Routes
-app.use('/api', router);
+  app.use(cors());
+  app.use(express.json());
 
-// Health check
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok' });
-});
+  app.use('/files', express.static(FilesService.publicDir()));
+  app.use('/api', router);
+  app.get('/health', (_req, res) => {
+    res.json({ status: 'ok' });
+  });
+
+  startServer().catch((error) => {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  });
+}
 
 async function startServer() {
   await connectToDatabase();
@@ -30,14 +37,14 @@ async function startServer() {
   });
 }
 
-startServer().catch((error) => {
-  console.error('Failed to start server:', error);
-  process.exit(1);
-});
-
 process.on('SIGINT', async () => {
   await disconnectFromDatabase();
   process.exit(0);
+});
+
+main().catch((error) => {
+  console.error('Error in main execution:', error);
+  process.exit(1);
 });
 
 export default app;
