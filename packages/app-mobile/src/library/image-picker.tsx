@@ -1,4 +1,7 @@
-import { FunctionComponent, ReactNode, useState } from 'react';
+import type { ImagePickerOptions } from 'expo-image-picker';
+import * as ExpoImagePicker from 'expo-image-picker';
+import { t } from 'i18next';
+import { FunctionComponent, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -11,13 +14,15 @@ import {
   Text,
   View,
 } from 'react-native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 export interface ImagePickerResult {
-  imageUri: string;
-  imageWidth: number;
-  imageHeight: number;
-  imageFileSize: number;
+  base64: string;
+  basename: string;
+  fileSize: number;
+  height: number;
+  mimeType: string;
+  uri: string;
+  width: number;
 }
 
 interface ImagePickerProps {
@@ -25,65 +30,66 @@ interface ImagePickerProps {
   onImageSelected: (result: ImagePickerResult) => void;
   onCancel: () => void;
   title?: string;
-  children?: (imageData: ImagePickerResult) => ReactNode;
 }
 
 const ImagePicker: FunctionComponent<ImagePickerProps> = ({
   visible,
   onImageSelected,
   onCancel,
-  title = 'Select Image',
-  children,
+  title,
 }) => {
+  const [imageFileSize, setImageFileSize] = useState(0);
+  const [imageHeight, setImageHeight] = useState(0);
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [imageWidth, setImageWidth] = useState(0);
-  const [imageHeight, setImageHeight] = useState(0);
-  const [imageFileSize, setImageFileSize] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleImageSelection = async (source: 'camera' | 'library') => {
     setIsProcessing(true);
 
-    const options = {
-      mediaType: 'photo' as const,
-      quality: 0.8 as const,
-      maxWidth: 2048,
-      maxHeight: 2048,
+    const options: ImagePickerOptions = {
+      allowsEditing: true,
+      allowsMultipleSelection: false,
+      base64: true,
+      quality: 0.8,
     };
 
     try {
       const result =
         source === 'camera'
-          ? await launchCamera(options)
-          : await launchImageLibrary(options);
+          ? await ExpoImagePicker.launchCameraAsync(options)
+          : await ExpoImagePicker.launchImageLibraryAsync(options);
 
-      if (result.didCancel) {
+      if (result.canceled || !result.assets || result.assets.length === 0) {
         setIsProcessing(false);
         return;
       }
 
-      if (result.errorCode) {
-        Alert.alert('Error', result.errorMessage || 'Failed to pick image');
+      const asset = result.assets[0];
+      const basename = asset.uri.split('/').pop();
+
+      if (!asset.base64 || !asset.mimeType || !asset.fileSize || !basename) {
         setIsProcessing(false);
+        Alert.alert('Error', 'Failed to retrieve image data');
         return;
       }
 
-      if (result.assets && result.assets[0]) {
-        const asset = result.assets[0];
-        const imageData: ImagePickerResult = {
-          imageUri: asset.uri || '',
-          imageWidth: asset.width || 0,
-          imageHeight: asset.height || 0,
-          imageFileSize: asset.fileSize || 0,
-        };
+      const imageData: ImagePickerResult = {
+        base64: asset.base64,
+        basename,
+        fileSize: asset.fileSize,
+        height: asset.height,
+        mimeType: asset.mimeType,
+        uri: asset.uri,
+        width: asset.width,
+      };
 
-        setImageUri(imageData.imageUri);
-        setImageWidth(imageData.imageWidth);
-        setImageHeight(imageData.imageHeight);
-        setImageFileSize(imageData.imageFileSize);
+      setImageUri(imageData.uri);
+      setImageWidth(imageData.width);
+      setImageHeight(imageData.height);
+      setImageFileSize(imageData.fileSize);
 
-        onImageSelected(imageData);
-      }
+      onImageSelected(imageData);
     } catch (error: unknown) {
       Alert.alert('Error', 'Failed to process image');
       console.error(error);
@@ -92,11 +98,15 @@ const ImagePicker: FunctionComponent<ImagePickerProps> = ({
     }
   };
 
-  const handlePickFromLibrary = () => {
+  const handlePickFromLibrary = async () => {
+    await ExpoImagePicker.requestMediaLibraryPermissionsAsync();
+
     handleImageSelection('library');
   };
 
-  const handleTakePhoto = () => {
+  const handleTakePhoto = async () => {
+    await ExpoImagePicker.requestCameraPermissionsAsync();
+
     handleImageSelection('camera');
   };
 
@@ -108,8 +118,13 @@ const ImagePicker: FunctionComponent<ImagePickerProps> = ({
     onCancel();
   };
 
-  const imageData: ImagePickerResult | null = imageUri
-    ? { imageUri, imageWidth, imageHeight, imageFileSize }
+  const imageData = imageUri
+    ? {
+        uri: imageUri,
+        width: imageWidth,
+        height: imageHeight,
+        fileSize: imageFileSize,
+      }
     : null;
 
   return (
@@ -124,9 +139,9 @@ const ImagePicker: FunctionComponent<ImagePickerProps> = ({
       >
         <View style={styles.header}>
           <Pressable onPress={handleCancel}>
-            <Text style={styles.cancelButton}>Cancel</Text>
+            <Text style={styles.cancelButton}>{t('actions.cancel')}</Text>
           </Pressable>
-          <Text style={styles.headerTitle}>{title}</Text>
+          <Text style={styles.headerTitle}>{title ?? 'Select Image'}</Text>
           <View style={styles.headerPlaceholder} />
         </View>
 
@@ -159,11 +174,10 @@ const ImagePicker: FunctionComponent<ImagePickerProps> = ({
         ) : (
           <View style={styles.contentContainer}>
             <Image
-              source={{ uri: imageData.imageUri }}
+              source={{ uri: imageData.uri }}
               style={styles.previewImage}
               resizeMode="cover"
             />
-            {children && children(imageData)}
           </View>
         )}
       </KeyboardAvoidingView>
@@ -247,3 +261,4 @@ const styles = StyleSheet.create({
 });
 
 export default ImagePicker;
+export type { ImagePickerProps };

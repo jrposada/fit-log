@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import sharp from 'sharp';
+import { v4 as uuid } from 'uuid';
 
 import { FilesService } from './files';
 
@@ -33,15 +34,31 @@ export class ImageProcessor {
     await fs.mkdir(this.thumbnailsDir, { recursive: true });
   }
 
-  async processImage(tempFilePath: string): Promise<ProcessedImage> {
+  async processImageFromBase64(
+    base64: string,
+    mimeType: string
+  ): Promise<ProcessedImage> {
     await this.ensureDirectories();
 
-    const fileId = path.basename(tempFilePath, path.extname(tempFilePath));
-    const extension = path.extname(tempFilePath).toLowerCase();
-    const fullImageBasename = `${fileId}${extension}`;
+    // Get file extension from mime type
+    const extensionMap: Record<string, string> = {
+      'image/jpeg': '.jpeg',
+      'image/jpg': '.jpg',
+      'image/png': '.png',
+      'image/webp': '.webp',
+    };
+    const extension = extensionMap[mimeType] || '.jpg';
 
+    // Convert base64 to buffer
+    const buffer = Buffer.from(base64, 'base64');
+
+    // Generate unique file ID
+    const fileId = uuid();
+    const fullImageBasename = `${fileId}${extension}`;
     const fullImagePath = path.join(this.fullImagesDir, fullImageBasename);
-    const imageInfo = await sharp(tempFilePath)
+
+    // Process full image
+    const imageInfo = await sharp(buffer)
       .resize(2048, 2048, {
         fit: 'inside',
         withoutEnlargement: true,
@@ -49,16 +66,15 @@ export class ImageProcessor {
       .jpeg({ quality: 85 })
       .toFile(fullImagePath);
 
+    // Process thumbnail
     const thumbnailBasename = `${fileId}_thumb${extension}`;
     const thumbnailPath = path.join(this.thumbnailsDir, thumbnailBasename);
-    await sharp(tempFilePath)
+    await sharp(buffer)
       .resize(400, 400, {
         fit: 'cover',
       })
       .jpeg({ quality: 80 })
       .toFile(thumbnailPath);
-
-    await fs.unlink(tempFilePath);
 
     const imageUrl = `images/full/${fullImageBasename}`;
     const thumbnailUrl = `images/thumbnails/${thumbnailBasename}`;

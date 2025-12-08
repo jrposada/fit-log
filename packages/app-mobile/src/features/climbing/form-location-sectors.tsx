@@ -1,15 +1,21 @@
 import { SectorsPutRequest } from '@shared/models/sector';
+import { useImagesPost } from '@shared-react/api/images/use-images-post';
 import { FunctionComponent, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import FormTextArea from '../../library/form/form-text-area';
 import FormTextInput from '../../library/form/form-text-input';
+import ImagePicker, { ImagePickerProps } from '../../library/image-picker';
 import { FormData } from './form-location';
-import SectorImagePicker, {
-  SectorImagePickerProps,
-} from './sector-image-picker';
 
 type SectorWithChanges = SectorsPutRequest & {
   _status?: 'new' | 'updated' | 'deleted';
@@ -27,6 +33,8 @@ const FormLocationSectors: FunctionComponent = () => {
   );
   const tempIdCounter = useRef(0);
 
+  const imagePost = useImagesPost();
+
   const handleAddSector = () => {
     const updatedSectors = [...sectors];
 
@@ -36,7 +44,7 @@ const FormLocationSectors: FunctionComponent = () => {
       name: '',
       latitude: 0,
       longitude: 0,
-      images: [], // Will be populated after image upload
+      images: [],
       climbs: [],
       _tempId: `temp-${tempIdCounter.current}`,
       _status: 'new',
@@ -72,17 +80,39 @@ const FormLocationSectors: FunctionComponent = () => {
     setShowSectorPicker(false);
   };
 
-  const handleImagePick: SectorImagePickerProps['onPick'] = (imageData) => {
+  const handleImagePick: ImagePickerProps['onImageSelected'] = async (
+    imageData
+  ) => {
     if (editingSectorIndex === null) {
       return;
     }
 
-    const updatedSectors = [...sectors];
+    try {
+      const savedImage = await imagePost.mutateAsync({
+        base64: imageData.base64,
+        mimeType: imageData.mimeType,
+      });
 
-    const existingSector = updatedSectors[editingSectorIndex];
-    existingSector.images = [...existingSector.images, imageData];
+      const updatedSectors = [...sectors];
+      const existingSector = updatedSectors[editingSectorIndex];
+      existingSector.images = [...existingSector.images, savedImage.id];
 
-    setValue('sectors', updatedSectors, { shouldDirty: true });
+      setValue('sectors', updatedSectors, { shouldDirty: true });
+      setShowSectorPicker(false);
+
+      Alert.alert(
+        t('climbing.success'),
+        t('climbing.image_uploaded_successfully')
+      );
+    } catch (error) {
+      console.error('Failed to upload image:', error);
+      Alert.alert(
+        t('climbing.error'),
+        t('climbing.failed_upload_image', {
+          error: error instanceof Error ? error.message : 'Unknown error',
+        })
+      );
+    }
   };
 
   return (
@@ -156,14 +186,26 @@ const FormLocationSectors: FunctionComponent = () => {
         </Text>
       </Pressable>
 
-      <SectorImagePicker
+      <ImagePicker
         visible={showSectorPicker}
-        onPick={handleImagePick}
+        onImageSelected={handleImagePick}
         onCancel={() => {
           setShowSectorPicker(false);
           setEditingSectorIndex(null);
         }}
+        title={'Add Image'}
       />
+
+      {imagePost.isPending && (
+        <View style={styles.uploadingOverlay}>
+          <View style={styles.uploadingContainer}>
+            <ActivityIndicator size="large" color="#007AFF" />
+            <Text style={styles.uploadingText}>
+              {t('climbing.uploading_image')}
+            </Text>
+          </View>
+        </View>
+      )}
     </>
   );
 };
@@ -235,6 +277,29 @@ const styles = StyleSheet.create({
   },
   deleteButtonText: {
     color: '#fff',
+  },
+  uploadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  uploadingContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 24,
+    alignItems: 'center',
+    minWidth: 200,
+  },
+  uploadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: '#000',
   },
 });
 

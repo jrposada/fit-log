@@ -15,13 +15,8 @@ export class FilesService {
     return path.join(FilesService.baseDir(), 'public');
   }
 
-  public static tempDir(): string {
-    return path.join(FilesService.baseDir(), 'temp');
-  }
-
   public static async ensureDirectories(): Promise<void> {
     await fs.mkdir(FilesService.baseDir(), { recursive: true });
     await fs.mkdir(FilesService.publicDir(), { recursive: true });
-    await fs.mkdir(FilesService.tempDir(), { recursive: true });
   }
 }

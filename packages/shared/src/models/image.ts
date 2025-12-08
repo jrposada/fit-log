@@ -59,9 +59,21 @@ export const imageSchema = z.object({
   updatedAt: z.string().datetime(),
 });
 
-/////////
-// PUT //
-/////////
-export type ImagesPutResponse = {
+//////////
+// POST //
+//////////
+export type ImagesPostRequest = {
+  /** Base64 encoded image data */
+  base64: string;
+
+  /** MIME type of the image */
+  mimeType: string;
+};
+export const imagesPostRequestSchema = z.object({
+  base64: z.string(),
+  mimeType: z.string(),
+});
+
+export type ImagesPostResponse = {
   image: Image;
 };

@@ -4,7 +4,6 @@ import { DynamoDBRecord, DynamoDBStreamEvent } from 'aws-lambda';
 
 import { OpenSearchHelper } from '../../services/aws/opensearch';
 
-
 interface DynamoDBItem {
   PK: string;
   SK: string;

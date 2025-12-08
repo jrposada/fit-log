@@ -1,35 +1,28 @@
-import { ImagesPutResponse } from '@shared/models/image';
+import { ImagesPostRequest, ImagesPostResponse } from '@shared/models/image';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 
-type UseImagesPutParams = {
+type UseImagesPostParams = {
   onError?: (message: string) => void;
   onSuccess?: (imageId: string) => void;
 };
 
-type UseImagesPutMutationParams = {
-  imageFile: File | Blob;
-};
-
-function useImagesPut({ onError, onSuccess }: UseImagesPutParams = {}) {
+function useImagesPost({ onError, onSuccess }: UseImagesPostParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
   return useMutation<
-    ImagesPutResponse['image'],
+    ImagesPostResponse['image'],
     string,
-    UseImagesPutMutationParams,
+    ImagesPostRequest,
     unknown
   >({
-    mutationFn: async ({ imageFile }) => {
-      const formData = new FormData();
-      formData.append('image', imageFile);
-
-      const response = await axios.put(`${apiBaseUrl}/images`, formData, {
+    mutationFn: async (payload) => {
+      const response = await axios.post(`${apiBaseUrl}/images`, payload, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
           Authorization: '',
         },
       });
@@ -41,7 +34,7 @@ function useImagesPut({ onError, onSuccess }: UseImagesPutParams = {}) {
       return response.data.data.image;
     },
     onError: (message) => {
-      console.error('Failed to put image:', JSON.stringify(message));
+      console.error('Failed to post image:', JSON.stringify(message));
       onError?.(message);
     },
     onSuccess: (image) => {
@@ -53,4 +46,4 @@ function useImagesPut({ onError, onSuccess }: UseImagesPutParams = {}) {
   });
 }
 
-export { useImagesPut };
+export { useImagesPost };
