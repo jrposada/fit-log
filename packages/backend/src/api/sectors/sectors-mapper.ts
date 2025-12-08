@@ -1,8 +1,16 @@
 import { Sector } from '@shared/models/sector';
+import { MergeType } from 'mongoose';
 
+import { IClimb } from '../../models/climb';
+import { IImage } from '../../models/image';
 import { ISector } from '../../models/sector';
+import { toApiClimb } from '../climbs/climbs-mapper';
+import { toApiImage } from '../images/images-mapper';
 
-function toApiSector(model: ISector): Sector {
+function toApiSector(
+  model: MergeType<ISector, { climbs: IClimb[]; images: IImage[] }>
+): Sector {
+  console.log('Mapping sector:', model);
   return {
     id: model._id.toString(),
     name: model.name,
@@ -13,8 +21,8 @@ function toApiSector(model: ISector): Sector {
     longitude: model.longitude,
     googleMapsId: model.googleMapsId,
 
-    climbs: model.climbs.map((climbId) => climbId.toString()),
-    images: model.images.map((imageId) => imageId.toString()),
+    climbs: model.climbs.map(toApiClimb),
+    images: model.images.map(toApiImage),
 
     createdAt: model.createdAt.toISOString(),
     updatedAt: model.updatedAt.toISOString(),

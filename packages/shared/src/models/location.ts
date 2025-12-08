@@ -1,5 +1,7 @@
 import z from 'zod';
 
+import { Sector, sectorSchema } from './sector';
+
 ////////////
 // Models //
 ////////////
@@ -39,9 +41,9 @@ export type Location = {
   googleMapsId?: string;
 
   /**
-   * Sectors ID associated with this location
+   * Sectors associated with this location
    */
-  sectors: string[];
+  sectors: Sector[];
 
   /**
    * Date when location was created in ISO 8601 format (UTC).
@@ -66,7 +68,7 @@ export const locationSchema = z.object({
   longitude: z.number().min(-180).max(180),
   googleMapsId: z.string().optional(),
 
-  sectors: z.array(z.string().nonempty()),
+  sectors: z.array(sectorSchema),
 
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
@@ -91,12 +93,17 @@ export type LocationsGetResponse = {
 /////////
 export type LocationsPutRequest = Omit<
   Location,
-  'id' | 'createdAt' | 'updatedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'sectors'
 > & {
   /**
    * ID
    */
   id?: string;
+
+  /**
+   * Sector IDs associated with this location
+   */
+  sectors: string[];
 };
 export const locationsPutRequestSchema = z.object({
   id: z.string().optional(),

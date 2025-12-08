@@ -167,8 +167,7 @@ const CreateLocationScreen: FunctionComponent = () => {
         latitude: existingLocation.latitude,
         longitude: existingLocation.longitude,
         googleMapsId: existingLocation.googleMapsId,
-        // FIXME: load actual sectors
-        sectors: [],
+        sectors: existingLocation.sectors,
       });
       initializedRef.current = true;
     }

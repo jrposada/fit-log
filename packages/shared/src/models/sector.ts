@@ -1,5 +1,8 @@
 import z from 'zod';
 
+import { Climb, climbSchema } from './climb';
+import { Image, imageSchema } from './image';
+
 ////////////
 // Models //
 ////////////
@@ -44,14 +47,14 @@ export type Sector = {
   googleMapsId?: string;
 
   /**
-   * Sector's images ID
+   * Sector's images
    */
-  images: string[];
+  images: Image[];
 
   /**
-   * Sector's climbs ID
+   * Sector's climbs
    */
-  climbs: string[];
+  climbs: Climb[];
 
   /**
    * Date when sector was created in ISO 8601 format (UTC).
@@ -78,8 +81,8 @@ export const sectorSchema = z.object({
   longitude: z.number().min(-180).max(180),
   googleMapsId: z.string().optional(),
 
-  images: z.array(z.string().nonempty()),
-  climbs: z.array(z.string().nonempty()),
+  images: z.array(imageSchema),
+  climbs: z.array(climbSchema),
 
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
@@ -94,12 +97,22 @@ export const sectorSchema = z.object({
 /////////
 export type SectorsPutRequest = Omit<
   Sector,
-  'id' | 'createdAt' | 'updatedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'images' | 'climbs'
 > & {
   /**
    * ID
    */
   id?: string;
+
+  /**
+   * Sector's images ID
+   */
+  images: string[];
+
+  /**
+   * Sector's climbs ID
+   */
+  climbs: string[];
 };
 export const sectorsPutRequestSchema = z.object({
   id: z.string().optional(),

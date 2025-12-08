@@ -1,3 +1,4 @@
+import { Image as ImageModel } from '@shared/models/image';
 import { SectorsPutRequest } from '@shared/models/sector';
 import { useImagesPost } from '@shared-react/api/images/use-images-post';
 import { FunctionComponent, useRef, useState } from 'react';
@@ -6,7 +7,9 @@ import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -20,6 +23,7 @@ import { FormData } from './form-location';
 type SectorWithChanges = SectorsPutRequest & {
   _status?: 'new' | 'updated' | 'deleted';
   _tempId?: string;
+  _imageData?: ImageModel[];
 };
 
 const FormLocationSectors: FunctionComponent = () => {
@@ -48,6 +52,7 @@ const FormLocationSectors: FunctionComponent = () => {
       climbs: [],
       _tempId: `temp-${tempIdCounter.current}`,
       _status: 'new',
+      _imageData: [],
     };
 
     updatedSectors.push(newSector);
@@ -94,8 +99,14 @@ const FormLocationSectors: FunctionComponent = () => {
       });
 
       const updatedSectors = [...sectors];
-      const existingSector = updatedSectors[editingSectorIndex];
+      const existingSector = updatedSectors[
+        editingSectorIndex
+      ] as SectorWithChanges;
       existingSector.images = [...existingSector.images, savedImage.id];
+      existingSector._imageData = [
+        ...(existingSector._imageData || []),
+        savedImage,
+      ];
 
       setValue('sectors', updatedSectors, { shouldDirty: true });
       setShowSectorPicker(false);
@@ -152,6 +163,28 @@ const FormLocationSectors: FunctionComponent = () => {
                     />
                   </View>
                 </View>
+                {sector._imageData && sector._imageData.length > 0 && (
+                  <View style={styles.imagesContainer}>
+                    <Text style={styles.imagesLabel}>
+                      {t('climbing.images')}
+                    </Text>
+                    <ScrollView
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      style={styles.imagesScroll}
+                    >
+                      {sector._imageData.map((image) => (
+                        <View key={image.id} style={styles.imageWrapper}>
+                          <Image
+                            source={{ uri: image.thumbnailUrl }}
+                            style={styles.thumbnailImage}
+                            resizeMode="cover"
+                          />
+                        </View>
+                      ))}
+                    </ScrollView>
+                  </View>
+                )}
                 <View style={styles.sectorActions}>
                   <Pressable
                     style={styles.actionButton}
@@ -300,6 +333,27 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 16,
     color: '#000',
+  },
+  imagesContainer: {
+    marginTop: 12,
+  },
+  imagesLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#000',
+    marginBottom: 8,
+  },
+  imagesScroll: {
+    flexDirection: 'row',
+  },
+  imageWrapper: {
+    marginRight: 8,
+  },
+  thumbnailImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    backgroundColor: '#e0e0e0',
   },
 });
 

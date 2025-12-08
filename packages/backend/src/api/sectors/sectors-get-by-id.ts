@@ -5,6 +5,8 @@ import {
 import { assert } from '@shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error';
+import { IClimb } from '../../models/climb';
+import { IImage } from '../../models/image';
 import { Sector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
 import { toApiSector } from './sectors-mapper';
@@ -15,7 +17,10 @@ const handler = toApiResponse<SectorsGetByIdResponse, SectorsGetByIdParams>(
 
     const { id } = request.params;
 
-    const sector = await Sector.findById(id);
+    const sector = await Sector.findById(id).populate<{
+      climbs: IClimb[];
+      images: IImage[];
+    }>(['climbs', 'images']);
 
     if (!sector) {
       throw new ResourceNotFound(`Sector with id ${id} not found`);

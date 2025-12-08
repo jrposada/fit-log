@@ -5,7 +5,6 @@ import { FunctionComponent, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Image,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -38,10 +37,6 @@ const ImagePicker: FunctionComponent<ImagePickerProps> = ({
   onCancel,
   title,
 }) => {
-  const [imageFileSize, setImageFileSize] = useState(0);
-  const [imageHeight, setImageHeight] = useState(0);
-  const [imageUri, setImageUri] = useState<string | null>(null);
-  const [imageWidth, setImageWidth] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleImageSelection = async (source: 'camera' | 'library') => {
@@ -84,11 +79,6 @@ const ImagePicker: FunctionComponent<ImagePickerProps> = ({
         width: asset.width,
       };
 
-      setImageUri(imageData.uri);
-      setImageWidth(imageData.width);
-      setImageHeight(imageData.height);
-      setImageFileSize(imageData.fileSize);
-
       onImageSelected(imageData);
     } catch (error: unknown) {
       Alert.alert('Error', 'Failed to process image');
@@ -111,21 +101,8 @@ const ImagePicker: FunctionComponent<ImagePickerProps> = ({
   };
 
   const handleCancel = () => {
-    setImageUri(null);
-    setImageWidth(0);
-    setImageHeight(0);
-    setImageFileSize(0);
     onCancel();
   };
-
-  const imageData = imageUri
-    ? {
-        uri: imageUri,
-        width: imageWidth,
-        height: imageHeight,
-        fileSize: imageFileSize,
-      }
-    : null;
 
   return (
     <Modal
@@ -145,41 +122,31 @@ const ImagePicker: FunctionComponent<ImagePickerProps> = ({
           <View style={styles.headerPlaceholder} />
         </View>
 
-        {!imageData ? (
-          <View style={styles.selectionContainer}>
-            {isProcessing ? (
-              <ActivityIndicator size="large" color="#007AFF" />
-            ) : (
-              <>
-                <Text style={styles.selectionTitle}>Choose Image Source</Text>
-                <Pressable
-                  style={styles.selectionButton}
-                  onPress={handleTakePhoto}
-                >
-                  <Text style={styles.selectionIcon}>📷</Text>
-                  <Text style={styles.selectionButtonText}>Take Photo</Text>
-                </Pressable>
-                <Pressable
-                  style={styles.selectionButton}
-                  onPress={handlePickFromLibrary}
-                >
-                  <Text style={styles.selectionIcon}>🖼️</Text>
-                  <Text style={styles.selectionButtonText}>
-                    Choose from Library
-                  </Text>
-                </Pressable>
-              </>
-            )}
-          </View>
-        ) : (
-          <View style={styles.contentContainer}>
-            <Image
-              source={{ uri: imageData.uri }}
-              style={styles.previewImage}
-              resizeMode="cover"
-            />
-          </View>
-        )}
+        <View style={styles.selectionContainer}>
+          {isProcessing ? (
+            <ActivityIndicator size="large" color="#007AFF" />
+          ) : (
+            <>
+              <Text style={styles.selectionTitle}>Choose Image Source</Text>
+              <Pressable
+                style={styles.selectionButton}
+                onPress={handleTakePhoto}
+              >
+                <Text style={styles.selectionIcon}>📷</Text>
+                <Text style={styles.selectionButtonText}>Take Photo</Text>
+              </Pressable>
+              <Pressable
+                style={styles.selectionButton}
+                onPress={handlePickFromLibrary}
+              >
+                <Text style={styles.selectionIcon}>🖼️</Text>
+                <Text style={styles.selectionButtonText}>
+                  Choose from Library
+                </Text>
+              </Pressable>
+            </>
+          )}
+        </View>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -246,17 +213,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     color: '#000',
-  },
-  contentContainer: {
-    flex: 1,
-    padding: 16,
-  },
-  previewImage: {
-    width: '100%',
-    height: 250,
-    borderRadius: 12,
-    marginBottom: 16,
-    backgroundColor: '#e0e0e0',
   },
 });
 
