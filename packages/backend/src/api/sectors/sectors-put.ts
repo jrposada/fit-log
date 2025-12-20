@@ -2,6 +2,8 @@ import { SectorsPutRequest, SectorsPutResponse } from '@shared/models/sector';
 import { assert } from '@shared/utils/assert';
 import { Types } from 'mongoose';
 
+import { IClimb } from '../../models/climb';
+import { IImage } from '../../models/image';
 import { Sector } from '../../models/sector';
 import { upsertDocument } from '../../utils/upsert-document';
 import { toApiResponse } from '../api-utils';
@@ -28,7 +30,7 @@ const handler = toApiResponse<
 
     images: sectorPutData.images.map((imageId) => new Types.ObjectId(imageId)),
     climbs: sectorPutData.climbs.map((climbId) => new Types.ObjectId(climbId)),
-  });
+  }).populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
 
   return {
     statusCode: 200,

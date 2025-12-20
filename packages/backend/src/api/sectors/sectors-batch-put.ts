@@ -5,6 +5,8 @@ import {
 import { assert } from '@shared/utils/assert';
 import { Types } from 'mongoose';
 
+import { IClimb } from '../../models/climb';
+import { IImage } from '../../models/image';
 import { Sector } from '../../models/sector';
 import { upsertDocument } from '../../utils/upsert-document';
 import { toApiResponse } from '../api-utils';
@@ -20,28 +22,27 @@ const handler = toApiResponse<
 
   const { sectors: sectorsData } = request.body;
 
-  const savedSectors = await Promise.all(
-    sectorsData.map(async (sectorPutData) => {
-      const sector = await upsertDocument(Sector, sectorPutData.id, {
-        name: sectorPutData.name,
-        description: sectorPutData.description,
-        isPrimary: sectorPutData.isPrimary,
+  const promises = sectorsData.map(async (sectorPutData) => {
+    const sector = await upsertDocument(Sector, sectorPutData.id, {
+      name: sectorPutData.name,
+      description: sectorPutData.description,
+      isPrimary: sectorPutData.isPrimary,
 
-        latitude: sectorPutData.latitude,
-        longitude: sectorPutData.longitude,
-        googleMapsId: sectorPutData.googleMapsId,
+      latitude: sectorPutData.latitude,
+      longitude: sectorPutData.longitude,
+      googleMapsId: sectorPutData.googleMapsId,
 
-        images: sectorPutData.images.map(
-          (imageId: string) => new Types.ObjectId(imageId)
-        ),
-        climbs: sectorPutData.climbs.map(
-          (climbId: string) => new Types.ObjectId(climbId)
-        ),
-      });
+      images: sectorPutData.images.map(
+        (imageId: string) => new Types.ObjectId(imageId)
+      ),
+      climbs: sectorPutData.climbs.map(
+        (climbId: string) => new Types.ObjectId(climbId)
+      ),
+    }).populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
 
-      return toApiSector(sector);
-    })
-  );
+    return toApiSector(sector);
+  });
+  const savedSectors = await Promise.all(promises);
 
   return {
     statusCode: 200,
