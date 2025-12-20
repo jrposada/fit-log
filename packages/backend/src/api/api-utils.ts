@@ -1,7 +1,8 @@
 import { ApiResponse } from '@shared/models/api-response';
 import { Request, Response } from 'express';
 
-function apiError<TError = unknown>(_error: TError, res: Response) {
+function handleApiError<TError = unknown>(_error: TError, res: Response) {
+  console.error('API Error:', _error);
   const body: ApiResponse = {
     data: undefined,
     success: false,
@@ -41,7 +42,7 @@ export function toApiResponse<
 
       res.status(statusCode).json(body);
     } catch (error) {
-      apiError(error, res);
+      handleApiError(error, res);
     }
   };
 }
