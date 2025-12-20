@@ -26,7 +26,7 @@ function useSectorsBatchDelete({
     unknown
   >({
     mutationFn: async ({ ids }) => {
-      const response = await axios.delete(`${apiBaseUrl}/sectors/batch`, {
+      const response = await axios.delete(`${apiBaseUrl}/sectors`, {
         data: { ids },
         headers: {
           'Content-Type': 'application/json',

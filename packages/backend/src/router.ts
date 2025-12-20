@@ -155,7 +155,7 @@ router.delete(
   sectorsDelete
 );
 router.delete(
-  '/sectors/batch',
+  '/sectors',
   authenticateKeycloak,
   validateBody(sectorsBatchDeleteRequestSchema),
   sectorsBatchDelete
