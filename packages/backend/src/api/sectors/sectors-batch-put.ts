@@ -7,8 +7,11 @@ import { Types } from 'mongoose';
 
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
-import { Sector } from '../../models/sector';
-import { upsertDocument } from '../../utils/upsert-document';
+import { ISector, Sector } from '../../models/sector';
+import {
+  batchUpsertDocument,
+  BatchUpsertItem,
+} from '../../utils/batch-upsert-document';
 import { toApiResponse } from '../api-utils';
 import { toApiSector } from './sectors-mapper';
 
@@ -22,8 +25,9 @@ const handler = toApiResponse<
 
   const { sectors: sectorsData } = request.body;
 
-  const promises = sectorsData.map(async (sectorPutData) => {
-    const sector = await upsertDocument(Sector, sectorPutData.id, {
+  const items = sectorsData.map<BatchUpsertItem<ISector>>((sectorPutData) => ({
+    id: sectorPutData.id,
+    data: {
       name: sectorPutData.name,
       description: sectorPutData.description,
       isPrimary: sectorPutData.isPrimary,
@@ -38,18 +42,21 @@ const handler = toApiResponse<
       climbs: sectorPutData.climbs.map(
         (climbId: string) => new Types.ObjectId(climbId)
       ),
-    }).populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
+    },
+  }));
 
-    return toApiSector(sector);
-  });
-  const savedSectors = await Promise.all(promises);
+  const ids = await batchUpsertDocument(Sector, items);
+  const savedSectors = await Sector.find({ _id: { $in: ids } }).populate<{
+    climbs: IClimb[];
+    images: IImage[];
+  }>(['images', 'climbs']);
 
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        sectors: savedSectors,
+        sectors: savedSectors.map(toApiSector),
       },
     },
   };
