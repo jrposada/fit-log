@@ -177,8 +177,6 @@ const CreateLocationScreen: FunctionComponent = () => {
     }
   }, [existingLocation, isEditMode, reset]);
 
-  console.log('Form errors:', methods.formState.errors, isValid);
-
   return (
     <FormProvider {...methods}>
       <KeyboardAvoidingView

@@ -17,7 +17,7 @@ import {
 import FormTextArea from '../../library/form/form-text-area';
 import FormTextInput from '../../library/form/form-text-input';
 import ImagePicker, { ImagePickerProps } from '../../library/image-picker';
-import { FormData, SectorWithChanges } from './form-location';
+import { FormData } from './form-location';
 
 const FormLocationSectors: FunctionComponent = () => {
   const filesBaseUrl = getEnvVariable('PUBLIC_FILES_BASE_URL');
@@ -38,7 +38,7 @@ const FormLocationSectors: FunctionComponent = () => {
     const updatedSectors = [...sectors];
 
     tempIdCounter.current += 1;
-    const newSector: SectorWithChanges = {
+    const newSector: FormData['sectors'][number] = {
       isPrimary: false,
       name: '',
       latitude: 0,
@@ -93,9 +93,7 @@ const FormLocationSectors: FunctionComponent = () => {
       });
 
       const updatedSectors = [...sectors];
-      const existingSector = updatedSectors[
-        editingSectorIndex
-      ] as SectorWithChanges;
+      const existingSector = updatedSectors[editingSectorIndex];
       existingSector.images = [...existingSector.images, savedImage];
 
       setValue('sectors', updatedSectors, { shouldDirty: true });
@@ -127,7 +125,7 @@ const FormLocationSectors: FunctionComponent = () => {
 
       {sectors.length > 0 && (
         <View style={styles.sectorsList}>
-          {sectors.map((sector: SectorWithChanges, index: number) => {
+          {sectors.map((sector, index) => {
             const actualIndex = sectors.indexOf(sector);
             return (
               <View
