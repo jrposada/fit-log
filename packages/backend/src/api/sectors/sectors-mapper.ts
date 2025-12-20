@@ -10,7 +10,6 @@ import { toApiImage } from '../images/images-mapper';
 function toApiSector(
   model: MergeType<ISector, { climbs: IClimb[]; images: IImage[] }>
 ): Sector {
-  console.log('Mapping sector:', model);
   return {
     id: model._id.toString(),
     name: model.name,

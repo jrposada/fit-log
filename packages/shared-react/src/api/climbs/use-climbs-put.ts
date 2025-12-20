@@ -20,14 +20,12 @@ function useClimbsPut({ onError, onSuccess }: UseClimbsPutParams = {}) {
     unknown
   >({
     mutationFn: async (climb) => {
-      console.log('Putting climb:', climb);
       const response = await axios.put(`${apiBaseUrl}/climbs`, climb, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: '',
         },
       });
-      console.log('Climb put response:', response);
 
       if (!response.data.success) {
         throw new Error('Api error');
