@@ -41,7 +41,11 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
     [selectedLocation]
   );
   const numClimbs = useMemo(
-    () => selectedLocation?.sectors.length ?? 0,
+    () =>
+      selectedLocation?.sectors.reduce<number>(
+        (reduced, sector) => reduced + sector.climbs.length,
+        0
+      ),
     [selectedLocation]
   );
 
