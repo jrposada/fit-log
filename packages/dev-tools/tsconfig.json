@@ -21,9 +21,9 @@
     "noImplicitReturns": true,
 
     "paths": {
-      "@backend/*": ["../backend/src/services/*"],
+      "@backend/*": ["../backend/src/*"],
       "@shared/*": ["../shared/src/*"]
     }
   },
-  "include": ["src", "../shared/src"]
+  "include": ["src"]
 }

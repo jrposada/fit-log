@@ -1,6 +1,5 @@
 import { faker } from '@faker-js/faker';
-
-import { DbRecord } from '@backend/aws/db-record';
+import { IClimb } from '@backend/models/climb';
 
 const grades = [
   'V0',
@@ -30,22 +29,19 @@ function fakeHold() {
   };
 }
 
-export function fakeClimb(
-  locations: DbRecord<'location'>[]
-): DbRecord<'climb'> {
+export function fakeClimb(): Partial<
+  Omit<
+    IClimb,
+    '_id' | 'createdAt' | 'updatedAt' | 'location' | 'sector' | 'image'
+  >
+> {
   const numHolds = faker.number.int({ min: 4, max: 12 });
   const holds = Array.from({ length: numHolds }, () => fakeHold());
 
   return {
-    PK: 'climb',
-    SK: `climb#${faker.string.uuid()}` as DbRecord<'climb'>['SK'],
-    updatedAt: faker.date.recent().toISOString(),
-    createdAt: faker.date.recent({ days: 30 }).toISOString(),
-    location: faker.helpers.arrayElement(locations).SK,
     name: faker.word.words({ count: { min: 1, max: 3 } }),
     grade: faker.helpers.arrayElement(grades),
     description: faker.lorem.paragraph(),
-    sector: faker.location.city(),
     holds,
   };
 }

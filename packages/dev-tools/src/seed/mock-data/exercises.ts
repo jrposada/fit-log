@@ -1,7 +1,7 @@
-import { DbRecord } from '@backend/aws/db-record';
 import { faker } from '@faker-js/faker';
+import { IExercise } from '@backend/models/workout';
 
-export function fakeExercise(): DbRecord<'workout'>['exercises'][number] {
+export function fakeExercise(): IExercise {
   return {
     description: faker.lorem.paragraphs(),
     intensity: faker.number.int(100),
