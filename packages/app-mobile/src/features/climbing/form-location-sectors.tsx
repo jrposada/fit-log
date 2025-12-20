@@ -1,6 +1,5 @@
-import { Image as ImageModel } from '@shared/models/image';
-import { SectorsPutRequest } from '@shared/models/sector';
 import { useImagesPost } from '@shared-react/api/images/use-images-post';
+import { getEnvVariable } from '@shared-react/infrastructure/get-env-variable';
 import { FunctionComponent, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -18,15 +17,11 @@ import {
 import FormTextArea from '../../library/form/form-text-area';
 import FormTextInput from '../../library/form/form-text-input';
 import ImagePicker, { ImagePickerProps } from '../../library/image-picker';
-import { FormData } from './form-location';
-
-type SectorWithChanges = SectorsPutRequest & {
-  _status?: 'new' | 'updated' | 'deleted';
-  _tempId?: string;
-  _imageData?: ImageModel[];
-};
+import { FormData, SectorWithChanges } from './form-location';
 
 const FormLocationSectors: FunctionComponent = () => {
+  const filesBaseUrl = getEnvVariable('PUBLIC_FILES_BASE_URL');
+
   const { t } = useTranslation();
   const { control, setValue } = useFormContext<FormData>();
   const sectors = useWatch({ control, name: 'sectors' }) || [];
@@ -52,7 +47,6 @@ const FormLocationSectors: FunctionComponent = () => {
       climbs: [],
       _tempId: `temp-${tempIdCounter.current}`,
       _status: 'new',
-      _imageData: [],
     };
 
     updatedSectors.push(newSector);
@@ -102,11 +96,7 @@ const FormLocationSectors: FunctionComponent = () => {
       const existingSector = updatedSectors[
         editingSectorIndex
       ] as SectorWithChanges;
-      existingSector.images = [...existingSector.images, savedImage.id];
-      existingSector._imageData = [
-        ...(existingSector._imageData || []),
-        savedImage,
-      ];
+      existingSector.images = [...existingSector.images, savedImage];
 
       setValue('sectors', updatedSectors, { shouldDirty: true });
       setShowSectorPicker(false);
@@ -163,7 +153,7 @@ const FormLocationSectors: FunctionComponent = () => {
                     />
                   </View>
                 </View>
-                {sector._imageData && sector._imageData.length > 0 && (
+                {sector.images && sector.images.length > 0 && (
                   <View style={styles.imagesContainer}>
                     <Text style={styles.imagesLabel}>
                       {t('climbing.images')}
@@ -173,10 +163,12 @@ const FormLocationSectors: FunctionComponent = () => {
                       showsHorizontalScrollIndicator={false}
                       style={styles.imagesScroll}
                     >
-                      {sector._imageData.map((image) => (
+                      {sector.images.map((image) => (
                         <View key={image.id} style={styles.imageWrapper}>
                           <Image
-                            source={{ uri: image.thumbnailUrl }}
+                            source={{
+                              uri: `${filesBaseUrl}/${image.thumbnailUrl}`,
+                            }}
                             style={styles.thumbnailImage}
                             resizeMode="cover"
                           />

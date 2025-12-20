@@ -115,7 +115,11 @@ const CreateLocationScreen: FunctionComponent = () => {
         });
 
         const result = await sectorsBatchPut.mutateAsync({
-          sectors: sectorsData,
+          sectors: sectorsData.map((sector) => ({
+            ...sector,
+            climbs: sector.climbs.map((climb) => climb.id),
+            images: sector.images.map((image) => image.id),
+          })),
         });
         savedSectorIds = result.sectors.map((s) => s.id);
       }
@@ -172,6 +176,8 @@ const CreateLocationScreen: FunctionComponent = () => {
       initializedRef.current = true;
     }
   }, [existingLocation, isEditMode, reset]);
+
+  console.log('Form errors:', methods.formState.errors, isValid);
 
   return (
     <FormProvider {...methods}>
