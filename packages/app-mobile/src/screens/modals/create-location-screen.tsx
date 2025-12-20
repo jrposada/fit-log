@@ -90,10 +90,35 @@ const CreateLocationScreen: FunctionComponent = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    const sectorsToDelete = data.sectors.filter(
+    const sectorsWithUpdatedStatus = data.sectors.map((sector, index) => {
+      const sectorDirtyFields = methods.formState.dirtyFields.sectors?.[index];
+
+      if (
+        sector.id &&
+        sector._status !== 'new' &&
+        sector._status !== 'deleted' &&
+        Object.keys(sectorDirtyFields ?? {}).length > 0
+      ) {
+        return { ...sector, _status: 'updated' as const };
+      }
+
+      return sector;
+    });
+
+    const sectorsToDelete = sectorsWithUpdatedStatus.filter(
       (s) => s._status === 'deleted' && s.id
     );
-    const sectorsToSave = data.sectors.filter((s) => s._status !== 'deleted');
+    const sectorsToSave = sectorsWithUpdatedStatus.filter(
+      (s) => s._status === 'new' || s._status === 'updated' || !s.id
+    );
+    const sectorsId = new Set(
+      sectorsWithUpdatedStatus
+        .filter(
+          (s): s is typeof s & { id: string } =>
+            s._status !== 'deleted' && !!s.id
+        )
+        .map((s) => s.id)
+    );
 
     try {
       if (sectorsToDelete.length > 0) {
@@ -106,7 +131,6 @@ const CreateLocationScreen: FunctionComponent = () => {
         }
       }
 
-      let savedSectorIds: string[] = [];
       if (sectorsToSave.length > 0) {
         const sectorsData = sectorsToSave.map((sector) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -121,7 +145,7 @@ const CreateLocationScreen: FunctionComponent = () => {
             images: sector.images.map((image) => image.id),
           })),
         });
-        savedSectorIds = result.sectors.map((s) => s.id);
+        result.sectors.forEach((s) => sectorsId.add(s.id));
       }
 
       const locationData = {
@@ -131,7 +155,7 @@ const CreateLocationScreen: FunctionComponent = () => {
         latitude: data.latitude,
         longitude: data.longitude,
         googleMapsId: data.googleMapsId,
-        sectors: savedSectorIds,
+        sectors: [...sectorsId],
       };
       locationsPut.mutate(locationData);
     } catch (error) {
@@ -176,6 +200,9 @@ const CreateLocationScreen: FunctionComponent = () => {
       initializedRef.current = true;
     }
   }, [existingLocation, isEditMode, reset]);
+
+  const isSubmitDisabled =
+    !isValid || !isDirty || locationsPut.isPending || isLoadingLocation;
 
   return (
     <FormProvider {...methods}>
@@ -222,10 +249,10 @@ const CreateLocationScreen: FunctionComponent = () => {
           <Pressable
             style={[
               styles.saveButton,
-              (!isValid || isLoadingLocation) && styles.saveButtonDisabled,
+              isSubmitDisabled && styles.saveButtonDisabled,
             ]}
             onPress={handleSubmit(onSubmit)}
-            disabled={!isValid || locationsPut.isPending || isLoadingLocation}
+            disabled={isSubmitDisabled}
           >
             <Text style={styles.saveButtonText}>
               {isLoadingLocation
