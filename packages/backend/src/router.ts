@@ -4,6 +4,12 @@ import {
   climbsGetQuerySchema,
   climbsPutRequestSchema,
 } from '@shared/models/climb';
+import {
+  climbHistoriesDeleteParamsSchema,
+  climbHistoriesGetByIdParamsSchema,
+  climbHistoriesGetQuerySchema,
+  climbHistoriesPutRequestSchema,
+} from '@shared/models/climb-history';
 import { imagesPostRequestSchema } from '@shared/models/image';
 import {
   locationsDeleteParamsSchema,
@@ -31,6 +37,10 @@ import {
 } from '@shared/models/workout';
 import { Router } from 'express';
 
+import { handler as climbHistoriesDelete } from './api/climb-histories/climb-histories-delete';
+import { handler as climbHistoriesGet } from './api/climb-histories/climb-histories-get';
+import { handler as climbHistoriesGetById } from './api/climb-histories/climb-histories-get-by-id';
+import { handler as climbHistoriesPut } from './api/climb-histories/climb-histories-put';
 import { handler as climbsDelete } from './api/climbs/climbs-delete';
 import { handler as climbsGet } from './api/climbs/climbs-get';
 import { handler as climbsGetById } from './api/climbs/climbs-get-by-id';
@@ -193,4 +203,30 @@ router.delete(
   authenticateKeycloak,
   validateParams(climbsDeleteParamsSchema),
   climbsDelete
+);
+
+// Climb Histories
+router.get(
+  '/climb-histories',
+  authenticateKeycloak,
+  validateQuery(climbHistoriesGetQuerySchema),
+  climbHistoriesGet
+);
+router.get(
+  '/climb-histories/:id',
+  authenticateKeycloak,
+  validateParams(climbHistoriesGetByIdParamsSchema),
+  climbHistoriesGetById
+);
+router.put(
+  '/climb-histories',
+  authenticateKeycloak,
+  validateBody(climbHistoriesPutRequestSchema),
+  climbHistoriesPut
+);
+router.delete(
+  '/climb-histories/:id',
+  authenticateKeycloak,
+  validateParams(climbHistoriesDeleteParamsSchema),
+  climbHistoriesDelete
 );
