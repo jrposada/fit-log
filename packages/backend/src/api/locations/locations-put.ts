@@ -24,13 +24,14 @@ const handler = toApiResponse<
   const locationPutData = request.body;
 
   const location = await upsertDocument(Location, locationPutData.id, {
+    /* Data */
     name: locationPutData.name,
     description: locationPutData.description,
-
     latitude: locationPutData.latitude,
     longitude: locationPutData.longitude,
     googleMapsId: locationPutData.googleMapsId,
 
+    /* References */
     sectors: locationPutData.sectors.map(
       (sectorId) => new Types.ObjectId(sectorId)
     ),

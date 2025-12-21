@@ -28,14 +28,15 @@ const handler = toApiResponse<
   const items = sectorsData.map<BatchUpsertItem<ISector>>((sectorPutData) => ({
     id: sectorPutData.id,
     data: {
+      /* Data */
       name: sectorPutData.name,
       description: sectorPutData.description,
       isPrimary: sectorPutData.isPrimary,
-
       latitude: sectorPutData.latitude,
       longitude: sectorPutData.longitude,
       googleMapsId: sectorPutData.googleMapsId,
 
+      /* References */
       images: sectorPutData.images.map(
         (imageId: string) => new Types.ObjectId(imageId)
       ),

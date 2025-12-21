@@ -24,6 +24,7 @@ const handler = toApiResponse<
   );
 
   const image = await upsertDocument(Image, undefined, {
+    /* Data */
     imageUrl: processedImage.imageUrl,
     thumbnailUrl: processedImage.thumbnailUrl,
     imageWidth: processedImage.imageWidth,

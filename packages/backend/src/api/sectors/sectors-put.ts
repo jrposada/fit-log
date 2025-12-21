@@ -20,14 +20,15 @@ const handler = toApiResponse<
   const sectorPutData = request.body;
 
   const sector = await upsertDocument(Sector, sectorPutData.id, {
+    /* Data */
     name: sectorPutData.name,
     description: sectorPutData.description,
     isPrimary: sectorPutData.isPrimary,
-
     latitude: sectorPutData.latitude,
     longitude: sectorPutData.longitude,
     googleMapsId: sectorPutData.googleMapsId,
 
+    /* References */
     images: sectorPutData.images.map((imageId) => new Types.ObjectId(imageId)),
     climbs: sectorPutData.climbs.map((climbId) => new Types.ObjectId(climbId)),
   }).populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);

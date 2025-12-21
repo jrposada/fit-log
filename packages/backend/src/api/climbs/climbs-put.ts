@@ -18,11 +18,13 @@ const handler = toApiResponse<
   const climbPutData = request.body;
 
   const climb = await upsertDocument(Climb, climbPutData.id, {
+    /* Data */
     name: climbPutData.name,
     grade: climbPutData.grade,
     description: climbPutData.description,
     holds: climbPutData.holds,
 
+    /* References */
     image: new Types.ObjectId(climbPutData.image),
     sector: new Types.ObjectId(climbPutData.sector),
     location: new Types.ObjectId(climbPutData.location),
