@@ -1,9 +1,7 @@
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
 export interface ILocation extends WithTimestamps<Document> {
-  //////////
-  // Data //
-  //////////
+  /* Data */
   name: string;
   description?: string;
 
@@ -11,16 +9,12 @@ export interface ILocation extends WithTimestamps<Document> {
   longitude: number;
   googleMapsId?: string;
 
-  ////////////////
-  // References //
-  ////////////////
+  /* References */
   sectors: Types.ObjectId[];
 }
 const locationSchema = new Schema<ILocation>(
   {
-    //////////
-    // Data //
-    //////////
+    /* Data */
     name: {
       type: String,
       required: true,
@@ -43,9 +37,7 @@ const locationSchema = new Schema<ILocation>(
       required: false,
     },
 
-    ////////////////
-    // References //
-    ////////////////
+    /* References */
     sectors: {
       type: [Schema.Types.ObjectId],
       ref: 'Sector',
@@ -57,9 +49,5 @@ const locationSchema = new Schema<ILocation>(
     timestamps: true,
   }
 );
-
-// Index for geospatial queries if needed
-// locationSchema.index({ latitude: 1, longitude: 1 });
-// locationSchema.index({ lastUsedAt: -1 });
 
 export const Location = model<ILocation>('Location', locationSchema);

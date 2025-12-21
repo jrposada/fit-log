@@ -14,16 +14,18 @@ function toApiLocation(
   >
 ): Location {
   return {
+    /* Data */
     id: model._id.toString(),
     name: model.name,
     description: model.description,
-
     latitude: model.latitude,
     longitude: model.longitude,
     googleMapsId: model.googleMapsId,
 
+    /* References */
     sectors: model.sectors.map(toApiSector),
 
+    /* Timestamps */
     createdAt: model.createdAt.toISOString(),
     updatedAt: model.updatedAt.toISOString(),
   };

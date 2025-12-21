@@ -6,17 +6,13 @@ export interface IHold {
 }
 
 export interface IClimb extends WithTimestamps<Document> {
-  //////////
-  // Data //
-  //////////
+  /* Data */
   name: string;
   grade: string;
   description?: string;
   holds: IHold[];
 
-  ////////////////
-  // References //
-  ////////////////
+  /* References */
   image: Types.ObjectId;
   location: Types.ObjectId;
   sector: Types.ObjectId;
@@ -38,9 +34,7 @@ const holdSchema = new Schema<IHold>(
 
 const climbSchema = new Schema<IClimb>(
   {
-    //////////
-    // Data //
-    //////////
+    /* Data */
     name: {
       type: String,
       required: true,
@@ -59,9 +53,7 @@ const climbSchema = new Schema<IClimb>(
       default: [],
     },
 
-    ////////////////
-    // References //
-    ////////////////
+    /* References */
     image: {
       type: Schema.Types.ObjectId,
       ref: 'Image',

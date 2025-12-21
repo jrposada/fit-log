@@ -1,9 +1,7 @@
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
 export interface ISector extends WithTimestamps<Document> {
-  //////////
-  // Data //
-  //////////
+  /* Data */
   name: string;
   description?: string;
   isPrimary: boolean;
@@ -12,17 +10,13 @@ export interface ISector extends WithTimestamps<Document> {
   longitude: number;
   googleMapsId?: string;
 
-  ////////////////
-  // References //
-  ////////////////
+  /* References */
   images: Types.ObjectId[];
   climbs: Types.ObjectId[];
 }
 const sectorSchema = new Schema<ISector>(
   {
-    //////////
-    // Data //
-    //////////
+    /* Data */
     name: {
       type: String,
       required: true,
@@ -50,9 +44,7 @@ const sectorSchema = new Schema<ISector>(
       required: false,
     },
 
-    ////////////////
-    // References //
-    ////////////////
+    /* References */
     images: {
       type: [Schema.Types.ObjectId],
       ref: 'Image',

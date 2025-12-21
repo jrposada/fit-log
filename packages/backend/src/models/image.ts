@@ -1,24 +1,16 @@
 import { Document, model, Schema, WithTimestamps } from 'mongoose';
 
 export interface IImage extends WithTimestamps<Document> {
-  //////////
-  // Data //
-  //////////
+  /* Data */
   imageUrl: string;
   thumbnailUrl: string;
   imageWidth: number;
   imageHeight: number;
-
-  ////////////////
-  // References //
-  ////////////////
 }
 
 const imageSchema = new Schema<IImage>(
   {
-    //////////
-    // Data //
-    //////////
+    /* Data */
     imageUrl: {
       type: String,
       required: true,
@@ -35,10 +27,6 @@ const imageSchema = new Schema<IImage>(
       type: Number,
       required: true,
     },
-
-    ////////////////
-    // References //
-    ////////////////
   },
   {
     timestamps: true,

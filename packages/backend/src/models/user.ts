@@ -1,18 +1,14 @@
 import { Document, model, Schema, WithTimestamps } from 'mongoose';
 
 export interface IUser extends WithTimestamps<Document> {
-  //////////
-  // Data //
-  //////////
+  /* Data */
   keycloakId: string;
   email: string;
   name: string;
   roles: string[];
   emailVerified: boolean;
 
-  ////////////////
-  // References //
-  ////////////////
+  /* References */
 }
 const userSchema = new Schema<IUser>(
   {
