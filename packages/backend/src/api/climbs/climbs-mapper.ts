@@ -10,9 +10,9 @@ function toApiClimb(model: IClimb): Climb {
     description: model.description,
     holds: model.holds,
 
-    image: model.image.toString(),
-    location: model.location.toString(),
-    sector: model.sector.toString(),
+    image: model.image._id.toString(),
+    location: model.location._id.toString(),
+    sector: model.sector.id.toString(),
 
     createdAt: model.createdAt.toISOString(),
     updatedAt: model.updatedAt.toISOString(),
