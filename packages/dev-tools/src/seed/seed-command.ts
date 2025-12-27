@@ -4,10 +4,12 @@ import { Workout } from '@backend/models/workout';
 import { Location } from '@backend/models/location';
 import { Sector } from '@backend/models/sector';
 import { Climb } from '@backend/models/climb';
+import { ClimbHistory } from '@backend/models/climb-history';
 import { Image } from '@backend/models/image';
 
 import { Settings } from '../register';
 import { fakeClimb } from './mock-data/climbs';
+import { fakeClimbHistory } from './mock-data/climb-histories';
 import { fakeWorkout } from './mock-data/workouts';
 import { fakeLocation } from './mock-data/locations';
 import { fakeImage } from './mock-data/images';
@@ -16,18 +18,19 @@ import { fakeSector } from './mock-data/sectors';
 type CommandSettings = Settings<{
   numWorkouts: number;
   numClimbs: number;
+  numClimbHistories: number;
   numLocations: number;
 }>;
 
 const action: CommandSettings['action'] = async ({
   numWorkouts,
   numClimbs,
+  numClimbHistories,
   numLocations,
 }) => {
   try {
     await connectToDatabase();
 
-    // 1. Create Images (prerequisites for climbs)
     console.log(`Creating ${numClimbs} images...`);
     const imagePromises = [];
     for (let i = 0; i < numClimbs; i++) {
@@ -37,7 +40,6 @@ const action: CommandSettings['action'] = async ({
     const images = await Promise.all(imagePromises);
     console.log(`✓ Created ${images.length} images`);
 
-    // 2. Create Locations
     console.log(`Creating ${numLocations} locations...`);
     const locationPromises = [];
     for (let i = 0; i < numLocations; i++) {
@@ -47,7 +49,6 @@ const action: CommandSettings['action'] = async ({
     const locations = await Promise.all(locationPromises);
     console.log(`✓ Created ${locations.length} locations`);
 
-    // 3. Create Sectors (2 per location)
     const sectorsPerLocation = 2;
     console.log(`Creating ${numLocations * sectorsPerLocation} sectors...`);
     const sectorPromises = [];
@@ -60,7 +61,6 @@ const action: CommandSettings['action'] = async ({
     const sectors = await Promise.all(sectorPromises);
     console.log(`✓ Created ${sectors.length} sectors`);
 
-    // 4. Update locations with sector references
     console.log('Linking sectors to locations...');
     for (let i = 0; i < locations.length; i++) {
       const location = locations[i];
@@ -73,7 +73,6 @@ const action: CommandSettings['action'] = async ({
     }
     console.log('✓ Linked sectors to locations');
 
-    // 5. Create Climbs
     console.log(`Creating ${numClimbs} climbs...`);
     const climbPromises = [];
     for (let i = 0; i < numClimbs; i++) {
@@ -92,7 +91,6 @@ const action: CommandSettings['action'] = async ({
     const climbs = await Promise.all(climbPromises);
     console.log(`✓ Created ${climbs.length} climbs`);
 
-    // 6. Update sectors with climb and image references
     console.log('Linking climbs and images to sectors...');
     for (const climb of climbs) {
       await Sector.findByIdAndUpdate(climb.sector, {
@@ -101,7 +99,22 @@ const action: CommandSettings['action'] = async ({
     }
     console.log('✓ Linked climbs and images to sectors');
 
-    // 7. Create Workouts
+    console.log(`Creating ${numClimbHistories} climb histories...`);
+    const climbHistoryPromises = [];
+    for (let i = 0; i < numClimbHistories; i++) {
+      const randomClimb = faker.helpers.arrayElement(climbs);
+
+      const climbHistoryData = {
+        ...fakeClimbHistory(),
+        climb: randomClimb._id,
+        location: randomClimb.location,
+        sector: randomClimb.sector,
+      };
+      climbHistoryPromises.push(ClimbHistory.create(climbHistoryData));
+    }
+    const climbHistories = await Promise.all(climbHistoryPromises);
+    console.log(`✓ Created ${climbHistories.length} climb histories`);
+
     console.log(`Creating ${numWorkouts} workouts...`);
     const workoutPromises = [];
     for (let i = 0; i < numWorkouts; i++) {
@@ -133,6 +146,12 @@ const seedCommand: CommandSettings = {
       description: 'Number of climbs to create',
       type: 'number',
       defaultValue: 250,
+    },
+    {
+      flags: '--num-climb-histories <value>',
+      description: 'Number of climb histories to create',
+      type: 'number',
+      defaultValue: 500,
     },
     {
       flags: '--num-locations <value>',

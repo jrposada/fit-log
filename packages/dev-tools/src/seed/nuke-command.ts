@@ -4,6 +4,7 @@ import { Workout } from '@backend/models/workout';
 import { Location } from '@backend/models/location';
 import { Sector } from '@backend/models/sector';
 import { Climb } from '@backend/models/climb';
+import { ClimbHistory } from '@backend/models/climb-history';
 import { Session } from '@backend/models/session';
 import { Image } from '@backend/models/image';
 import * as fs from 'fs/promises';
@@ -79,6 +80,7 @@ async function nukeDatabase() {
     { name: 'Location', model: Location },
     { name: 'Sector', model: Sector },
     { name: 'Climb', model: Climb },
+    { name: 'ClimbHistory', model: ClimbHistory },
     { name: 'Session', model: Session },
     { name: 'Image', model: Image },
   ];
