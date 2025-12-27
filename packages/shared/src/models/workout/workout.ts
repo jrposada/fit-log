@@ -1,8 +1,5 @@
 import z from 'zod';
 
-////////////
-// Models //
-////////////
 export type Exercise = {
   name: string;
   description: string;
@@ -75,64 +72,3 @@ export const workoutSchema = z.object({
   exercises: z.array(exerciseSchema),
   isFavorite: z.boolean(),
 });
-
-/////////
-// GET //
-/////////
-export type WorkoutsGetQuery = {
-  limit?: number;
-  onlyFavorites?: boolean;
-};
-export const workoutsGetQuerySchema = z.object({
-  limit: z.number().optional(),
-  onlyFavorites: z.boolean().optional(),
-});
-
-export type WorkoutsGetResponse = {
-  workouts: Workout[];
-};
-
-/////////
-// PUT //
-/////////
-export type WorkoutsPutRequest = Omit<Workout, 'id' | 'isFavorite'> & {
-  /**
-   * ID `workout#<user-id>#<workout-id>`.
-   */
-  id?: string;
-};
-export const workoutsPutRequestSchema = z.object({
-  id: z.string().nonempty().optional(),
-  name: z.string().nonempty(),
-  description: z.string().nonempty(),
-  exercises: z.array(exerciseSchema),
-});
-
-export type WorkoutsPutResponse = {
-  workout: Workout;
-};
-
-////////////
-// DELETE //
-////////////
-export type WorkoutsDeleteParams = {
-  id: string;
-};
-export const workoutsDeleteParamsSchema = z.object({
-  id: z.string().nonempty(),
-});
-export type WorkoutsDeleteResponse = undefined;
-
-///////////////
-// GET by ID //
-///////////////
-export type WorkoutsGetByIdParams = {
-  id: string;
-};
-export const workoutsGetByIdParamsSchema = z.object({
-  id: z.string().nonempty(),
-});
-
-export type WorkoutsGetByIdResponse = {
-  workout: Workout;
-};
