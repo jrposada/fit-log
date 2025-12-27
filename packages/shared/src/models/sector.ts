@@ -6,68 +6,23 @@ import { Image, imageSchema } from './image';
 ////////////
 // Models //
 ////////////
-
-/**
- * Represents a sector/wall within a climbing location.
- */
 export type Sector = {
-  /**
-   * ID
-   */
+  /* Data */
   id: string;
-
-  /**
-   * Name of the sector
-   */
   name: string;
-
-  /**
-   * Description of the sector
-   */
   description?: string;
-
-  /**
-   * Whether this is the primary sector for the location
-   */
   isPrimary: boolean;
 
-  /**
-   * Location latitude
-   */
   latitude: number;
-
-  /**
-   * Location longitude
-   */
   longitude: number;
-
-  /**
-   * Google Maps place ID
-   */
   googleMapsId?: string;
 
-  /**
-   * Sector's images
-   */
+  /* References */
   images: Image[];
-
-  /**
-   * Sector's climbs
-   */
   climbs: Climb[];
 
-  /**
-   * Date when sector was created in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
+  /* Timestamps */
   createdAt: string;
-
-  /**
-   * Date when sector was last updated in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
   updatedAt: string;
 };
 
@@ -89,29 +44,15 @@ export const sectorSchema = z.object({
 });
 
 /////////
-// GET //
-/////////
-
-/////////
 // PUT //
 /////////
 export type SectorsPutRequest = Omit<
   Sector,
   'id' | 'createdAt' | 'updatedAt' | 'images' | 'climbs'
 > & {
-  /**
-   * ID
-   */
   id?: string;
 
-  /**
-   * Sector's images ID
-   */
   images: string[];
-
-  /**
-   * Sector's climbs ID
-   */
   climbs: string[];
 };
 export const sectorsPutRequestSchema = z.object({

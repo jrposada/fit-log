@@ -4,8 +4,6 @@ import { Expect } from '../types/expect';
 import { IsEqual } from '../types/is-equal';
 import { IsTrue } from '../types/is-true';
 import {
-  ClimbHistory,
-  climbHistorySchema,
   ClimbHistoriesDeleteParams,
   climbHistoriesDeleteParamsSchema,
   ClimbHistoriesGetByIdParams,
@@ -14,6 +12,8 @@ import {
   climbHistoriesGetQuerySchema,
   ClimbHistoriesPutRequest,
   climbHistoriesPutRequestSchema,
+  ClimbHistory,
+  climbHistorySchema,
 } from './climb-history';
 
 export type ClimbHistoryTest = Expect<

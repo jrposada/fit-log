@@ -4,39 +4,12 @@ import z from 'zod';
 // Models //
 ////////////
 export type Exercise = {
-  /**
-   * Exercise name.
-   */
   name: string;
-
-  /**
-   * Exercise description.
-   */
   description: string;
-
-  /**
-   * Sort order against other exercises.
-   */
   sort: number;
-
-  /**
-   * Number of sets.
-   */
   sets: number;
-
-  /**
-   * Rest between sets (in seconds).
-   */
   restBetweenSets: number;
-
-  /**
-   * Number of repetitions per set.
-   */
   reps: number;
-
-  /**
-   * Rest between reps (in seconds).
-   */
   restBetweenReps: number;
 
   /**

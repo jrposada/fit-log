@@ -4,30 +4,10 @@ import z from 'zod';
 // Models //
 ////////////
 export type Session = {
-  /**
-   * ID.
-   */
   id: string;
 
-  /**
-   * Date when session was completed.
-   *
-   * @format date-time
-   */
   completedAt: string;
-
-  /**
-   * Date when climb was created in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
   createdAt: string;
-
-  /**
-   * Date when climb was last updated in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
   updatedAt: string;
 };
 export const sessionSchema = z.object({

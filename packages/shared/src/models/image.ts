@@ -3,48 +3,16 @@ import z from 'zod';
 ////////////
 // Models //
 ////////////
-
-/**
- * Represents an image with metadata
- */
 export type Image = {
-  /**
-   * ID
-   */
+  /* Data */
   id: string;
-
-  /**
-   * URL to the full-size image
-   */
   imageUrl: string;
-
-  /**
-   * URL to the thumbnail image
-   */
   thumbnailUrl: string;
-
-  /**
-   * Image width in pixels
-   */
   imageWidth: number;
-
-  /**
-   * Image height in pixels
-   */
   imageHeight: number;
 
-  /**
-   * Date when image was created in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
+  /* Timestamps */
   createdAt: string;
-
-  /**
-   * Date when image was last updated in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
   updatedAt: string;
 };
 
@@ -63,10 +31,7 @@ export const imageSchema = z.object({
 // POST //
 //////////
 export type ImagesPostRequest = {
-  /** Base64 encoded image data */
   base64: string;
-
-  /** MIME type of the image */
   mimeType: string;
 };
 export const imagesPostRequestSchema = z.object({

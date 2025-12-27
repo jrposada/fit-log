@@ -5,58 +5,21 @@ import { Sector, sectorSchema } from './sector';
 ////////////
 // Models //
 ////////////
-
-/**
- * Represents a climbing location/gym.
- */
 export type Location = {
-  /**
-   * ID
-   */
+  /* Data */
   id: string;
-
-  /**
-   * Name of the location
-   */
   name: string;
-
-  /**
-   * Description of the location
-   */
   description?: string;
 
-  /**
-   * Latitude coordinate
-   */
   latitude: number;
-
-  /**
-   * Longitude coordinate
-   */
   longitude: number;
-
-  /**
-   * Google Maps Place ID
-   */
   googleMapsId?: string;
 
-  /**
-   * Sectors associated with this location
-   */
+  /* References */
   sectors: Sector[];
 
-  /**
-   * Date when location was created in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
+  /* Timestamps */
   createdAt: string;
-
-  /**
-   * Date when location was last updated in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
   updatedAt: string;
 };
 export const locationSchema = z.object({
@@ -95,14 +58,8 @@ export type LocationsPutRequest = Omit<
   Location,
   'id' | 'createdAt' | 'updatedAt' | 'sectors'
 > & {
-  /**
-   * ID
-   */
   id?: string;
 
-  /**
-   * Sector IDs associated with this location
-   */
   sectors: string[];
 };
 export const locationsPutRequestSchema = z.object({

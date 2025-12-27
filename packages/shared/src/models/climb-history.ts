@@ -1,65 +1,28 @@
 import z from 'zod';
 
+import { Climb, climbSchema } from './climb';
+import { Location, locationSchema } from './location';
+import { Sector, sectorSchema } from './sector';
+
 ////////////
 // Models //
 ////////////
-
-/**
- * Status of a climb attempt
- */
 export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt' | 'project';
 
-/**
- * Represents a climb history entry
- */
 export type ClimbHistory = {
-  /**
-   * ID
-   */
+  /* Data */
   id: string;
-
-  /**
-   * Status of the climb
-   */
   status: ClimbHistoryStatus;
-
-  /**
-   * Number of attempts
-   */
   attempts?: number;
-
-  /**
-   * Free text notes
-   */
   notes?: string;
 
-  /**
-   * Climb reference
-   */
-  climb: string;
+  /* References */
+  climb: Climb;
+  location: Location;
+  sector: Sector;
 
-  /**
-   * Location reference (denormalized from climb)
-   */
-  location: string;
-
-  /**
-   * Sector reference (denormalized from climb)
-   */
-  sector: string;
-
-  /**
-   * Date when history entry was created in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
+  /* Timestamps */
   createdAt: string;
-
-  /**
-   * Date when history entry was last updated in ISO 8601 format (UTC).
-   *
-   * @format date-time
-   */
   updatedAt: string;
 };
 
@@ -69,9 +32,9 @@ export const climbHistorySchema = z.object({
   attempts: z.number().int().positive().optional(),
   notes: z.string().optional(),
 
-  climb: z.string().nonempty(),
-  location: z.string().nonempty(),
-  sector: z.string().nonempty(),
+  climb: climbSchema,
+  location: locationSchema,
+  sector: sectorSchema,
 
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
@@ -109,12 +72,13 @@ export type ClimbHistoriesGetResponse = {
 /////////
 export type ClimbHistoriesPutRequest = Omit<
   ClimbHistory,
-  'id' | 'createdAt' | 'updatedAt'
+  'id' | 'createdAt' | 'updatedAt' | 'climb' | 'location' | 'sector'
 > & {
-  /**
-   * ID
-   */
   id?: string;
+
+  climb: string;
+  location: string;
+  sector: string;
 };
 
 export const climbHistoriesPutRequestSchema = z.object({
