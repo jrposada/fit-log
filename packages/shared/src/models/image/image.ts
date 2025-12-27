@@ -1,8 +1,5 @@
 import z from 'zod';
 
-////////////
-// Models //
-////////////
 export type Image = {
   /* Data */
   id: string;
@@ -26,19 +23,3 @@ export const imageSchema = z.object({
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });
-
-//////////
-// POST //
-//////////
-export type ImagesPostRequest = {
-  base64: string;
-  mimeType: string;
-};
-export const imagesPostRequestSchema = z.object({
-  base64: z.string(),
-  mimeType: z.string(),
-});
-
-export type ImagesPostResponse = {
-  image: Image;
-};
