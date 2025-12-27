@@ -1,4 +1,7 @@
-import { ImagesPostRequest, ImagesPostResponse } from '@shared/models/image';
+import {
+  ImagesPostRequest,
+  ImagesPostResponse,
+} from '@shared/models/image/image-post';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

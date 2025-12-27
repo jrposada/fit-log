@@ -1,7 +1,7 @@
 import {
   LocationsDeleteParams,
   LocationsDeleteResponse,
-} from '@shared/models/location';
+} from '@shared/models/location/location-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

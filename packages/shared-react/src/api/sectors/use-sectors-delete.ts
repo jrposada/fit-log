@@ -1,7 +1,7 @@
 import {
   SectorsDeleteParams,
   SectorsDeleteResponse,
-} from '@shared/models/sector';
+} from '@shared/models/sector/sector-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

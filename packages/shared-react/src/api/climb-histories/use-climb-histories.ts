@@ -2,7 +2,7 @@ import { ApiResponse } from '@shared/models/api-response';
 import {
   ClimbHistoriesGetQuery,
   ClimbHistoriesGetResponse,
-} from '@shared/models/climb-history';
+} from '@shared/models/climb-history/climb-history-get';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

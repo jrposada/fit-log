@@ -2,7 +2,7 @@ import { ApiResponse } from '@shared/models/api-response';
 import {
   LocationsGetByIdParams,
   LocationsGetByIdResponse,
-} from '@shared/models/location';
+} from '@shared/models/location/location-get-by-id';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

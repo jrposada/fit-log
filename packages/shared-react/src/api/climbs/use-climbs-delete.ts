@@ -1,4 +1,7 @@
-import { ClimbsDeleteParams, ClimbsDeleteResponse } from '@shared/models/climb';
+import {
+  ClimbsDeleteParams,
+  ClimbsDeleteResponse,
+} from '@shared/models/climb/climb-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

@@ -2,7 +2,7 @@ import { ApiResponse } from '@shared/models/api-response';
 import {
   SectorsGetByIdParams,
   SectorsGetByIdResponse,
-} from '@shared/models/sector';
+} from '@shared/models/sector/sector-get-by-id';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

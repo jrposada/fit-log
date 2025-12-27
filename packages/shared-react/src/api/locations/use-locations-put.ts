@@ -1,7 +1,7 @@
 import {
   LocationsPutRequest,
   LocationsPutResponse,
-} from '@shared/models/location';
+} from '@shared/models/location/location-put';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

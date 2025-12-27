@@ -1,4 +1,4 @@
-import { SectorsPutRequest } from '@shared/models/sector';
+import { SectorsPutRequest } from '@shared/models/sector/sector-put';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

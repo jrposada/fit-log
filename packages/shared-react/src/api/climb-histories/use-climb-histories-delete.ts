@@ -1,7 +1,7 @@
 import {
   ClimbHistoriesDeleteParams,
   ClimbHistoriesDeleteResponse,
-} from '@shared/models/climb-history';
+} from '@shared/models/climb-history/climb-history-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

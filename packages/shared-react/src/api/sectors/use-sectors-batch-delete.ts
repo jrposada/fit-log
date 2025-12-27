@@ -1,7 +1,7 @@
 import {
   SectorsBatchDeleteRequest,
   SectorsBatchDeleteResponse,
-} from '@shared/models/sector';
+} from '@shared/models/sector/sector-batch-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

@@ -1,5 +1,5 @@
 import { ApiResponse } from '@shared/models/api-response';
-import { ClimbsGetByIdResponse } from '@shared/models/climb';
+import { ClimbsGetByIdResponse } from '@shared/models/climb/climb-get-by-id';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

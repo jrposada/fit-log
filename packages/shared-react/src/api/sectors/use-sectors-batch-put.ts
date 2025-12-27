@@ -1,7 +1,7 @@
 import {
   SectorsBatchPutRequest,
   SectorsBatchPutResponse,
-} from '@shared/models/sector';
+} from '@shared/models/sector/sector-batch-put';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

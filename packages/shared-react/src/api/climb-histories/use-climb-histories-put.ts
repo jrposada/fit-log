@@ -1,7 +1,7 @@
 import {
   ClimbHistoriesPutRequest,
   ClimbHistoriesPutResponse,
-} from '@shared/models/climb-history';
+} from '@shared/models/climb-history/climb-history-put';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

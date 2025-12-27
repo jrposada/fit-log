@@ -1,4 +1,4 @@
-import { ClimbGrade } from '@shared/models/climb';
+import { ClimbGrade } from '@shared/models/climb/climb';
 
 const GRADE_PALETTE: Record<ClimbGrade, string> = {
   V0: '#B9F6CA',
