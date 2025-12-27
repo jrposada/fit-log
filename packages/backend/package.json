@@ -28,6 +28,7 @@
     "lint": "run-p lint:*"
   },
   "dependencies": {
+    "@jrposada/fit-log-shared": "*",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "mongoose": "^9.0.0",
