@@ -1,7 +1,7 @@
-import { climbSchema } from '@shared/models/climb';
-import { imageSchema } from '@shared/models/image';
-import { locationsPutRequestSchema } from '@shared/models/location';
-import { sectorsPutRequestSchema } from '@shared/models/sector';
+import { climbSchema } from '@shared/models/climb/climb';
+import { imageSchema } from '@shared/models/image/image';
+import { locationsPutRequestSchema } from '@shared/models/location/location-put';
+import { sectorsPutRequestSchema } from '@shared/models/sector/sector-put';
 import z from 'zod';
 
 const sectorsFormDataSchema = sectorsPutRequestSchema

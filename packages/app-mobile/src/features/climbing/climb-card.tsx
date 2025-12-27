@@ -1,4 +1,4 @@
-import { Climb } from '@shared/models/climb';
+import { Climb } from '@shared/models/climb/climb';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';

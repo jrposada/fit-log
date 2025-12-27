@@ -45,7 +45,7 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
       selectedLocation?.sectors.reduce<number>(
         (reduced, sector) => reduced + sector.climbs.length,
         0
-      ),
+      ) ?? 0,
     [selectedLocation]
   );
 
