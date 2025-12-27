@@ -1,20 +1,19 @@
 import z from 'zod';
 
-import { Expect } from '../types/expect';
-import { IsEqual } from '../types/is-equal';
-import { IsTrue } from '../types/is-true';
+import { Expect } from '../../types/expect';
+import { IsEqual } from '../../types/is-equal';
+import { IsTrue } from '../../types/is-true';
+import { Location, locationSchema } from './location';
 import {
-  Location,
-  locationSchema,
   LocationsDeleteParams,
   locationsDeleteParamsSchema,
+} from './location-delete';
+import { LocationsGetQuery, locationsGetQuerySchema } from './location-get';
+import {
   LocationsGetByIdParams,
   locationsGetByIdParamsSchema,
-  LocationsGetQuery,
-  locationsGetQuerySchema,
-  LocationsPutRequest,
-  locationsPutRequestSchema,
-} from './location';
+} from './location-get-by-id';
+import { LocationsPutRequest, locationsPutRequestSchema } from './location-put';
 
 export type LocationTest = Expect<
   IsTrue<IsEqual<Location, z.infer<typeof locationSchema>>>
