@@ -1,22 +1,16 @@
 import z from 'zod';
 
-import { Expect } from '../types/expect';
-import { IsEqual } from '../types/is-equal';
-import { IsTrue } from '../types/is-true';
+import { Expect } from '../../types/expect';
+import { IsEqual } from '../../types/is-equal';
+import { IsTrue } from '../../types/is-true';
+import { Climb, climbSchema, Hold, holdSchema } from './climb';
+import { ClimbsDeleteParams, climbsDeleteParamsSchema } from './climb-delete';
+import { ClimbsGetQuery, climbsGetQuerySchema } from './climb-get';
 import {
-  Climb,
-  climbSchema,
-  ClimbsDeleteParams,
-  climbsDeleteParamsSchema,
   ClimbsGetByIdParams,
   climbsGetByIdParamsSchema,
-  ClimbsGetQuery,
-  climbsGetQuerySchema,
-  ClimbsPutRequest,
-  climbsPutRequestSchema,
-  Hold,
-  holdSchema,
-} from './climb';
+} from './climb-get-by-id';
+import { ClimbsPutRequest, climbsPutRequestSchema } from './climb-put';
 
 export type HoldTest = Expect<
   IsTrue<IsEqual<Hold, z.infer<typeof holdSchema>>>

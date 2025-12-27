@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { Climb, climbSchema } from './climb';
+import { Climb, climbSchema } from './climb/climb';
 import { Image, imageSchema } from './image';
 
 ////////////

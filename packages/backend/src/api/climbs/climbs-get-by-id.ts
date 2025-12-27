@@ -1,7 +1,7 @@
 import {
   ClimbsGetByIdParams,
   ClimbsGetByIdResponse,
-} from '@shared/models/climb';
+} from '@shared/models/climb/climb-get-by-id';
 import { assert } from '@shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error';
