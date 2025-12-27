@@ -1,4 +1,4 @@
-import { Climb } from '@shared/models/climb';
+import { Climb } from '@shared/models/climb/climb';
 
 import { IClimb } from '../../models/climb';
 

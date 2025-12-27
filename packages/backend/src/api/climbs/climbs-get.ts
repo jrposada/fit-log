@@ -1,4 +1,7 @@
-import { ClimbsGetQuery, ClimbsGetResponse } from '@shared/models/climb';
+import {
+  ClimbsGetQuery,
+  ClimbsGetResponse,
+} from '@shared/models/climb/climb-get';
 import { assert } from '@shared/utils/assert';
 
 import { Climb } from '../../models/climb';

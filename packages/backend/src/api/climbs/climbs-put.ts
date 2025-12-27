@@ -1,4 +1,7 @@
-import { ClimbsPutRequest, ClimbsPutResponse } from '@shared/models/climb';
+import {
+  ClimbsPutRequest,
+  ClimbsPutResponse,
+} from '@shared/models/climb/climb-put';
 import { assert } from '@shared/utils/assert';
 import { Types } from 'mongoose';
 
