@@ -1,40 +1,28 @@
-import {
-  climbsDeleteParamsSchema,
-  climbsGetByIdParamsSchema,
-  climbsGetQuerySchema,
-  climbsPutRequestSchema,
-} from '@shared/models/climb';
-import {
-  climbHistoriesDeleteParamsSchema,
-  climbHistoriesGetByIdParamsSchema,
-  climbHistoriesGetQuerySchema,
-  climbHistoriesPutRequestSchema,
-} from '@shared/models/climb-history';
-import { imagesPostRequestSchema } from '@shared/models/image';
-import {
-  locationsDeleteParamsSchema,
-  locationsGetByIdParamsSchema,
-  locationsGetQuerySchema,
-  locationsPutRequestSchema,
-} from '@shared/models/location';
-import {
-  sectorsBatchDeleteRequestSchema,
-  sectorsBatchPutRequestSchema,
-  sectorsDeleteParamsSchema,
-  sectorsPutRequestSchema,
-} from '@shared/models/sector';
-import {
-  sessionsDeleteParamsSchema,
-  sessionsGetByIdParamsSchema,
-  sessionsGetQuerySchema,
-  sessionsPutRequestSchema,
-} from '@shared/models/session';
-import {
-  workoutsDeleteParamsSchema,
-  workoutsGetByIdParamsSchema,
-  workoutsGetQuerySchema,
-  workoutsPutRequestSchema,
-} from '@shared/models/workout';
+import { climbsDeleteParamsSchema } from '@shared/models/climb/climb-delete';
+import { climbsGetQuerySchema } from '@shared/models/climb/climb-get';
+import { climbsGetByIdParamsSchema } from '@shared/models/climb/climb-get-by-id';
+import { climbsPutRequestSchema } from '@shared/models/climb/climb-put';
+import { climbHistoriesDeleteParamsSchema } from '@shared/models/climb-history/climb-history-delete';
+import { climbHistoriesGetQuerySchema } from '@shared/models/climb-history/climb-history-get';
+import { climbHistoriesGetByIdParamsSchema } from '@shared/models/climb-history/climb-history-get-by-id';
+import { climbHistoriesPutRequestSchema } from '@shared/models/climb-history/climb-history-put';
+import { imagesPostRequestSchema } from '@shared/models/image/image-post';
+import { locationsDeleteParamsSchema } from '@shared/models/location/location-delete';
+import { locationsGetQuerySchema } from '@shared/models/location/location-get';
+import { locationsGetByIdParamsSchema } from '@shared/models/location/location-get-by-id';
+import { locationsPutRequestSchema } from '@shared/models/location/location-put';
+import { sectorsBatchDeleteRequestSchema } from '@shared/models/sector/sector-batch-delete';
+import { sectorsBatchPutRequestSchema } from '@shared/models/sector/sector-batch-put';
+import { sectorsDeleteParamsSchema } from '@shared/models/sector/sector-delete';
+import { sectorsPutRequestSchema } from '@shared/models/sector/sector-put';
+import { sessionsDeleteParamsSchema } from '@shared/models/session/session-delete';
+import { sessionsGetQuerySchema } from '@shared/models/session/session-get';
+import { sessionsGetByIdParamsSchema } from '@shared/models/session/session-get-by-id';
+import { sessionsPutRequestSchema } from '@shared/models/session/session-put';
+import { workoutsDeleteParamsSchema } from '@shared/models/workout/workout-delete';
+import { workoutsGetQuerySchema } from '@shared/models/workout/workout-get';
+import { workoutsGetByIdParamsSchema } from '@shared/models/workout/workout-get-by-id';
+import { workoutsPutRequestSchema } from '@shared/models/workout/workout-put';
 import { Router } from 'express';
 
 import { handler as climbHistoriesDelete } from './api/climb-histories/climb-histories-delete';
