@@ -1,4 +1,7 @@
-import { SessionsGetQuery, SessionsGetResponse } from '@shared/models/session';
+import {
+  SessionsGetQuery,
+  SessionsGetResponse,
+} from '@shared/models/session/session-get';
 import { assert } from '@shared/utils/assert';
 
 import { Session } from '../../models/session';

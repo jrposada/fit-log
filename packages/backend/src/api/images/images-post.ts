@@ -1,4 +1,7 @@
-import { ImagesPostRequest, ImagesPostResponse } from '@shared/models/image';
+import {
+  ImagesPostRequest,
+  ImagesPostResponse,
+} from '@shared/models/image/image-post';
 import { assert } from '@shared/utils/assert';
 
 import { Image } from '../../models/image';

@@ -1,7 +1,7 @@
 import {
   WorkoutsPutRequest,
   WorkoutsPutResponse,
-} from '@shared/models/workout';
+} from '@shared/models/workout/workout-put';
 import { assert } from '@shared/utils/assert';
 
 import { Workout } from '../../models/workout';

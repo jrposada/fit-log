@@ -1,4 +1,4 @@
-import { Session } from '@shared/models/session';
+import { Session } from '@shared/models/session/session';
 
 import { ISession } from '../../models/session';
 

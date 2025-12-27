@@ -1,7 +1,7 @@
 import {
   LocationsDeleteParams,
   LocationsDeleteResponse,
-} from '@shared/models/location';
+} from '@shared/models/location/location-delete';
 import { assert } from '@shared/utils/assert';
 
 import { Location } from '../../models/location';

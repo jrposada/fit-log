@@ -1,7 +1,7 @@
 import {
   LocationsPutRequest,
   LocationsPutResponse,
-} from '@shared/models/location';
+} from '@shared/models/location/location-put';
 import { assert } from '@shared/utils/assert';
 import { MergeType, Types } from 'mongoose';
 

@@ -1,4 +1,4 @@
-import { Image } from '@shared/models/image';
+import { Image } from '@shared/models/image/image';
 
 import { IImage } from '../../models/image';
 

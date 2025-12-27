@@ -1,7 +1,7 @@
 import {
   WorkoutsDeleteParams,
   WorkoutsDeleteResponse,
-} from '@shared/models/workout';
+} from '@shared/models/workout/workout-delete';
 import { assert } from '@shared/utils/assert';
 
 import { Workout } from '../../models/workout';

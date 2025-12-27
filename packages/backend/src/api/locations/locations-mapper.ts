@@ -1,4 +1,4 @@
-import { Location } from '@shared/models/location';
+import { Location } from '@shared/models/location/location';
 import { MergeType } from 'mongoose';
 
 import { IClimb } from '../../models/climb';

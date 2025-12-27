@@ -1,7 +1,7 @@
 import {
   SectorsDeleteParams,
   SectorsDeleteResponse,
-} from '@shared/models/sector';
+} from '@shared/models/sector/sector-delete';
 import { assert } from '@shared/utils/assert';
 
 import { Sector } from '../../models/sector';

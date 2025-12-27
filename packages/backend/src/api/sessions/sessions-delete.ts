@@ -1,7 +1,7 @@
 import {
   SessionsDeleteParams,
   SessionsDeleteResponse,
-} from '@shared/models/session';
+} from '@shared/models/session/session-delete';
 import { assert } from '@shared/utils/assert';
 
 import { Session } from '../../models/session';

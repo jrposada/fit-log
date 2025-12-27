@@ -1,7 +1,7 @@
 import {
   SectorsBatchPutRequest,
   SectorsBatchPutResponse,
-} from '@shared/models/sector';
+} from '@shared/models/sector/sector-batch-put';
 import { assert } from '@shared/utils/assert';
 import { Types } from 'mongoose';
 

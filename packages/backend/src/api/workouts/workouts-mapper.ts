@@ -1,4 +1,4 @@
-import { Workout } from '@shared/models/workout';
+import { Workout } from '@shared/models/workout/workout';
 
 import { IWorkout } from '../../models/workout';
 

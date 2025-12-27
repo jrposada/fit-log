@@ -1,7 +1,7 @@
 import {
   SectorsGetByIdParams,
   SectorsGetByIdResponse,
-} from '@shared/models/sector';
+} from '@shared/models/sector/sector-get-by-id';
 import { assert } from '@shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error';

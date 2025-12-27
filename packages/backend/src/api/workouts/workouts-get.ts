@@ -1,4 +1,7 @@
-import { WorkoutsGetQuery, WorkoutsGetResponse } from '@shared/models/workout';
+import {
+  WorkoutsGetQuery,
+  WorkoutsGetResponse,
+} from '@shared/models/workout/workout-get';
 import { assert } from '@shared/utils/assert';
 
 import { Workout } from '../../models/workout';

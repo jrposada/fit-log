@@ -1,4 +1,7 @@
-import { SectorsPutRequest, SectorsPutResponse } from '@shared/models/sector';
+import {
+  SectorsPutRequest,
+  SectorsPutResponse,
+} from '@shared/models/sector/sector-put';
 import { assert } from '@shared/utils/assert';
 import { Types } from 'mongoose';
 

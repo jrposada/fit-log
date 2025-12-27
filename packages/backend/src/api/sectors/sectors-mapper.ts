@@ -1,4 +1,4 @@
-import { Sector } from '@shared/models/sector';
+import { Sector } from '@shared/models/sector/sector';
 import { MergeType } from 'mongoose';
 
 import { IClimb } from '../../models/climb';

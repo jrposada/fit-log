@@ -1,7 +1,7 @@
 import {
   WorkoutsGetByIdParams,
   WorkoutsGetByIdResponse,
-} from '@shared/models/workout';
+} from '@shared/models/workout/workout-get-by-id';
 import { assert } from '@shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error';

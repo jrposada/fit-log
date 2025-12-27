@@ -1,7 +1,7 @@
 import {
   SessionsPutRequest,
   SessionsPutResponse,
-} from '@shared/models/session';
+} from '@shared/models/session/session-put';
 import { assert } from '@shared/utils/assert';
 
 import { Session } from '../../models/session';

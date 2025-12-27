@@ -1,7 +1,7 @@
 import {
   LocationsGetByIdParams,
   LocationsGetByIdResponse,
-} from '@shared/models/location';
+} from '@shared/models/location/location-get-by-id';
 import { assert } from '@shared/utils/assert';
 import { MergeType } from 'mongoose';
 

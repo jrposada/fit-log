@@ -1,7 +1,7 @@
 import {
   LocationsGetQuery,
   LocationsGetResponse,
-} from '@shared/models/location';
+} from '@shared/models/location/location-get';
 import { assert } from '@shared/utils/assert';
 import { MergeType } from 'mongoose';
 
