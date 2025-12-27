@@ -32,6 +32,8 @@
     "@emotion/styled": "^11.14.0",
     "@fontsource/roboto": "^5.2.8",
     "@hookform/resolvers": "^5.2.2",
+    "@jrposada/fit-log-shared-react": "*",
+    "@jrposada/fit-log-shared": "*",
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.0.2",
     "@mui/x-date-pickers": "^8.0.0",

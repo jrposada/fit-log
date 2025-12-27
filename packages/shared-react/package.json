@@ -23,6 +23,7 @@
     "lint": "run-p lint:*"
   },
   "peerDependencies": {
+    "@jrposada/fit-log-shared": "*",
     "@tanstack/react-query": "^5.90.5",
     "react": "19.1.0"
   },

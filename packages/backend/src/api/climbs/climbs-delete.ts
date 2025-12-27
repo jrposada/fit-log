@@ -1,7 +1,7 @@
 import {
   ClimbsDeleteParams,
   ClimbsDeleteResponse,
-} from '@shared/models/climb.delete';
+} from '@shared/models/climb/climb-delete';
 import { assert } from '@shared/utils/assert';
 
 import { Climb } from '../../models/climb';
