@@ -2,7 +2,7 @@ import z from 'zod';
 
 import { Climb, climbSchema } from '../climb/climb';
 import { Location, locationSchema } from '../location/location';
-import { Sector, sectorSchema } from '../sector';
+import { Sector, sectorSchema } from '../sector/sector';
 
 export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt' | 'project';
 
