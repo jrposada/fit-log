@@ -1,4 +1,4 @@
-import { ClimbHistory } from '@shared/models/climb-history';
+import { ClimbHistory } from '@shared/models/climb-history/climb-history';
 import { MergeType } from 'mongoose';
 
 import { IClimb } from '../../models/climb';

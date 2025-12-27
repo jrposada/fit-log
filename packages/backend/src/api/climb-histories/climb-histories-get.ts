@@ -1,7 +1,7 @@
 import {
   ClimbHistoriesGetQuery,
   ClimbHistoriesGetResponse,
-} from '@shared/models/climb-history';
+} from '@shared/models/climb-history/climb-history-get';
 import { assert } from '@shared/utils/assert';
 
 import { ClimbHistory } from '../../models/climb-history';

@@ -1,7 +1,7 @@
 import {
   ClimbHistoriesDeleteParams,
   ClimbHistoriesDeleteResponse,
-} from '@shared/models/climb-history';
+} from '@shared/models/climb-history/climb-history-delete';
 import { assert } from '@shared/utils/assert';
 
 import { ClimbHistory } from '../../models/climb-history';

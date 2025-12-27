@@ -1,20 +1,25 @@
 import z from 'zod';
 
-import { Expect } from '../types/expect';
-import { IsEqual } from '../types/is-equal';
-import { IsTrue } from '../types/is-true';
+import { Expect } from '../../types/expect';
+import { IsEqual } from '../../types/is-equal';
+import { IsTrue } from '../../types/is-true';
+import { ClimbHistory, climbHistorySchema } from './climb-history';
 import {
   ClimbHistoriesDeleteParams,
   climbHistoriesDeleteParamsSchema,
-  ClimbHistoriesGetByIdParams,
-  climbHistoriesGetByIdParamsSchema,
+} from './climb-history-delete';
+import {
   ClimbHistoriesGetQuery,
   climbHistoriesGetQuerySchema,
+} from './climb-history-get';
+import {
+  ClimbHistoriesGetByIdParams,
+  climbHistoriesGetByIdParamsSchema,
+} from './climb-history-get-by-id';
+import {
   ClimbHistoriesPutRequest,
   climbHistoriesPutRequestSchema,
-  ClimbHistory,
-  climbHistorySchema,
-} from './climb-history';
+} from './climb-history-put';
 
 export type ClimbHistoryTest = Expect<
   IsTrue<IsEqual<ClimbHistory, z.infer<typeof climbHistorySchema>>>
@@ -22,7 +27,10 @@ export type ClimbHistoryTest = Expect<
 
 export type ClimbHistoriesGetQueryTest = Expect<
   IsTrue<
-    IsEqual<ClimbHistoriesGetQuery, z.infer<typeof climbHistoriesGetQuerySchema>>
+    IsEqual<
+      ClimbHistoriesGetQuery,
+      z.infer<typeof climbHistoriesGetQuerySchema>
+    >
   >
 >;
 
