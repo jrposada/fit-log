@@ -1,20 +1,19 @@
 import z from 'zod';
 
-import { Expect } from '../types/expect';
-import { IsEqual } from '../types/is-equal';
-import { IsTrue } from '../types/is-true';
+import { Expect } from '../../types/expect';
+import { IsEqual } from '../../types/is-equal';
+import { IsTrue } from '../../types/is-true';
+import { Session, sessionSchema } from './session';
 import {
-  Session,
-  sessionSchema,
   SessionsDeleteParams,
   sessionsDeleteParamsSchema,
+} from './session-delete';
+import { SessionsGetQuery, sessionsGetQuerySchema } from './session-get';
+import {
   SessionsGetByIdParams,
   sessionsGetByIdParamsSchema,
-  SessionsGetQuery,
-  sessionsGetQuerySchema,
-  SessionsPutRequest,
-  sessionsPutRequestSchema,
-} from './session';
+} from './session-get-by-id';
+import { SessionsPutRequest, sessionsPutRequestSchema } from './session-put';
 
 export type SessionTest = Expect<
   IsTrue<IsEqual<Session, z.infer<typeof sessionSchema>>>
