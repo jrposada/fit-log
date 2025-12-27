@@ -5,6 +5,7 @@ import {
 import { assert } from '@shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error';
+import { IClimb } from '../../models/climb';
 import { ClimbHistory } from '../../models/climb-history';
 import { toApiResponse } from '../api-utils';
 import { toApiClimbHistory } from './climb-histories-mapper';
@@ -17,7 +18,9 @@ const handler = toApiResponse<
 
   const { id } = request.params;
 
-  const climbHistory = await ClimbHistory.findById(id);
+  const climbHistory = await ClimbHistory.findById(id).populate<{
+    climb: IClimb;
+  }>(['climb']);
 
   if (!climbHistory) {
     throw new ResourceNotFound(`ClimbHistory with id ${id} not found`);

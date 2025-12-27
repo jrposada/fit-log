@@ -3,17 +3,10 @@ import { MergeType } from 'mongoose';
 
 import { IClimb } from '../../models/climb';
 import { IClimbHistory } from '../../models/climb-history';
-import { ILocation } from '../../models/location';
-import { ISector } from '../../models/sector';
 import { toApiClimb } from '../climbs/climbs-mapper';
-import { toApiLocation } from '../locations/locations-mapper';
-import { toApiSector } from '../sectors/sectors-mapper';
 
 function toApiClimbHistory(
-  model: MergeType<
-    IClimbHistory,
-    { climb: IClimb; location: ILocation; sector: ISector }
-  >
+  model: MergeType<IClimbHistory, { climb: IClimb }>
 ): ClimbHistory {
   return {
     /* Data */
@@ -24,8 +17,8 @@ function toApiClimbHistory(
 
     /* References */
     climb: toApiClimb(model.climb),
-    location: toApiLocation(model.location),
-    sector: toApiSector(model.sector),
+    location: model.location._id.toString(),
+    sector: model.sector._id.toString(),
 
     /* Timestamps */
     createdAt: model.createdAt.toISOString(),

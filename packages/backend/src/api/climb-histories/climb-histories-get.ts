@@ -4,6 +4,7 @@ import {
 } from '@shared/models/climb-history/climb-history-get';
 import { assert } from '@shared/utils/assert';
 
+import { IClimb } from '../../models/climb';
 import { ClimbHistory } from '../../models/climb-history';
 import { toApiResponse } from '../api-utils';
 import { toApiClimbHistory } from './climb-histories-mapper';
@@ -39,7 +40,9 @@ const handler = toApiResponse<
 
   query.sort({ createdAt: -1 });
 
-  const climbHistories = await query.exec();
+  const climbHistories = await query.populate<{
+    climb: IClimb;
+  }>(['climb']);
 
   return {
     statusCode: 200,

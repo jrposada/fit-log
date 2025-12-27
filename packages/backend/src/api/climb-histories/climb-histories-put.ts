@@ -5,6 +5,7 @@ import {
 import { assert } from '@shared/utils/assert';
 import { Types } from 'mongoose';
 
+import { IClimb } from '../../models/climb';
 import { ClimbHistory } from '../../models/climb-history';
 import { upsertDocument } from '../../utils/upsert-document';
 import { toApiResponse } from '../api-utils';
@@ -34,7 +35,9 @@ const handler = toApiResponse<
       location: new Types.ObjectId(climbHistoryPutData.location),
       sector: new Types.ObjectId(climbHistoryPutData.sector),
     }
-  );
+  ).populate<{
+    climb: IClimb;
+  }>(['climb']);
 
   return {
     statusCode: 200,
