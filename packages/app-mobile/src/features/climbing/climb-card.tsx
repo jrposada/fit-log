@@ -1,20 +1,29 @@
 import { Climb } from '@shared/models/climb/climb';
+import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export interface ClimbCardProps {
-  climb: Climb;
-  onLog: (id: string) => void;
+  climb: Omit<Climb, 'image'> & { image: string };
 }
 
-const ClimbCard: FunctionComponent<ClimbCardProps> = ({ climb, onLog }) => {
+const ClimbCard: FunctionComponent<ClimbCardProps> = ({ climb }) => {
   const { t } = useTranslation();
+  const climbHistoriesPut = useClimbHistoriesPut();
 
   const handlePress = () => {
-    onLog(climb.id);
+    climbHistoriesPut.mutate({
+      climb: climb.id,
+      location: climb.location.id,
+      sector: climb.sector.id,
+      status: 'send',
+      attempts: 1,
+    });
   };
+
+  console.log(climb);
 
   return (
     <View style={styles.card}>
@@ -27,7 +36,7 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({ climb, onLog }) => {
         </Text>
       </View>
       <View style={styles.bottomRow}>
-        <Text style={styles.sector}>{climb.sector}</Text>
+        <Text style={styles.sector}>{climb.sector.name}</Text>
         <TouchableOpacity
           style={styles.actionButton}
           onPress={handlePress}
