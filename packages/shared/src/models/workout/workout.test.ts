@@ -3,7 +3,6 @@ import z from 'zod';
 import { Expect } from '../../types/expect';
 import { IsEqual } from '../../types/is-equal';
 import { IsTrue } from '../../types/is-true';
-import { Exercise, exerciseSchema, Workout, workoutSchema } from './workout';
 import {
   WorkoutsDeleteParams,
   workoutsDeleteParamsSchema,
@@ -14,14 +13,6 @@ import {
   workoutsGetByIdParamsSchema,
 } from './workout-get-by-id';
 import { WorkoutsPutRequest, workoutsPutRequestSchema } from './workout-put';
-
-export type ExerciseTest = Expect<
-  IsTrue<IsEqual<Exercise, z.infer<typeof exerciseSchema>>>
->;
-
-export type WorkoutTest = Expect<
-  IsTrue<IsEqual<Workout, z.infer<typeof workoutSchema>>>
->;
 
 export type WorkoutsGetQueryTest = Expect<
   IsTrue<IsEqual<WorkoutsGetQuery, z.infer<typeof workoutsGetQuerySchema>>>

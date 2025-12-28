@@ -3,7 +3,6 @@ import z from 'zod';
 import { Expect } from '../../types/expect';
 import { IsEqual } from '../../types/is-equal';
 import { IsTrue } from '../../types/is-true';
-import { ClimbHistory, climbHistorySchema } from './climb-history';
 import {
   ClimbHistoriesDeleteParams,
   climbHistoriesDeleteParamsSchema,
@@ -20,10 +19,6 @@ import {
   ClimbHistoriesPutRequest,
   climbHistoriesPutRequestSchema,
 } from './climb-history-put';
-
-export type ClimbHistoryTest = Expect<
-  IsTrue<IsEqual<ClimbHistory, z.infer<typeof climbHistorySchema>>>
->;
 
 export type ClimbHistoriesGetQueryTest = Expect<
   IsTrue<

@@ -1,5 +1,3 @@
-import z from 'zod';
-
 export type Exercise = {
   name: string;
   description: string;
@@ -25,21 +23,6 @@ export type Exercise = {
    */
   intensityUnit: 'time' | 'weight' | 'body-weight';
 };
-export const exerciseSchema = z.object({
-  name: z.string().nonempty(),
-  description: z.string().nonempty(),
-  sort: z.number(),
-  sets: z.number(),
-  restBetweenSets: z.number(),
-  reps: z.number(),
-  restBetweenReps: z.number(),
-  intensity: z.number(),
-  intensityUnit: z.union([
-    z.literal('time'),
-    z.literal('weight'),
-    z.literal('body-weight'),
-  ]),
-});
 
 export type Workout = {
   /**
@@ -65,10 +48,3 @@ export type Workout = {
   /** Whether workouts has been added to favorites by current user. */
   isFavorite: boolean;
 };
-export const workoutSchema = z.object({
-  id: z.string().nonempty(),
-  name: z.string().nonempty(),
-  description: z.string().nonempty(),
-  exercises: z.array(exerciseSchema),
-  isFavorite: z.boolean(),
-});

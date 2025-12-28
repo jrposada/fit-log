@@ -1,6 +1,22 @@
 import z from 'zod';
 
-import { exerciseSchema, Workout } from './workout';
+import { Workout } from './workout';
+
+const exerciseSchema = z.object({
+  name: z.string().nonempty(),
+  description: z.string().nonempty(),
+  sort: z.number(),
+  sets: z.number(),
+  restBetweenSets: z.number(),
+  reps: z.number(),
+  restBetweenReps: z.number(),
+  intensity: z.number(),
+  intensityUnit: z.union([
+    z.literal('time'),
+    z.literal('weight'),
+    z.literal('body-weight'),
+  ]),
+});
 
 export type WorkoutsPutRequest = Omit<Workout, 'id' | 'isFavorite'> & {
   /**

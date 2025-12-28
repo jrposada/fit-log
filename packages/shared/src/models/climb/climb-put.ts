@@ -1,9 +1,21 @@
 import z from 'zod';
 
-import { Climb, holdSchema } from './climb';
+import { Climb } from './climb';
 
-export type ClimbsPutRequest = Omit<Climb, 'id' | 'createdAt' | 'updatedAt'> & {
+const holdSchema = z.object({
+  x: z.number().min(0).max(1),
+  y: z.number().min(0).max(1),
+});
+
+export type ClimbsPutRequest = Omit<
+  Climb,
+  'id' | 'createdAt' | 'updatedAt' | 'image' | 'location' | 'sector'
+> & {
   id?: string;
+
+  image: string;
+  location: string;
+  sector: string;
 };
 export const climbsPutRequestSchema = z.object({
   id: z.string().optional(),

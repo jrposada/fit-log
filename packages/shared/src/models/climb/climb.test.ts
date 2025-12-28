@@ -3,7 +3,6 @@ import z from 'zod';
 import { Expect } from '../../types/expect';
 import { IsEqual } from '../../types/is-equal';
 import { IsTrue } from '../../types/is-true';
-import { Climb, climbSchema, Hold, holdSchema } from './climb';
 import { ClimbsDeleteParams, climbsDeleteParamsSchema } from './climb-delete';
 import { ClimbsGetQuery, climbsGetQuerySchema } from './climb-get';
 import {
@@ -11,14 +10,6 @@ import {
   climbsGetByIdParamsSchema,
 } from './climb-get-by-id';
 import { ClimbsPutRequest, climbsPutRequestSchema } from './climb-put';
-
-export type HoldTest = Expect<
-  IsTrue<IsEqual<Hold, z.infer<typeof holdSchema>>>
->;
-
-export type ClimbTest = Expect<
-  IsTrue<IsEqual<Climb, z.infer<typeof climbSchema>>>
->;
 
 export type ClimbsGetQueryTest = Expect<
   IsTrue<IsEqual<ClimbsGetQuery, z.infer<typeof climbsGetQuerySchema>>>

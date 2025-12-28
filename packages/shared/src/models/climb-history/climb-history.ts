@@ -1,6 +1,6 @@
-import z from 'zod';
-
-import { Climb, climbSchema } from '../climb/climb';
+import { Climb } from '../climb/climb';
+import { Location } from '../location/location';
+import { Sector } from '../sector/sector';
 
 export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt' | 'project';
 
@@ -12,25 +12,18 @@ export type ClimbHistory = {
   notes?: string;
 
   /* References */
-  climb: Climb;
-  location: string;
-  sector: string;
+  climb: Omit<Climb, 'image' | 'location' | 'sector'> & {
+    image: string;
+    location: string;
+    sector: string;
+  };
+  location: Omit<Location, 'sectors'> & { sectors: string[] };
+  sector: Omit<Sector, 'images' | 'climbs'> & {
+    images: string[];
+    climbs: string[];
+  };
 
   /* Timestamps */
   createdAt: string;
   updatedAt: string;
 };
-
-export const climbHistorySchema = z.object({
-  id: z.string().nonempty(),
-  status: z.enum(['send', 'flash', 'attempt', 'project']),
-  attempts: z.number().int().positive().optional(),
-  notes: z.string().optional(),
-
-  climb: climbSchema,
-  location: z.string().nonempty(),
-  sector: z.string().nonempty(),
-
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-});

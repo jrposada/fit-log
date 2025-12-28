@@ -3,7 +3,6 @@ import z from 'zod';
 import { Expect } from '../../types/expect';
 import { IsEqual } from '../../types/is-equal';
 import { IsTrue } from '../../types/is-true';
-import { Session, sessionSchema } from './session';
 import {
   SessionsDeleteParams,
   sessionsDeleteParamsSchema,
@@ -14,10 +13,6 @@ import {
   sessionsGetByIdParamsSchema,
 } from './session-get-by-id';
 import { SessionsPutRequest, sessionsPutRequestSchema } from './session-put';
-
-export type SessionTest = Expect<
-  IsTrue<IsEqual<Session, z.infer<typeof sessionSchema>>>
->;
 
 export type SessionsGetQueryTest = Expect<
   IsTrue<IsEqual<SessionsGetQuery, z.infer<typeof sessionsGetQuerySchema>>>

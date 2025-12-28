@@ -1,4 +1,6 @@
-import z from 'zod';
+import { Image } from '../image/image';
+import { Location } from '../location/location';
+import { Sector } from '../sector/sector';
 
 export type ClimbGrade =
   | 'V0'
@@ -25,10 +27,6 @@ export type Hold = {
   x: number;
   y: number;
 };
-export const holdSchema = z.object({
-  x: z.number().min(0).max(1),
-  y: z.number().min(0).max(1),
-});
 
 export type Climb = {
   /* Data */
@@ -39,25 +37,11 @@ export type Climb = {
   holds: Hold[];
 
   /* References */
-  image: string;
-  location: string;
-  sector: string;
+  image: Image;
+  location: Location;
+  sector: Sector;
 
   /* Timestamps */
   createdAt: string;
   updatedAt: string;
 };
-export const climbSchema = z.object({
-  id: z.string().nonempty(),
-  name: z.string().nonempty(),
-  grade: z.string().nonempty(),
-  description: z.string().optional(),
-  holds: z.array(holdSchema),
-
-  image: z.string().nonempty(),
-  location: z.string().nonempty(),
-  sector: z.string().nonempty(),
-
-  createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-});
