@@ -14,7 +14,11 @@ export type Sector = {
 
   /* References */
   images: Image[];
-  climbs: Climb[];
+  climbs: (Omit<Climb, 'image' | 'location' | 'sector'> & {
+    image: string;
+    location: string;
+    sector: string;
+  })[];
 
   /* Timestamps */
   createdAt: string;

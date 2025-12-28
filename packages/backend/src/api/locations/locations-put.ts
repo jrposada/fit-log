@@ -3,10 +3,8 @@ import {
   LocationsPutResponse,
 } from '@shared/models/location/location-put';
 import { assert } from '@shared/utils/assert';
-import { MergeType, Types } from 'mongoose';
+import { Types } from 'mongoose';
 
-import { IClimb } from '../../models/climb';
-import { IImage } from '../../models/image';
 import { Location } from '../../models/location';
 import { ISector } from '../../models/sector';
 import { upsertDocument } from '../../utils/upsert-document';
@@ -36,11 +34,8 @@ const handler = toApiResponse<
       (sectorId) => new Types.ObjectId(sectorId)
     ),
   }).populate<{
-    sectors: MergeType<ISector, { climbs: IClimb[]; images: IImage[] }>[];
-  }>({
-    path: 'sectors',
-    populate: [{ path: 'climbs' }, { path: 'images' }],
-  });
+    sectors: ISector[];
+  }>(['sectors']);
 
   return {
     statusCode: 200,

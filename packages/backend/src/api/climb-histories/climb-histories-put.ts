@@ -7,6 +7,8 @@ import { Types } from 'mongoose';
 
 import { IClimb } from '../../models/climb';
 import { ClimbHistory } from '../../models/climb-history';
+import { ILocation } from '../../models/location';
+import { ISector } from '../../models/sector';
 import { upsertDocument } from '../../utils/upsert-document';
 import { toApiResponse } from '../api-utils';
 import { toApiClimbHistory } from './climb-histories-mapper';
@@ -37,7 +39,9 @@ const handler = toApiResponse<
     }
   ).populate<{
     climb: IClimb;
-  }>(['climb']);
+    location: ILocation;
+    sector: ISector;
+  }>(['climb', 'location', 'sector']);
 
   return {
     statusCode: 200,

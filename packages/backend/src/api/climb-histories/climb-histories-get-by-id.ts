@@ -7,6 +7,8 @@ import { assert } from '@shared/utils/assert';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { IClimb } from '../../models/climb';
 import { ClimbHistory } from '../../models/climb-history';
+import { ILocation } from '../../models/location';
+import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
 import { toApiClimbHistory } from './climb-histories-mapper';
 
@@ -20,7 +22,9 @@ const handler = toApiResponse<
 
   const climbHistory = await ClimbHistory.findById(id).populate<{
     climb: IClimb;
-  }>(['climb']);
+    location: ILocation;
+    sector: ISector;
+  }>(['climb', 'location', 'sector']);
 
   if (!climbHistory) {
     throw new ResourceNotFound(`ClimbHistory with id ${id} not found`);

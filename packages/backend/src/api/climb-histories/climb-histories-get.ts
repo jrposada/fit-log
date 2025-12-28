@@ -6,6 +6,8 @@ import { assert } from '@shared/utils/assert';
 
 import { IClimb } from '../../models/climb';
 import { ClimbHistory } from '../../models/climb-history';
+import { ILocation } from '../../models/location';
+import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
 import { toApiClimbHistory } from './climb-histories-mapper';
 
@@ -42,7 +44,11 @@ const handler = toApiResponse<
 
   const climbHistories = await query.populate<{
     climb: IClimb;
-  }>(['climb']);
+    location: ILocation;
+    sector: ISector;
+  }>(['climb', 'location', 'sector']);
+
+  console.log(climbHistories);
 
   return {
     statusCode: 200,

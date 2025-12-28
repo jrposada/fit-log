@@ -5,6 +5,9 @@ import {
 import { assert } from '@shared/utils/assert';
 
 import { Climb } from '../../models/climb';
+import { IImage } from '../../models/image';
+import { ILocation } from '../../models/location';
+import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
 import { toApiClimb } from './climbs-mapper';
 
@@ -22,7 +25,11 @@ const handler = toApiResponse<ClimbsGetResponse, unknown, ClimbsGetQuery>(
       query.limit(limit);
     }
 
-    const climbs = await query.exec();
+    const climbs = await query.populate<{
+      image: IImage;
+      location: ILocation;
+      sector: ISector;
+    }>(['image', 'location', 'sector']);
 
     return {
       statusCode: 200,

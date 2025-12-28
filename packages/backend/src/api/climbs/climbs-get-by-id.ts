@@ -6,6 +6,9 @@ import { assert } from '@shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Climb } from '../../models/climb';
+import { IImage } from '../../models/image';
+import { ILocation } from '../../models/location';
+import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
 import { toApiClimb } from './climbs-mapper';
 
@@ -15,7 +18,11 @@ const handler = toApiResponse<ClimbsGetByIdResponse, ClimbsGetByIdParams>(
 
     const { id } = request.params;
 
-    const climb = await Climb.findById(id);
+    const climb = await Climb.findById(id).populate<{
+      image: IImage;
+      location: ILocation;
+      sector: ISector;
+    }>(['image', 'location', 'sector']);
 
     if (!climb) {
       throw new ResourceNotFound(`Climb with id ${id} not found`);

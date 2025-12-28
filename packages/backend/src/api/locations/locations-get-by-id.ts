@@ -3,11 +3,8 @@ import {
   LocationsGetByIdResponse,
 } from '@shared/models/location/location-get-by-id';
 import { assert } from '@shared/utils/assert';
-import { MergeType } from 'mongoose';
 
 import ResourceNotFound from '../../infrastructure/not-found-error';
-import { IClimb } from '../../models/climb';
-import { IImage } from '../../models/image';
 import { Location } from '../../models/location';
 import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
@@ -20,11 +17,8 @@ const handler = toApiResponse<LocationsGetByIdResponse, LocationsGetByIdParams>(
     const { id } = request.params;
 
     const location = await Location.findById(id).populate<{
-      sectors: MergeType<ISector, { climbs: IClimb[]; images: IImage[] }>[];
-    }>({
-      path: 'sectors',
-      populate: [{ path: 'climbs' }, { path: 'images' }],
-    });
+      sectors: ISector[];
+    }>(['sectors']);
 
     if (!location) {
       throw new ResourceNotFound(`Location with id ${id} not found`);

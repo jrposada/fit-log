@@ -3,10 +3,7 @@ import {
   LocationsGetResponse,
 } from '@shared/models/location/location-get';
 import { assert } from '@shared/utils/assert';
-import { MergeType } from 'mongoose';
 
-import { IClimb } from '../../models/climb';
-import { IImage } from '../../models/image';
 import { Location } from '../../models/location';
 import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
@@ -19,11 +16,8 @@ const handler = toApiResponse<LocationsGetResponse, unknown, LocationsGetQuery>(
     const { limit } = request.query;
 
     const query = Location.find().populate<{
-      sectors: MergeType<ISector, { climbs: IClimb[]; images: IImage[] }>[];
-    }>({
-      path: 'sectors',
-      populate: [{ path: 'climbs' }, { path: 'images' }],
-    });
+      sectors: ISector[];
+    }>(['sectors']);
 
     if (limit) {
       query.limit(limit);

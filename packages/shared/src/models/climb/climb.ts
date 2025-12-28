@@ -38,8 +38,11 @@ export type Climb = {
 
   /* References */
   image: Image;
-  location: Location;
-  sector: Sector;
+  location: Omit<Location, 'sectors'> & { sectors: string[] };
+  sector: Omit<Sector, 'images' | 'climbs'> & {
+    images: string[];
+    climbs: string[];
+  };
 
   /* Timestamps */
   createdAt: string;
