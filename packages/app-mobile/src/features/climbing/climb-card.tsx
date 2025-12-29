@@ -1,29 +1,30 @@
 import { Climb } from '@shared/models/climb/climb';
-import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
+type Data = Omit<Climb, 'image' | 'location'> & {
+  image: string;
+  location: string;
+};
+
 export interface ClimbCardProps {
-  climb: Omit<Climb, 'image'> & { image: string };
+  climb: Data;
+  onLog: (climb: Data) => void;
+  logDisabled: boolean;
 }
 
-const ClimbCard: FunctionComponent<ClimbCardProps> = ({ climb }) => {
+const ClimbCard: FunctionComponent<ClimbCardProps> = ({
+  climb,
+  onLog,
+  logDisabled,
+}) => {
   const { t } = useTranslation();
-  const climbHistoriesPut = useClimbHistoriesPut();
 
   const handlePress = () => {
-    climbHistoriesPut.mutate({
-      climb: climb.id,
-      location: climb.location.id,
-      sector: climb.sector.id,
-      status: 'send',
-      attempts: 1,
-    });
+    onLog(climb);
   };
-
-  console.log(climb);
 
   return (
     <View style={styles.card}>
@@ -40,6 +41,7 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({ climb }) => {
         <TouchableOpacity
           style={styles.actionButton}
           onPress={handlePress}
+          disabled={logDisabled}
           activeOpacity={0.7}
         >
           <Text style={styles.actionText}>{t('climbing.log_action')}</Text>

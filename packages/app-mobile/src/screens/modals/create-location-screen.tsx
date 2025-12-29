@@ -106,10 +106,12 @@ const CreateLocationScreen: FunctionComponent = () => {
     });
 
     const sectorsToDelete = sectorsWithUpdatedStatus.filter(
-      (s) => s._status === 'deleted' && s.id
+      (s): s is typeof s & { _status: 'deleted'; id: string } =>
+        s._status === 'deleted' && !!s.id
     );
     const sectorsToSave = sectorsWithUpdatedStatus.filter(
-      (s) => s._status === 'new' || s._status === 'updated' || !s.id
+      (s): s is typeof s & { _status: 'new' | 'updated' } =>
+        s._status === 'new' || s._status === 'updated'
     );
     const sectorsId = new Set(
       sectorsWithUpdatedStatus
@@ -141,7 +143,7 @@ const CreateLocationScreen: FunctionComponent = () => {
         const result = await sectorsBatchPut.mutateAsync({
           sectors: sectorsData.map((sector) => ({
             ...sector,
-            climbs: sector.climbs.map((climb) => climb.id),
+            climbs: sector.climbs,
             images: sector.images.map((image) => image.id),
           })),
         });
