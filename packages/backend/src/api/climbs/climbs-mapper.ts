@@ -15,7 +15,7 @@ function toApiClimb(
     {
       image: IImage;
       location: ILocation;
-      sector: ISector;
+      sector: MergeType<ISector, { images: IImage[] }>;
     }
   >
 ): Climb {

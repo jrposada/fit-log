@@ -3,7 +3,7 @@ import {
   ClimbsPutResponse,
 } from '@shared/models/climb/climb-put';
 import { assert } from '@shared/utils/assert';
-import { Types } from 'mongoose';
+import { MergeType, Types } from 'mongoose';
 
 import { Climb } from '../../models/climb';
 import { IImage } from '../../models/image';
@@ -34,11 +34,17 @@ const handler = toApiResponse<
     image: new Types.ObjectId(climbPutData.image),
     sector: new Types.ObjectId(climbPutData.sector),
     location: new Types.ObjectId(climbPutData.location),
-  }).populate<{
-    image: IImage;
-    location: ILocation;
-    sector: ISector;
-  }>(['image', 'location', 'sector']);
+  })
+    .populate<{
+      image: IImage;
+      location: ILocation;
+    }>(['image', 'location'])
+    .populate<{
+      sector: MergeType<ISector, { images: IImage[] }>;
+    }>({
+      path: 'sector',
+      populate: ['images'],
+    });
 
   return {
     statusCode: 200,

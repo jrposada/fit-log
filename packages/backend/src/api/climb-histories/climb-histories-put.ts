@@ -3,10 +3,11 @@ import {
   ClimbHistoriesPutResponse,
 } from '@shared/models/climb-history/climb-history-put';
 import { assert } from '@shared/utils/assert';
-import { Types } from 'mongoose';
+import { MergeType, Types } from 'mongoose';
 
 import { IClimb } from '../../models/climb';
 import { ClimbHistory } from '../../models/climb-history';
+import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
 import { upsertDocument } from '../../utils/upsert-document';
@@ -37,11 +38,17 @@ const handler = toApiResponse<
       location: new Types.ObjectId(climbHistoryPutData.location),
       sector: new Types.ObjectId(climbHistoryPutData.sector),
     }
-  ).populate<{
-    climb: IClimb;
-    location: ILocation;
-    sector: ISector;
-  }>(['climb', 'location', 'sector']);
+  )
+    .populate<{
+      climb: IClimb;
+      location: ILocation;
+    }>(['climb', 'location'])
+    .populate<{
+      sector: MergeType<ISector, { images: IImage[] }>;
+    }>({
+      path: 'sector',
+      populate: ['images'],
+    });
 
   return {
     statusCode: 200,

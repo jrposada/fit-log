@@ -3,6 +3,7 @@ import {
   ClimbsGetResponse,
 } from '@shared/models/climb/climb-get';
 import { assert } from '@shared/utils/assert';
+import { MergeType } from 'mongoose';
 
 import { Climb } from '../../models/climb';
 import { IImage } from '../../models/image';
@@ -25,11 +26,17 @@ const handler = toApiResponse<ClimbsGetResponse, unknown, ClimbsGetQuery>(
       query.limit(limit);
     }
 
-    const climbs = await query.populate<{
-      image: IImage;
-      location: ILocation;
-      sector: ISector;
-    }>(['image', 'location', 'sector']);
+    const climbs = await query
+      .populate<{
+        image: IImage;
+        location: ILocation;
+      }>(['image', 'location'])
+      .populate<{
+        sector: MergeType<ISector, { images: IImage[] }>;
+      }>({
+        path: 'sector',
+        populate: ['images'],
+      });
 
     return {
       statusCode: 200,

@@ -8,8 +8,8 @@ import { toApiDepopulatedClimb } from '../climbs/climbs-mapper';
 import { toApiImage } from '../images/images-mapper';
 
 function toApiDepopulatedSector(
-  model: ISector
-): Omit<Sector, 'climbs' | 'images'> & { climbs: string[]; images: string[] } {
+  model: MergeType<ISector, { images: IImage[] }>
+): Omit<Sector, 'climbs'> & { climbs: string[] } {
   return {
     /* Data */
     id: model._id.toString(),
@@ -22,7 +22,7 @@ function toApiDepopulatedSector(
 
     /* References */
     climbs: model.climbs.map((climb) => climb._id.toString()),
-    images: model.images.map((image) => image._id.toString()),
+    images: model.images.map(toApiImage),
 
     /* Timestamps */
     createdAt: model.createdAt.toISOString(),

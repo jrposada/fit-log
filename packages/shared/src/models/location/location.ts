@@ -11,10 +11,7 @@ export type Location = {
   googleMapsId?: string;
 
   /* References */
-  sectors: (Omit<Sector, 'images' | 'climbs'> & {
-    images: string[];
-    climbs: string[];
-  })[];
+  sectors: (Omit<Sector, 'climbs'> & { climbs: string[] })[];
 
   /* Timestamps */
   createdAt: string;

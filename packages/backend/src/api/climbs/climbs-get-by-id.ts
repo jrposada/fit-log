@@ -3,6 +3,7 @@ import {
   ClimbsGetByIdResponse,
 } from '@shared/models/climb/climb-get-by-id';
 import { assert } from '@shared/utils/assert';
+import { MergeType } from 'mongoose';
 
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Climb } from '../../models/climb';
@@ -18,11 +19,17 @@ const handler = toApiResponse<ClimbsGetByIdResponse, ClimbsGetByIdParams>(
 
     const { id } = request.params;
 
-    const climb = await Climb.findById(id).populate<{
-      image: IImage;
-      location: ILocation;
-      sector: ISector;
-    }>(['image', 'location', 'sector']);
+    const climb = await Climb.findById(id)
+      .populate<{
+        image: IImage;
+        location: ILocation;
+      }>(['image', 'location'])
+      .populate<{
+        sector: MergeType<ISector, { images: IImage[] }>;
+      }>({
+        path: 'sector',
+        populate: ['images'],
+      });
 
     if (!climb) {
       throw new ResourceNotFound(`Climb with id ${id} not found`);

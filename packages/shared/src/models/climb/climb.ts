@@ -39,8 +39,7 @@ export type Climb = {
   /* References */
   image: Image;
   location: Omit<Location, 'sectors'> & { sectors: string[] };
-  sector: Omit<Sector, 'images' | 'climbs'> & {
-    images: string[];
+  sector: Omit<Sector, 'climbs'> & {
     climbs: string[];
   };
 

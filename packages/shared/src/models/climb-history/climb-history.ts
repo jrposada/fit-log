@@ -18,10 +18,7 @@ export type ClimbHistory = {
     sector: string;
   };
   location: Omit<Location, 'sectors'> & { sectors: string[] };
-  sector: Omit<Sector, 'images' | 'climbs'> & {
-    images: string[];
-    climbs: string[];
-  };
+  sector: Omit<Sector, 'climbs'> & { climbs: string[] };
 
   /* Timestamps */
   createdAt: string;

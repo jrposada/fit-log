@@ -3,9 +3,11 @@ import {
   ClimbHistoriesGetResponse,
 } from '@shared/models/climb-history/climb-history-get';
 import { assert } from '@shared/utils/assert';
+import { MergeType } from 'mongoose';
 
 import { IClimb } from '../../models/climb';
 import { ClimbHistory } from '../../models/climb-history';
+import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
@@ -42,11 +44,17 @@ const handler = toApiResponse<
 
   query.sort({ createdAt: -1 });
 
-  const climbHistories = await query.populate<{
-    climb: IClimb;
-    location: ILocation;
-    sector: ISector;
-  }>(['climb', 'location', 'sector']);
+  const climbHistories = await query
+    .populate<{
+      climb: IClimb;
+      location: ILocation;
+    }>(['climb', 'location'])
+    .populate<{
+      sector: MergeType<ISector, { images: IImage[] }>;
+    }>({
+      path: 'sector',
+      populate: ['images'],
+    });
 
   console.log(climbHistories);
 

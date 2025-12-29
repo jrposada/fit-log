@@ -1,6 +1,7 @@
 import { Location } from '@shared/models/location/location';
 import { MergeType } from 'mongoose';
 
+import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
 import { toApiDepopulatedSector } from '../sectors/sectors-mapper';
@@ -27,7 +28,10 @@ function toApiDepopulatedLocation(
 }
 
 function toApiLocation(
-  model: MergeType<ILocation, { sectors: ISector[] }>
+  model: MergeType<
+    ILocation,
+    { sectors: MergeType<ISector, { images: IImage[] }>[] }
+  >
 ): Location {
   return {
     /* Data */
