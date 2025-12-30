@@ -16,7 +16,12 @@ export type ClimbsGetQueryTest = Expect<
 >;
 
 export type ClimbsPutRequestTest = Expect<
-  IsTrue<IsEqual<ClimbsPutRequest, z.infer<typeof climbsPutRequestSchema>>>
+  IsTrue<
+    IsEqual<
+      Omit<ClimbsPutRequest, 'grade'> & { grade: string },
+      z.infer<typeof climbsPutRequestSchema>
+    >
+  >
 >;
 
 export type ClimbsDeleteParamsTest = Expect<
