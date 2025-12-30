@@ -20,6 +20,7 @@ import {
   View,
 } from 'react-native';
 
+import BackButton from '../navigation/back-button';
 import { ClimbingParamList } from '../types/routes';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -107,6 +108,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerLeft}>
+          <BackButton variant="secondary" />
           <Text style={styles.name} numberOfLines={1}>
             {climb.name}
           </Text>
@@ -174,6 +176,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+  backButton: {
+    width: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   loadingContainer: {
     flex: 1,
     alignItems: 'center',
@@ -200,8 +208,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   name: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: 'semibold',
     color: '#222',
     flexShrink: 1,
   },

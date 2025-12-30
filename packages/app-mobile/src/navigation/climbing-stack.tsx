@@ -14,33 +14,29 @@ const ClimbingStack: FunctionComponent = () => {
   const { t } = useTranslation();
 
   return (
-    <Stack.Navigator initialRouteName="ClimbingMain">
-      <Stack.Screen
-        name="ClimbingMain"
-        component={ClimbingScreen}
-        options={{
-          header: () => <Header title={t('climbing.title')} />,
-        }}
-      />
+    <Stack.Navigator
+      initialRouteName="ClimbingMain"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="ClimbingMain" component={ClimbingScreen} />
       <Stack.Screen
         name="CreateLocation"
         component={CreateLocationScreen}
         options={{
           header: () => (
-            <Header title={t('climbing.create_location_title')} back />
+            <Header
+              title={t('climbing.create_location_title')}
+              mode="modal"
+              back
+            />
           ),
           presentation: 'modal',
+          headerShown: true,
         }}
       />
-      <Stack.Screen
-        name="ClimbDetail"
-        component={ClimbDetailScreen}
-        options={{
-          header: () => (
-            <Header title={t('climbing.climb_detail_title')} back />
-          ),
-        }}
-      />
+      <Stack.Screen name="ClimbDetail" component={ClimbDetailScreen} />
     </Stack.Navigator>
   );
 };

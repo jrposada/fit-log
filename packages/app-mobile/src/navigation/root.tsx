@@ -19,7 +19,12 @@ const Root: FunctionComponent = () => {
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
-      <Tab.Navigator initialRouteName="Home">
+      <Tab.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          animation: 'shift',
+        }}
+      >
         <Tab.Screen
           name="Home"
           component={HomeScreen}
@@ -32,9 +37,8 @@ const Root: FunctionComponent = () => {
           name="Climbing"
           component={ClimbingStack}
           options={{
-            title: t('climbing.title'),
+            header: () => <Header title={t('climbing.title')} />,
             tabBarIcon: () => <Text style={styles.tabIcon}>🧗</Text>,
-            headerShown: false,
           }}
         />
         <Tab.Screen
