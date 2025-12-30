@@ -32,7 +32,7 @@ export type Climb = {
   /* Data */
   id: string;
   name: string;
-  grade: string;
+  grade: ClimbGrade;
   description?: string;
   holds: Hold[];
 

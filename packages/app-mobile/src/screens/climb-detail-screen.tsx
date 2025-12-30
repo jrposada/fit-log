@@ -3,7 +3,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Hold } from '@shared/models/climb/climb';
 import { useClimbsById } from '@shared-react/api/climbs/use-climbs-by-id';
 import { useClimbsDelete } from '@shared-react/api/climbs/use-climbs-delete';
-import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -11,8 +10,6 @@ import {
   Alert,
   Dimensions,
   Image,
-  Linking,
-  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -20,7 +17,6 @@ import {
   View,
 } from 'react-native';
 
-import BackButton from '../navigation/back-button';
 import { ClimbingParamList } from '../types/routes';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -70,24 +66,6 @@ const ClimbDetailScreen: FunctionComponent = () => {
     );
   };
 
-  const handleOpenMap = () => {
-    if (!climb?.location?.latitude || !climb?.location?.longitude) {
-      return;
-    }
-
-    const { latitude, longitude } = climb.location;
-    const label = encodeURIComponent(climb.location.name || 'Location');
-
-    const url = Platform.select({
-      ios: `maps:0,0?q=${label}@${latitude},${longitude}`,
-      android: `geo:0,0?q=${latitude},${longitude}(${label})`,
-    });
-
-    if (url) {
-      Linking.openURL(url);
-    }
-  };
-
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -106,27 +84,6 @@ const ClimbDetailScreen: FunctionComponent = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <BackButton variant="secondary" />
-          <Text style={styles.name} numberOfLines={1}>
-            {climb.name}
-          </Text>
-          <View
-            style={[
-              styles.gradeBadge,
-              { backgroundColor: beautifyGradeColor(climb.grade) },
-            ]}
-          >
-            <Text style={styles.gradeText}>{climb.grade}</Text>
-          </View>
-        </View>
-
-        <TouchableOpacity style={styles.mapButton} onPress={handleOpenMap}>
-          <Text style={styles.mapIcon}>📍</Text>
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.imageContainer}>
         <Image source={{ uri: climb.image.imageUrl }} style={styles.image} />
         {climb.holds.length > 0 && (
@@ -176,12 +133,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  backButton: {
-    width: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   loadingContainer: {
     flex: 1,
     alignItems: 'center',
@@ -191,49 +142,6 @@ const styles = StyleSheet.create({
   notFoundText: {
     fontSize: 16,
     color: '#666',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
-    height: HEADER_HEIGHT,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    gap: 12,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: 'semibold',
-    color: '#222',
-    flexShrink: 1,
-  },
-  gradeBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  gradeText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  mapButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 12,
-  },
-  mapIcon: {
-    fontSize: 20,
   },
   imageContainer: {
     width: '100%',
@@ -307,3 +215,4 @@ const styles = StyleSheet.create({
 });
 
 export default ClimbDetailScreen;
+export type { ClimbDetailRouteProp };

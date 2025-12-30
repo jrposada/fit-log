@@ -1,25 +1,36 @@
+import { useNavigation } from '@react-navigation/native';
 import { useVersion } from '@shared-react/api/version/use-version';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import BackButton from './back-button';
 
 interface HeaderProps {
   back?: boolean;
-  title: string;
+  title: string | undefined;
+  extra?: React.ReactNode;
+  action?: React.ReactNode;
+  loading?: boolean;
   mode?: 'screen' | 'modal';
 }
 
 const Header: FunctionComponent<HeaderProps> = ({
   back = false,
-  title,
+  title = '',
+  extra,
+  action,
+  loading = false,
   mode = 'screen',
 }) => {
   const { t } = useTranslation();
+  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+
   const { data: version } = useVersion();
+
+  const handleBackPress = () => {
+    navigation.goBack();
+  };
 
   return (
     <View
@@ -29,10 +40,21 @@ const Header: FunctionComponent<HeaderProps> = ({
       ]}
     >
       <View style={styles.leftSection}>
-        {back && <BackButton />}
-        <Text style={styles.title}>{title}</Text>
+        {back && (
+          <Pressable onPress={handleBackPress} style={styles.backButton}>
+            <Text style={styles.backButtonText}>←</Text>
+          </Pressable>
+        )}
+        <Text style={styles.title} numberOfLines={1}>
+          {title}
+          {loading ? '...' : ''}
+        </Text>
+        {extra && <View style={{ marginLeft: 8 }}>{extra}</View>}
       </View>
-      <Text style={styles.versionText}>{t('version', { version })}</Text>
+      {!!action && action}
+      {!action && (
+        <Text style={styles.versionText}>{t('version', { version })}</Text>
+      )}
     </View>
   );
 };
@@ -46,6 +68,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 8,
   },
+  backButton: {
+    width: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backButtonText: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: '#fff',
+  },
   leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -55,6 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: '600',
     color: '#fff',
+    flexShrink: 1,
   },
   versionText: {
     fontSize: 11,
