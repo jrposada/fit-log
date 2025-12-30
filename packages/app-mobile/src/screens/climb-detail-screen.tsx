@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   Alert,
   Dimensions,
-  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -18,6 +17,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import InteractiveImage from '../library/interactive-image';
 import { HEADER_FIXED_HEIGHT } from '../navigation/header.styles';
 import { ClimbingParamList } from '../types/routes';
 
@@ -86,13 +86,14 @@ const ClimbDetailScreen: FunctionComponent = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View
+      <InteractiveImage
+        source={{ uri: climb.image.imageUrl }}
         style={[
           styles.imageContainer,
           { height: SCREEN_HEIGHT - (insets.top + HEADER_FIXED_HEIGHT) },
         ]}
+        imageStyle={styles.image}
       >
-        <Image source={{ uri: climb.image.imageUrl }} style={styles.image} />
         {climb.holds.length > 0 && (
           <View style={styles.holdsOverlay}>
             {climb.holds.map((hold: Hold, index: number) => (
@@ -109,7 +110,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
             ))}
           </View>
         )}
-      </View>
+      </InteractiveImage>
 
       <View style={styles.footer}>
         {climb.description && (
