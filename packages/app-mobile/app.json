@@ -17,7 +17,8 @@
       "infoPlist": {
         "NSCameraUsageDescription": "This app requires access to the camera to take photos of climbing problems.",
         "NSPhotoLibraryUsageDescription": "This app requires access to the photo library to select images of climbing problems."
-      }
+      },
+      "bundleIdentifier": "jrposada.fitlogappmobile"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +32,8 @@
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "jrposada.fitlogappmobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
