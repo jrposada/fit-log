@@ -16,11 +16,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { HEADER_FIXED_HEIGHT } from '../navigation/header.styles';
 import { ClimbingParamList } from '../types/routes';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-const HEADER_HEIGHT = 60;
 
 type ClimbDetailNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,
@@ -33,6 +34,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<ClimbDetailNavigationProp>();
   const route = useRoute<ClimbDetailRouteProp>();
+  const insets = useSafeAreaInsets();
 
   const { climbId } = route.params;
   const { data: climb, isLoading } = useClimbsById({
@@ -84,7 +86,12 @@ const ClimbDetailScreen: FunctionComponent = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.imageContainer}>
+      <View
+        style={[
+          styles.imageContainer,
+          { height: SCREEN_HEIGHT - (insets.top + HEADER_FIXED_HEIGHT) },
+        ]}
+      >
         <Image source={{ uri: climb.image.imageUrl }} style={styles.image} />
         {climb.holds.length > 0 && (
           <View style={styles.holdsOverlay}>
@@ -145,7 +152,6 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: SCREEN_HEIGHT - HEADER_HEIGHT - 100,
     position: 'relative',
     backgroundColor: '#e0e0e0',
   },
