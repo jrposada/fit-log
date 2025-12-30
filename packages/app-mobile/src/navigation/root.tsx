@@ -30,6 +30,7 @@ const Root: FunctionComponent = () => {
           component={HomeScreen}
           options={{
             header: () => <Header title={t('home.title')} />,
+            tabBarLabel: t('home.title'),
             tabBarIcon: () => <Text style={styles.tabIcon}>🏠</Text>,
           }}
         />
@@ -37,7 +38,8 @@ const Root: FunctionComponent = () => {
           name="Climbing"
           component={ClimbingStack}
           options={{
-            header: () => <Header title={t('climbing.title')} />,
+            headerShown: false,
+            tabBarLabel: t('climbing.title'),
             tabBarIcon: () => <Text style={styles.tabIcon}>🧗</Text>,
           }}
         />
@@ -46,6 +48,7 @@ const Root: FunctionComponent = () => {
           component={TrainingScreen}
           options={{
             header: () => <Header title={t('training.title')} />,
+            tabBarLabel: t('training.title'),
             tabBarIcon: () => <Text style={styles.tabIcon}>💪</Text>,
           }}
         />
