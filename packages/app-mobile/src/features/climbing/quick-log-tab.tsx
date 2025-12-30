@@ -24,6 +24,7 @@ const QuickLogTab: FunctionComponent = () => {
     useClimbHistories({
       limit: 3,
       locationId,
+      status: ['attempt', 'project'],
     });
 
   const climbHistoriesPut = useClimbHistoriesPut();

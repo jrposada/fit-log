@@ -41,9 +41,9 @@ function useClimbHistories({
         if (sectorId) {
           params.append('sectorId', sectorId);
         }
-        if (status) {
-          params.append('status', status);
-        }
+        status?.forEach((s) => {
+          params.append('status', s);
+        });
         if (startDate) {
           params.append('startDate', startDate);
         }
