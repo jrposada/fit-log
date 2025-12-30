@@ -1,8 +1,18 @@
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Climb } from '@shared/models/climb/climb';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
+import { ClimbingParamList } from '../../types/routes';
 
 type Data = Omit<Climb, 'image' | 'location'> & {
   image: string;
@@ -15,32 +25,44 @@ export interface ClimbCardProps {
   logDisabled: boolean;
 }
 
+type ClimbCardNavigationProp = NativeStackNavigationProp<
+  ClimbingParamList,
+  'ClimbingMain'
+>;
+
 const ClimbCard: FunctionComponent<ClimbCardProps> = ({
   climb,
   onLog,
   logDisabled,
 }) => {
   const { t } = useTranslation();
+  const navigation = useNavigation<ClimbCardNavigationProp>();
 
-  const handlePress = () => {
+  const handleClimbPress = () => {
+    navigation.navigate('ClimbDetail', { climbId: climb.id });
+  };
+
+  const handleLogPress = () => {
     onLog(climb);
   };
 
   return (
     <View style={styles.card}>
       <View style={styles.topRow}>
-        <Text style={styles.title}>
-          <Text style={{ color: beautifyGradeColor(climb.grade) }}>
-            ● {climb.grade}
-          </Text>{' '}
-          | {climb.name}
-        </Text>
+        <Pressable onPress={handleClimbPress}>
+          <Text style={styles.title}>
+            <Text style={{ color: beautifyGradeColor(climb.grade) }}>
+              ● {climb.grade}
+            </Text>{' '}
+            | {climb.name}
+          </Text>
+        </Pressable>
       </View>
       <View style={styles.bottomRow}>
         <Text style={styles.sector}>{climb.sector.name}</Text>
         <TouchableOpacity
           style={styles.actionButton}
-          onPress={handlePress}
+          onPress={handleLogPress}
           disabled={logDisabled}
           activeOpacity={0.7}
         >
