@@ -27,7 +27,7 @@ const handler = toApiResponse<
     ...(climbId ? { climb: climbId } : {}),
     ...(locationId ? { location: locationId } : {}),
     ...(sectorId ? { sector: sectorId } : {}),
-    ...(status ? { status } : {}),
+    ...(status ? { status: { $in: status } } : {}),
     ...(startDate || endDate
       ? {
           createdAt: {

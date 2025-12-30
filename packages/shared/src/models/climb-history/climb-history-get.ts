@@ -7,7 +7,7 @@ export type ClimbHistoriesGetQuery = {
   climbId?: string;
   locationId?: string;
   sectorId?: string;
-  status?: ClimbHistoryStatus;
+  status?: ClimbHistoryStatus[];
   startDate?: string;
   endDate?: string;
 };
@@ -17,7 +17,13 @@ export const climbHistoriesGetQuerySchema = z.object({
   climbId: z.string().optional(),
   locationId: z.string().optional(),
   sectorId: z.string().optional(),
-  status: z.enum(['send', 'flash', 'attempt', 'project']).optional(),
+  status: z
+    .union([
+      z.enum(['send', 'flash', 'attempt', 'project']),
+      z.array(z.enum(['send', 'flash', 'attempt', 'project'])),
+    ])
+    .transform((val) => (Array.isArray(val) ? val : [val]))
+    .optional(),
   startDate: z.string().datetime().optional(),
   endDate: z.string().datetime().optional(),
 });
