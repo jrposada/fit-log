@@ -8,10 +8,6 @@
       "args": ["run", "dev"],
       "options": {
         "cwd": "${workspaceFolder}/packages/shared",
-        "env": {
-          "TSC_WATCHFILE": "UseFsEventsWithFallbackDynamicPolling",
-          "TSC_NONPOLLING_WATCHER": "UseFsEvents"
-        }
       },
       "isBackground": true,
       "problemMatcher": {
@@ -47,10 +43,6 @@
       "args": ["run", "dev"],
       "options": {
         "cwd": "${workspaceFolder}/packages/shared-react",
-        "env": {
-          "TSC_WATCHFILE": "UseFsEventsWithFallbackDynamicPolling",
-          "TSC_NONPOLLING_WATCHER": "UseFsEvents"
-        }
       },
       "isBackground": true,
       "problemMatcher": {
@@ -108,10 +100,6 @@
         "panel": "dedicated",
         "focus": false,
         "clear": true
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": false
       },
     },
   ]
