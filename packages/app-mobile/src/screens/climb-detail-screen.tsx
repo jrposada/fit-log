@@ -41,7 +41,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
   const { data: climb, isLoading } = useClimbsById({
     id: climbId,
   });
-  const { mutate: deleteClimb, isPending } = useClimbsDelete({
+  const deleteClimb = useClimbsDelete({
     onSuccess: () => {
       Alert.alert(
         t('climbing.climb_deleted_title'),
@@ -63,7 +63,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
         {
           text: t('actions.delete'),
           style: 'destructive',
-          onPress: () => deleteClimb({ id: climbId }),
+          onPress: () => deleteClimb.mutate({ id: climbId }),
         },
       ]
     );
@@ -103,11 +103,8 @@ const ClimbDetailScreen: FunctionComponent = () => {
     );
   }
 
-  const hasLocation = climb.location?.latitude && climb.location?.longitude;
-
   return (
     <ScrollView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <Text style={styles.name} numberOfLines={1}>
@@ -122,46 +119,32 @@ const ClimbDetailScreen: FunctionComponent = () => {
             <Text style={styles.gradeText}>{climb.grade}</Text>
           </View>
         </View>
-        {hasLocation && (
-          <TouchableOpacity style={styles.mapButton} onPress={handleOpenMap}>
-            <Text style={styles.mapIcon}>📍</Text>
-          </TouchableOpacity>
-        )}
+
+        <TouchableOpacity style={styles.mapButton} onPress={handleOpenMap}>
+          <Text style={styles.mapIcon}>📍</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Body - Image with holds overlay */}
       <View style={styles.imageContainer}>
-        {climb.image?.imageUrl ? (
-          <>
-            <Image
-              source={{ uri: climb.image.imageUrl }}
-              style={styles.image}
-            />
-            {climb.holds?.length > 0 && (
-              <View style={styles.holdsOverlay}>
-                {climb.holds.map((hold: Hold, index: number) => (
-                  <View
-                    key={`hold-${index}`}
-                    style={[
-                      styles.hold,
-                      {
-                        left: `${hold.x * 100}%`,
-                        top: `${hold.y * 100}%`,
-                      },
-                    ]}
-                  />
-                ))}
-              </View>
-            )}
-          </>
-        ) : (
-          <View style={styles.noImagePlaceholder}>
-            <Text style={styles.noImageText}>{t('climbing.no_image')}</Text>
+        <Image source={{ uri: climb.image.imageUrl }} style={styles.image} />
+        {climb.holds.length > 0 && (
+          <View style={styles.holdsOverlay}>
+            {climb.holds.map((hold: Hold, index: number) => (
+              <View
+                key={`hold-${index}`}
+                style={[
+                  styles.hold,
+                  {
+                    left: `${hold.x * 100}%`,
+                    top: `${hold.y * 100}%`,
+                  },
+                ]}
+              />
+            ))}
           </View>
         )}
       </View>
 
-      {/* Footer */}
       <View style={styles.footer}>
         {climb.description && (
           <View style={styles.descriptionSection}>
@@ -173,10 +156,10 @@ const ClimbDetailScreen: FunctionComponent = () => {
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={handleDelete}
-          disabled={isPending}
+          disabled={deleteClimb.isPending}
         >
           <Text style={styles.deleteButtonText}>
-            {isPending
+            {deleteClimb.isPending
               ? t('climbing.deleting')
               : t('climbing.delete_climb_button')}
           </Text>
