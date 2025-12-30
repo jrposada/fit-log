@@ -56,8 +56,6 @@ const handler = toApiResponse<
       populate: ['images'],
     });
 
-  console.log(climbHistories);
-
   return {
     statusCode: 200,
     body: {

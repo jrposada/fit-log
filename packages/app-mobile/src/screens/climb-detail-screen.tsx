@@ -9,7 +9,10 @@ import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Alert,
+  Dimensions,
   Image,
+  Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -18,6 +21,9 @@ import {
 } from 'react-native';
 
 import { ClimbingParamList } from '../types/routes';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const HEADER_HEIGHT = 60;
 
 type ClimbDetailNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,
@@ -63,6 +69,24 @@ const ClimbDetailScreen: FunctionComponent = () => {
     );
   };
 
+  const handleOpenMap = () => {
+    if (!climb?.location?.latitude || !climb?.location?.longitude) {
+      return;
+    }
+
+    const { latitude, longitude } = climb.location;
+    const label = encodeURIComponent(climb.location.name || 'Location');
+
+    const url = Platform.select({
+      ios: `maps:0,0?q=${label}@${latitude},${longitude}`,
+      android: `geo:0,0?q=${latitude},${longitude}(${label})`,
+    });
+
+    if (url) {
+      Linking.openURL(url);
+    }
+  };
+
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -79,68 +103,66 @@ const ClimbDetailScreen: FunctionComponent = () => {
     );
   }
 
+  const hasLocation = climb.location?.latitude && climb.location?.longitude;
+
   return (
     <ScrollView style={styles.container}>
-      {climb.image?.imageUrl && (
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: climb.image.imageUrl }} style={styles.image} />
-          {climb.holds?.length > 0 && (
-            <View style={styles.holdsOverlay}>
-              {climb.holds.map((hold: Hold, index: number) => (
-                <View
-                  key={`hold-${index}`}
-                  style={[
-                    styles.hold,
-                    {
-                      left: `${hold.x * 100}%`,
-                      top: `${hold.y * 100}%`,
-                    },
-                  ]}
-                />
-              ))}
-            </View>
-          )}
-        </View>
-      )}
-
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.name}>{climb.name}</Text>
-          <View style={styles.gradeContainer}>
-            <Text
-              style={[
-                styles.grade,
-                { backgroundColor: beautifyGradeColor(climb.grade) },
-              ]}
-            >
-              {climb.grade}
-            </Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <View style={styles.headerLeft}>
+          <Text style={styles.name} numberOfLines={1}>
+            {climb.name}
+          </Text>
+          <View
+            style={[
+              styles.gradeBadge,
+              { backgroundColor: beautifyGradeColor(climb.grade) },
+            ]}
+          >
+            <Text style={styles.gradeText}>{climb.grade}</Text>
           </View>
         </View>
+        {hasLocation && (
+          <TouchableOpacity style={styles.mapButton} onPress={handleOpenMap}>
+            <Text style={styles.mapIcon}>📍</Text>
+          </TouchableOpacity>
+        )}
+      </View>
 
-        <View style={styles.infoSection}>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>{t('climbing.location')}</Text>
-            <Text style={styles.value}>{climb.location?.name}</Text>
+      {/* Body - Image with holds overlay */}
+      <View style={styles.imageContainer}>
+        {climb.image?.imageUrl ? (
+          <>
+            <Image
+              source={{ uri: climb.image.imageUrl }}
+              style={styles.image}
+            />
+            {climb.holds?.length > 0 && (
+              <View style={styles.holdsOverlay}>
+                {climb.holds.map((hold: Hold, index: number) => (
+                  <View
+                    key={`hold-${index}`}
+                    style={[
+                      styles.hold,
+                      {
+                        left: `${hold.x * 100}%`,
+                        top: `${hold.y * 100}%`,
+                      },
+                    ]}
+                  />
+                ))}
+              </View>
+            )}
+          </>
+        ) : (
+          <View style={styles.noImagePlaceholder}>
+            <Text style={styles.noImageText}>{t('climbing.no_image')}</Text>
           </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>{t('climbing.sector')}</Text>
-            <Text style={styles.value}>{climb.sector?.name}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>{t('climbing.created_at')}</Text>
-            <Text style={styles.value}>
-              {new Date(climb.createdAt).toLocaleDateString()}
-            </Text>
-          </View>
-          {climb.holds?.length > 0 && (
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>{t('climbing.holds')}</Text>
-              <Text style={styles.value}>{climb.holds.length}</Text>
-            </View>
-          )}
-        </View>
+        )}
+      </View>
 
+      {/* Footer */}
+      <View style={styles.footer}>
         {climb.description && (
           <View style={styles.descriptionSection}>
             <Text style={styles.sectionTitle}>{t('climbing.description')}</Text>
@@ -179,15 +201,59 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#fff',
+    height: HEADER_HEIGHT,
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: 12,
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#222',
+    flexShrink: 1,
+  },
+  gradeBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  gradeText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  mapButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 12,
+  },
+  mapIcon: {
+    fontSize: 20,
+  },
   imageContainer: {
     width: '100%',
-    aspectRatio: 1,
+    height: SCREEN_HEIGHT - HEADER_HEIGHT - 100,
     position: 'relative',
+    backgroundColor: '#e0e0e0',
   },
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
+    resizeMode: 'contain',
   },
   holdsOverlay: {
     position: 'absolute',
@@ -207,53 +273,17 @@ const styles = StyleSheet.create({
     marginLeft: -12,
     marginTop: -12,
   },
-  content: {
-    padding: 16,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#222',
+  noImagePlaceholder: {
     flex: 1,
-    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  gradeContainer: {},
-  grade: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#fff',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-    overflow: 'hidden',
+  noImageText: {
+    fontSize: 16,
+    color: '#999',
   },
-  infoSection: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
+  footer: {
     padding: 16,
-    marginBottom: 16,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-  },
-  label: {
-    fontSize: 14,
-    color: '#666',
-  },
-  value: {
-    fontSize: 14,
-    color: '#222',
-    fontWeight: '500',
   },
   descriptionSection: {
     backgroundColor: '#fff',
@@ -277,7 +307,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',
-    marginTop: 8,
   },
   deleteButtonText: {
     color: '#fff',
