@@ -1,9 +1,10 @@
 import { FunctionComponent } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, TextInput, TextInputProps } from 'react-native';
+import { TextInput, TextInputProps } from 'react-native';
 
 import FormField from './form-field';
+import { styles } from './form-text-area.styles';
 
 interface FormTextAreaProps
   extends Omit<
@@ -70,20 +71,5 @@ const FormTextArea: FunctionComponent<FormTextAreaProps> = ({
     </FormField>
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    color: '#000',
-    backgroundColor: '#fff',
-  },
-  textArea: {
-    minHeight: 100,
-  },
-});
 
 export default FormTextArea;

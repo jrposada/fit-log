@@ -1,5 +1,7 @@
 import { FunctionComponent } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
+
+import { styles } from './separator.styles';
 
 export interface SeparatorProps {
   insetHorizontal?: number;
@@ -25,12 +27,5 @@ const Separator: FunctionComponent<SeparatorProps> = ({
     />
   );
 };
-
-const styles = StyleSheet.create({
-  base: {
-    height: 1,
-    alignSelf: 'stretch',
-  },
-});
 
 export default Separator;

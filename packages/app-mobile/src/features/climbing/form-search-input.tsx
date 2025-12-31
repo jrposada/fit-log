@@ -1,13 +1,14 @@
 import { FunctionComponent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import {
-  StyleSheet,
   Text,
   TextInput,
   TextInputProps,
   TouchableOpacity,
   View,
 } from 'react-native';
+
+import { styles } from './form-search-input.styles';
 
 interface FormSearchInputProps
   extends Omit<TextInputProps, 'value' | 'onChangeText' | 'onBlur'> {
@@ -49,34 +50,5 @@ const FormSearchInput: FunctionComponent<FormSearchInputProps> = ({
     />
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-  input: {
-    flex: 1,
-    height: 44,
-    fontSize: 16,
-    color: '#333',
-  },
-  clearButton: {
-    padding: 8,
-  },
-  clearButtonText: {
-    fontSize: 20,
-    color: '#999',
-  },
-});
 
 export default FormSearchInput;

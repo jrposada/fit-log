@@ -1,6 +1,8 @@
 import type React from 'react';
 import { ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
+
+import { styles } from './footer.styles';
 
 export interface ModalFooterProps {
   children: ReactNode;
@@ -9,14 +11,5 @@ export interface ModalFooterProps {
 function Footer({ children }: ModalFooterProps): React.ReactElement {
   return <View style={styles.footer}>{children}</View>;
 }
-
-const styles = StyleSheet.create({
-  footer: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#eee',
-  },
-});
 
 export default Footer;

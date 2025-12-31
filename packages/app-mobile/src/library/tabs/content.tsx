@@ -1,5 +1,7 @@
 import type React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+
+import { styles } from './content.styles';
 
 export type TabContentItem<T extends string> = {
   id: T;
@@ -25,17 +27,5 @@ function Content<T extends string>({
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollContent: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexGrow: 1,
-  },
-  inner: {
-    padding: 20,
-  },
-});
 
 export default Content;

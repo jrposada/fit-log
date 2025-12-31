@@ -1,6 +1,8 @@
 import type React from 'react';
 import { ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
+
+import { styles } from './header.styles';
 
 export interface ModalHeaderProps {
   children: ReactNode;
@@ -9,14 +11,5 @@ export interface ModalHeaderProps {
 function Header({ children }: ModalHeaderProps): React.ReactElement {
   return <View style={styles.header}>{children}</View>;
 }
-
-const styles = StyleSheet.create({
-  header: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-});
 
 export default Header;

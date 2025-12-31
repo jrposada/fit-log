@@ -4,7 +4,6 @@ import {
   ImageSourcePropType,
   ImageStyle,
   StyleProp,
-  StyleSheet,
   ViewStyle,
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -13,6 +12,8 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+
+import { styles } from './interactive-image.styles';
 
 interface InteractiveImageProps {
   source: ImageSourcePropType;
@@ -116,21 +117,6 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
     </GestureDetector>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    overflow: 'hidden',
-  },
-  animatedContainer: {
-    width: '100%',
-    height: '100%',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
-  },
-});
 
 export default InteractiveImage;
 export type { InteractiveImageProps };

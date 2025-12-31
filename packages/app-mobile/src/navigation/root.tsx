@@ -3,13 +3,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text } from 'react-native';
+import { Text } from 'react-native';
 
 import HomeScreen from '../screens/home-screen';
 import TrainingScreen from '../screens/training-screen';
 import { RootParamList } from '../types/routes';
 import ClimbingStack from './climbing-stack';
 import Header from './header';
+import { styles } from './root.styles';
 
 const Tab = createBottomTabNavigator<RootParamList>();
 
@@ -56,11 +57,5 @@ const Root: FunctionComponent = () => {
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  tabIcon: {
-    fontSize: 24,
-  },
-});
 
 export default Root;

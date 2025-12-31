@@ -1,10 +1,11 @@
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import BrowseTab from '../features/climbing/browse-tab';
 import QuickLogTab from '../features/climbing/quick-log-tab';
 import Tabs, { TabBarItem, TabContentItem } from '../library/tabs';
+import { styles } from './climbing-screen.styles';
 
 type Tab = 'quick-log' | 'browse' | 'projects' | 'stats';
 
@@ -54,18 +55,5 @@ const ClimbingScreen: FunctionComponent = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  placeholderText: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    marginTop: 40,
-  },
-});
 
 export default ClimbingScreen;

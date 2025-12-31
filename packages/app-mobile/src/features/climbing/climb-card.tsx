@@ -4,15 +4,10 @@ import { Climb } from '@shared/models/climb/climb';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 
 import { ClimbingParamList } from '../../types/routes';
+import { styles } from './climb-card.styles';
 
 type Data = Omit<Climb, 'image' | 'location'> & {
   image: string;
@@ -72,48 +67,5 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    marginBottom: 14,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-  topRow: {
-    marginBottom: 6,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#222',
-  },
-  bottomRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  sector: {
-    fontSize: 13,
-    color: '#666',
-  },
-  actionButton: {
-    backgroundColor: '#1b5e20',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  actionText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-});
 
 export default ClimbCard;
