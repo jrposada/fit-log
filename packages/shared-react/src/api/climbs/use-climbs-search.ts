@@ -1,19 +1,24 @@
 import { ApiResponse } from '@shared/models/api-response';
 import {
-  ClimbsGetQuery,
-  ClimbsGetResponse,
-} from '@shared/models/climb/climb-get';
+  ClimbsSearchQuery,
+  ClimbsSearchResponse,
+} from '@shared/models/climb/climb-search';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
-function useClimbs({ grade, limit, locationId, search }: ClimbsGetQuery = {}) {
+function useClimbsSearch({
+  grade,
+  limit,
+  locationId,
+  search,
+}: ClimbsSearchQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
 
   return useQuery({
-    queryKey: ['climbs', 'get', { grade, limit, locationId, search }],
+    queryKey: ['climbs', 'search', { grade, limit, locationId, search }],
     queryFn: query({
       defaultResponse: [],
       fn: async () => {
@@ -30,12 +35,15 @@ function useClimbs({ grade, limit, locationId, search }: ClimbsGetQuery = {}) {
           params.append('search', search);
         }
 
-        const url = `${apiBaseUrl}/climbs${params.toString() ? `?${params.toString()}` : ''}`;
-        const response = await axios.get<ApiResponse<ClimbsGetResponse>>(url, {
-          headers: {
-            Authorization: '',
-          },
-        });
+        const url = `${apiBaseUrl}/climbs/search${params.toString() ? `?${params.toString()}` : ''}`;
+        const response = await axios.get<ApiResponse<ClimbsSearchResponse>>(
+          url,
+          {
+            headers: {
+              Authorization: '',
+            },
+          }
+        );
 
         if (!response.data.success) {
           throw new Error('Api error');
@@ -47,4 +55,4 @@ function useClimbs({ grade, limit, locationId, search }: ClimbsGetQuery = {}) {
   });
 }
 
-export { useClimbs };
+export { useClimbsSearch };

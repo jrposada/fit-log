@@ -10,9 +10,24 @@ import {
   climbsGetByIdParamsSchema,
 } from './climb-get-by-id';
 import { ClimbsPutRequest, climbsPutRequestSchema } from './climb-put';
+import { ClimbsSearchQuery, climbsSearchQuerySchema } from './climb-search';
 
 export type ClimbsGetQueryTest = Expect<
-  IsTrue<IsEqual<ClimbsGetQuery, z.infer<typeof climbsGetQuerySchema>>>
+  IsTrue<
+    IsEqual<
+      Omit<ClimbsGetQuery, 'grade'> & { grade?: string[] },
+      z.infer<typeof climbsGetQuerySchema>
+    >
+  >
+>;
+
+export type ClimbsSearchQueryTest = Expect<
+  IsTrue<
+    IsEqual<
+      Omit<ClimbsSearchQuery, 'grade'> & { grade?: string[] },
+      z.infer<typeof climbsSearchQuerySchema>
+    >
+  >
 >;
 
 export type ClimbsPutRequestTest = Expect<

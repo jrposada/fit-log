@@ -16,10 +16,20 @@ const handler = toApiResponse<ClimbsGetResponse, unknown, ClimbsGetQuery>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 
-    const { limit, locationId } = request.query;
+    const { limit, locationId, grade, search } = request.query;
 
     const query = Climb.find({
       ...(locationId ? { location: locationId } : {}),
+      ...(grade && grade.length > 0 ? { grade: { $in: grade } } : {}),
+      ...(search && search.trim()
+        ? {
+            $or: [
+              { name: { $regex: search, $options: 'i' } },
+              { description: { $regex: search, $options: 'i' } },
+              { grade: { $regex: search, $options: 'i' } },
+            ],
+          }
+        : {}),
     });
 
     if (limit) {
