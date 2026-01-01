@@ -3,11 +3,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 
+import { useAuth } from '../contexts/auth/use-auth';
 import HomeScreen from '../screens/home-screen';
 import TrainingScreen from '../screens/training-screen';
 import { RootParamList } from '../types/routes';
+import AuthStack from './auth-stack';
 import ClimbingStack from './climbing-stack';
 import Header from './header';
 import { styles } from './root.styles';
@@ -16,6 +18,34 @@ const Tab = createBottomTabNavigator<RootParamList>();
 
 const Root: FunctionComponent = () => {
   const { t } = useTranslation();
+  const { isLoading, isAuthenticated } = useAuth();
+
+  if (isLoading) {
+    return (
+      <NavigationContainer>
+        <StatusBar style="auto" />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#f5f5f5',
+          }}
+        >
+          <ActivityIndicator size="large" color="#4CAF50" />
+        </View>
+      </NavigationContainer>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <NavigationContainer>
+        <StatusBar style="auto" />
+        <AuthStack />
+      </NavigationContainer>
+    );
+  }
 
   return (
     <NavigationContainer>

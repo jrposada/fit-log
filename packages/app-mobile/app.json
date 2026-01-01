@@ -45,7 +45,9 @@
           "photosPermission": "$(PRODUCT_NAME) app requires access to the photo library to select images of climbing problems.",
           "cameraPermission": "$(PRODUCT_NAME) app requires access to the camera to take photos of climbing problems."
         }
-      ]
+      ],
+      "expo-web-browser",
+      "expo-secure-store"
     ]
   }
 }
