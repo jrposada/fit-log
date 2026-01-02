@@ -1,45 +1,40 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { User } from '../models/user';
+import Keycloak from '../services/keycloak';
 
 export async function authenticateKeycloak(
   req: Request,
-  _res: Response,
+  res: Response,
   next: NextFunction
 ): Promise<void> {
   try {
-    const decodedToken = {
-      // Mock decoding for illustration; replace with actual Keycloak token decoding
-      sub: 'unique-user-id',
-      email: 'user@example.com',
-      name: 'John Doe',
-      preferred_username: 'johndoe',
-      realm_access: {
-        roles: ['user', 'admin'],
-      },
-    };
+    const decodedToken = await Keycloak.instance.verifyToken(
+      req.headers.authorization
+    );
+    if (!decodedToken) {
+      res.status(401).json({ success: false, error: 'Invalid token' });
+      return;
+    }
 
-    let user = await User.findOne({ keycloakId: decodedToken.sub });
+    let user = await User.findOne({ keycloakId: decodedToken.authId });
 
     if (!user) {
       user = await User.create({
-        keycloakId: decodedToken.sub,
+        keycloakId: decodedToken.authId,
         email: decodedToken.email,
-        name:
-          decodedToken.name ||
-          decodedToken.preferred_username ||
-          'Unknown User',
-        roles: decodedToken.realm_access?.roles || [],
+        name: decodedToken.name,
+        roles: decodedToken.roles,
       });
     } else {
       let hasChanges = false;
 
-      const newName =
-        decodedToken.name || decodedToken.preferred_username || user.name;
-      const newRoles = decodedToken.realm_access?.roles || [];
+      const newEmail = decodedToken.email || user.email;
+      const newName = decodedToken.name;
+      const newRoles = decodedToken.roles;
 
-      if (user.email !== decodedToken.email) {
-        user.email = decodedToken.email;
+      if (user.email !== newEmail) {
+        user.email = newEmail;
         hasChanges = true;
       }
 

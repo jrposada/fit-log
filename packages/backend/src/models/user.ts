@@ -6,7 +6,6 @@ export interface IUser extends WithTimestamps<Document> {
   email: string;
   name: string;
   roles: string[];
-  emailVerified: boolean;
 
   /* References */
 }

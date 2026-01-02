@@ -90,9 +90,15 @@ router.delete(
 );
 
 // Sessions
-router.get('/sessions', validateQuery(sessionsGetQuerySchema), sessionsGet);
+router.get(
+  '/sessions',
+  authenticateKeycloak,
+  validateQuery(sessionsGetQuerySchema),
+  sessionsGet
+);
 router.get(
   '/sessions/:id',
+  authenticateKeycloak,
   validateParams(sessionsGetByIdParamsSchema),
   sessionsGetById
 );

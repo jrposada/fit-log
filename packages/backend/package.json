@@ -31,6 +31,8 @@
     "@jrposada/fit-log-shared": "*",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.3",
+    "jwks-rsa": "^3.2.0",
     "mongoose": "^9.0.0",
     "sharp": "^0.34.5",
     "uuid": "^11.0.5",
@@ -39,6 +41,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.13.1",
     "@types/uuid": "^10.0.0",
     "tsx": "^4.19.2"
