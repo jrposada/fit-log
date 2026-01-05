@@ -1,17 +1,18 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import { useAuth } from '@shared-react/contexts/auth/use-auth';
 import { StatusBar } from 'expo-status-bar';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Text, View } from 'react-native';
 
-import { useAuth } from '../contexts/auth/use-auth';
 import HomeScreen from '../screens/home-screen';
 import TrainingScreen from '../screens/training-screen';
 import { RootParamList } from '../types/routes';
 import AuthStack from './auth-stack';
 import ClimbingStack from './climbing-stack';
 import Header from './header';
+import HomeHeader from './home-header';
 import { styles } from './root.styles';
 
 const Tab = createBottomTabNavigator<RootParamList>();
@@ -60,7 +61,7 @@ const Root: FunctionComponent = () => {
           name="Home"
           component={HomeScreen}
           options={{
-            header: () => <Header title={t('home.title')} />,
+            header: () => <HomeHeader />,
             tabBarLabel: t('home.title'),
             tabBarIcon: () => <Text style={styles.tabIcon}>🏠</Text>,
           }}
