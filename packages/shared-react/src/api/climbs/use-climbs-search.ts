@@ -6,6 +6,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
@@ -16,11 +17,13 @@ function useClimbsSearch({
   search,
 }: ClimbsSearchQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
+  const { token } = useAuth();
 
   return useQuery({
     queryKey: ['climbs', 'search', { grade, limit, locationId, search }],
     queryFn: query({
       defaultResponse: [],
+
       fn: async () => {
         const params = new URLSearchParams();
 
@@ -40,7 +43,7 @@ function useClimbsSearch({
           url,
           {
             headers: {
-              Authorization: '',
+              Authorization: `Bearer ${token}`,
             },
           }
         );

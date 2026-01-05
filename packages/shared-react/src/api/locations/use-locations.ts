@@ -6,16 +6,19 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
 function useLocations({ limit }: LocationsGetQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
+  const { token } = useAuth();
 
   return useQuery({
     queryKey: ['locations', { limit }],
     queryFn: query({
       defaultResponse: [],
+
       fn: async () => {
         const params = new URLSearchParams();
         if (limit) {
@@ -27,7 +30,7 @@ function useLocations({ limit }: LocationsGetQuery = {}) {
           url,
           {
             headers: {
-              Authorization: '',
+              Authorization: `Bearer ${token}`,
             },
           }
         );

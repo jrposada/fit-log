@@ -6,11 +6,13 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
 function useLocationsById({ id }: LocationsGetByIdParams) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
+  const { token } = useAuth();
 
   return useQuery({
     queryKey: ['locations', { id }],
@@ -20,7 +22,7 @@ function useLocationsById({ id }: LocationsGetByIdParams) {
           `${apiBaseUrl}/locations/${encodeURIComponent(id)}`,
           {
             headers: {
-              Authorization: '',
+              Authorization: `Bearer ${token}`,
             },
           }
         );

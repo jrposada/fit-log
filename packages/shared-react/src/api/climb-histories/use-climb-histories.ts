@@ -6,6 +6,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
@@ -19,6 +20,7 @@ function useClimbHistories({
   endDate,
 }: ClimbHistoriesGetQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
+  const { token } = useAuth();
 
   return useQuery({
     queryKey: [
@@ -27,6 +29,7 @@ function useClimbHistories({
     ],
     queryFn: query({
       defaultResponse: [],
+
       fn: async () => {
         const params = new URLSearchParams();
         if (limit) {
@@ -56,7 +59,7 @@ function useClimbHistories({
           ApiResponse<ClimbHistoriesGetResponse>
         >(url, {
           headers: {
-            Authorization: '',
+            Authorization: `Bearer ${token}`,
           },
         });
 

@@ -5,6 +5,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 
 type UseLocationsPutParams = {
@@ -15,6 +16,7 @@ type UseLocationsPutParams = {
 function useLocationsPut({ onError, onSuccess }: UseLocationsPutParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
+  const { token } = useAuth();
 
   return useMutation<
     LocationsPutResponse['location'],
@@ -26,7 +28,7 @@ function useLocationsPut({ onError, onSuccess }: UseLocationsPutParams = {}) {
       const response = await axios.put(`${apiBaseUrl}/locations`, location, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: '',
+          Authorization: `Bearer ${token}`,
         },
       });
 

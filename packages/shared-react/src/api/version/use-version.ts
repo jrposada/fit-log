@@ -14,12 +14,7 @@ export function useVersion() {
       defaultResponse: '',
       fn: async () => {
         const response = await axios.get<ApiResponse<string>>(
-          `${apiBaseUrl}/version`,
-          {
-            headers: {
-              Authorization: '',
-            },
-          }
+          `${apiBaseUrl}/version`
         );
 
         if (!response.data.success) {

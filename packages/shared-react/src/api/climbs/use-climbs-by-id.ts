@@ -3,6 +3,7 @@ import { ClimbsGetByIdResponse } from '@shared/models/climb/climb-get-by-id';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
@@ -12,6 +13,7 @@ type UseClimbsById = {
 
 function useClimbsById({ id }: UseClimbsById) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
+  const { token } = useAuth();
 
   return useQuery({
     queryKey: ['climbs', { id }],
@@ -21,7 +23,7 @@ function useClimbsById({ id }: UseClimbsById) {
           `${apiBaseUrl}/climbs/${encodeURIComponent(id)}`,
           {
             headers: {
-              Authorization: '',
+              Authorization: `Bearer ${token}`,
             },
           }
         );

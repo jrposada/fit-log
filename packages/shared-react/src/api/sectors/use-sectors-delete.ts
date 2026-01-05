@@ -5,6 +5,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 
 type UseSectorsDeleteParams = {
@@ -15,6 +16,7 @@ type UseSectorsDeleteParams = {
 function useSectorsDelete({ onError, onSuccess }: UseSectorsDeleteParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
+  const { token } = useAuth();
 
   return useMutation<
     SectorsDeleteResponse,
@@ -25,7 +27,7 @@ function useSectorsDelete({ onError, onSuccess }: UseSectorsDeleteParams = {}) {
     mutationFn: async ({ id }) => {
       const response = await axios.delete(`${apiBaseUrl}/sectors/${id}`, {
         headers: {
-          Authorization: '',
+          Authorization: `Bearer ${token}`,
         },
       });
 

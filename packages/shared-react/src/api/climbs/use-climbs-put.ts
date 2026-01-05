@@ -5,6 +5,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 
 type UseClimbsPutParams = {
@@ -15,6 +16,7 @@ type UseClimbsPutParams = {
 function useClimbsPut({ onError, onSuccess }: UseClimbsPutParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
+  const { token } = useAuth();
 
   return useMutation<
     ClimbsPutResponse['climb'],
@@ -26,7 +28,7 @@ function useClimbsPut({ onError, onSuccess }: UseClimbsPutParams = {}) {
       const response = await axios.put(`${apiBaseUrl}/climbs`, climb, {
         headers: {
           'Content-Type': 'application/json',
-          Authorization: '',
+          Authorization: `Bearer ${token}`,
         },
       });
 

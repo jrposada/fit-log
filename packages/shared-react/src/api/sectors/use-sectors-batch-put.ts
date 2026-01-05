@@ -5,6 +5,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
+import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 
 type UseSectorsBatchPutParams = {
@@ -18,6 +19,7 @@ function useSectorsBatchPut({
 }: UseSectorsBatchPutParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
+  const { token } = useAuth();
 
   return useMutation<
     SectorsBatchPutResponse,
@@ -32,7 +34,7 @@ function useSectorsBatchPut({
         {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: '',
+            Authorization: `Bearer ${token}`,
           },
         }
       );
