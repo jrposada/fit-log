@@ -80,3 +80,8 @@ npm run cli nuke
 
 ## Troubleshooting
 
+## Components
+
+- [HX711](https://electronperdido.com/shop/sensores/fuerza/modulo-de-pesaje-electronico-hx711/) [Datasheet](https://electronperdido.com/wp-content/uploads/2015/10/HX711-datasheet.pdf)
+- [ESP32 Wifi + Bluetooth](https://electronperdido.com/shop/esp32-esp8266/modulo-esp32-dual-wifi-bluetooth/)
+- [Load cell 20Kg](https://electronperdido.com/shop/sensores/fuerza/celda-de-carga-20kg/): Input Red-Black (5-10V) | Signal Green-White (1 mV/V ± 150 μV/V)
