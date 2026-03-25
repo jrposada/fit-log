@@ -1,4 +1,5 @@
 import type { Command } from 'commander';
+import { confirm } from '@inquirer/prompts';
 import { connectToDatabase, disconnectFromDatabase } from '@backend/database';
 import { User } from '@backend/models/user';
 import { Workout } from '@backend/models/workout';
@@ -94,7 +95,19 @@ export function registerNukeCommand(setupCmd: Command): void {
   setupCmd
     .command('nuke')
     .description('Delete all items from the database')
+    .requiredOption('--nuke', 'Confirm you want to nuke the database')
     .action(async () => {
+      const confirmed = await confirm({
+        message:
+          'This will permanently delete all data from the database. Are you sure?',
+        default: false,
+      });
+
+      if (!confirmed) {
+        console.log('Aborted.');
+        process.exit(0);
+      }
+
       try {
         await nukeDatabase();
         await cleanDataDirectory();

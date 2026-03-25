@@ -46,9 +46,7 @@ async function fetchToken(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(
-      `Failed to fetch token: ${response.status} - ${errorText}`
-    );
+    throw new Error(`Failed to fetch token: ${response.status} - ${errorText}`);
   }
 
   return response.json() as Promise<TokenResponse>;
