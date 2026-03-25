@@ -21,14 +21,15 @@ export type AuthTokens = {
 
 export type UserInfo = {
   sub: string;
-  email?: string;
-  name?: string;
+  email: string;
+  name: string;
   preferredUsername?: string;
   emailVerified?: boolean;
 };
 
 const getDiscoveryDocument = (): AuthSession.DiscoveryDocument => {
-  const baseUrl = `${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}`;
+  const baseUrl = `${KEYCLOAK_URL}/realms/${encodeURIComponent(KEYCLOAK_REALM)}`;
+  console.log(baseUrl);
   return {
     authorizationEndpoint: `${baseUrl}/protocol/openid-connect/auth`,
     tokenEndpoint: `${baseUrl}/protocol/openid-connect/token`,
@@ -97,7 +98,8 @@ export const authService = {
     });
 
     if (!response.ok) {
-      throw new Error('Token refresh failed');
+      const errorData = await response.text();
+      throw new Error(`Token refresh failed: ${errorData}`);
     }
 
     const data = await response.json();
@@ -147,7 +149,6 @@ export const authService = {
   },
 
   getAuthRequest(): AuthSession.AuthRequest {
-    const discovery = getDiscoveryDocument();
     const redirectUri = getRedirectUri();
 
     return new AuthSession.AuthRequest({

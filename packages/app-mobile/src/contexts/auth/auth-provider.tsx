@@ -1,3 +1,6 @@
+import AuthContext, {
+  AuthContextValue,
+} from '@shared-react/contexts/auth/auth-context';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import {
@@ -5,6 +8,7 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 
@@ -13,7 +17,6 @@ import {
   getRedirectUri,
   UserInfo,
 } from '../../services/auth-service';
-import AuthContext from './auth-context';
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -21,6 +24,7 @@ type AuthProviderProps = {
 
 const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserInfo | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const discovery = authService.getDiscoveryDocument();
@@ -47,6 +51,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
             authRequest.codeVerifier
           );
           await authService.saveTokens(tokens);
+          setToken(tokens.accessToken);
           const userInfo = await authService.fetchUserInfo(tokens.accessToken);
           setUser(userInfo);
         } catch (error) {
@@ -66,12 +71,14 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
         if (refreshToken) {
           const tokens = await authService.refreshTokens(refreshToken);
           await authService.saveTokens(tokens);
+          setToken(tokens.accessToken);
           const userInfo = await authService.fetchUserInfo(tokens.accessToken);
           setUser(userInfo);
         }
       } catch (error) {
         console.error('Auth initialization failed:', error);
         await authService.clearTokens();
+        setToken(null);
       } finally {
         setIsLoading(false);
       }
@@ -116,6 +123,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
             request.codeVerifier
           );
           await authService.saveTokens(tokens);
+          setToken(tokens.accessToken);
           const userInfo = await authService.fetchUserInfo(tokens.accessToken);
           setUser(userInfo);
         }
@@ -151,6 +159,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
             authRequest.codeVerifier
           );
           await authService.saveTokens(tokens);
+          setToken(tokens.accessToken);
           const userInfo = await authService.fetchUserInfo(tokens.accessToken);
           setUser(userInfo);
         }
@@ -168,49 +177,31 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
       } else {
         await authService.clearTokens();
       }
-      setUser(null);
     } catch (error) {
       console.error('Logout failed:', error);
       await authService.clearTokens();
+    } finally {
       setUser(null);
+      setToken(null);
     }
   }, []);
 
-  const getAccessToken = useCallback(async (): Promise<string | null> => {
-    const accessToken = await authService.getAccessToken();
-
-    if (!accessToken) {
-      const refreshToken = await authService.getRefreshToken();
-      if (!refreshToken) return null;
-
-      try {
-        const tokens = await authService.refreshTokens(refreshToken);
-        await authService.saveTokens(tokens);
-        return tokens.accessToken;
-      } catch {
-        await logout();
-        return null;
-      }
-    }
-
-    return accessToken;
-  }, [logout]);
+  const contextValue = useMemo<AuthContextValue>(
+    () => ({
+      user,
+      isLoading,
+      isAuthenticated: !!user,
+      token,
+      login,
+      loginWithIdp,
+      register,
+      logout,
+    }),
+    [isLoading, login, loginWithIdp, logout, register, token, user]
+  );
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isLoading,
-        isAuthenticated: !!user,
-        login,
-        loginWithIdp,
-        register,
-        logout,
-        getAccessToken,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 

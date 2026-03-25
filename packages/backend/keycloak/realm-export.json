@@ -42,7 +42,10 @@
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
       "protocol": "openid-connect",
-      "redirectUris": ["exp://192.168.68.78:8081/--/auth/callback"],
+      "redirectUris": [
+        "exp://192.168.68.78:8081/--/auth/callback",
+        "exp://192.168.1.136:8081/--/auth/callback"
+      ],
       "webOrigins": ["*"],
       "attributes": {
         "pkce.code.challenge.method": "S256"

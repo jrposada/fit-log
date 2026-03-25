@@ -1,9 +1,9 @@
+import { useAuth } from '@shared-react/contexts/auth/use-auth';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useAuth } from '../../contexts/auth/use-auth';
 import { styles } from './login-screen.styles';
 
 const LoginScreen: FunctionComponent = () => {
