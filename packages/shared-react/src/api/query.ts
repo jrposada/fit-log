@@ -3,11 +3,15 @@ import { AxiosError } from 'axios';
 export type QueryParams<TResponse> = {
   defaultResponse?: TResponse;
   fn: () => Promise<TResponse>;
+  refreshToken?: () => Promise<void>;
+  logout?: () => Promise<void>;
 };
 
 export function query<TResponse>({
   defaultResponse,
   fn,
+  refreshToken,
+  logout,
 }: QueryParams<TResponse>): () => Promise<TResponse> {
   return async () => {
     try {
@@ -17,7 +21,12 @@ export function query<TResponse>({
         error instanceof AxiosError &&
         (error.status === 401 || error.status === 403)
       ) {
-        console.log('Unauthorized access - redirecting to login.');
+        try {
+          await refreshToken?.();
+          return await fn();
+        } catch {
+          await logout?.();
+        }
       }
 
       return defaultResponse ?? ({} as TResponse);
