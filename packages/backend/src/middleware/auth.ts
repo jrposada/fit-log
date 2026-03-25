@@ -20,6 +20,7 @@ export async function authenticateKeycloak(
     let user = await User.findOne({ keycloakId: decodedToken.authId });
 
     if (!user) {
+      console.log('New user detected, creating DB record...');
       user = await User.create({
         keycloakId: decodedToken.authId,
         email: decodedToken.email,
