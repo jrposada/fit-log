@@ -8,15 +8,15 @@ import { Climb } from '@backend/models/climb';
 import { ClimbHistory } from '@backend/models/climb-history';
 import { Image } from '@backend/models/image';
 
-import { fakeClimb } from './mock-data/climbs';
-import { fakeClimbHistory } from './mock-data/climb-histories';
-import { fakeWorkout } from './mock-data/workouts';
-import { fakeLocation } from './mock-data/locations';
-import { fakeImage } from './mock-data/images';
-import { fakeSector } from './mock-data/sectors';
+import { fakeClimb } from '../seed/mock-data/climbs';
+import { fakeClimbHistory } from '../seed/mock-data/climb-histories';
+import { fakeWorkout } from '../seed/mock-data/workouts';
+import { fakeLocation } from '../seed/mock-data/locations';
+import { fakeImage } from '../seed/mock-data/images';
+import { fakeSector } from '../seed/mock-data/sectors';
 
-export function registerSeedCommand(seedCmd: Command): void {
-  seedCmd
+export function registerSetupCommand(setupCmd: Command): void {
+  setupCmd
     .command('data')
     .description('Seed DB with mock data')
     .option('--num-workouts <value>', 'Number of workouts to create', '100')

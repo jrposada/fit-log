@@ -90,8 +90,8 @@ async function nukeDatabase() {
   console.log('✓ Database nuked successfully!');
 }
 
-export function registerNukeCommand(seedCmd: Command): void {
-  seedCmd
+export function registerNukeCommand(setupCmd: Command): void {
+  setupCmd
     .command('nuke')
     .description('Delete all items from the database')
     .action(async () => {

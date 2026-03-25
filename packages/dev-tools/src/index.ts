@@ -6,14 +6,14 @@ Object.assign(process.env, env);
 import { Command } from 'commander';
 
 import registerAuthCommand from './commands/auth';
-import registerSeedCommand from './commands/seed';
+import registerSetupCommand from './commands/setup';
 
 const program = new Command();
 
 program.name('dev-tools').description('Developer CLI tool');
 
 registerAuthCommand(program);
-registerSeedCommand(program);
+registerSetupCommand(program);
 
 export function run(): void {
   program.parse();
