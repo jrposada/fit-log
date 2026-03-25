@@ -1,5 +1,5 @@
 {
-  "realm": "fit-log",
+  "realm": "FIT Log",
   "enabled": true,
   "registrationAllowed": true,
   "registrationEmailAsUsername": true,
@@ -59,16 +59,16 @@
   ],
   "users": [
     {
-      "username": "testuser@example.com",
-      "email": "testuser@example.com",
+      "username": "dev@example.com",
+      "email": "dev@example.com",
       "emailVerified": true,
       "enabled": true,
-      "firstName": "Test",
-      "lastName": "User",
+      "firstName": "Developer",
+      "lastName": "Example",
       "credentials": [
         {
           "type": "password",
-          "value": "password123",
+          "value": "dev123",
           "temporary": false
         }
       ],
