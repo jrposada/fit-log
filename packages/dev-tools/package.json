@@ -11,12 +11,15 @@
     "type": "git",
     "url": "git+https://github.com/jrposada/fit-log.git"
   },
+  "bin": {
+    "dev-tools": "./bin/dev-tools.ts"
+  },
   "engines": {
     "node": "^22",
     "npm": "^10"
   },
   "scripts": {
-    "start": "tsx src/index.ts",
+    "start": "tsx bin/dev-tools.ts",
     "lint:eslint": "eslint .",
     "lint:format": "prettier . --check",
     "lint:types": "tsc --noEmit",

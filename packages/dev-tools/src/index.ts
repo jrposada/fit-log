@@ -3,16 +3,20 @@ import dotenv from 'dotenv';
 const env = dotenv.config({ path: '.env' }).parsed;
 Object.assign(process.env, env);
 
-import { program } from 'commander';
-import tokenCommand from './auth/token-command';
-import nukeCommand from './seed/nuke-command';
-import seedCommand from './seed/seed-command';
-import register from './register';
+import { Command } from 'commander';
+
+import registerAuthCommand from './commands/auth';
+import registerSeedCommand from './commands/seed';
+
+const program = new Command();
 
 program.name('dev-tools').description('Developer CLI tool');
 
-register(program, seedCommand);
-register(program, nukeCommand);
-register(program, tokenCommand);
+registerAuthCommand(program);
+registerSeedCommand(program);
 
-program.parse();
+export function run(): void {
+  program.parse();
+}
+
+export { program };

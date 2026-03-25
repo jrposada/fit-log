@@ -1,3 +1,4 @@
+import type { Command } from 'commander';
 import { connectToDatabase, disconnectFromDatabase } from '@backend/database';
 import { User } from '@backend/models/user';
 import { Workout } from '@backend/models/workout';
@@ -9,10 +10,6 @@ import { Session } from '@backend/models/session';
 import { Image } from '@backend/models/image';
 import * as fs from 'fs/promises';
 import * as path from 'path';
-
-import { Settings } from '../register';
-
-type CommandSettings = Settings<void, Record<string, never>>;
 
 async function countFilesInDirectory(dirPath: string): Promise<number> {
   let count = 0;
@@ -93,19 +90,18 @@ async function nukeDatabase() {
   console.log('✓ Database nuked successfully!');
 }
 
-const action: CommandSettings['action'] = async () => {
-  try {
-    await nukeDatabase();
-    await cleanDataDirectory();
-  } finally {
-    await disconnectFromDatabase();
-  }
-};
+export function registerNukeCommand(seedCmd: Command): void {
+  seedCmd
+    .command('nuke')
+    .description('Delete all items from the database')
+    .action(async () => {
+      try {
+        await nukeDatabase();
+        await cleanDataDirectory();
+      } finally {
+        await disconnectFromDatabase();
+      }
 
-const nukeCommand: CommandSettings = {
-  name: 'nuke',
-  description: 'Delete all items from the database',
-  action,
-};
-
-export default nukeCommand;
+      process.exit(0);
+    });
+}
