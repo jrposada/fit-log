@@ -169,6 +169,19 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
     }
   }, [authRequest?.codeVerifier, redirectUri]);
 
+  const refreshToken = useCallback(async () => {
+    const storedRefreshToken = await authService.getRefreshToken();
+    if (!storedRefreshToken) {
+      throw new Error('No refresh token available');
+    }
+
+    const tokens = await authService.refreshTokens(storedRefreshToken);
+    await authService.saveTokens(tokens);
+    setToken(tokens.accessToken);
+    const userInfo = await authService.fetchUserInfo(tokens.accessToken);
+    setUser(userInfo);
+  }, []);
+
   const logout = useCallback(async () => {
     try {
       const idToken = await authService.getIdToken();
@@ -195,9 +208,19 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
       login,
       loginWithIdp,
       register,
+      refreshToken,
       logout,
     }),
-    [isLoading, login, loginWithIdp, logout, register, token, user]
+    [
+      isLoading,
+      login,
+      loginWithIdp,
+      logout,
+      refreshToken,
+      register,
+      token,
+      user,
+    ]
   );
 
   return (
