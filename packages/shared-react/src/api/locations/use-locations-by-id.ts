@@ -12,11 +12,13 @@ import { query } from '../query';
 
 function useLocationsById({ id }: LocationsGetByIdParams) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token } = useAuth();
+  const { token, refreshToken, logout } = useAuth();
 
   return useQuery({
     queryKey: ['locations', { id }],
     queryFn: query({
+      refreshToken,
+      logout,
       fn: async () => {
         const response = await axios.get<ApiResponse<LocationsGetByIdResponse>>(
           `${apiBaseUrl}/locations/${encodeURIComponent(id)}`,

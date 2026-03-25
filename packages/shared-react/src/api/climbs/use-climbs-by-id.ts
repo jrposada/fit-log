@@ -13,11 +13,13 @@ type UseClimbsById = {
 
 function useClimbsById({ id }: UseClimbsById) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token } = useAuth();
+  const { token, refreshToken, logout } = useAuth();
 
   return useQuery({
     queryKey: ['climbs', { id }],
     queryFn: query({
+      refreshToken,
+      logout,
       fn: async () => {
         const response = await axios.get<ApiResponse<ClimbsGetByIdResponse>>(
           `${apiBaseUrl}/climbs/${encodeURIComponent(id)}`,

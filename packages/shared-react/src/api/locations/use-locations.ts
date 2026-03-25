@@ -12,12 +12,14 @@ import { query } from '../query';
 
 function useLocations({ limit }: LocationsGetQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token } = useAuth();
+  const { token, refreshToken, logout } = useAuth();
 
   return useQuery({
     queryKey: ['locations', { limit }],
     queryFn: query({
       defaultResponse: [],
+      refreshToken,
+      logout,
 
       fn: async () => {
         const params = new URLSearchParams();

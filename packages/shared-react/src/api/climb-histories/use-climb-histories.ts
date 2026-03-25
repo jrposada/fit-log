@@ -20,7 +20,7 @@ function useClimbHistories({
   endDate,
 }: ClimbHistoriesGetQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token } = useAuth();
+  const { token, refreshToken, logout } = useAuth();
 
   return useQuery({
     queryKey: [
@@ -29,6 +29,8 @@ function useClimbHistories({
     ],
     queryFn: query({
       defaultResponse: [],
+      refreshToken,
+      logout,
 
       fn: async () => {
         const params = new URLSearchParams();
@@ -62,6 +64,8 @@ function useClimbHistories({
             Authorization: `Bearer ${token}`,
           },
         });
+
+        console.log('response', response);
 
         if (!response.data.success) {
           throw new Error('Api error');
