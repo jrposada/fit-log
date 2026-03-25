@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
+import { mutation } from '../mutation';
 
 type UseImagesPostParams = {
   onError?: (message: string) => void;
@@ -17,7 +18,7 @@ type UseImagesPostParams = {
 function useImagesPost({ onError, onSuccess }: UseImagesPostParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token } = useAuth();
+  const { token, refreshToken, logout } = useAuth();
 
   return useMutation<
     ImagesPostResponse['image'],
@@ -25,24 +26,28 @@ function useImagesPost({ onError, onSuccess }: UseImagesPostParams = {}) {
     ImagesPostRequest,
     unknown
   >({
-    mutationFn: async (payload) => {
-      const response = await axios.post<ApiResponse<ImagesPostResponse>>(
-        `${apiBaseUrl}/images`,
-        payload,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
+    mutationFn: mutation({
+      refreshToken,
+      logout,
+      fn: async (payload) => {
+        const response = await axios.post<ApiResponse<ImagesPostResponse>>(
+          `${apiBaseUrl}/images`,
+          payload,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.data.success) {
+          throw new Error('Api error');
         }
-      );
 
-      if (!response.data.success) {
-        throw new Error('Api error');
-      }
-
-      return response.data.data.image;
-    },
+        return response.data.data.image;
+      },
+    }),
     onError: (message) => {
       console.error('Failed to post image:', JSON.stringify(message));
       onError?.(message);

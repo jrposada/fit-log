@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
+import { mutation } from '../mutation';
 
 type UseClimbHistoriesPutParams = {
   onError?: (message: string) => void;
@@ -20,7 +21,7 @@ function useClimbHistoriesPut({
 }: UseClimbHistoriesPutParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token } = useAuth();
+  const { token, refreshToken, logout } = useAuth();
 
   return useMutation<
     ClimbHistoriesPutResponse['climbHistory'],
@@ -28,24 +29,26 @@ function useClimbHistoriesPut({
     ClimbHistoriesPutRequest,
     unknown
   >({
-    mutationFn: async (climbHistory) => {
-      const response = await axios.put<ApiResponse<ClimbHistoriesPutResponse>>(
-        `${apiBaseUrl}/climb-histories`,
-        climbHistory,
-        {
+    mutationFn: mutation({
+      refreshToken,
+      logout,
+      fn: async (climbHistory) => {
+        const response = await axios.put<
+          ApiResponse<ClimbHistoriesPutResponse>
+        >(`${apiBaseUrl}/climb-histories`, climbHistory, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
+        });
+
+        if (!response.data.success) {
+          throw new Error('Api error');
         }
-      );
 
-      if (!response.data.success) {
-        throw new Error('Api error');
-      }
-
-      return response.data.data.climbHistory;
-    },
+        return response.data.data.climbHistory;
+      },
+    }),
     onError: (message) => {
       console.error('Failed to put climb history:', JSON.stringify(message));
       onError?.(message);

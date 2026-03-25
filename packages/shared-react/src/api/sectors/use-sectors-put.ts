@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
+import { mutation } from '../mutation';
 
 type UseSectorsPutParams = {
   onError?: (message: string) => void;
@@ -17,7 +18,7 @@ type UseSectorsPutParams = {
 function useSectorsPut({ onError, onSuccess }: UseSectorsPutParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token } = useAuth();
+  const { token, refreshToken, logout } = useAuth();
 
   return useMutation<
     SectorsPutResponse['sector'],
@@ -25,24 +26,28 @@ function useSectorsPut({ onError, onSuccess }: UseSectorsPutParams = {}) {
     SectorsPutRequest,
     unknown
   >({
-    mutationFn: async (sector) => {
-      const response = await axios.put<ApiResponse<SectorsPutResponse>>(
-        `${apiBaseUrl}/sectors`,
-        sector,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
+    mutationFn: mutation({
+      refreshToken,
+      logout,
+      fn: async (sector) => {
+        const response = await axios.put<ApiResponse<SectorsPutResponse>>(
+          `${apiBaseUrl}/sectors`,
+          sector,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.data.success) {
+          throw new Error('Api error');
         }
-      );
 
-      if (!response.data.success) {
-        throw new Error('Api error');
-      }
-
-      return response.data.data.sector;
-    },
+        return response.data.data.sector;
+      },
+    }),
     onError: (message) => {
       console.error('Failed to put sector:', JSON.stringify(message));
       onError?.(message);

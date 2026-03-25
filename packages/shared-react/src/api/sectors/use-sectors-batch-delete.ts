@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
+import { mutation } from '../mutation';
 
 type UseSectorsBatchDeleteParams = {
   onError?: (message: string) => void;
@@ -20,7 +21,7 @@ function useSectorsBatchDelete({
 }: UseSectorsBatchDeleteParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token } = useAuth();
+  const { token, refreshToken, logout } = useAuth();
 
   return useMutation<
     SectorsBatchDeleteResponse,
@@ -28,23 +29,27 @@ function useSectorsBatchDelete({
     SectorsBatchDeleteRequest,
     unknown
   >({
-    mutationFn: async ({ ids }) => {
-      const response = await axios.delete<
-        ApiResponse<SectorsBatchDeleteResponse>
-      >(`${apiBaseUrl}/sectors`, {
-        data: { ids },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    mutationFn: mutation({
+      refreshToken,
+      logout,
+      fn: async ({ ids }) => {
+        const response = await axios.delete<
+          ApiResponse<SectorsBatchDeleteResponse>
+        >(`${apiBaseUrl}/sectors`, {
+          data: { ids },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (!response.data.success) {
-        throw new Error('Api error');
-      }
+        if (!response.data.success) {
+          throw new Error('Api error');
+        }
 
-      return response.data.data;
-    },
+        return response.data.data;
+      },
+    }),
     onError: (message) => {
       console.error('Failed to batch delete sectors:', JSON.stringify(message));
       onError?.(message);

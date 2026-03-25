@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
+import { mutation } from '../mutation';
 
 type UseClimbHistoriesDeleteParams = {
   onError?: (message: string) => void;
@@ -20,7 +21,7 @@ function useClimbHistoriesDelete({
 }: UseClimbHistoriesDeleteParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token } = useAuth();
+  const { token, refreshToken, logout } = useAuth();
 
   return useMutation<
     ClimbHistoriesDeleteResponse,
@@ -28,19 +29,25 @@ function useClimbHistoriesDelete({
     ClimbHistoriesDeleteParams,
     unknown
   >({
-    mutationFn: async ({ id }) => {
-      const response = await axios.delete<
-        ApiResponse<ClimbHistoriesDeleteResponse>
-      >(`${apiBaseUrl}/climb-histories/${encodeURIComponent(id)}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    mutationFn: mutation({
+      refreshToken,
+      logout,
+      fn: async ({ id }) => {
+        const response = await axios.delete<
+          ApiResponse<ClimbHistoriesDeleteResponse>
+        >(`${apiBaseUrl}/climb-histories/${encodeURIComponent(id)}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (!response.data.success) {
-        throw new Error('Api error');
-      }
-    },
+        if (!response.data.success) {
+          throw new Error('Api error');
+        }
+
+        return response.data.data;
+      },
+    }),
     onError: (message) => {
       onError?.(message);
     },

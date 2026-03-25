@@ -8,6 +8,7 @@ import axios from 'axios';
 
 import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
+import { mutation } from '../mutation';
 
 type UseLocationsPutParams = {
   onError?: (message: string) => void;
@@ -17,7 +18,7 @@ type UseLocationsPutParams = {
 function useLocationsPut({ onError, onSuccess }: UseLocationsPutParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token } = useAuth();
+  const { token, refreshToken, logout } = useAuth();
 
   return useMutation<
     LocationsPutResponse['location'],
@@ -25,24 +26,28 @@ function useLocationsPut({ onError, onSuccess }: UseLocationsPutParams = {}) {
     LocationsPutRequest,
     unknown
   >({
-    mutationFn: async (location) => {
-      const response = await axios.put<ApiResponse<LocationsPutResponse>>(
-        `${apiBaseUrl}/locations`,
-        location,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
+    mutationFn: mutation({
+      refreshToken,
+      logout,
+      fn: async (location) => {
+        const response = await axios.put<ApiResponse<LocationsPutResponse>>(
+          `${apiBaseUrl}/locations`,
+          location,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.data.success) {
+          throw new Error('Api error');
         }
-      );
 
-      if (!response.data.success) {
-        throw new Error('Api error');
-      }
-
-      return response.data.data.location;
-    },
+        return response.data.data.location;
+      },
+    }),
     onError: (message) => {
       console.error('Failed to put location:', JSON.stringify(message));
       onError?.(message);
