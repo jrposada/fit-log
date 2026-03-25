@@ -35,7 +35,7 @@ class Keycloak {
     this.realm = process.env.KEYCLOAK_REALM;
 
     this.jwks = jwksClient({
-      jwksUri: `${this.url}/realms/${this.realm}/protocol/openid-connect/certs`,
+      jwksUri: `${this.url}/realms/${encodeURIComponent(this.realm)}/protocol/openid-connect/certs`,
       cache: true,
       cacheMaxAge: 10 * 60 * 1000, // 10 minutes
       rateLimit: true,
@@ -52,7 +52,7 @@ class Keycloak {
       return null;
     }
 
-    const issuer = `${this.url}/realms/${this.realm}`;
+    const issuer = `${this.url}/realms/${encodeURIComponent(this.realm)}`;
 
     return new Promise((resolve, reject) => {
       jwt.verify(

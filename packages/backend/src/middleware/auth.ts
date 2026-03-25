@@ -59,6 +59,8 @@ export async function authenticateKeycloak(
     req.user = user;
     next();
   } catch (error) {
-    next(error);
+    console.log('Keycloak authentication failed', error);
+    res.status(401).end();
+    return;
   }
 }
