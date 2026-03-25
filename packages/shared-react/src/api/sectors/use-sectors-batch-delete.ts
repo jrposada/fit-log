@@ -1,3 +1,4 @@
+import { ApiResponse } from '@shared/models/api-response';
 import {
   SectorsBatchDeleteRequest,
   SectorsBatchDeleteResponse,
@@ -28,7 +29,9 @@ function useSectorsBatchDelete({
     unknown
   >({
     mutationFn: async ({ ids }) => {
-      const response = await axios.delete(`${apiBaseUrl}/sectors`, {
+      const response = await axios.delete<
+        ApiResponse<SectorsBatchDeleteResponse>
+      >(`${apiBaseUrl}/sectors`, {
         data: { ids },
         headers: {
           'Content-Type': 'application/json',

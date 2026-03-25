@@ -65,8 +65,6 @@ function useClimbHistories({
           },
         });
 
-        console.log('response', response);
-
         if (!response.data.success) {
           throw new Error('Api error');
         }

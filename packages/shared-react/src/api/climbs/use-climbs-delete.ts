@@ -1,3 +1,4 @@
+import { ApiResponse } from '@shared/models/api-response';
 import {
   ClimbsDeleteParams,
   ClimbsDeleteResponse,
@@ -21,7 +22,7 @@ function useClimbsDelete({ onError, onSuccess }: UseClimbsDeleteParams = {}) {
   return useMutation<ClimbsDeleteResponse, string, ClimbsDeleteParams, unknown>(
     {
       mutationFn: async ({ id }) => {
-        const response = await axios.delete(
+        const response = await axios.delete<ApiResponse<ClimbsDeleteResponse>>(
           `${apiBaseUrl}/climbs/${encodeURIComponent(id)}`,
           {
             headers: {

@@ -1,3 +1,4 @@
+import { ApiResponse } from '@shared/models/api-response';
 import {
   ClimbHistoriesDeleteParams,
   ClimbHistoriesDeleteResponse,
@@ -28,14 +29,13 @@ function useClimbHistoriesDelete({
     unknown
   >({
     mutationFn: async ({ id }) => {
-      const response = await axios.delete(
-        `${apiBaseUrl}/climb-histories/${encodeURIComponent(id)}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.delete<
+        ApiResponse<ClimbHistoriesDeleteResponse>
+      >(`${apiBaseUrl}/climb-histories/${encodeURIComponent(id)}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (!response.data.success) {
         throw new Error('Api error');

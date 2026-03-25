@@ -1,3 +1,4 @@
+import { ApiResponse } from '@shared/models/api-response';
 import {
   SectorsBatchPutRequest,
   SectorsBatchPutResponse,
@@ -28,7 +29,7 @@ function useSectorsBatchPut({
     unknown
   >({
     mutationFn: async ({ sectors }) => {
-      const response = await axios.put(
+      const response = await axios.put<ApiResponse<SectorsBatchPutResponse>>(
         `${apiBaseUrl}/sectors/batch`,
         { sectors },
         {

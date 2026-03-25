@@ -1,3 +1,4 @@
+import { ApiResponse } from '@shared/models/api-response';
 import {
   LocationsDeleteParams,
   LocationsDeleteResponse,
@@ -28,7 +29,7 @@ function useLocationsDelete({
     unknown
   >({
     mutationFn: async ({ id }) => {
-      const response = await axios.delete(
+      const response = await axios.delete<ApiResponse<LocationsDeleteResponse>>(
         `${apiBaseUrl}/locations/${encodeURIComponent(id)}`,
         {
           headers: {

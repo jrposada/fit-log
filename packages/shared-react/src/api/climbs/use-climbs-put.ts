@@ -1,3 +1,4 @@
+import { ApiResponse } from '@shared/models/api-response';
 import {
   ClimbsPutRequest,
   ClimbsPutResponse,
@@ -25,12 +26,16 @@ function useClimbsPut({ onError, onSuccess }: UseClimbsPutParams = {}) {
     unknown
   >({
     mutationFn: async (climb) => {
-      const response = await axios.put(`${apiBaseUrl}/climbs`, climb, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.put<ApiResponse<ClimbsPutResponse>>(
+        `${apiBaseUrl}/climbs`,
+        climb,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.data.success) {
         throw new Error('Api error');

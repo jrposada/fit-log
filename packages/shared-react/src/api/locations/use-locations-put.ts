@@ -1,3 +1,4 @@
+import { ApiResponse } from '@shared/models/api-response';
 import {
   LocationsPutRequest,
   LocationsPutResponse,
@@ -25,12 +26,16 @@ function useLocationsPut({ onError, onSuccess }: UseLocationsPutParams = {}) {
     unknown
   >({
     mutationFn: async (location) => {
-      const response = await axios.put(`${apiBaseUrl}/locations`, location, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.put<ApiResponse<LocationsPutResponse>>(
+        `${apiBaseUrl}/locations`,
+        location,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.data.success) {
         throw new Error('Api error');

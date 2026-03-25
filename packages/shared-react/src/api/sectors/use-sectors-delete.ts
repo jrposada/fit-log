@@ -1,3 +1,4 @@
+import { ApiResponse } from '@shared/models/api-response';
 import {
   SectorsDeleteParams,
   SectorsDeleteResponse,
@@ -25,11 +26,14 @@ function useSectorsDelete({ onError, onSuccess }: UseSectorsDeleteParams = {}) {
     unknown
   >({
     mutationFn: async ({ id }) => {
-      const response = await axios.delete(`${apiBaseUrl}/sectors/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.delete<ApiResponse<SectorsDeleteResponse>>(
+        `${apiBaseUrl}/sectors/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.data.success) {
         throw new Error('Api error');

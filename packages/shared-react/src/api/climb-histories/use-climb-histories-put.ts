@@ -1,3 +1,4 @@
+import { ApiResponse } from '@shared/models/api-response';
 import {
   ClimbHistoriesPutRequest,
   ClimbHistoriesPutResponse,
@@ -28,7 +29,7 @@ function useClimbHistoriesPut({
     unknown
   >({
     mutationFn: async (climbHistory) => {
-      const response = await axios.put(
+      const response = await axios.put<ApiResponse<ClimbHistoriesPutResponse>>(
         `${apiBaseUrl}/climb-histories`,
         climbHistory,
         {

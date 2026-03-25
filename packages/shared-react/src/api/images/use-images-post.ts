@@ -1,3 +1,4 @@
+import { ApiResponse } from '@shared/models/api-response';
 import {
   ImagesPostRequest,
   ImagesPostResponse,
@@ -25,12 +26,16 @@ function useImagesPost({ onError, onSuccess }: UseImagesPostParams = {}) {
     unknown
   >({
     mutationFn: async (payload) => {
-      const response = await axios.post(`${apiBaseUrl}/images`, payload, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post<ApiResponse<ImagesPostResponse>>(
+        `${apiBaseUrl}/images`,
+        payload,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!response.data.success) {
         throw new Error('Api error');
