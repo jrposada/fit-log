@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import Separator from '../../../library/separator';
+import { useSwipeHint } from '../hooks/use-swipe-hint';
 import ClimbCard, { ClimbCardProps } from './climb-card';
 import LocationSelector from './location-selector';
 import { styles } from './quick-log-tab.styles';
@@ -26,6 +27,8 @@ const QuickLogTab: FunctionComponent = () => {
       locationId,
       status: ['attempt', 'project'],
     });
+
+  const { shouldPeek, markShown } = useSwipeHint();
 
   const climbHistoriesPut = useClimbHistoriesPut();
 
@@ -52,7 +55,7 @@ const QuickLogTab: FunctionComponent = () => {
       <LocationSelector value={locationId} onChange={setLocationId} />
       <Separator />
       <Text style={styles.sectionLabel}>{t('climbing.recent_climbs')}</Text>
-      {climbHistories.map((climbHistory) => (
+      {climbHistories.map((climbHistory, index) => (
         <ClimbCard
           key={climbHistory.id}
           climb={{
@@ -61,6 +64,8 @@ const QuickLogTab: FunctionComponent = () => {
           }}
           onLog={handleLog}
           logDisabled={climbHistoriesPut.isPending}
+          shouldPeek={index === 0 && shouldPeek}
+          onPeekDone={markShown}
         />
       ))}
       <TouchableOpacity style={styles.customButton} activeOpacity={0.7}>
