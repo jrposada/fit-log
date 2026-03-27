@@ -6,6 +6,8 @@ import { IsTrue } from '../../types/is-true';
 import {
   ClimbHistoriesDeleteParams,
   climbHistoriesDeleteParamsSchema,
+  ClimbHistoriesDeleteQuery,
+  climbHistoriesDeleteQuerySchema,
 } from './climb-history-delete';
 import {
   ClimbHistoriesGetQuery,
@@ -43,6 +45,15 @@ export type ClimbHistoriesDeleteParamsTest = Expect<
     IsEqual<
       ClimbHistoriesDeleteParams,
       z.infer<typeof climbHistoriesDeleteParamsSchema>
+    >
+  >
+>;
+
+export type ClimbHistoriesDeleteQueryTest = Expect<
+  IsTrue<
+    IsEqual<
+      ClimbHistoriesDeleteQuery,
+      z.infer<typeof climbHistoriesDeleteQuerySchema>
     >
   >
 >;

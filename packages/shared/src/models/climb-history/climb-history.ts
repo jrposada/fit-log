@@ -4,12 +4,19 @@ import { Sector } from '../sector/sector';
 
 export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt' | 'project';
 
-export type ClimbHistory = {
-  /* Data */
+export type ClimbHistoryTry = {
   id: string;
   status: ClimbHistoryStatus;
   attempts?: number;
   notes?: string;
+  date: string;
+};
+
+export type ClimbHistory = {
+  /* Data */
+  id: string;
+  status: ClimbHistoryStatus;
+  tries: ClimbHistoryTry[];
 
   /* References */
   climb: Omit<Climb, 'image' | 'location' | 'sector'> & {
