@@ -36,6 +36,7 @@ type CreateLocationRouteProp = RouteProp<ClimbingParamList, 'CreateLocation'>;
 
 const CreateLocationScreen: FunctionComponent = () => {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<CreateLocationNavigationProp>();
   const route = useRoute<CreateLocationRouteProp>();
 
@@ -168,25 +169,6 @@ const CreateLocationScreen: FunctionComponent = () => {
     }
   };
 
-  const handleCancel = () => {
-    if (isDirty) {
-      Alert.alert(
-        t('climbing.unsaved_changes'),
-        t('climbing.discard_changes_message'),
-        [
-          { text: t('climbing.cancel'), style: 'cancel' },
-          {
-            text: t('climbing.discard'),
-            style: 'destructive',
-            onPress: () => navigation.goBack(),
-          },
-        ]
-      );
-    } else {
-      navigation.goBack();
-    }
-  };
-
   // Pre-fill form when editing existing location (only once)
   useEffect(() => {
     if (existingLocation && isEditMode && !initializedRef.current) {
@@ -247,7 +229,7 @@ const CreateLocationScreen: FunctionComponent = () => {
           </View>
         </ScrollView>
 
-        <View style={styles.footer}>
+        <View style={[styles.footer, { paddingBottom: 16 + insets.bottom }]}>
           <Pressable
             style={[
               styles.saveButton,
