@@ -28,7 +28,6 @@
     "react": "19.1.0"
   },
   "dependencies": {
-    "@jrposada/fit-log-shared": "*",
     "axios": "^1.13.2"
   },
   "devDependencies": {
