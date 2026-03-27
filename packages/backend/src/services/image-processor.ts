@@ -38,6 +38,21 @@ export class ImageProcessor {
     base64: string,
     mimeType: string
   ): Promise<ProcessedImage> {
+    const buffer = Buffer.from(base64, 'base64');
+    return this.processBuffer(buffer, mimeType);
+  }
+
+  async processImageFromBuffer(
+    buffer: Buffer,
+    mimeType: string
+  ): Promise<ProcessedImage> {
+    return this.processBuffer(buffer, mimeType);
+  }
+
+  private async processBuffer(
+    buffer: Buffer,
+    mimeType: string
+  ): Promise<ProcessedImage> {
     await this.ensureDirectories();
 
     // Get file extension from mime type
@@ -48,9 +63,6 @@ export class ImageProcessor {
       'image/webp': '.webp',
     };
     const extension = extensionMap[mimeType] || '.jpg';
-
-    // Convert base64 to buffer
-    const buffer = Buffer.from(base64, 'base64');
 
     // Generate unique file ID
     const fileId = uuid();
