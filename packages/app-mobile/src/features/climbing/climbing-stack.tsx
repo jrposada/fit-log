@@ -26,16 +26,20 @@ const ClimbingStack: FunctionComponent = () => {
       <Stack.Screen
         name="CreateLocation"
         component={CreateLocationScreen}
-        options={{
+        options={({ route }) => ({
           header: () => (
             <Header
-              title={t('climbing.create_location_title')}
+              title={
+                route.params?.locationId
+                  ? t('climbing.update_location_title')
+                  : t('climbing.create_location_title')
+              }
               mode="modal"
               back
             />
           ),
           presentation: 'modal',
-        }}
+        })}
       />
       <Stack.Screen
         name="ClimbDetail"
