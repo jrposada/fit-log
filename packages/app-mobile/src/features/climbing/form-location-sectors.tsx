@@ -1,5 +1,4 @@
 import { useImagesPost } from '@shared-react/api/images/use-images-post';
-import { getEnvVariable } from '@shared-react/infrastructure/get-env-variable';
 import { FunctionComponent, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -20,8 +19,6 @@ import { FormData } from './form-location';
 import { styles } from './form-location-sectors.styles';
 
 const FormLocationSectors: FunctionComponent = () => {
-  const filesBaseUrl = getEnvVariable('PUBLIC_FILES_BASE_URL');
-
   const { t } = useTranslation();
   const { control, setValue } = useFormContext<FormData>();
   const sectors = useWatch({ control, name: 'sectors' }) || [];
@@ -165,7 +162,7 @@ const FormLocationSectors: FunctionComponent = () => {
                         <View key={image.id} style={styles.imageWrapper}>
                           <Image
                             source={{
-                              uri: `${filesBaseUrl}/${image.thumbnailUrl}`,
+                              uri: image.thumbnailUrl,
                             }}
                             style={styles.thumbnailImage}
                             resizeMode="cover"
