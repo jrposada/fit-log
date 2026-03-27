@@ -2,11 +2,26 @@ import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
 export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt' | 'project';
 
-export interface IClimbHistory extends WithTimestamps<Document> {
-  /* Data */
+export const STATUS_PRIORITY: Record<ClimbHistoryStatus, number> = {
+  flash: 4,
+  send: 3,
+  attempt: 2,
+  project: 1,
+};
+
+export const STATUS_LIST = Object.keys(STATUS_PRIORITY) as ClimbHistoryStatus[];
+
+export interface IClimbHistoryTry {
   status: ClimbHistoryStatus;
   attempts?: number;
   notes?: string;
+  date: Date;
+}
+
+export interface IClimbHistory extends WithTimestamps<Document> {
+  /* Data */
+  status: ClimbHistoryStatus;
+  tries: Types.DocumentArray<IClimbHistoryTry>;
 
   /* References */
   climb: Types.ObjectId;
@@ -14,12 +29,23 @@ export interface IClimbHistory extends WithTimestamps<Document> {
   sector: Types.ObjectId;
 }
 
-const climbHistorySchema = new Schema<IClimbHistory>(
+export function computeTopStatus(
+  tries: { status: ClimbHistoryStatus }[]
+): ClimbHistoryStatus {
+  let best: ClimbHistoryStatus = tries[0]?.status ?? 'project';
+  for (const t of tries) {
+    if (STATUS_PRIORITY[t.status] > STATUS_PRIORITY[best]) {
+      best = t.status;
+    }
+  }
+  return best;
+}
+
+const climbHistoryTrySchema = new Schema<IClimbHistoryTry>(
   {
-    /* Data */
     status: {
       type: String,
-      enum: ['send', 'flash', 'attempt', 'project'],
+      enum: STATUS_LIST,
       required: true,
     },
     attempts: {
@@ -30,6 +56,28 @@ const climbHistorySchema = new Schema<IClimbHistory>(
     notes: {
       type: String,
       required: false,
+    },
+    date: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
+  },
+  { _id: true }
+);
+
+const climbHistorySchema = new Schema<IClimbHistory>(
+  {
+    /* Data */
+    status: {
+      type: String,
+      enum: STATUS_LIST,
+      required: true,
+    },
+    tries: {
+      type: [climbHistoryTrySchema],
+      required: true,
+      default: [],
     },
 
     /* References */
@@ -54,12 +102,11 @@ const climbHistorySchema = new Schema<IClimbHistory>(
   }
 );
 
-climbHistorySchema.index({ climb: 1 });
+climbHistorySchema.index({ climb: 1 }, { unique: true });
 climbHistorySchema.index({ location: 1 });
 climbHistorySchema.index({ sector: 1 });
 climbHistorySchema.index({ status: 1 });
 climbHistorySchema.index({ createdAt: -1 });
-climbHistorySchema.index({ climb: 1, createdAt: -1 });
 
 export const ClimbHistory = model<IClimbHistory>(
   'ClimbHistory',

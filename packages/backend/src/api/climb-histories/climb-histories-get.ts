@@ -30,7 +30,7 @@ const handler = toApiResponse<
     ...(status ? { status: { $in: status } } : {}),
     ...(startDate || endDate
       ? {
-          createdAt: {
+          updatedAt: {
             ...(startDate ? { $gte: new Date(startDate) } : {}),
             ...(endDate ? { $lte: new Date(endDate) } : {}),
           },
@@ -42,7 +42,7 @@ const handler = toApiResponse<
     query.limit(limit);
   }
 
-  query.sort({ createdAt: -1 });
+  query.sort({ updatedAt: -1 });
 
   const climbHistories = await query
     .populate<{

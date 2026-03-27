@@ -7,7 +7,7 @@ import { assert } from '@shared/utils/assert';
 import { MergeType } from 'mongoose';
 
 import { Climb } from '../../models/climb';
-import { ClimbHistory, ClimbHistoryStatus } from '../../models/climb-history';
+import { ClimbHistory } from '../../models/climb-history';
 import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
@@ -53,37 +53,15 @@ const handler = toApiResponse<ClimbsSearchResponse, unknown, ClimbsSearchQuery>(
 
     const histories = await ClimbHistory.find({
       climb: { $in: climbIds },
-    }).sort({ createdAt: -1 });
+    });
 
-    // Build a map of climb ID to best status (send/flash > attempt > project)
-    const statusMap = new Map<
-      string,
-      { status: ClimbHistoryStatus; attempts?: number }
-    >();
+    const statusMap = new Map(
+      histories.map((h) => [
+        h.climb.toString(),
+        { status: h.status, attempts: h.tries[h.tries.length - 1]?.attempts },
+      ])
+    );
 
-    const statusPriority: Record<ClimbHistoryStatus, number> = {
-      flash: 4,
-      send: 3,
-      attempt: 2,
-      project: 1,
-    };
-
-    for (const history of histories) {
-      const climbId = history.climb.toString();
-      const existing = statusMap.get(climbId);
-
-      if (
-        !existing ||
-        statusPriority[history.status] > statusPriority[existing.status]
-      ) {
-        statusMap.set(climbId, {
-          status: history.status,
-          attempts: history.attempts,
-        });
-      }
-    }
-
-    // Combine climbs with their user status
     const results: ClimbSearchResult[] = climbs.map((climb) => {
       const baseClimb = toApiClimb(climb);
       const userStatus = statusMap.get(climb._id.toString());

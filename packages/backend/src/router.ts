@@ -3,7 +3,10 @@ import { climbsGetQuerySchema } from '@shared/models/climb/climb-get';
 import { climbsGetByIdParamsSchema } from '@shared/models/climb/climb-get-by-id';
 import { climbsPutRequestSchema } from '@shared/models/climb/climb-put';
 import { climbsSearchQuerySchema } from '@shared/models/climb/climb-search';
-import { climbHistoriesDeleteParamsSchema } from '@shared/models/climb-history/climb-history-delete';
+import {
+  climbHistoriesDeleteParamsSchema,
+  climbHistoriesDeleteQuerySchema,
+} from '@shared/models/climb-history/climb-history-delete';
 import { climbHistoriesGetQuerySchema } from '@shared/models/climb-history/climb-history-get';
 import { climbHistoriesGetByIdParamsSchema } from '@shared/models/climb-history/climb-history-get-by-id';
 import { climbHistoriesPutRequestSchema } from '@shared/models/climb-history/climb-history-put';
@@ -230,5 +233,6 @@ router.delete(
   '/climb-histories/:id',
   authenticateKeycloak,
   validateParams(climbHistoriesDeleteParamsSchema),
+  validateQuery(climbHistoriesDeleteQuerySchema),
   climbHistoriesDelete
 );

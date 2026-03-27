@@ -24,8 +24,13 @@ function toApiClimbHistory(
     /* Data */
     id: model._id.toString(),
     status: model.status,
-    attempts: model.attempts,
-    notes: model.notes,
+    tries: model.tries.map((t) => ({
+      id: t._id.toString(),
+      status: t.status,
+      attempts: t.attempts,
+      notes: t.notes,
+      date: t.date.toISOString(),
+    })),
 
     /* References */
     climb: toApiDepopulatedClimb(model.climb),
