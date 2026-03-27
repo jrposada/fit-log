@@ -2,6 +2,7 @@
   "expo": {
     "name": "fit-log-app-mobile",
     "slug": "fit-log-app-mobile",
+    "scheme": "fit-log",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
