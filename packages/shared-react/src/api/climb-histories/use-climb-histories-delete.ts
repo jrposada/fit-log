@@ -1,6 +1,7 @@
 import { ApiResponse } from '@shared/models/api-response';
 import {
   ClimbHistoriesDeleteParams,
+  ClimbHistoriesDeleteQuery,
   ClimbHistoriesDeleteResponse,
 } from '@shared/models/climb-history/climb-history-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -26,16 +27,22 @@ function useClimbHistoriesDelete({
   return useMutation<
     ClimbHistoriesDeleteResponse,
     string,
-    ClimbHistoriesDeleteParams,
+    ClimbHistoriesDeleteParams & ClimbHistoriesDeleteQuery,
     unknown
   >({
     mutationFn: mutation({
       refreshToken,
       logout,
-      fn: async ({ id }) => {
+      fn: async ({ id, tryId }) => {
+        const params = new URLSearchParams();
+        if (tryId) {
+          params.append('tryId', tryId);
+        }
+
+        const url = `${apiBaseUrl}/climb-histories/${encodeURIComponent(id)}${params.toString() ? `?${params.toString()}` : ''}`;
         const response = await axios.delete<
           ApiResponse<ClimbHistoriesDeleteResponse>
-        >(`${apiBaseUrl}/climb-histories/${encodeURIComponent(id)}`, {
+        >(url, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -54,6 +61,9 @@ function useClimbHistoriesDelete({
     onSuccess: () => {
       client.invalidateQueries({
         queryKey: ['climb-histories'],
+      });
+      client.invalidateQueries({
+        queryKey: ['climbs-search'],
       });
       onSuccess?.();
     },

@@ -57,6 +57,9 @@ function useClimbHistoriesPut({
       client.invalidateQueries({
         queryKey: ['climb-histories'],
       });
+      client.invalidateQueries({
+        queryKey: ['climbs-search'],
+      });
       onSuccess?.();
     },
   });
