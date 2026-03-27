@@ -18,6 +18,7 @@ export interface SelectProps {
   value: string;
   onChange: (value: string) => void;
   onAddNew?: (value: string) => void;
+  onClear?: () => void;
   placeholder?: string;
   searchPlaceholder?: string;
   addButtonLabel?: string;
@@ -31,6 +32,7 @@ function Select({
   value,
   onChange,
   onAddNew,
+  onClear,
   placeholder = 'Select an option',
   searchPlaceholder = 'Search',
   addButtonLabel = 'Add',
@@ -105,13 +107,25 @@ function Select({
   return (
     <View>
       <TouchableOpacity
-        style={styles.valueButton}
+        style={[
+          styles.valueButton,
+          onClear && value && styles.valueButtonClearable,
+        ]}
         activeOpacity={0.7}
         onPress={openModal}
       >
         <Text style={[styles.valueText, !value && styles.placeholderText]}>
           {value || placeholder}
         </Text>
+        {onClear && value ? (
+          <TouchableOpacity
+            style={styles.valueClearButton}
+            onPress={onClear}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Text style={styles.valueClearButtonText}>✕</Text>
+          </TouchableOpacity>
+        ) : null}
       </TouchableOpacity>
 
       <Modal.Root visible={isModalVisible} onClose={closeModal}>

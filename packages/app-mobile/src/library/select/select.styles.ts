@@ -2,6 +2,8 @@ import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   valueButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: '#ffffff',
     borderRadius: 8,
     paddingVertical: 12,
@@ -9,9 +11,26 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
   },
+  valueButtonClearable: {
+    paddingRight: 40,
+  },
   valueText: {
+    flex: 1,
     fontSize: 16,
     color: '#222',
+  },
+  valueClearButton: {
+    position: 'absolute',
+    right: 8,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    paddingHorizontal: 8,
+  },
+  valueClearButtonText: {
+    fontSize: 20,
+    color: '#999',
+    fontWeight: '600',
   },
   placeholderText: {
     color: '#999',
