@@ -38,6 +38,7 @@ const QuickLogTab: FunctionComponent = () => {
       attempts: 1,
     });
   };
+
   if (isLoadingClimbHistories) {
     return (
       <View style={styles.loadingContainer}>
