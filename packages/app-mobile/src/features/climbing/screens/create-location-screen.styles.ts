@@ -56,4 +56,16 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
   },
+  unsavedBanner: {
+    backgroundColor: '#FFF3CD',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FFECB5',
+  },
+  unsavedBannerText: {
+    color: '#664D03',
+    fontSize: 13,
+    textAlign: 'center',
+  },
 });

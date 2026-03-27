@@ -117,6 +117,7 @@
   "climbing.failed_delete_sectors": "Failed to delete sectors: {{error}}",
   "climbing.failed_process_sectors": "Failed to process sectors: {{error}}",
   "climbing.unsaved_changes": "Unsaved Changes",
+  "climbing.unsaved_changes_banner": "You have unsaved changes",
   "climbing.discard_changes_message": "Are you sure you want to discard your changes?",
   "climbing.discard": "Discard",
   "climbing.sectors_walls_optional": "📸 Sectors & Walls (optional)",
