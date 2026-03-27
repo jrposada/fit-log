@@ -3,7 +3,7 @@ import { I18nextProvider } from 'react-i18next';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import AuthProvider from './src/contexts/auth/auth-provider';
+import AuthProvider from './src/features/auth/auth-provider';
 import i18n from './src/i18n';
 import Root from './src/navigation/root';
 

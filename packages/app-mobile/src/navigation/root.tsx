@@ -9,7 +9,7 @@ import { ActivityIndicator, Text, View } from 'react-native';
 import HomeScreen from '../screens/home-screen';
 import TrainingScreen from '../screens/training-screen';
 import { RootParamList } from '../types/routes';
-import AuthStack from './auth-stack';
+import AuthStack from '../features/auth/auth-stack';
 import ClimbingStack from './climbing-stack';
 import Header from './header';
 import HomeHeader from './home-header';

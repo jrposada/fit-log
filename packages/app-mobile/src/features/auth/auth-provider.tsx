@@ -17,7 +17,7 @@ import {
   authService,
   getRedirectUri,
   UserInfo,
-} from '../../services/auth-service';
+} from './auth-service';
 
 type AuthProviderProps = {
   children: ReactNode;
