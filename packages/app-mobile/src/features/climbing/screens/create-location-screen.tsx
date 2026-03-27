@@ -17,6 +17,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import FormMapPointPicker from '../../../library/form/form-map-point-picker';
 import FormTextArea from '../../../library/form/form-text-area';
@@ -185,6 +186,29 @@ const CreateLocationScreen: FunctionComponent = () => {
     }
   }, [existingLocation, isEditMode, reset]);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (!isDirty) return;
+
+      e.preventDefault();
+
+      Alert.alert(
+        t('climbing.unsaved_changes'),
+        t('climbing.discard_changes_message'),
+        [
+          { text: t('climbing.cancel'), style: 'cancel' },
+          {
+            text: t('climbing.discard'),
+            style: 'destructive',
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]
+      );
+    });
+
+    return unsubscribe;
+  }, [navigation, isDirty, t]);
+
   const isSubmitDisabled =
     !isValid || !isDirty || locationsPut.isPending || isLoadingLocation;
 
@@ -245,11 +269,8 @@ const CreateLocationScreen: FunctionComponent = () => {
                   ? t('climbing.saving')
                   : isEditMode
                     ? t('climbing.update_location')
-                    : t('climbing.save_location')}
+                    : t('climbing.create_location')}
             </Text>
-          </Pressable>
-          <Pressable onPress={handleCancel}>
-            <Text style={styles.headerButton}>{t('climbing.cancel')}</Text>
           </Pressable>
         </View>
       </KeyboardAvoidingView>
