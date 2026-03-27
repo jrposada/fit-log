@@ -10,16 +10,11 @@ export const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
   },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
   label: {
     fontSize: 14,
     fontWeight: '600',
     color: '#333',
+    marginBottom: 4,
   },
   editButton: {
     paddingHorizontal: 8,
