@@ -11,6 +11,7 @@ type AuthContextValue = {
   isLoading: boolean;
   isAuthenticated: boolean;
   token: string | null;
+  getToken: () => string | null;
   login: () => Promise<void>;
   loginWithIdp: (idp: 'google' | 'apple') => Promise<void>;
   register: () => Promise<void>;

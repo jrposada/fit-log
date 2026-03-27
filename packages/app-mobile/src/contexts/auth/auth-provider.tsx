@@ -9,6 +9,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 
@@ -24,8 +25,16 @@ type AuthProviderProps = {
 
 const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserInfo | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, _setToken] = useState<string | null>(null);
+  const tokenRef = useRef<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const setToken = useCallback((newToken: string | null) => {
+    tokenRef.current = newToken;
+    _setToken(newToken);
+  }, []);
+
+  const getToken = useCallback(() => tokenRef.current, []);
 
   const discovery = authService.getDiscoveryDocument();
   const redirectUri = getRedirectUri();
@@ -205,6 +214,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
       isLoading,
       isAuthenticated: !!user,
       token,
+      getToken,
       login,
       loginWithIdp,
       register,
@@ -212,6 +222,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
       logout,
     }),
     [
+      getToken,
       isLoading,
       login,
       loginWithIdp,
