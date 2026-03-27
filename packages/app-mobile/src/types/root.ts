@@ -1,6 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 
-import { ClimbingParamList } from './climbing';
+import { ClimbingParamList } from '../features/climbing/types';
 
 export type RootParamList = {
   Home: undefined;

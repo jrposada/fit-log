@@ -5,8 +5,8 @@ import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
 
-import Select from '../../library/select';
-import { ClimbingParamList } from '../../types/routes';
+import Select from '../../../library/select';
+import { ClimbingParamList } from '../types';
 import { styles } from './location-selector.styles';
 
 type LocationSelectorNavigationProp = NativeStackNavigationProp<

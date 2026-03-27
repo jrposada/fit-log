@@ -6,7 +6,7 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
 
-import { ClimbingParamList } from '../../types/routes';
+import { ClimbingParamList } from '../types';
 import { styles } from './climb-card.styles';
 
 type Data = Omit<Climb, 'image' | 'location'> & {

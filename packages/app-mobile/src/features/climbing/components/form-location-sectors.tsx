@@ -12,9 +12,9 @@ import {
   View,
 } from 'react-native';
 
-import FormTextArea from '../../library/form/form-text-area';
-import FormTextInput from '../../library/form/form-text-input';
-import ImagePicker, { ImagePickerProps } from '../../library/image-picker';
+import FormTextArea from '../../../library/form/form-text-area';
+import FormTextInput from '../../../library/form/form-text-input';
+import ImagePicker, { ImagePickerProps } from '../../../library/image-picker';
 import { FormData } from './form-location';
 import { styles } from './form-location-sectors.styles';
 

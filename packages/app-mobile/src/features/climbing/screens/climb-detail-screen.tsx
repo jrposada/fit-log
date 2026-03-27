@@ -16,9 +16,9 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import InteractiveImage from '../library/interactive-image';
-import { HEADER_FIXED_HEIGHT } from '../navigation/header.styles';
-import { ClimbingParamList } from '../types/routes';
+import InteractiveImage from '../../../library/interactive-image';
+import { HEADER_FIXED_HEIGHT } from '../../../navigation/header.styles';
+import { ClimbingParamList } from '../types';
 import { styles } from './climb-detail-screen.styles';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');

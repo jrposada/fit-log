@@ -23,9 +23,9 @@ import {
 } from 'react-native';
 import { z } from 'zod';
 
-import Modal from '../../library/modal';
-import Separator from '../../library/separator';
-import { ClimbingParamList } from '../../types/routes';
+import Modal from '../../../library/modal';
+import Separator from '../../../library/separator';
+import { ClimbingParamList } from '../types';
 import { styles } from './browse-tab.styles';
 import FormGradeChips from './form-grade-chips';
 import FormSearchInput from './form-search-input';

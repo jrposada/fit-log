@@ -15,7 +15,7 @@ import {
   View,
 } from 'react-native';
 
-import { RootStackParamList } from '../../types/routes';
+import { RootStackParamList } from '../../../types/routes';
 import { HOLD_RADIUS, styles } from './boulder-editor-screen.styles';
 
 type BoulderEditorScreenProps = {

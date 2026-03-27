@@ -18,13 +18,13 @@ import {
   View,
 } from 'react-native';
 
-import type { FormData } from '../features/climbing/form-location';
-import { formDataSchema } from '../features/climbing/form-location';
-import FormLocationSectors from '../features/climbing/form-location-sectors';
-import FormMapPointPicker from '../library/form/form-map-point-picker';
-import FormTextArea from '../library/form/form-text-area';
-import FormTextInput from '../library/form/form-text-input';
-import { ClimbingParamList } from '../types/climbing';
+import type { FormData } from '../components/form-location';
+import { formDataSchema } from '../components/form-location';
+import FormLocationSectors from '../components/form-location-sectors';
+import FormMapPointPicker from '../../../library/form/form-map-point-picker';
+import FormTextArea from '../../../library/form/form-text-area';
+import FormTextInput from '../../../library/form/form-text-input';
+import { ClimbingParamList } from '../types';
 import { styles } from './create-location-screen.styles';
 
 type CreateLocationNavigationProp = NativeStackNavigationProp<
