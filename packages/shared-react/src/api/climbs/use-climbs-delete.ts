@@ -18,7 +18,7 @@ type UseClimbsDeleteParams = {
 function useClimbsDelete({ onError, onSuccess }: UseClimbsDeleteParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token, refreshToken, logout } = useAuth();
+  const { getToken, refreshToken, logout } = useAuth();
 
   return useMutation<ClimbsDeleteResponse, string, ClimbsDeleteParams, unknown>(
     {
@@ -30,7 +30,7 @@ function useClimbsDelete({ onError, onSuccess }: UseClimbsDeleteParams = {}) {
             ApiResponse<ClimbsDeleteResponse>
           >(`${apiBaseUrl}/climbs/${encodeURIComponent(id)}`, {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${getToken()}`,
             },
           });
 

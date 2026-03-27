@@ -21,7 +21,7 @@ function useLocationsDelete({
 }: UseLocationsDeleteParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token, refreshToken, logout } = useAuth();
+  const { getToken, refreshToken, logout } = useAuth();
 
   return useMutation<
     LocationsDeleteResponse,
@@ -37,7 +37,7 @@ function useLocationsDelete({
           ApiResponse<LocationsDeleteResponse>
         >(`${apiBaseUrl}/locations/${encodeURIComponent(id)}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getToken()}`,
           },
         });
 

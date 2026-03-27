@@ -12,7 +12,7 @@ import { query } from '../query';
 
 function useLocations({ limit }: LocationsGetQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token, refreshToken, logout } = useAuth();
+  const { getToken, refreshToken, logout } = useAuth();
 
   return useQuery({
     queryKey: ['locations', { limit }],
@@ -32,7 +32,7 @@ function useLocations({ limit }: LocationsGetQuery = {}) {
           url,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${getToken()}`,
             },
           }
         );

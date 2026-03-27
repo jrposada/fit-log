@@ -21,7 +21,7 @@ function useClimbHistoriesPut({
 }: UseClimbHistoriesPutParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token, refreshToken, logout } = useAuth();
+  const { getToken, refreshToken, logout } = useAuth();
 
   return useMutation<
     ClimbHistoriesPutResponse['climbHistory'],
@@ -38,7 +38,7 @@ function useClimbHistoriesPut({
         >(`${apiBaseUrl}/climb-histories`, climbHistory, {
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getToken()}`,
           },
         });
 

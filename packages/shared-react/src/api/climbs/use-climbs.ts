@@ -12,7 +12,7 @@ import { query } from '../query';
 
 function useClimbs({ grade, limit, locationId, search }: ClimbsGetQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token, refreshToken, logout } = useAuth();
+  const { getToken, refreshToken, logout } = useAuth();
 
   return useQuery({
     queryKey: ['climbs', 'get', { grade, limit, locationId, search }],
@@ -38,7 +38,7 @@ function useClimbs({ grade, limit, locationId, search }: ClimbsGetQuery = {}) {
         const url = `${apiBaseUrl}/climbs${params.toString() ? `?${params.toString()}` : ''}`;
         const response = await axios.get<ApiResponse<ClimbsGetResponse>>(url, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getToken()}`,
           },
         });
 

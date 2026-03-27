@@ -12,7 +12,7 @@ import { query } from '../query';
 
 function useLocationsById({ id }: LocationsGetByIdParams) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token, refreshToken, logout } = useAuth();
+  const { getToken, refreshToken, logout } = useAuth();
 
   return useQuery({
     queryKey: ['locations', { id }],
@@ -24,7 +24,7 @@ function useLocationsById({ id }: LocationsGetByIdParams) {
           `${apiBaseUrl}/locations/${encodeURIComponent(id)}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${getToken()}`,
             },
           }
         );

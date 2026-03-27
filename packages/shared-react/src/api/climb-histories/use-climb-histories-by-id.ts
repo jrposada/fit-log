@@ -13,7 +13,7 @@ type UseClimbHistoriesById = {
 
 function useClimbHistoriesById({ id }: UseClimbHistoriesById) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token, refreshToken, logout } = useAuth();
+  const { getToken, refreshToken, logout } = useAuth();
 
   return useQuery({
     queryKey: ['climb-histories', { id }],
@@ -25,7 +25,7 @@ function useClimbHistoriesById({ id }: UseClimbHistoriesById) {
           ApiResponse<ClimbHistoriesGetByIdResponse>
         >(`${apiBaseUrl}/climb-histories/${encodeURIComponent(id)}`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getToken()}`,
           },
         });
 

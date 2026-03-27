@@ -18,7 +18,7 @@ type UseSectorsDeleteParams = {
 function useSectorsDelete({ onError, onSuccess }: UseSectorsDeleteParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token, refreshToken, logout } = useAuth();
+  const { getToken, refreshToken, logout } = useAuth();
 
   return useMutation<
     SectorsDeleteResponse,
@@ -34,7 +34,7 @@ function useSectorsDelete({ onError, onSuccess }: UseSectorsDeleteParams = {}) {
           `${apiBaseUrl}/sectors/${id}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${getToken()}`,
             },
           }
         );

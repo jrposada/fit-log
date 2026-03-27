@@ -22,7 +22,7 @@ function useClimbHistoriesDelete({
 }: UseClimbHistoriesDeleteParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
-  const { token, refreshToken, logout } = useAuth();
+  const { getToken, refreshToken, logout } = useAuth();
 
   return useMutation<
     ClimbHistoriesDeleteResponse,
@@ -44,7 +44,7 @@ function useClimbHistoriesDelete({
           ApiResponse<ClimbHistoriesDeleteResponse>
         >(url, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getToken()}`,
           },
         });
 
