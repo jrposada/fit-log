@@ -7,6 +7,8 @@ import { Sector } from '@backend/models/sector';
 import { Climb } from '@backend/models/climb';
 import { ClimbHistory } from '@backend/models/climb-history';
 import { Image } from '@backend/models/image';
+import { ImageProcessor } from '@backend/services/image-processor';
+import { FilesService } from '@backend/services/files';
 
 import { fakeClimb } from '../seed/mock-data/climbs';
 import { fakeClimbHistory } from '../seed/mock-data/climb-histories';
@@ -41,14 +43,16 @@ export function registerSetupCommand(setupCmd: Command): void {
 
         try {
           await connectToDatabase();
+          await FilesService.ensureDirectories();
+          const imageProcessor = new ImageProcessor();
 
           console.log(`Creating ${numClimbs} images...`);
-          const imagePromises = [];
+          const images = [];
           for (let i = 0; i < numClimbs; i++) {
-            const imageData = fakeImage();
-            imagePromises.push(Image.create(imageData));
+            const imageData = await fakeImage(imageProcessor);
+            const image = await Image.create(imageData);
+            images.push(image);
           }
-          const images = await Promise.all(imagePromises);
           console.log(`✓ Created ${images.length} images`);
 
           console.log(`Creating ${numLocations} locations...`);
