@@ -13,11 +13,7 @@ import {
   useState,
 } from 'react';
 
-import {
-  authService,
-  getRedirectUri,
-  UserInfo,
-} from './auth-service';
+import { authService, getRedirectUri, UserInfo } from './auth-service';
 
 type AuthProviderProps = {
   children: ReactNode;
@@ -50,13 +46,16 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
     discovery
   );
 
+  const authCode =
+    authResponse?.type === 'success' ? authResponse.params.code : undefined;
+
   // Handle auth response
   useEffect(() => {
     const handleAuthResponse = async () => {
-      if (authResponse?.type === 'success' && authRequest?.codeVerifier) {
+      if (authCode && authRequest?.codeVerifier) {
         try {
           const tokens = await authService.exchangeCodeForTokens(
-            authResponse.params.code,
+            authCode,
             authRequest.codeVerifier
           );
           await authService.saveTokens(tokens);
@@ -70,7 +69,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
     };
 
     handleAuthResponse();
-  }, [authResponse, authRequest?.codeVerifier]);
+  }, [authRequest?.codeVerifier, authCode, setToken]);
 
   // Check for existing session on mount
   useEffect(() => {
@@ -94,7 +93,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
     };
 
     initAuth();
-  }, []);
+  }, [setToken]);
 
   const login = useCallback(async () => {
     try {
@@ -140,7 +139,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
         console.error('IDP login failed:', error);
       }
     },
-    [discovery, redirectUri]
+    [discovery, redirectUri, setToken]
   );
 
   const register = useCallback(async () => {
@@ -176,7 +175,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       console.error('Registration failed:', error);
     }
-  }, [authRequest?.codeVerifier, redirectUri]);
+  }, [authRequest?.codeVerifier, redirectUri, setToken]);
 
   const refreshToken = useCallback(async () => {
     const storedRefreshToken = await authService.getRefreshToken();
@@ -189,7 +188,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
     setToken(tokens.accessToken);
     const userInfo = await authService.fetchUserInfo(tokens.accessToken);
     setUser(userInfo);
-  }, []);
+  }, [setToken]);
 
   const logout = useCallback(async () => {
     try {
@@ -206,7 +205,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
       setUser(null);
       setToken(null);
     }
-  }, []);
+  }, [setToken]);
 
   const contextValue = useMemo<AuthContextValue>(
     () => ({
