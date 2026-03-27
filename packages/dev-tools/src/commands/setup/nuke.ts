@@ -107,7 +107,6 @@ async function nukeKeycloak() {
     'KEYCLOAK_ADMIN_PASSWORD environment variable is not set'
   );
 
-
   console.log('⚠️  Resetting Keycloak...');
 
   // Get admin token from master realm

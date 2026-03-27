@@ -22,21 +22,21 @@ export function registerSetupCommand(setupCmd: Command): void {
     .option('--num-workouts <value>', 'Number of workouts to create', '100')
     .option('--num-climbs <value>', 'Number of climbs to create', '250')
     .option(
-      '--num-climb-histories <value>',
-      'Number of climb histories to create',
-      '500'
+      '--climb-history-chance <value>',
+      'Chance (0-1) each climb has history',
+      '0.6'
     )
     .option('--num-locations <value>', 'Number of locations to create', '50')
     .action(
       async (options: {
         numWorkouts: string;
         numClimbs: string;
-        numClimbHistories: string;
+        climbHistoryChance: string;
         numLocations: string;
       }) => {
         const numWorkouts = parseInt(options.numWorkouts);
         const numClimbs = parseInt(options.numClimbs);
-        const numClimbHistories = parseInt(options.numClimbHistories);
+        const climbHistoryChance = parseFloat(options.climbHistoryChance);
         const numLocations = parseInt(options.numLocations);
 
         try {
@@ -112,18 +112,20 @@ export function registerSetupCommand(setupCmd: Command): void {
           }
           console.log('✓ Linked climbs and images to sectors');
 
-          console.log(`Creating ${numClimbHistories} climb histories...`);
+          console.log(
+            `Creating climb histories (${(climbHistoryChance * 100).toFixed(0)}% chance per climb)...`
+          );
           const climbHistoryPromises = [];
-          for (let i = 0; i < numClimbHistories; i++) {
-            const randomClimb = faker.helpers.arrayElement(climbs);
-
-            const climbHistoryData = {
-              ...fakeClimbHistory(),
-              climb: randomClimb._id,
-              location: randomClimb.location,
-              sector: randomClimb.sector,
-            };
-            climbHistoryPromises.push(ClimbHistory.create(climbHistoryData));
+          for (const climb of climbs) {
+            if (faker.datatype.boolean({ probability: climbHistoryChance })) {
+              const climbHistoryData = {
+                ...fakeClimbHistory(),
+                climb: climb._id,
+                location: climb.location,
+                sector: climb.sector,
+              };
+              climbHistoryPromises.push(ClimbHistory.create(climbHistoryData));
+            }
           }
           const climbHistories = await Promise.all(climbHistoryPromises);
           console.log(`✓ Created ${climbHistories.length} climb histories`);
