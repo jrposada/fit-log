@@ -1,9 +1,0 @@
-Authorizer:
-  handler: src/lambdas/authorizer/authorizer.handler
-  role: LambdaAuthorizerRole
-  memorySize: 128
-  environment:
-    USER_POOL_ID:
-      Ref: CognitoUserPool
-    CLIENT_ID:
-      Ref: CognitoUserPoolClient
