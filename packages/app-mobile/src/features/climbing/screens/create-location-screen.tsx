@@ -5,7 +5,7 @@ import { useLocationsById } from '@shared-react/api/locations/use-locations-by-i
 import { useLocationsPut } from '@shared-react/api/locations/use-locations-put';
 import { useSectorsBatchDelete } from '@shared-react/api/sectors/use-sectors-batch-delete';
 import { useSectorsBatchPut } from '@shared-react/api/sectors/use-sectors-batch-put';
-import { FunctionComponent, useEffect, useRef } from 'react';
+import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -22,6 +22,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import FormMapPointPicker from '../../../library/form/form-map-point-picker';
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
+import Header from '../../../navigation/header';
 import type { FormData } from '../components/form-location';
 import { formDataSchema } from '../components/form-location';
 import FormLocationSectors from '../components/form-location-sectors';
@@ -186,28 +187,43 @@ const CreateLocationScreen: FunctionComponent = () => {
     }
   }, [existingLocation, isEditMode, reset]);
 
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-      if (!isDirty) return;
+  const handleBackPress = useCallback(() => {
+    if (!isDirty) {
+      navigation.goBack();
+      return;
+    }
 
-      e.preventDefault();
-
-      Alert.alert(
-        t('climbing.unsaved_changes'),
-        t('climbing.discard_changes_message'),
-        [
-          { text: t('climbing.cancel'), style: 'cancel' },
-          {
-            text: t('climbing.discard'),
-            style: 'destructive',
-            onPress: () => navigation.dispatch(e.data.action),
-          },
-        ]
-      );
-    });
-
-    return unsubscribe;
+    Alert.alert(
+      t('climbing.unsaved_changes'),
+      t('climbing.discard_changes_message'),
+      [
+        { text: t('climbing.cancel'), style: 'cancel' },
+        {
+          text: t('climbing.discard'),
+          style: 'destructive',
+          onPress: () => navigation.goBack(),
+        },
+      ]
+    );
   }, [navigation, isDirty, t]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      gestureEnabled: !isDirty,
+      header: () => (
+        <Header
+          title={
+            isEditMode
+              ? t('climbing.update_location_title')
+              : t('climbing.create_location_title')
+          }
+          mode="modal"
+          back
+          onBackPress={handleBackPress}
+        />
+      ),
+    });
+  }, [navigation, isDirty, isEditMode, t, handleBackPress]);
 
   const isSubmitDisabled =
     !isValid || !isDirty || locationsPut.isPending || isLoadingLocation;
@@ -219,6 +235,13 @@ const CreateLocationScreen: FunctionComponent = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
+          {isDirty && (
+            <View style={styles.unsavedBanner}>
+              <Text style={styles.unsavedBannerText}>
+                {t('climbing.unsaved_changes_banner')}
+              </Text>
+            </View>
+          )}
           <View style={styles.section}>
             <FormTextInput
               name="name"
