@@ -2,12 +2,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Header from '../../navigation/header';
+import ClimbDetailHeader from './climb-detail-header';
 import ClimbDetailScreen from './screens/climb-detail-screen';
 import ClimbingScreen from './screens/climbing-screen';
 import CreateLocationScreen from './screens/create-location-screen';
 import { ClimbingParamList } from './types';
-import ClimbDetailHeader from './climb-detail-header';
-import Header from '../../navigation/header';
 
 const Stack = createNativeStackNavigator<ClimbingParamList>();
 

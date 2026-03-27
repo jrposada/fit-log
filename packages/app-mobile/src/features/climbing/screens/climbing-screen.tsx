@@ -2,9 +2,9 @@ import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, View } from 'react-native';
 
+import Tabs, { TabBarItem, TabContentItem } from '../../../library/tabs';
 import BrowseTab from '../components/browse-tab';
 import QuickLogTab from '../components/quick-log-tab';
-import Tabs, { TabBarItem, TabContentItem } from '../../../library/tabs';
 import { styles } from './climbing-screen.styles';
 
 type Tab = 'quick-log' | 'browse' | 'projects' | 'stats';

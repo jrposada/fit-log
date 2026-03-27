@@ -6,13 +6,13 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Text, View } from 'react-native';
 
+import AuthStack from '../features/auth/auth-stack';
+import ClimbingStack from '../features/climbing/climbing-stack';
+import HomeHeader from '../features/home/home-header';
 import HomeScreen from '../features/home/home-screen';
 import TrainingScreen from '../features/training/training-screen';
 import { RootParamList } from '../types/routes';
-import AuthStack from '../features/auth/auth-stack';
-import ClimbingStack from '../features/climbing/climbing-stack';
 import Header from './header';
-import HomeHeader from '../features/home/home-header';
 import { styles } from './root.styles';
 
 const Tab = createBottomTabNavigator<RootParamList>();

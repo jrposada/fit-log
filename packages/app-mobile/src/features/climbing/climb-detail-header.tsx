@@ -3,10 +3,10 @@ import { useClimbsById } from '@shared-react/api/climbs/use-climbs-by-id';
 import { FunctionComponent } from 'react';
 import { Linking, Platform, Text, TouchableOpacity } from 'react-native';
 
+import Header from '../../navigation/header';
+import { styles } from './climb-detail-header.styles';
 import GradeBadge from './components/grade-badge';
 import { ClimbDetailRouteProp } from './screens/climb-detail-screen';
-import { styles } from './climb-detail-header.styles';
-import Header from '../../navigation/header';
 
 const ClimbDetailHeader: FunctionComponent = () => {
   const route = useRoute<ClimbDetailRouteProp>();
