@@ -9,6 +9,7 @@ import styles from './header.styles';
 
 interface HeaderProps {
   back?: boolean;
+  onBackPress?: () => void;
   title: string | undefined;
   extra?: React.ReactNode;
   action?: React.ReactNode;
@@ -18,6 +19,7 @@ interface HeaderProps {
 
 const Header: FunctionComponent<HeaderProps> = ({
   back = false,
+  onBackPress,
   title = '',
   extra,
   action,
@@ -31,7 +33,11 @@ const Header: FunctionComponent<HeaderProps> = ({
   const { data: version } = useVersion();
 
   const handleBackPress = () => {
-    navigation.goBack();
+    if (onBackPress) {
+      onBackPress();
+    } else {
+      navigation.goBack();
+    }
   };
 
   return (
