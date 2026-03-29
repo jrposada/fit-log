@@ -4,18 +4,21 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 
 import MapPointPicker from '../../library/map-point-picker';
+import FormField from './form-field';
 import { styles } from './form-map-point-picker.styles';
 
 interface FormMapPointPickerProps {
   latitudeName: string;
   longitudeName: string;
   googleMapsIdName: string;
+  label?: string;
 }
 
 const FormMapPointPicker: FunctionComponent<FormMapPointPickerProps> = ({
   latitudeName,
   longitudeName,
   googleMapsIdName,
+  label,
 }) => {
   const { t } = useTranslation();
   const { control, setValue } = useFormContext();
@@ -28,10 +31,7 @@ const FormMapPointPicker: FunctionComponent<FormMapPointPickerProps> = ({
   const hasLocation = latitude !== undefined && longitude !== undefined;
 
   return (
-    <>
-      <Text style={styles.sectionTitle}>
-        📍 {t('climbing.location_optional')}
-      </Text>
+    <FormField label={label}>
       {hasLocation ? (
         <View style={styles.locationCard}>
           <View style={styles.locationCardContent}>
@@ -73,7 +73,7 @@ const FormMapPointPicker: FunctionComponent<FormMapPointPickerProps> = ({
         }}
         onCancel={() => setShowMapPicker(false)}
       />
-    </>
+    </FormField>
   );
 };
 

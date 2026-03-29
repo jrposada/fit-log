@@ -3,12 +3,6 @@ import { StyleSheet } from 'react-native';
 import { colors, radii, spacing } from '../theme';
 
 export const styles = StyleSheet.create({
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#000',
-    marginBottom: spacing.sm,
-  },
   mapPlaceholder: {
     borderWidth: 2,
     borderColor: colors.border,
