@@ -1,18 +1,8 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, spacing } from '../../../library/theme';
+import { colors } from '../../../library/theme';
 
 export const styles = StyleSheet.create({
-  imageContainer: {
-    width: '100%',
-    position: 'relative',
-    backgroundColor: colors.border,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
-  },
   holdsOverlay: {
     position: 'absolute',
     top: 0,
@@ -30,13 +20,5 @@ export const styles = StyleSheet.create({
     borderColor: colors.cardBackground,
     marginLeft: -12,
     marginTop: -12,
-  },
-  descriptionContainer: {
-    padding: spacing.lg,
-  },
-  description: {
-    fontSize: 14,
-    color: '#444',
-    lineHeight: 20,
   },
 });

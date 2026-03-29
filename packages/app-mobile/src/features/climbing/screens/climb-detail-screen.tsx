@@ -90,11 +90,9 @@ const ClimbDetailScreen: FunctionComponent = () => {
         >
           <InteractiveImage
             source={{ uri: climb.image.imageUrl }}
-            style={[
-              styles.imageContainer,
-              { height: SCREEN_HEIGHT - (insets.top + HEADER_FIXED_HEIGHT) },
-            ]}
-            imageStyle={styles.image}
+            style={{
+              height: SCREEN_HEIGHT - (insets.top + HEADER_FIXED_HEIGHT),
+            }}
           >
             {climb.holds.length > 0 && (
               <View style={styles.holdsOverlay}>
@@ -115,11 +113,9 @@ const ClimbDetailScreen: FunctionComponent = () => {
           </InteractiveImage>
 
           {climb.description && (
-            <View style={styles.descriptionContainer}>
-              <Section title={t('climbing.description')}>
-                <Text style={styles.description}>{climb.description}</Text>
-              </Section>
-            </View>
+            <Section spacing="lg" title={t('climbing.description')}>
+              <Text>{climb.description}</Text>
+            </Section>
           )}
         </Screen>
       )}
