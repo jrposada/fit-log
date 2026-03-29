@@ -12,8 +12,8 @@ import Button from '../../../library/button';
 import EmptyState from '../../../library/empty-state';
 import InteractiveImage from '../../../library/interactive-image';
 import LoadingState from '../../../library/loading-state';
+import { HEADER_FIXED_HEIGHT } from '../../../library/screen-header';
 import Section from '../../../library/section';
-import { HEADER_FIXED_HEIGHT } from '../../../navigation/header.styles';
 import { ClimbingParamList } from '../types';
 import { styles } from './climb-detail-screen.styles';
 

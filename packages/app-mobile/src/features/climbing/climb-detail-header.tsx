@@ -1,10 +1,10 @@
 import { useRoute } from '@react-navigation/native';
 import { useClimbsById } from '@shared-react/api/climbs/use-climbs-by-id';
 import { FunctionComponent } from 'react';
-import { Linking, Platform, Text, TouchableOpacity } from 'react-native';
+import { Linking, Platform } from 'react-native';
 
+import IconButton from '../../library/icon-button';
 import Header from '../../navigation/header';
-import { styles } from './climb-detail-header.styles';
 import GradeBadge from './components/grade-badge';
 import { ClimbDetailRouteProp } from './screens/climb-detail-screen';
 
@@ -38,11 +38,7 @@ const ClimbDetailHeader: FunctionComponent = () => {
     <Header
       title={climb?.name}
       extra={<GradeBadge grade={climb?.grade ?? 'V0'} />}
-      action={
-        <TouchableOpacity style={styles.mapButton} onPress={handleOpenMap}>
-          <Text style={styles.mapIcon}>📍</Text>
-        </TouchableOpacity>
-      }
+      action={<IconButton icon="📍" onPress={handleOpenMap} />}
       loading={isLoading}
       back
     />

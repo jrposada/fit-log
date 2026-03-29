@@ -2,33 +2,24 @@ import { useNavigation } from '@react-navigation/native';
 import { useVersion } from '@shared-react/api/version/use-version';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Text } from 'react-native';
 
+import ScreenHeader, {
+  ScreenHeaderProps,
+} from '../library/screen-header/screen-header';
 import styles from './header.styles';
 
-interface HeaderProps {
-  back?: boolean;
+type HeaderProps = Omit<ScreenHeaderProps, 'onBackPress'> & {
   onBackPress?: () => void;
-  title: string | undefined;
-  extra?: React.ReactNode;
-  action?: React.ReactNode;
-  loading?: boolean;
-  mode?: 'screen' | 'modal';
-}
+};
 
 const Header: FunctionComponent<HeaderProps> = ({
-  back = false,
   onBackPress,
-  title = '',
-  extra,
   action,
-  loading = false,
-  mode = 'screen',
+  ...rest
 }) => {
   const { t } = useTranslation();
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
 
   const { data: version } = useVersion();
 
@@ -40,30 +31,16 @@ const Header: FunctionComponent<HeaderProps> = ({
     }
   };
 
+  const resolvedAction = action ?? (
+    <Text style={styles.versionText}>{t('version', { version })}</Text>
+  );
+
   return (
-    <View
-      style={[
-        styles.header,
-        { paddingTop: mode === 'screen' ? insets.top : 8 },
-      ]}
-    >
-      <View style={styles.leftSection}>
-        {back && (
-          <Pressable onPress={handleBackPress} style={styles.backButton}>
-            <Text style={styles.backButtonText}>←</Text>
-          </Pressable>
-        )}
-        <Text style={styles.title} numberOfLines={1}>
-          {title}
-          {loading ? '...' : ''}
-        </Text>
-        {extra && <View style={{ marginLeft: 8 }}>{extra}</View>}
-      </View>
-      {!!action && action}
-      {!action && (
-        <Text style={styles.versionText}>{t('version', { version })}</Text>
-      )}
-    </View>
+    <ScreenHeader
+      {...rest}
+      onBackPress={handleBackPress}
+      action={resolvedAction}
+    />
   );
 };
 
