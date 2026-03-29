@@ -1,25 +1,19 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Hold } from '@shared/models/climb/climb';
 import { useClimbsById } from '@shared-react/api/climbs/use-climbs-by-id';
 import { useClimbsDelete } from '@shared-react/api/climbs/use-climbs-delete';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Dimensions, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Alert, LayoutChangeEvent, Text } from 'react-native';
 
 import Button from '../../../library/button';
 import EmptyState from '../../../library/empty-state';
-import InteractiveImage from '../../../library/interactive-image';
 import LoadingState from '../../../library/loading-state';
 import Screen from '../../../library/screen';
-import { HEADER_FIXED_HEIGHT } from '../../../library/screen-header';
 import Section from '../../../library/section';
 import { colors } from '../../../library/theme';
+import ClimbImage from '../components/climb-image';
 import { ClimbingParamList } from '../types';
-import { styles } from './climb-detail-screen.styles';
-
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 type ClimbDetailNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,
@@ -32,7 +26,11 @@ const ClimbDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<ClimbDetailNavigationProp>();
   const route = useRoute<ClimbDetailRouteProp>();
-  const insets = useSafeAreaInsets();
+  const [scrollHeight, setScrollHeight] = useState(0);
+
+  const handleScrollLayout = (event: LayoutChangeEvent) => {
+    setScrollHeight(event.nativeEvent.layout.height);
+  };
 
   const { climbId } = route.params;
   const { data: climb, isLoading } = useClimbsById({
@@ -75,6 +73,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
         <EmptyState message={t('climbing.climb_not_found')} />
       ) : (
         <Screen
+          scrollViewProps={{ onLayout: handleScrollLayout }}
           footer={
             <Button
               variant="destructive"
@@ -88,29 +87,11 @@ const ClimbDetailScreen: FunctionComponent = () => {
             />
           }
         >
-          <InteractiveImage
+          <ClimbImage
             source={{ uri: climb.image.imageUrl }}
-            style={{
-              height: SCREEN_HEIGHT - (insets.top + HEADER_FIXED_HEIGHT),
-            }}
-          >
-            {climb.holds.length > 0 && (
-              <View style={styles.holdsOverlay}>
-                {climb.holds.map((hold: Hold, index: number) => (
-                  <View
-                    key={`hold-${index}`}
-                    style={[
-                      styles.hold,
-                      {
-                        left: `${hold.x * 100}%`,
-                        top: `${hold.y * 100}%`,
-                      },
-                    ]}
-                  />
-                ))}
-              </View>
-            )}
-          </InteractiveImage>
+            holds={climb.holds}
+            style={{ height: scrollHeight }}
+          />
 
           {climb.description && (
             <Section spacing="lg" title={t('climbing.description')}>

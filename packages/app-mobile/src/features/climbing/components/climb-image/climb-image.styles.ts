@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
 
-import { colors } from '../../../library/theme';
+import { colors } from '../../../../library/theme';
 
 export const styles = StyleSheet.create({
-  holdsOverlay: {
+  container: {
     position: 'absolute',
     top: 0,
     left: 0,
