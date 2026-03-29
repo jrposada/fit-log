@@ -1,6 +1,7 @@
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Button from '../../../library/button';
 import EmptyState from '../../../library/empty-state';
 import Screen from '../../../library/screen';
 import Tabs, { TabBarItem, TabContentItem } from '../../../library/tabs';
@@ -18,6 +19,13 @@ const ClimbingScreen: FunctionComponent = () => {
       id: 'quick-log',
       label: t('climbing.quick_log'),
       content: <QuickLogTab />,
+      footer: (
+        <Button
+          title={`+ ${t('climbing.log_custom_climb')}`}
+          onPress={() => {}}
+          variant="primary"
+        />
+      ),
     },
     {
       id: 'browse',
@@ -37,7 +45,7 @@ const ClimbingScreen: FunctionComponent = () => {
   ];
 
   return (
-    <Screen>
+    <Screen scrollViewProps={{ contentContainerStyle: { flexGrow: 1 } }}>
       <Tabs.Bar<Tab>
         items={items}
         activeId={activeTab}

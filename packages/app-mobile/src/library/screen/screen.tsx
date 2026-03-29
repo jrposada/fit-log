@@ -14,19 +14,10 @@ import { spacing } from '../theme';
 import { styles } from './screen.styles';
 
 export interface ScreenProps {
-  /** Content rendered in a sticky footer below the ScrollView. */
   footer?: ReactNode;
-
-  /** When true, wraps the layout in a KeyboardAvoidingView. Default: false. */
   keyboardAvoiding?: boolean;
-
-  /** Extra props forwarded to the inner ScrollView. */
   scrollViewProps?: ScrollViewProps;
-
-  /** Override the scroll content style. */
   contentStyle?: StyleProp<ViewStyle>;
-
-  /** Override the outer container style (rarely needed). */
   style?: StyleProp<ViewStyle>;
 }
 

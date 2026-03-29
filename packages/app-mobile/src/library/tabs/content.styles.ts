@@ -1,7 +1,12 @@
 import { StyleSheet } from 'react-native';
 
+import { spacing } from '../theme';
+
 export const styles = StyleSheet.create({
-  scrollContent: {
+  container: {
+    flex: 1,
+  },
+  scroll: {
     flex: 1,
   },
   contentContainer: {
@@ -9,5 +14,8 @@ export const styles = StyleSheet.create({
   },
   inner: {
     padding: 20,
+  },
+  footer: {
+    padding: spacing.lg,
   },
 });

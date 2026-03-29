@@ -2,14 +2,13 @@ import { useClimbHistories } from '@shared-react/api/climb-histories/use-climb-h
 import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text, TouchableOpacity } from 'react-native';
 
 import LoadingState from '../../../library/loading-state';
+import Section from '../../../library/section';
 import Separator from '../../../library/separator';
 import { useSwipeHint } from '../hooks/use-swipe-hint';
 import ClimbCard, { ClimbCardProps } from './climb-card';
 import LocationSelector from './location-selector';
-import { styles } from './quick-log-tab.styles';
 
 const QuickLogTab: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -39,13 +38,11 @@ const QuickLogTab: FunctionComponent = () => {
 
   return (
     <LoadingState isLoading={isLoadingClimbHistories}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.content}
-      >
+      <Section title={t('climbing.recent_climbs')}>
         <LocationSelector value={locationId} onChange={setLocationId} />
+
         <Separator />
-        <Text style={styles.sectionLabel}>{t('climbing.recent_climbs')}</Text>
+
         {climbHistories.map((climbHistory, index) => (
           <ClimbCard
             key={climbHistory.id}
@@ -59,12 +56,7 @@ const QuickLogTab: FunctionComponent = () => {
             onPeekDone={markShown}
           />
         ))}
-        <TouchableOpacity style={styles.customButton} activeOpacity={0.7}>
-          <Text style={styles.customButtonText}>
-            + {t('climbing.log_custom_climb')}
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
+      </Section>
     </LoadingState>
   );
 };
