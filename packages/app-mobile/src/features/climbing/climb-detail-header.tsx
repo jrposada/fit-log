@@ -40,6 +40,7 @@ const ClimbDetailHeader: FunctionComponent = () => {
       extra={<GradeBadge grade={climb?.grade ?? 'V0'} />}
       action={<IconButton icon="📍" onPress={handleOpenMap} />}
       loading={isLoading}
+      mode="modal"
       back
     />
   );

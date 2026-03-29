@@ -46,7 +46,7 @@ const ClimbingStack: FunctionComponent = () => {
         component={ClimbDetailScreen}
         options={{
           header: () => <ClimbDetailHeader />,
-          presentation: 'fullScreenModal',
+          presentation: 'modal',
         }}
       />
     </Stack.Navigator>
