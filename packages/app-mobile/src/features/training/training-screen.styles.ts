@@ -1,36 +1,26 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, spacing } from '../../library/theme';
+
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-    padding: 20,
+    padding: spacing.xl,
   },
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: spacing.xl,
     marginTop: 10,
-    color: '#333',
+    color: colors.textHeading,
   },
   cardsContainer: {
     gap: 15,
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
+    padding: spacing.xl,
     flexDirection: 'row',
     alignItems: 'center',
     borderLeftWidth: 4,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 3,
   },
   cardIcon: {
     fontSize: 40,
@@ -42,10 +32,10 @@ export const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   cardDescription: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
   },
 });

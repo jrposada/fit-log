@@ -1,11 +1,13 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, spacing } from '../../../library/theme';
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   content: {
-    padding: 16,
+    padding: spacing.lg,
     paddingBottom: 48,
   },
   loadingContainer: {
@@ -16,18 +18,18 @@ export const styles = StyleSheet.create({
   sectionLabel: {
     fontSize: 15,
     fontWeight: '600',
-    marginBottom: 12,
-    color: '#333',
+    marginBottom: spacing.md,
+    color: colors.textHeading,
   },
   customButton: {
-    marginTop: 8,
+    marginTop: spacing.sm,
     backgroundColor: '#2962ff',
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: radii.lg,
     alignItems: 'center',
   },
   customButtonText: {
-    color: '#fff',
+    color: colors.textOnAction,
     fontSize: 16,
     fontWeight: '600',
   },

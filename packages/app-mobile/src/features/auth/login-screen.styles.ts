@@ -1,14 +1,16 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, shadows, spacing } from '../../library/theme';
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.screenBackground,
   },
   content: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.xxl,
     paddingBottom: 40,
   },
   logoContainer: {
@@ -17,75 +19,68 @@ export const styles = StyleSheet.create({
   },
   logoText: {
     fontSize: 48,
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
   appName: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#4CAF50',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   tagline: {
     fontSize: 16,
-    color: '#666',
+    color: colors.textSecondary,
   },
   buttonsContainer: {
-    gap: 12,
+    gap: spacing.md,
   },
   button: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingVertical: 16,
-    paddingHorizontal: 24,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 3,
+    backgroundColor: colors.cardBackground,
+    borderRadius: radii.card,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.xxl,
+    ...shadows.cardElevated,
   },
   primaryButton: {
     backgroundColor: '#4CAF50',
   },
   buttonIcon: {
     fontSize: 20,
-    marginRight: 12,
+    marginRight: spacing.md,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textHeading,
   },
   primaryButtonText: {
-    color: '#fff',
+    color: colors.textOnAction,
   },
   divider: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 24,
+    marginVertical: spacing.xxl,
   },
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: colors.borderLight,
   },
   dividerText: {
-    marginHorizontal: 16,
-    color: '#666',
+    marginHorizontal: spacing.lg,
+    color: colors.textSecondary,
     fontSize: 14,
   },
   footer: {
-    paddingHorizontal: 24,
+    paddingHorizontal: spacing.xxl,
     paddingBottom: 32,
     alignItems: 'center',
   },
   createAccountButton: {
-    paddingVertical: 12,
+    paddingVertical: spacing.md,
   },
   createAccountText: {
     fontSize: 16,

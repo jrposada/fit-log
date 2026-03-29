@@ -11,12 +11,14 @@ import {
   Dimensions,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import Button from '../../../library/button';
 import InteractiveImage from '../../../library/interactive-image';
+import Section from '../../../library/section';
+import { commonStyles } from '../../../library/theme';
 import { HEADER_FIXED_HEIGHT } from '../../../navigation/header.styles';
 import { ClimbingParamList } from '../types';
 import { styles } from './climb-detail-screen.styles';
@@ -70,7 +72,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
 
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={[commonStyles.loadingContainer, styles.loadingContainer]}>
         <ActivityIndicator size="large" color="#4CAF50" />
       </View>
     );
@@ -78,7 +80,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
 
   if (!climb) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={commonStyles.loadingContainer}>
         <Text style={styles.notFoundText}>{t('climbing.climb_not_found')}</Text>
       </View>
     );
@@ -114,23 +116,22 @@ const ClimbDetailScreen: FunctionComponent = () => {
 
       <View style={styles.footer}>
         {climb.description && (
-          <View style={styles.descriptionSection}>
-            <Text style={styles.sectionTitle}>{t('climbing.description')}</Text>
+          <Section title={t('climbing.description')}>
             <Text style={styles.description}>{climb.description}</Text>
-          </View>
+          </Section>
         )}
 
-        <TouchableOpacity
-          style={styles.deleteButton}
+        <Button
+          variant="destructive"
+          title={
+            deleteClimb.isPending
+              ? t('climbing.deleting')
+              : t('climbing.delete_climb_button')
+          }
           onPress={handleDelete}
           disabled={deleteClimb.isPending}
-        >
-          <Text style={styles.deleteButtonText}>
-            {deleteClimb.isPending
-              ? t('climbing.deleting')
-              : t('climbing.delete_climb_button')}
-          </Text>
-        </TouchableOpacity>
+          style={{ marginTop: 16 }}
+        />
       </View>
     </ScrollView>
   );

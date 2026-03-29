@@ -1,30 +1,28 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, shadows, spacing } from '../../../library/theme';
+
 export const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+    backgroundColor: colors.cardBackground,
+    borderRadius: radii.lg,
+    paddingHorizontal: spacing.md,
+    marginBottom: spacing.md,
+    ...shadows.card,
   },
   input: {
     flex: 1,
     height: 44,
     fontSize: 16,
-    color: '#333',
+    color: colors.textHeading,
   },
   clearButton: {
-    padding: 8,
+    padding: spacing.sm,
   },
   clearButtonText: {
     fontSize: 20,
-    color: '#999',
+    color: colors.textDisabled,
   },
 });

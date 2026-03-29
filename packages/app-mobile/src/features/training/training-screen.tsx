@@ -1,7 +1,9 @@
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
+import Card from '../../library/card';
+import ScreenContainer from '../../library/screen-container';
 import { styles } from './training-screen.styles';
 
 type TrainingCard = {
@@ -61,25 +63,30 @@ const TrainingScreen: FunctionComponent = () => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>{t('training.title')}</Text>
-      <View style={styles.cardsContainer}>
-        {trainingCards.map((card) => (
-          <TouchableOpacity
-            key={card.id}
-            style={[styles.card, { borderLeftColor: card.color }]}
-          >
-            <Text style={styles.cardIcon}>{card.icon}</Text>
-            <View style={styles.cardContent}>
-              <Text style={[styles.cardTitle, { color: card.color }]}>
-                {card.title}
-              </Text>
-              <Text style={styles.cardDescription}>{card.description}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
+    <ScreenContainer>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>{t('training.title')}</Text>
+        <View style={styles.cardsContainer}>
+          {trainingCards.map((card) => (
+            <Card
+              key={card.id}
+              variant="elevatedStrong"
+              borderLeftColor={card.color}
+              onPress={() => {}}
+              style={styles.card}
+            >
+              <Text style={styles.cardIcon}>{card.icon}</Text>
+              <View style={styles.cardContent}>
+                <Text style={[styles.cardTitle, { color: card.color }]}>
+                  {card.title}
+                </Text>
+                <Text style={styles.cardDescription}>{card.description}</Text>
+              </View>
+            </Card>
+          ))}
+        </View>
+      </ScrollView>
+    </ScreenContainer>
   );
 };
 

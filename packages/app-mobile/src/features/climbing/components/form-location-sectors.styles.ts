@@ -1,72 +1,74 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, spacing } from '../../../library/theme';
+
 export const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '500',
     color: '#000',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   sectionDescription: {
     fontSize: 14,
-    color: '#666',
-    marginBottom: 12,
+    color: colors.textSecondary,
+    marginBottom: spacing.md,
   },
   addSectorButton: {
     borderWidth: 2,
-    borderColor: '#007AFF',
-    borderRadius: 8,
-    padding: 16,
+    borderColor: colors.actionPrimary,
+    borderRadius: radii.button,
+    padding: spacing.lg,
     alignItems: 'center',
   },
   addSectorButtonText: {
     fontSize: 16,
-    color: '#007AFF',
+    color: colors.actionPrimary,
     fontWeight: '500',
   },
   sectorsList: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   sectorItem: {
-    padding: 12,
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    marginBottom: 8,
+    padding: spacing.md,
+    backgroundColor: colors.screenBackground,
+    borderRadius: radii.md,
+    marginBottom: spacing.sm,
   },
   sectorMainContent: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   sectorTextContainer: {
     flex: 1,
   },
   sectorDescription: {
     fontSize: 14,
-    color: '#666',
-    marginTop: 4,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
   },
   sectorActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    gap: 8,
+    gap: spacing.sm,
   },
   actionButton: {
-    paddingHorizontal: 12,
+    paddingHorizontal: spacing.md,
     paddingVertical: 6,
-    borderRadius: 6,
-    backgroundColor: '#007AFF',
+    borderRadius: radii.sm,
+    backgroundColor: colors.actionPrimary,
   },
   actionButtonText: {
     fontSize: 14,
-    color: '#fff',
+    color: colors.textOnAction,
     fontWeight: '500',
   },
   deleteButton: {
     backgroundColor: '#FF3B30',
   },
   deleteButtonText: {
-    color: '#fff',
+    color: colors.textOnAction,
   },
   uploadingOverlay: {
     position: 'absolute',
@@ -80,36 +82,36 @@ export const styles = StyleSheet.create({
     zIndex: 1000,
   },
   uploadingContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 24,
+    backgroundColor: colors.cardBackground,
+    borderRadius: radii.card,
+    padding: spacing.xxl,
     alignItems: 'center',
     minWidth: 200,
   },
   uploadingText: {
-    marginTop: 12,
+    marginTop: spacing.md,
     fontSize: 16,
     color: '#000',
   },
   imagesContainer: {
-    marginTop: 12,
+    marginTop: spacing.md,
   },
   imagesLabel: {
     fontSize: 14,
     fontWeight: '500',
     color: '#000',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   imagesScroll: {
     flexDirection: 'row',
   },
   imageWrapper: {
-    marginRight: 8,
+    marginRight: spacing.sm,
   },
   thumbnailImage: {
     width: 100,
     height: 100,
-    borderRadius: 8,
-    backgroundColor: '#e0e0e0',
+    borderRadius: radii.md,
+    backgroundColor: colors.border,
   },
 });

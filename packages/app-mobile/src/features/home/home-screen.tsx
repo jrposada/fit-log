@@ -1,7 +1,9 @@
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
+import Card from '../../library/card';
+import ScreenContainer from '../../library/screen-container';
 import { styles } from './home-screen.styles';
 
 type DashboardCard = {
@@ -61,25 +63,30 @@ const HomeScreen: FunctionComponent = () => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>{t('home.title')}</Text>
-      <View style={styles.cardsContainer}>
-        {dashboardCards.map((card) => (
-          <TouchableOpacity
-            key={card.id}
-            style={[styles.card, { borderLeftColor: card.color }]}
-          >
-            <Text style={styles.cardIcon}>{card.icon}</Text>
-            <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>{card.title}</Text>
-              <Text style={[styles.cardValue, { color: card.color }]}>
-                {card.value}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
+    <ScreenContainer>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>{t('home.title')}</Text>
+        <View style={styles.cardsContainer}>
+          {dashboardCards.map((card) => (
+            <Card
+              key={card.id}
+              variant="elevatedStrong"
+              borderLeftColor={card.color}
+              onPress={() => {}}
+              style={styles.card}
+            >
+              <Text style={styles.cardIcon}>{card.icon}</Text>
+              <View style={styles.cardContent}>
+                <Text style={styles.cardTitle}>{card.title}</Text>
+                <Text style={[styles.cardValue, { color: card.color }]}>
+                  {card.value}
+                </Text>
+              </View>
+            </Card>
+          ))}
+        </View>
+      </ScrollView>
+    </ScreenContainer>
   );
 };
 

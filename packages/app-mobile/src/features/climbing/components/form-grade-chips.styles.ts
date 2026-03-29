@@ -1,33 +1,35 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, spacing } from '../../../library/theme';
+
 export const styles = StyleSheet.create({
   container: {
-    marginBottom: 12,
+    marginBottom: spacing.md,
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#666',
-    marginBottom: 8,
+    color: colors.textSecondary,
+    marginBottom: spacing.sm,
   },
   chipsContainer: {
     flexDirection: 'row',
-    gap: 8,
+    gap: spacing.sm,
   },
   chip: {
-    paddingHorizontal: 12,
+    paddingHorizontal: spacing.md,
     paddingVertical: 6,
     borderRadius: 16,
-    backgroundColor: '#e0e0e0',
+    backgroundColor: colors.border,
   },
   chipSelected: {
-    backgroundColor: '#2196F3',
+    backgroundColor: colors.actionInfo,
   },
   chipText: {
     fontSize: 14,
-    color: '#333',
+    color: colors.textHeading,
   },
   chipTextSelected: {
-    color: '#fff',
+    color: colors.textOnAction,
   },
 });

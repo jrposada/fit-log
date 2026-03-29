@@ -1,37 +1,35 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, shadows, spacing } from '../../../library/theme';
+
 const ACTION_BUTTON_WIDTH = 72;
 
 export const styles = StyleSheet.create({
   container: {
     marginBottom: 14,
-    borderRadius: 12,
+    borderRadius: radii.card,
     overflow: 'hidden',
   },
   swipeableRow: {
     overflow: 'visible',
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+    backgroundColor: colors.cardBackground,
+    borderRadius: radii.card,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    ...shadows.card,
   },
   cardPressed: {
     opacity: 0.7,
   },
   topRow: {
-    marginBottom: 6,
+    marginBottom: spacing.sm,
   },
   title: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#222',
+    color: colors.textPrimary,
   },
   bottomRow: {
     flexDirection: 'row',
@@ -40,22 +38,22 @@ export const styles = StyleSheet.create({
   },
   sector: {
     fontSize: 13,
-    color: '#666',
+    color: colors.textSecondary,
   },
   rightActions: {
     width: ACTION_BUTTON_WIDTH,
     flexDirection: 'row',
   },
   actionButton: {
-    backgroundColor: '#1b5e20',
+    backgroundColor: colors.actionSuccess,
     justifyContent: 'center',
     alignItems: 'center',
     width: ACTION_BUTTON_WIDTH,
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
+    borderTopRightRadius: radii.card,
+    borderBottomRightRadius: radii.card,
   },
   actionText: {
-    color: '#fff',
+    color: colors.textOnAction,
     fontSize: 14,
     fontWeight: '600',
   },

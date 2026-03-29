@@ -1,24 +1,26 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, spacing } from '../../../library/theme';
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.screenBackground,
   },
   loadingContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.screenBackground,
   },
   notFoundText: {
     fontSize: 16,
-    color: '#666',
+    color: colors.textSecondary,
   },
   imageContainer: {
     width: '100%',
     position: 'relative',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: colors.border,
   },
   image: {
     width: '100%',
@@ -39,7 +41,7 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: 'rgba(255, 0, 0, 0.5)',
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: colors.cardBackground,
     marginLeft: -12,
     marginTop: -12,
   },
@@ -50,22 +52,22 @@ export const styles = StyleSheet.create({
   },
   noImageText: {
     fontSize: 16,
-    color: '#999',
+    color: colors.textDisabled,
   },
   footer: {
-    padding: 16,
+    padding: spacing.lg,
   },
   descriptionSection: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    backgroundColor: colors.cardBackground,
+    borderRadius: radii.card,
+    padding: spacing.lg,
+    marginBottom: spacing.lg,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#222',
-    marginBottom: 8,
+    color: colors.textPrimary,
+    marginBottom: spacing.sm,
   },
   description: {
     fontSize: 14,
@@ -73,13 +75,13 @@ export const styles = StyleSheet.create({
     lineHeight: 20,
   },
   deleteButton: {
-    backgroundColor: '#dc3545',
-    borderRadius: 8,
-    padding: 16,
+    backgroundColor: colors.actionDestructive,
+    borderRadius: radii.button,
+    padding: spacing.lg,
     alignItems: 'center',
   },
   deleteButtonText: {
-    color: '#fff',
+    color: colors.textOnAction,
     fontSize: 16,
     fontWeight: '600',
   },

@@ -1,24 +1,26 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, spacing } from '../../../library/theme';
+
 export const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: spacing.xl,
   },
   container: {
-    marginBottom: 16,
+    marginBottom: spacing.lg,
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
-    marginBottom: 4,
+    color: colors.textHeading,
+    marginBottom: spacing.xs,
   },
   editButton: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   editButtonText: {
     fontSize: 13,
@@ -26,12 +28,12 @@ export const styles = StyleSheet.create({
     fontWeight: '500',
   },
   selectWrapper: {
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   infoContainer: {
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    padding: 12,
+    backgroundColor: colors.screenBackground,
+    borderRadius: radii.md,
+    padding: spacing.md,
   },
   selectedContainer: {
     flexDirection: 'row',
@@ -43,10 +45,10 @@ export const styles = StyleSheet.create({
   },
   selectedStats: {
     fontSize: 13,
-    color: '#666',
+    color: colors.textSecondary,
   },
   placeholderText: {
     fontSize: 15,
-    color: '#999',
+    color: colors.textDisabled,
   },
 });
