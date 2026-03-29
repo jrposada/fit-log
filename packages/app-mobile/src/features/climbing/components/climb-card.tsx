@@ -1,10 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Climb } from '@shared/models/climb/climb';
+import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import ReanimatedSwipeable, {
   SwipeableMethods,
 } from 'react-native-gesture-handler/ReanimatedSwipeable';
@@ -23,8 +24,6 @@ type Data = Omit<Climb, 'image' | 'location'> & {
 
 export interface ClimbCardProps {
   climb: Data;
-  onLog: (climb: Data) => void;
-  logDisabled: boolean;
   /** If true, the card auto-peeks to hint at the swipe action */
   shouldPeek?: boolean;
   /** Called after peek animation completes */
@@ -60,14 +59,14 @@ function RightAction(
 
 const ClimbCard: FunctionComponent<ClimbCardProps> = ({
   climb,
-  onLog,
-  logDisabled,
   shouldPeek,
   onPeekDone,
 }) => {
   const { t } = useTranslation();
   const navigation = useNavigation<ClimbCardNavigationProp>();
   const swipeableRef = useRef<SwipeableMethods>(null);
+  const climbHistoriesPut = useClimbHistoriesPut();
+  const loading = climbHistoriesPut.isPending;
 
   useEffect(() => {
     if (shouldPeek) {
@@ -86,16 +85,26 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
     navigation.navigate('ClimbDetail', { climbId: climb.id });
   };
 
+  const handleLog = useCallback(() => {
+    climbHistoriesPut.mutate({
+      climb: climb.id,
+      location: climb.location,
+      sector: climb.sector.id,
+      status: 'send',
+      attempts: 1,
+    });
+  }, [climb, climbHistoriesPut]);
+
   const handleLogPress = useCallback(() => {
     swipeableRef.current?.close();
-    onLog(climb);
-  }, [climb, onLog]);
+    handleLog();
+  }, [handleLog]);
 
   const handleLongPress = () => {
     Alert.alert(climb.name, undefined, [
       {
         text: t('climbing.log_action'),
-        onPress: () => onLog(climb),
+        onPress: handleLog,
       },
       {
         text: t('climbing.browse_view_details'),
@@ -111,7 +120,7 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
   ) =>
     RightAction(prog, drag, {
       onLog: handleLogPress,
-      logDisabled,
+      logDisabled: loading,
       label: t('climbing.log_action'),
     });
 
@@ -126,10 +135,15 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
         containerStyle={styles.swipeableRow}
       >
         <Pressable
-          style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+          style={({ pressed }) => [
+            styles.card,
+            pressed && styles.cardPressed,
+            loading && styles.cardLoading,
+          ]}
           onPress={handleClimbPress}
           onLongPress={handleLongPress}
           delayLongPress={400}
+          disabled={loading}
         >
           <View style={styles.topRow}>
             <Text style={styles.title}>
@@ -141,6 +155,7 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
           </View>
           <View style={styles.bottomRow}>
             <Text style={styles.sector}>{climb.sector.name}</Text>
+            {loading && <ActivityIndicator size="small" />}
           </View>
         </Pressable>
       </ReanimatedSwipeable>

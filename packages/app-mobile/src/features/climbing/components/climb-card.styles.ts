@@ -23,6 +23,9 @@ export const styles = StyleSheet.create({
   cardPressed: {
     opacity: 0.7,
   },
+  cardLoading: {
+    opacity: 0.5,
+  },
   topRow: {
     marginBottom: spacing.sm,
   },
