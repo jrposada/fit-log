@@ -57,51 +57,51 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
     }
   };
 
-  if (isLoadingLocations) {
-    return <LoadingState />;
-  }
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{t('climbing.current_location')}</Text>
-      <View style={styles.selectWrapper}>
-        <Select
-          options={locations.map((loc) => loc.name)}
-          value={selectedLocation?.name || ''}
-          onChange={(name) => {
-            const loc = locations.find((l) => l.name === name);
-            if (loc) onChange(loc.id);
-          }}
-          onAddNew={handleAddNew}
-          onClear={() => onChange('')}
-          placeholder={t('climbing.select_location')}
-          searchPlaceholder={t('climbing.search_location')}
-          addButtonLabel={t('actions.add')}
-          closeButtonLabel={t('actions.close')}
-          emptyStateMessage={t('climbing.no_locations_found')}
-          allowAddNew
-        />
-      </View>
-      {selectedLocation && (
-        <View style={styles.infoContainer}>
-          <View style={styles.selectedContainer}>
-            <View style={styles.selectedTextContainer}>
-              <Text style={styles.selectedStats}>
-                {t('climbing.climbs_count', { count: numClimbs })} •{' '}
-                {t('climbing.sectors_count', { count: numSectors })}
-              </Text>
-            </View>
-            <TouchableOpacity
-              onPress={handleEditLocation}
-              style={styles.editButton}
-              activeOpacity={0.6}
-            >
-              <Text style={styles.editButtonText}>✏️ {t('actions.edit')}</Text>
-            </TouchableOpacity>
-          </View>
+    <LoadingState isLoading={isLoadingLocations}>
+      <View style={styles.container}>
+        <Text style={styles.label}>{t('climbing.current_location')}</Text>
+        <View style={styles.selectWrapper}>
+          <Select
+            options={locations.map((loc) => loc.name)}
+            value={selectedLocation?.name || ''}
+            onChange={(name) => {
+              const loc = locations.find((l) => l.name === name);
+              if (loc) onChange(loc.id);
+            }}
+            onAddNew={handleAddNew}
+            onClear={() => onChange('')}
+            placeholder={t('climbing.select_location')}
+            searchPlaceholder={t('climbing.search_location')}
+            addButtonLabel={t('actions.add')}
+            closeButtonLabel={t('actions.close')}
+            emptyStateMessage={t('climbing.no_locations_found')}
+            allowAddNew
+          />
         </View>
-      )}
-    </View>
+        {selectedLocation && (
+          <View style={styles.infoContainer}>
+            <View style={styles.selectedContainer}>
+              <View style={styles.selectedTextContainer}>
+                <Text style={styles.selectedStats}>
+                  {t('climbing.climbs_count', { count: numClimbs })} •{' '}
+                  {t('climbing.sectors_count', { count: numSectors })}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={handleEditLocation}
+                style={styles.editButton}
+                activeOpacity={0.6}
+              >
+                <Text style={styles.editButtonText}>
+                  ✏️ {t('actions.edit')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        )}
+      </View>
+    </LoadingState>
   );
 };
 

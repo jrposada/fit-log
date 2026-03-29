@@ -3,9 +3,6 @@ import { StyleSheet } from 'react-native';
 import { colors, spacing } from '../../../library/theme';
 
 export const styles = StyleSheet.create({
-  loadingContainer: {
-    backgroundColor: colors.screenBackground,
-  },
   imageContainer: {
     width: '100%',
     position: 'relative',

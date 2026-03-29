@@ -26,7 +26,7 @@ const Root: FunctionComponent = () => {
     return (
       <NavigationContainer>
         <StatusBar style="auto" />
-        <LoadingState style={{ backgroundColor: '#f5f5f5' }} />
+        <LoadingState isLoading style={{ backgroundColor: '#f5f5f5' }} />
       </NavigationContainer>
     );
   }

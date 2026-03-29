@@ -37,34 +37,35 @@ const QuickLogTab: FunctionComponent = () => {
     });
   };
 
-  if (isLoadingClimbHistories) {
-    return <LoadingState />;
-  }
-
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <LocationSelector value={locationId} onChange={setLocationId} />
-      <Separator />
-      <Text style={styles.sectionLabel}>{t('climbing.recent_climbs')}</Text>
-      {climbHistories.map((climbHistory, index) => (
-        <ClimbCard
-          key={climbHistory.id}
-          climb={{
-            ...climbHistory.climb,
-            sector: climbHistory.sector,
-          }}
-          onLog={handleLog}
-          logDisabled={climbHistoriesPut.isPending}
-          shouldPeek={index === 0 && shouldPeek}
-          onPeekDone={markShown}
-        />
-      ))}
-      <TouchableOpacity style={styles.customButton} activeOpacity={0.7}>
-        <Text style={styles.customButtonText}>
-          + {t('climbing.log_custom_climb')}
-        </Text>
-      </TouchableOpacity>
-    </ScrollView>
+    <LoadingState isLoading={isLoadingClimbHistories}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+      >
+        <LocationSelector value={locationId} onChange={setLocationId} />
+        <Separator />
+        <Text style={styles.sectionLabel}>{t('climbing.recent_climbs')}</Text>
+        {climbHistories.map((climbHistory, index) => (
+          <ClimbCard
+            key={climbHistory.id}
+            climb={{
+              ...climbHistory.climb,
+              sector: climbHistory.sector,
+            }}
+            onLog={handleLog}
+            logDisabled={climbHistoriesPut.isPending}
+            shouldPeek={index === 0 && shouldPeek}
+            onPeekDone={markShown}
+          />
+        ))}
+        <TouchableOpacity style={styles.customButton} activeOpacity={0.7}>
+          <Text style={styles.customButtonText}>
+            + {t('climbing.log_custom_climb')}
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </LoadingState>
   );
 };
 
