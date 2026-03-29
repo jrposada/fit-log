@@ -141,7 +141,7 @@ const FormLocationSectors: FunctionComponent = () => {
                     />
                     <FormTextArea
                       name={`sectors.${actualIndex}.description`}
-                      label={t('climbing.description_optional')}
+                      label={t('climbing.description')}
                       placeholder={t('climbing.add_description')}
                       maxLength={500}
                       numberOfLines={4}

@@ -16,7 +16,6 @@ import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
 import Screen from '../../../library/screen';
 import Section from '../../../library/section';
-import { spacing } from '../../../library/theme';
 import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
 import type { FormData } from '../components/form-location';
@@ -248,7 +247,7 @@ const CreateLocationScreen: FunctionComponent = () => {
           isDirty={isDirty}
           message={t('climbing.unsaved_changes_banner')}
         />
-        <Section style={{ marginTop: spacing.lg }}>
+        <Section spacing="lg">
           <FormTextInput
             name="name"
             label={t('climbing.location_name')}
@@ -260,24 +259,26 @@ const CreateLocationScreen: FunctionComponent = () => {
           />
         </Section>
 
-        <Section style={{ marginTop: spacing.lg }}>
+        <Section spacing="lg">
           <FormTextArea
             name="description"
-            label={t('climbing.description_optional')}
+            label={t('climbing.description')}
             placeholder={t('climbing.add_description')}
             maxLength={500}
             numberOfLines={4}
           />
         </Section>
 
-        <Section style={{ marginTop: spacing.lg }} />
-        <FormMapPointPicker
-          latitudeName="latitude"
-          longitudeName="longitude"
-          googleMapsIdName="googleMapsId"
-        />
+        <Section spacing="lg">
+          <FormMapPointPicker
+            latitudeName="latitude"
+            longitudeName="longitude"
+            googleMapsIdName="googleMapsId"
+            label={t('climbing.location')}
+          />
+        </Section>
 
-        <Section style={{ marginTop: spacing.lg }}>
+        <Section spacing="lg">
           <FormLocationSectors />
         </Section>
       </Screen>
