@@ -1,7 +1,8 @@
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 
+import Screen from '../../../library/screen';
 import Tabs, { TabBarItem, TabContentItem } from '../../../library/tabs';
 import BrowseTab from '../components/browse-tab';
 import QuickLogTab from '../components/quick-log-tab';
@@ -45,14 +46,14 @@ const ClimbingScreen: FunctionComponent = () => {
   ];
 
   return (
-    <View style={styles.container}>
+    <Screen>
       <Tabs.Bar<Tab>
         items={items}
         activeId={activeTab}
         onChange={(id) => setActiveTab(id)}
       />
       <Tabs.Content<Tab> items={items} activeId={activeTab} />
-    </View>
+    </Screen>
   );
 };
 

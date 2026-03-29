@@ -8,20 +8,12 @@ import { useSectorsBatchPut } from '@shared-react/api/sectors/use-sectors-batch-
 import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Alert, Pressable, Text, View } from 'react-native';
 
 import FormMapPointPicker from '../../../library/form/form-map-point-picker';
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
+import Screen from '../../../library/screen';
 import Header from '../../../navigation/header';
 import type { FormData } from '../components/form-location';
 import { formDataSchema } from '../components/form-location';
@@ -38,7 +30,6 @@ type CreateLocationRouteProp = RouteProp<ClimbingParamList, 'CreateLocation'>;
 
 const CreateLocationScreen: FunctionComponent = () => {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation<CreateLocationNavigationProp>();
   const route = useRoute<CreateLocationRouteProp>();
 
@@ -230,53 +221,10 @@ const CreateLocationScreen: FunctionComponent = () => {
 
   return (
     <FormProvider {...methods}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
-          {isDirty && (
-            <View style={styles.unsavedBanner}>
-              <Text style={styles.unsavedBannerText}>
-                {t('climbing.unsaved_changes_banner')}
-              </Text>
-            </View>
-          )}
-          <View style={styles.section}>
-            <FormTextInput
-              name="name"
-              label={t('climbing.location_name')}
-              placeholder={t('climbing.enter_location_name')}
-              maxLength={100}
-              required
-              showCharacterCount
-              autoFocus
-            />
-          </View>
-
-          <View style={styles.section}>
-            <FormTextArea
-              name="description"
-              label={t('climbing.description_optional')}
-              placeholder={t('climbing.add_description')}
-              maxLength={500}
-              numberOfLines={4}
-            />
-          </View>
-
-          <View style={styles.section}></View>
-          <FormMapPointPicker
-            latitudeName="latitude"
-            longitudeName="longitude"
-            googleMapsIdName="googleMapsId"
-          />
-
-          <View style={styles.section}>
-            <FormLocationSectors />
-          </View>
-        </ScrollView>
-
-        <View style={[styles.footer, { paddingBottom: 16 + insets.bottom }]}>
+      <Screen
+        keyboardAvoiding
+        scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
+        footer={
           <Pressable
             style={[
               styles.saveButton,
@@ -295,8 +243,48 @@ const CreateLocationScreen: FunctionComponent = () => {
                     : t('climbing.create_location')}
             </Text>
           </Pressable>
+        }
+      >
+        {isDirty && (
+          <View style={styles.unsavedBanner}>
+            <Text style={styles.unsavedBannerText}>
+              {t('climbing.unsaved_changes_banner')}
+            </Text>
+          </View>
+        )}
+        <View style={styles.section}>
+          <FormTextInput
+            name="name"
+            label={t('climbing.location_name')}
+            placeholder={t('climbing.enter_location_name')}
+            maxLength={100}
+            required
+            showCharacterCount
+            autoFocus
+          />
         </View>
-      </KeyboardAvoidingView>
+
+        <View style={styles.section}>
+          <FormTextArea
+            name="description"
+            label={t('climbing.description_optional')}
+            placeholder={t('climbing.add_description')}
+            maxLength={500}
+            numberOfLines={4}
+          />
+        </View>
+
+        <View style={styles.section}></View>
+        <FormMapPointPicker
+          latitudeName="latitude"
+          longitudeName="longitude"
+          googleMapsIdName="googleMapsId"
+        />
+
+        <View style={styles.section}>
+          <FormLocationSectors />
+        </View>
+      </Screen>
     </FormProvider>
   );
 };

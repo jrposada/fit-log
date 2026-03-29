@@ -3,23 +3,10 @@ import { StyleSheet } from 'react-native';
 import { colors, radii, spacing } from '../../../library/theme';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.screenBackground,
-  },
-  content: {
-    flex: 1,
-  },
   section: {
     backgroundColor: colors.cardBackground,
     padding: spacing.lg,
     marginTop: spacing.lg,
-  },
-  footer: {
-    backgroundColor: colors.cardBackground,
-    padding: spacing.lg,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
   },
   saveButton: {
     backgroundColor: colors.actionPrimary,

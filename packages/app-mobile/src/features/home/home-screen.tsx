@@ -1,9 +1,9 @@
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 import IconCard from '../../library/icon-card';
-import ScreenContainer from '../../library/screen-container';
+import Screen from '../../library/screen';
 import { styles } from './home-screen.styles';
 
 type DashboardCard = {
@@ -63,24 +63,22 @@ const HomeScreen: FunctionComponent = () => {
   ];
 
   return (
-    <ScreenContainer>
-      <ScrollView style={styles.container}>
-        <Text style={styles.title}>{t('home.title')}</Text>
-        <View style={styles.cardsContainer}>
-          {dashboardCards.map((card) => (
-            <IconCard
-              key={card.id}
-              icon={card.icon}
-              color={card.color}
-              title={card.title}
-              subtitle={card.value}
-              variant="stat"
-              onPress={() => {}}
-            />
-          ))}
-        </View>
-      </ScrollView>
-    </ScreenContainer>
+    <Screen contentStyle={styles.container}>
+      <Text style={styles.title}>{t('home.title')}</Text>
+      <View style={styles.cardsContainer}>
+        {dashboardCards.map((card) => (
+          <IconCard
+            key={card.id}
+            icon={card.icon}
+            color={card.color}
+            title={card.title}
+            subtitle={card.value}
+            variant="stat"
+            onPress={() => {}}
+          />
+        ))}
+      </View>
+    </Screen>
   );
 };
 

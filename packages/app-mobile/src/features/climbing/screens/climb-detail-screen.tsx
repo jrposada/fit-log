@@ -5,13 +5,14 @@ import { useClimbsById } from '@shared-react/api/climbs/use-climbs-by-id';
 import { useClimbsDelete } from '@shared-react/api/climbs/use-climbs-delete';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Dimensions, ScrollView, Text, View } from 'react-native';
+import { Alert, Dimensions, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Button from '../../../library/button';
 import EmptyState from '../../../library/empty-state';
 import InteractiveImage from '../../../library/interactive-image';
 import LoadingState from '../../../library/loading-state';
+import Screen from '../../../library/screen';
 import { HEADER_FIXED_HEIGHT } from '../../../library/screen-header';
 import Section from '../../../library/section';
 import { ClimbingParamList } from '../types';
@@ -73,7 +74,20 @@ const ClimbDetailScreen: FunctionComponent = () => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <Screen
+      footer={
+        <Button
+          variant="destructive"
+          title={
+            deleteClimb.isPending
+              ? t('climbing.deleting')
+              : t('climbing.delete_climb_button')
+          }
+          onPress={handleDelete}
+          disabled={deleteClimb.isPending}
+        />
+      }
+    >
       <InteractiveImage
         source={{ uri: climb.image.imageUrl }}
         style={[
@@ -100,26 +114,14 @@ const ClimbDetailScreen: FunctionComponent = () => {
         )}
       </InteractiveImage>
 
-      <View style={styles.footer}>
-        {climb.description && (
+      {climb.description && (
+        <View style={styles.descriptionContainer}>
           <Section title={t('climbing.description')}>
             <Text style={styles.description}>{climb.description}</Text>
           </Section>
-        )}
-
-        <Button
-          variant="destructive"
-          title={
-            deleteClimb.isPending
-              ? t('climbing.deleting')
-              : t('climbing.delete_climb_button')
-          }
-          onPress={handleDelete}
-          disabled={deleteClimb.isPending}
-          style={{ marginTop: 16 }}
-        />
-      </View>
-    </ScrollView>
+        </View>
+      )}
+    </Screen>
   );
 };
 

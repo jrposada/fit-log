@@ -1,12 +1,8 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from '../../../library/theme';
+import { colors, spacing } from '../../../library/theme';
 
 export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.screenBackground,
-  },
   loadingContainer: {
     backgroundColor: colors.screenBackground,
   },
@@ -38,44 +34,12 @@ export const styles = StyleSheet.create({
     marginLeft: -12,
     marginTop: -12,
   },
-  noImagePlaceholder: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noImageText: {
-    fontSize: 16,
-    color: colors.textDisabled,
-  },
-  footer: {
+  descriptionContainer: {
     padding: spacing.lg,
-  },
-  descriptionSection: {
-    backgroundColor: colors.cardBackground,
-    borderRadius: radii.card,
-    padding: spacing.lg,
-    marginBottom: spacing.lg,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.textPrimary,
-    marginBottom: spacing.sm,
   },
   description: {
     fontSize: 14,
     color: '#444',
     lineHeight: 20,
-  },
-  deleteButton: {
-    backgroundColor: colors.actionDestructive,
-    borderRadius: radii.button,
-    padding: spacing.lg,
-    alignItems: 'center',
-  },
-  deleteButtonText: {
-    color: colors.textOnAction,
-    fontSize: 16,
-    fontWeight: '600',
   },
 });
