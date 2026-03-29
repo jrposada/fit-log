@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, View } from 'react-native';
 
-import Card from '../../library/card';
+import IconCard from '../../library/icon-card';
 import ScreenContainer from '../../library/screen-container';
 import { styles } from './home-screen.styles';
 
@@ -68,21 +68,15 @@ const HomeScreen: FunctionComponent = () => {
         <Text style={styles.title}>{t('home.title')}</Text>
         <View style={styles.cardsContainer}>
           {dashboardCards.map((card) => (
-            <Card
+            <IconCard
               key={card.id}
-              variant="elevatedStrong"
-              borderLeftColor={card.color}
+              icon={card.icon}
+              color={card.color}
+              title={card.title}
+              subtitle={card.value}
+              variant="stat"
               onPress={() => {}}
-              style={styles.card}
-            >
-              <Text style={styles.cardIcon}>{card.icon}</Text>
-              <View style={styles.cardContent}>
-                <Text style={styles.cardTitle}>{card.title}</Text>
-                <Text style={[styles.cardValue, { color: card.color }]}>
-                  {card.value}
-                </Text>
-              </View>
-            </Card>
+            />
           ))}
         </View>
       </ScrollView>

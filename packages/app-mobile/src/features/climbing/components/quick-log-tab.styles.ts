@@ -10,11 +10,6 @@ export const styles = StyleSheet.create({
     padding: spacing.lg,
     paddingBottom: 48,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   sectionLabel: {
     fontSize: 15,
     fontWeight: '600',

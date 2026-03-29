@@ -5,20 +5,14 @@ import { useClimbsById } from '@shared-react/api/climbs/use-climbs-by-id';
 import { useClimbsDelete } from '@shared-react/api/climbs/use-climbs-delete';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  Alert,
-  Dimensions,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import { Alert, Dimensions, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Button from '../../../library/button';
+import EmptyState from '../../../library/empty-state';
 import InteractiveImage from '../../../library/interactive-image';
+import LoadingState from '../../../library/loading-state';
 import Section from '../../../library/section';
-import { commonStyles } from '../../../library/theme';
 import { HEADER_FIXED_HEIGHT } from '../../../navigation/header.styles';
 import { ClimbingParamList } from '../types';
 import { styles } from './climb-detail-screen.styles';
@@ -71,19 +65,11 @@ const ClimbDetailScreen: FunctionComponent = () => {
   };
 
   if (isLoading) {
-    return (
-      <View style={[commonStyles.loadingContainer, styles.loadingContainer]}>
-        <ActivityIndicator size="large" color="#4CAF50" />
-      </View>
-    );
+    return <LoadingState style={styles.loadingContainer} />;
   }
 
   if (!climb) {
-    return (
-      <View style={commonStyles.loadingContainer}>
-        <Text style={styles.notFoundText}>{t('climbing.climb_not_found')}</Text>
-      </View>
-    );
+    return <EmptyState message={t('climbing.climb_not_found')} />;
   }
 
   return (

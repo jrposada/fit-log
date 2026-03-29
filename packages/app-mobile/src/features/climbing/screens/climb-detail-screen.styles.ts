@@ -8,14 +8,7 @@ export const styles = StyleSheet.create({
     backgroundColor: colors.screenBackground,
   },
   loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: colors.screenBackground,
-  },
-  notFoundText: {
-    fontSize: 16,
-    color: colors.textSecondary,
   },
   imageContainer: {
     width: '100%',

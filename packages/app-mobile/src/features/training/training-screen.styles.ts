@@ -16,26 +16,4 @@ export const styles = StyleSheet.create({
   cardsContainer: {
     gap: 15,
   },
-  card: {
-    padding: spacing.xl,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderLeftWidth: 4,
-  },
-  cardIcon: {
-    fontSize: 40,
-    marginRight: 15,
-  },
-  cardContent: {
-    flex: 1,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: spacing.xs,
-  },
-  cardDescription: {
-    fontSize: 14,
-    color: colors.textSecondary,
-  },
 });

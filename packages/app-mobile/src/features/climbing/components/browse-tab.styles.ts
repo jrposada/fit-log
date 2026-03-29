@@ -13,42 +13,6 @@ export const styles = StyleSheet.create({
     padding: spacing.lg,
     paddingBottom: 48,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyState: {
-    padding: 40,
-    alignItems: 'center',
-  },
-  emptyStateText: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    textAlign: 'center',
-  },
-  sectorSection: {
-    marginBottom: spacing.lg,
-  },
-  sectorHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#e8e8e8',
-    paddingHorizontal: spacing.md,
-    paddingVertical: 10,
-    borderRadius: radii.md,
-    marginBottom: spacing.sm,
-  },
-  sectorTitle: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: colors.textHeading,
-  },
-  expandIcon: {
-    fontSize: 12,
-    color: colors.textSecondary,
-  },
   climbCard: {
     backgroundColor: colors.cardBackground,
     borderRadius: radii.lg,

@@ -2,14 +2,9 @@ import { useClimbHistories } from '@shared-react/api/climb-histories/use-climb-h
 import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, Text, TouchableOpacity } from 'react-native';
 
+import LoadingState from '../../../library/loading-state';
 import Separator from '../../../library/separator';
 import { useSwipeHint } from '../hooks/use-swipe-hint';
 import ClimbCard, { ClimbCardProps } from './climb-card';
@@ -43,11 +38,7 @@ const QuickLogTab: FunctionComponent = () => {
   };
 
   if (isLoadingClimbHistories) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#2962ff" />
-      </View>
-    );
+    return <LoadingState />;
   }
 
   return (

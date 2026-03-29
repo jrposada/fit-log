@@ -13,16 +13,12 @@ import { useDebounce } from '@shared-react/hooks/use-debounce';
 import { FunctionComponent, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { z } from 'zod';
 
+import CollapsibleSection from '../../../library/collapsible-section';
+import EmptyState from '../../../library/empty-state';
+import LoadingState from '../../../library/loading-state';
 import Modal from '../../../library/modal';
 import Separator from '../../../library/separator';
 import { ClimbingParamList } from '../types';
@@ -146,11 +142,7 @@ const BrowseTab: FunctionComponent = () => {
   };
 
   if (isLoadingClimbs) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#2962ff" />
-      </View>
-    );
+    return <LoadingState />;
   }
 
   return (
@@ -183,11 +175,7 @@ const BrowseTab: FunctionComponent = () => {
 
           {/* Climbs grouped by sector */}
           {climbsBySector.size === 0 ? (
-            <View style={styles.emptyState}>
-              <Text style={styles.emptyStateText}>
-                {t('climbing.browse_no_climbs')}
-              </Text>
-            </View>
+            <EmptyState message={t('climbing.browse_no_climbs')} />
           ) : (
             Array.from(climbsBySector.entries()).map(
               ([sectorId, { name, climbs: sectorClimbs }]) => {
@@ -195,61 +183,54 @@ const BrowseTab: FunctionComponent = () => {
                   expandedSectors.has(sectorId) || climbsBySector.size === 1;
 
                 return (
-                  <View key={sectorId} style={styles.sectorSection}>
-                    <TouchableOpacity
-                      style={styles.sectorHeader}
-                      onPress={() => toggleSector(sectorId)}
-                      activeOpacity={0.7}
-                    >
-                      <Text style={styles.sectorTitle}>
-                        📍 {name} ({sectorClimbs.length})
-                      </Text>
-                      <Text style={styles.expandIcon}>
-                        {isExpanded ? '▼' : '▶'}
-                      </Text>
-                    </TouchableOpacity>
-
-                    {isExpanded &&
-                      sectorClimbs.map((climb) => (
-                        <TouchableOpacity
-                          key={climb.id}
-                          style={styles.climbCard}
-                          onPress={() => setQuickViewClimb(climb)}
-                          activeOpacity={0.7}
-                        >
-                          <View style={styles.climbInfo}>
-                            <View style={styles.climbTopRow}>
-                              <Text style={styles.climbTitle}>
-                                <Text
-                                  style={{
-                                    color: beautifyGradeColor(climb.grade),
-                                  }}
-                                >
-                                  ●
-                                </Text>{' '}
-                                {climb.grade} | {climb.name}
-                              </Text>
-                              {getStatusBadge(climb)}
-                            </View>
-                            <Text style={styles.climbMeta}>
-                              {t('climbing.browse_created', {
-                                date: new Date(
-                                  climb.createdAt
-                                ).toLocaleDateString(),
-                              })}
+                  <CollapsibleSection
+                    key={sectorId}
+                    title={name}
+                    count={sectorClimbs.length}
+                    icon="📍"
+                    expanded={isExpanded}
+                    onToggle={() => toggleSector(sectorId)}
+                  >
+                    {sectorClimbs.map((climb) => (
+                      <TouchableOpacity
+                        key={climb.id}
+                        style={styles.climbCard}
+                        onPress={() => setQuickViewClimb(climb)}
+                        activeOpacity={0.7}
+                      >
+                        <View style={styles.climbInfo}>
+                          <View style={styles.climbTopRow}>
+                            <Text style={styles.climbTitle}>
+                              <Text
+                                style={{
+                                  color: beautifyGradeColor(climb.grade),
+                                }}
+                              >
+                                ●
+                              </Text>{' '}
+                              {climb.grade} | {climb.name}
                             </Text>
+                            {getStatusBadge(climb)}
                           </View>
-                          <TouchableOpacity
-                            style={styles.quickViewButton}
-                            onPress={() => setQuickViewClimb(climb)}
-                          >
-                            <Text style={styles.quickViewButtonText}>
-                              {t('climbing.browse_quick_view')}
-                            </Text>
-                          </TouchableOpacity>
+                          <Text style={styles.climbMeta}>
+                            {t('climbing.browse_created', {
+                              date: new Date(
+                                climb.createdAt
+                              ).toLocaleDateString(),
+                            })}
+                          </Text>
+                        </View>
+                        <TouchableOpacity
+                          style={styles.quickViewButton}
+                          onPress={() => setQuickViewClimb(climb)}
+                        >
+                          <Text style={styles.quickViewButtonText}>
+                            {t('climbing.browse_quick_view')}
+                          </Text>
                         </TouchableOpacity>
-                      ))}
-                  </View>
+                      </TouchableOpacity>
+                    ))}
+                  </CollapsibleSection>
                 );
               }
             )

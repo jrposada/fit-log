@@ -3,8 +3,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLocations } from '@shared-react/api/locations/use-locations';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
+import LoadingState from '../../../library/loading-state';
 import Select from '../../../library/select';
 import { ClimbingParamList } from '../types';
 import { styles } from './location-selector.styles';
@@ -57,11 +58,7 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
   };
 
   if (isLoadingLocations) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#2962ff" />
-      </View>
-    );
+    return <LoadingState />;
   }
 
   return (

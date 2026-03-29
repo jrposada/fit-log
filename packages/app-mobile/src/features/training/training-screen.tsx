@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, Text, View } from 'react-native';
 
-import Card from '../../library/card';
+import IconCard from '../../library/icon-card';
 import ScreenContainer from '../../library/screen-container';
 import { styles } from './training-screen.styles';
 
@@ -68,21 +68,15 @@ const TrainingScreen: FunctionComponent = () => {
         <Text style={styles.title}>{t('training.title')}</Text>
         <View style={styles.cardsContainer}>
           {trainingCards.map((card) => (
-            <Card
+            <IconCard
               key={card.id}
-              variant="elevatedStrong"
-              borderLeftColor={card.color}
+              icon={card.icon}
+              color={card.color}
+              title={card.title}
+              subtitle={card.description}
+              variant="description"
               onPress={() => {}}
-              style={styles.card}
-            >
-              <Text style={styles.cardIcon}>{card.icon}</Text>
-              <View style={styles.cardContent}>
-                <Text style={[styles.cardTitle, { color: card.color }]}>
-                  {card.title}
-                </Text>
-                <Text style={styles.cardDescription}>{card.description}</Text>
-              </View>
-            </Card>
+            />
           ))}
         </View>
       </ScrollView>
