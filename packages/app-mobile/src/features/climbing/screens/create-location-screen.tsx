@@ -8,18 +8,21 @@ import { useSectorsBatchPut } from '@shared-react/api/sectors/use-sectors-batch-
 import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Alert, Pressable, Text, View } from 'react-native';
+import { Alert } from 'react-native';
 
+import Button from '../../../library/button';
 import FormMapPointPicker from '../../../library/form/form-map-point-picker';
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
 import Screen from '../../../library/screen';
+import Section from '../../../library/section';
+import { spacing } from '../../../library/theme';
+import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
 import type { FormData } from '../components/form-location';
 import { formDataSchema } from '../components/form-location';
 import FormLocationSectors from '../components/form-location-sectors';
 import { ClimbingParamList } from '../types';
-import { styles } from './create-location-screen.styles';
 
 type CreateLocationNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,
@@ -225,34 +228,27 @@ const CreateLocationScreen: FunctionComponent = () => {
         keyboardAvoiding
         scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
         footer={
-          <Pressable
-            style={[
-              styles.saveButton,
-              isSubmitDisabled && styles.saveButtonDisabled,
-            ]}
-            onPress={handleSubmit(onSubmit)}
-            disabled={isSubmitDisabled}
-          >
-            <Text style={styles.saveButtonText}>
-              {isLoadingLocation
+          <Button
+            variant="primary"
+            title={
+              isLoadingLocation
                 ? t('climbing.loading')
                 : locationsPut.isPending
                   ? t('climbing.saving')
                   : isEditMode
                     ? t('climbing.update_location')
-                    : t('climbing.create_location')}
-            </Text>
-          </Pressable>
+                    : t('climbing.create_location')
+            }
+            onPress={handleSubmit(onSubmit)}
+            disabled={isSubmitDisabled}
+          />
         }
       >
-        {isDirty && (
-          <View style={styles.unsavedBanner}>
-            <Text style={styles.unsavedBannerText}>
-              {t('climbing.unsaved_changes_banner')}
-            </Text>
-          </View>
-        )}
-        <View style={styles.section}>
+        <UnsavedBanner
+          isDirty={isDirty}
+          message={t('climbing.unsaved_changes_banner')}
+        />
+        <Section style={{ marginTop: spacing.lg }}>
           <FormTextInput
             name="name"
             label={t('climbing.location_name')}
@@ -262,9 +258,9 @@ const CreateLocationScreen: FunctionComponent = () => {
             showCharacterCount
             autoFocus
           />
-        </View>
+        </Section>
 
-        <View style={styles.section}>
+        <Section style={{ marginTop: spacing.lg }}>
           <FormTextArea
             name="description"
             label={t('climbing.description_optional')}
@@ -272,18 +268,18 @@ const CreateLocationScreen: FunctionComponent = () => {
             maxLength={500}
             numberOfLines={4}
           />
-        </View>
+        </Section>
 
-        <View style={styles.section}></View>
+        <Section style={{ marginTop: spacing.lg }} />
         <FormMapPointPicker
           latitudeName="latitude"
           longitudeName="longitude"
           googleMapsIdName="googleMapsId"
         />
 
-        <View style={styles.section}>
+        <Section style={{ marginTop: spacing.lg }}>
           <FormLocationSectors />
-        </View>
+        </Section>
       </Screen>
     </FormProvider>
   );

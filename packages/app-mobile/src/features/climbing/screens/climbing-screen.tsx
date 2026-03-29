@@ -1,12 +1,11 @@
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text } from 'react-native';
 
+import EmptyState from '../../../library/empty-state';
 import Screen from '../../../library/screen';
 import Tabs, { TabBarItem, TabContentItem } from '../../../library/tabs';
 import BrowseTab from '../components/browse-tab';
 import QuickLogTab from '../components/quick-log-tab';
-import { styles } from './climbing-screen.styles';
 
 type Tab = 'quick-log' | 'browse' | 'projects' | 'stats';
 
@@ -28,20 +27,12 @@ const ClimbingScreen: FunctionComponent = () => {
     {
       id: 'projects',
       label: t('climbing.projects'),
-      content: (
-        <Text style={styles.placeholderText}>
-          {t('climbing.projects_content')}
-        </Text>
-      ),
+      content: <EmptyState message={t('climbing.projects_content')} />,
     },
     {
       id: 'stats',
       label: t('climbing.stats'),
-      content: (
-        <Text style={styles.placeholderText}>
-          {t('climbing.stats_content')}
-        </Text>
-      ),
+      content: <EmptyState message={t('climbing.stats_content')} />,
     },
   ];
 
