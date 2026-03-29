@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii } from '../theme';
+
 export const styles = StyleSheet.create({
   overlay: {
     flex: 1,
@@ -17,16 +19,16 @@ export const styles = StyleSheet.create({
     width: '100%',
     maxHeight: '90%',
     display: 'flex',
-    backgroundColor: '#fff',
-    borderTopEndRadius: 8,
-    borderTopStartRadius: 8,
+    backgroundColor: colors.cardBackground,
+    borderTopEndRadius: radii.md,
+    borderTopStartRadius: radii.md,
     overflow: 'hidden',
   },
   containerFullscreen: {
     width: '100%',
     height: '100%',
     display: 'flex',
-    backgroundColor: '#fff',
+    backgroundColor: colors.cardBackground,
     overflow: 'hidden',
   },
 });

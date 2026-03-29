@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native';
 
+import { spacing } from '../theme';
+
 export const styles = StyleSheet.create({
   body: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
   },
 });

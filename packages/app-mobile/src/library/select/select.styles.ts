@@ -1,15 +1,17 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, spacing } from '../theme';
+
 export const styles = StyleSheet.create({
   valueButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    backgroundColor: colors.cardBackground,
+    borderRadius: radii.md,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.borderLight,
   },
   valueButtonClearable: {
     paddingRight: 40,
@@ -17,7 +19,7 @@ export const styles = StyleSheet.create({
   valueText: {
     flex: 1,
     fontSize: 16,
-    color: '#222',
+    color: colors.textPrimary,
   },
   valueClearButton: {
     position: 'absolute',
@@ -25,24 +27,24 @@ export const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     justifyContent: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: spacing.sm,
   },
   valueClearButtonText: {
     fontSize: 20,
-    color: '#999',
+    color: colors.textDisabled,
     fontWeight: '600',
   },
   placeholderText: {
-    color: '#999',
+    color: colors.textDisabled,
   },
   searchContainer: {
     position: 'relative',
   },
   searchInput: {
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
+    borderColor: colors.borderLight,
+    borderRadius: radii.md,
+    padding: spacing.md,
     paddingRight: 40,
     fontSize: 16,
   },
@@ -52,11 +54,11 @@ export const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     justifyContent: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: spacing.sm,
   },
   clearButtonText: {
     fontSize: 20,
-    color: '#999',
+    color: colors.textDisabled,
     fontWeight: '600',
   },
   listView: {
@@ -67,50 +69,50 @@ export const styles = StyleSheet.create({
   },
   dropdownItem: {
     height: 48,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.lg,
     justifyContent: 'center',
-    borderRadius: 6,
-    marginBottom: 4,
+    borderRadius: radii.sm,
+    marginBottom: spacing.xs,
   },
   selectedItem: {
     backgroundColor: '#e3f2fd',
   },
   dropdownItemText: {
     fontSize: 16,
-    color: '#333',
+    color: colors.textHeading,
   },
   selectedItemText: {
-    color: '#2196F3',
+    color: colors.actionInfo,
     fontWeight: '600',
   },
   emptyState: {
-    paddingVertical: 24,
+    paddingVertical: spacing.xxl,
     alignItems: 'center',
   },
   emptyStateText: {
     fontSize: 14,
-    color: '#999',
+    color: colors.textDisabled,
   },
   addButton: {
-    backgroundColor: '#2196F3',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    marginBottom: 12,
+    backgroundColor: colors.actionInfo,
+    borderRadius: radii.button,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl,
+    marginBottom: spacing.md,
     alignSelf: 'stretch',
   },
   addButtonText: {
-    color: '#fff',
+    color: colors.textOnAction,
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',
   },
   closeButton: {
     alignSelf: 'center',
-    paddingVertical: 12,
+    paddingVertical: spacing.md,
   },
   closeButtonText: {
-    color: '#2196F3',
+    color: colors.actionInfo,
     fontSize: 16,
     fontWeight: '600',
   },

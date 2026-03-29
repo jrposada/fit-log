@@ -1,10 +1,12 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, spacing } from '../theme';
+
 export const styles = StyleSheet.create({
   footer: {
-    paddingHorizontal: 16,
-    paddingVertical: 16,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: '#eee',
+    borderTopColor: colors.borderLight,
   },
 });

@@ -1,14 +1,16 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, spacing } from '../theme';
+
 export const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 12,
+    borderColor: colors.border,
+    borderRadius: radii.md,
+    padding: spacing.md,
     fontSize: 16,
     color: '#000',
-    backgroundColor: '#fff',
+    backgroundColor: colors.cardBackground,
   },
   inputError: {
     borderColor: '#ff3b30',

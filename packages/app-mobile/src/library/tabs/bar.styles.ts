@@ -1,11 +1,13 @@
 import { StyleSheet } from 'react-native';
 
+import { colors } from '../theme';
+
 export const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
-    backgroundColor: '#fff',
+    backgroundColor: colors.cardBackground,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: colors.border,
     paddingTop: 10,
   },
   tab: {
@@ -17,14 +19,14 @@ export const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
   },
   activeTab: {
-    borderBottomColor: '#2196F3',
+    borderBottomColor: colors.actionInfo,
   },
   tabText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#666',
+    color: colors.textSecondary,
   },
   activeTabText: {
-    color: '#2196F3',
+    color: colors.actionInfo,
   },
 });

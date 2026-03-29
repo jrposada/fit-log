@@ -1,22 +1,24 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, spacing } from './theme';
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.cardBackground,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: colors.border,
   },
   cancelButton: {
     fontSize: 16,
-    color: '#007AFF',
+    color: colors.actionPrimary,
   },
   headerTitle: {
     fontSize: 18,
@@ -27,16 +29,16 @@ export const styles = StyleSheet.create({
     width: 60,
   },
   searchContainer: {
-    padding: 16,
-    backgroundColor: '#f5f5f5',
+    padding: spacing.lg,
+    backgroundColor: colors.screenBackground,
   },
   searchInput: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 12,
+    backgroundColor: colors.cardBackground,
+    borderRadius: radii.md,
+    padding: spacing.md,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
   },
   mapContainer: {
     flex: 1,
@@ -47,12 +49,12 @@ export const styles = StyleSheet.create({
   },
   myLocationButton: {
     position: 'absolute',
-    bottom: 16,
-    right: 16,
+    bottom: spacing.lg,
+    right: spacing.lg,
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#fff',
+    backgroundColor: colors.cardBackground,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -65,39 +67,39 @@ export const styles = StyleSheet.create({
     fontSize: 24,
   },
   footer: {
-    padding: 16,
+    padding: spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: '#e0e0e0',
+    borderTopColor: colors.border,
   },
   addressCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
+    backgroundColor: colors.screenBackground,
+    borderRadius: radii.md,
+    padding: spacing.md,
+    marginBottom: spacing.md,
   },
   addressIcon: {
     fontSize: 20,
-    marginRight: 8,
+    marginRight: spacing.sm,
   },
   addressText: {
     flex: 1,
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
   },
   confirmButton: {
-    backgroundColor: '#007AFF',
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: colors.actionPrimary,
+    borderRadius: radii.card,
+    padding: spacing.lg,
     alignItems: 'center',
   },
   confirmButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: colors.disabled,
     opacity: 0.6,
   },
   confirmButtonText: {
-    color: '#fff',
+    color: colors.textOnAction,
     fontSize: 18,
     fontWeight: '600',
   },

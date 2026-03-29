@@ -1,23 +1,25 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, shadows, spacing } from './theme';
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.screenBackground,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#fff',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+    backgroundColor: colors.cardBackground,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: colors.border,
   },
   cancelButton: {
     fontSize: 16,
-    color: '#007AFF',
+    color: colors.actionPrimary,
   },
   headerTitle: {
     fontSize: 18,
@@ -42,20 +44,16 @@ export const styles = StyleSheet.create({
   selectionButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 16,
+    backgroundColor: colors.cardBackground,
+    borderRadius: radii.card,
+    padding: spacing.xl,
+    marginBottom: spacing.lg,
     width: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 2,
+    ...shadows.cardElevated,
   },
   selectionIcon: {
     fontSize: 32,
-    marginRight: 16,
+    marginRight: spacing.lg,
   },
   selectionButtonText: {
     fontSize: 18,

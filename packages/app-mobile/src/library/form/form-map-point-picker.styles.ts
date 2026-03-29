@@ -1,53 +1,55 @@
 import { StyleSheet } from 'react-native';
 
+import { colors, radii, spacing } from '../theme';
+
 export const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: '500',
     color: '#000',
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   mapPlaceholder: {
     borderWidth: 2,
-    borderColor: '#e0e0e0',
+    borderColor: colors.border,
     borderStyle: 'dashed',
-    borderRadius: 12,
+    borderRadius: radii.card,
     padding: 32,
     alignItems: 'center',
     backgroundColor: '#fafafa',
   },
   mapPlaceholderIcon: {
     fontSize: 48,
-    marginBottom: 8,
+    marginBottom: spacing.sm,
   },
   mapPlaceholderText: {
     fontSize: 16,
-    color: '#666',
+    color: colors.textSecondary,
   },
   locationCard: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 12,
-    padding: 16,
-    backgroundColor: '#fff',
+    borderColor: colors.border,
+    borderRadius: radii.card,
+    padding: spacing.lg,
+    backgroundColor: colors.cardBackground,
   },
   locationCardContent: {
     flex: 1,
   },
   locationAddress: {
     fontSize: 16,
-    color: '#007AFF',
-    marginBottom: 4,
+    color: colors.actionPrimary,
+    marginBottom: spacing.xs,
   },
   locationCoords: {
     fontSize: 12,
-    color: '#999',
+    color: colors.textDisabled,
   },
   changeButton: {
     fontSize: 16,
-    color: '#007AFF',
+    color: colors.actionPrimary,
     fontWeight: '500',
   },
 });
