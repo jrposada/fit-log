@@ -20,6 +20,9 @@ export const colors = {
   actionInfo: '#2196F3',
 
   disabled: '#ccc',
+
+  headerBackground: '#4CAF50',
+  headerText: '#fff',
 } as const;
 
 export const spacing = {
