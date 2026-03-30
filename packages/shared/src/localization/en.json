@@ -8,6 +8,7 @@
   "auth.signInWithApple": "Sign in with Apple",
   "auth.signInWithEmail": "Sign in with Email",
   "auth.signInWithGoogle": "Sign in with Google",
+  "auth.appName": "FIT Log",
   "auth.tagline": "Track your climbing progress",
   "actions.cancel": "Cancel",
   "actions.clear": "Clear",
