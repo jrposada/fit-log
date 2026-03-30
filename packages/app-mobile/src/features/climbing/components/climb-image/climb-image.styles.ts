@@ -20,5 +20,16 @@ export const styles = StyleSheet.create({
     borderColor: colors.cardBackground,
     marginLeft: -12,
     marginTop: -12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  holdEditable: {
+    backgroundColor: 'rgba(255, 0, 0, 0.7)',
+  },
+  holdRemoveIndicator: {
+    color: colors.cardBackground,
+    fontSize: 10,
+    fontWeight: 'bold',
+    lineHeight: 12,
   },
 });
