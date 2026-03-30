@@ -86,8 +86,8 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
               {t('climbing.sectors_count', { count: numSectors })}
             </Text>
             <Button
-              title={t('actions.edit')}
-              icon="✏️"
+              title={t('actions.view')}
+              icon="👁️"
               variant="ghost"
               size="sm"
               onPress={handleEditLocation}
