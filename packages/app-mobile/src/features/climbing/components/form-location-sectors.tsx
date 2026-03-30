@@ -14,14 +14,19 @@ import {
 
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
+import { useFormReadonly } from '../../../library/form/use-form-readonly';
 import ImagePicker, { ImagePickerProps } from '../../../library/image-picker';
 import { FormData } from './form-location';
 import { styles } from './form-location-sectors.styles';
 
 const FormLocationSectors: FunctionComponent = () => {
   const { t } = useTranslation();
+  const isReadonly = useFormReadonly();
   const { control, setValue } = useFormContext<FormData>();
-  const sectors = useWatch({ control, name: 'sectors' }) || [];
+  const allSectors = useWatch({ control, name: 'sectors' }) || [];
+  const sectors = isReadonly
+    ? allSectors.filter((s) => s._status !== 'deleted')
+    : allSectors;
 
   const [showSectorPicker, setShowSectorPicker] = useState(false);
   const [editingSectorIndex, setEditingSectorIndex] = useState<number | null>(
@@ -111,19 +116,27 @@ const FormLocationSectors: FunctionComponent = () => {
     }
   };
 
+  if (isReadonly && sectors.length === 0) {
+    return null;
+  }
+
   return (
     <>
       <Text style={styles.sectionTitle}>
-        {t('climbing.sectors_walls_optional')}
+        {isReadonly
+          ? t('climbing.sectors')
+          : t('climbing.sectors_walls_optional')}
       </Text>
-      <Text style={styles.sectionDescription}>
-        {t('climbing.sectors_description')}
-      </Text>
+      {!isReadonly && (
+        <Text style={styles.sectionDescription}>
+          {t('climbing.sectors_description')}
+        </Text>
+      )}
 
       {sectors.length > 0 && (
         <View style={styles.sectorsList}>
           {sectors.map((sector, index) => {
-            const actualIndex = sectors.indexOf(sector);
+            const actualIndex = allSectors.indexOf(sector);
             return (
               <View
                 key={sector.id || sector._tempId || index}
@@ -172,59 +185,70 @@ const FormLocationSectors: FunctionComponent = () => {
                     </ScrollView>
                   </View>
                 )}
-                <View style={styles.sectorActions}>
-                  <Pressable
-                    style={styles.actionButton}
-                    onPress={() => handleEditSector(actualIndex)}
-                  >
-                    <Text style={styles.actionButtonText}>
-                      {t('climbing.edit')}
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    style={[styles.actionButton, styles.deleteButton]}
-                    onPress={() => handleDeleteSector(actualIndex)}
-                  >
-                    <Text
-                      style={[styles.actionButtonText, styles.deleteButtonText]}
+                {!isReadonly && (
+                  <View style={styles.sectorActions}>
+                    <Pressable
+                      style={styles.actionButton}
+                      onPress={() => handleEditSector(actualIndex)}
                     >
-                      {t('climbing.delete')}
-                    </Text>
-                  </Pressable>
-                </View>
+                      <Text style={styles.actionButtonText}>
+                        {t('climbing.edit')}
+                      </Text>
+                    </Pressable>
+                    <Pressable
+                      style={[styles.actionButton, styles.deleteButton]}
+                      onPress={() => handleDeleteSector(actualIndex)}
+                    >
+                      <Text
+                        style={[
+                          styles.actionButtonText,
+                          styles.deleteButtonText,
+                        ]}
+                      >
+                        {t('climbing.delete')}
+                      </Text>
+                    </Pressable>
+                  </View>
+                )}
               </View>
             );
           })}
         </View>
       )}
 
-      <Pressable style={styles.addSectorButton} onPress={handleAddSector}>
-        <Text style={styles.addSectorButtonText}>
-          {sectors.length > 0
-            ? t('climbing.add_another_sector')
-            : t('climbing.add_first_sector')}
-        </Text>
-      </Pressable>
+      {!isReadonly && (
+        <Pressable style={styles.addSectorButton} onPress={handleAddSector}>
+          <Text style={styles.addSectorButtonText}>
+            {sectors.length > 0
+              ? t('climbing.add_another_sector')
+              : t('climbing.add_first_sector')}
+          </Text>
+        </Pressable>
+      )}
 
-      <ImagePicker
-        visible={showSectorPicker}
-        onImageSelected={handleImagePick}
-        onCancel={() => {
-          setShowSectorPicker(false);
-          setEditingSectorIndex(null);
-        }}
-        title={'Add Image'}
-      />
+      {!isReadonly && (
+        <>
+          <ImagePicker
+            visible={showSectorPicker}
+            onImageSelected={handleImagePick}
+            onCancel={() => {
+              setShowSectorPicker(false);
+              setEditingSectorIndex(null);
+            }}
+            title={'Add Image'}
+          />
 
-      {imagePost.isPending && (
-        <View style={styles.uploadingOverlay}>
-          <View style={styles.uploadingContainer}>
-            <ActivityIndicator size="large" color="#007AFF" />
-            <Text style={styles.uploadingText}>
-              {t('climbing.uploading_image')}
-            </Text>
-          </View>
-        </View>
+          {imagePost.isPending && (
+            <View style={styles.uploadingOverlay}>
+              <View style={styles.uploadingContainer}>
+                <ActivityIndicator size="large" color="#007AFF" />
+                <Text style={styles.uploadingText}>
+                  {t('climbing.uploading_image')}
+                </Text>
+              </View>
+            </View>
+          )}
+        </>
       )}
     </>
   );
