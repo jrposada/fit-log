@@ -15,6 +15,7 @@ import { styles } from './screen.styles';
 
 export interface ScreenProps {
   footer?: ReactNode;
+  footerStyle?: StyleProp<ViewStyle>;
   keyboardAvoiding?: boolean;
   scrollViewProps?: ScrollViewProps;
   contentStyle?: StyleProp<ViewStyle>;
@@ -24,6 +25,7 @@ export interface ScreenProps {
 const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
   children,
   footer,
+  footerStyle,
   keyboardAvoiding = false,
   scrollViewProps,
   contentStyle,
@@ -38,7 +40,11 @@ const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
       </ScrollView>
       {footer && (
         <View
-          style={[styles.footer, { paddingBottom: spacing.lg + insets.bottom }]}
+          style={[
+            styles.footer,
+            { paddingBottom: spacing.lg + insets.bottom },
+            footerStyle,
+          ]}
         >
           {footer}
         </View>
