@@ -2,20 +2,31 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLocationsById } from '@shared-react/api/locations/use-locations-by-id';
+import { useLocationsDelete } from '@shared-react/api/locations/use-locations-delete';
 import { useLocationsPut } from '@shared-react/api/locations/use-locations-put';
 import { useSectorsBatchDelete } from '@shared-react/api/sectors/use-sectors-batch-delete';
 import { useSectorsBatchPut } from '@shared-react/api/sectors/use-sectors-batch-put';
-import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
+import {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Alert } from 'react-native';
+import { Alert, Linking, Platform, Text, View } from 'react-native';
 
 import Button from '../../../library/button';
+import EmptyState from '../../../library/empty-state';
 import FormMapPointPicker from '../../../library/form/form-map-point-picker';
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
+import IconButton from '../../../library/icon-button';
+import LoadingState from '../../../library/loading-state';
 import Screen from '../../../library/screen';
 import Section from '../../../library/section';
+import { colors } from '../../../library/theme';
 import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
 import type { FormData } from '../components/form-location';
@@ -36,7 +47,9 @@ const LocationDetailScreen: FunctionComponent = () => {
   const route = useRoute<LocationDetailRouteProp>();
 
   const locationId = route.params?.locationId;
-  const isEditMode = !!locationId;
+  const isCreateMode = !locationId;
+
+  const [isEditMode, setIsEditMode] = useState(isCreateMode);
   const initializedRef = useRef(false);
 
   const methods = useForm<FormData>({
@@ -59,7 +72,16 @@ const LocationDetailScreen: FunctionComponent = () => {
 
   const locationsPut = useLocationsPut({
     onSuccess: (data) => {
-      navigation.navigate('ClimbingMain', { newLocationId: data.id });
+      if (isCreateMode) {
+        navigation.navigate('ClimbingMain', { newLocationId: data.id });
+      } else {
+        setIsEditMode(false);
+        initializedRef.current = false;
+        Alert.alert(
+          t('climbing.location_updated_title'),
+          t('climbing.location_updated_message')
+        );
+      }
     },
     onError: (error) => {
       Alert.alert(
@@ -82,6 +104,19 @@ const LocationDetailScreen: FunctionComponent = () => {
         t('climbing.error'),
         t('climbing.failed_delete_sectors', { error })
       );
+    },
+  });
+
+  const deleteLocation = useLocationsDelete({
+    onSuccess: () => {
+      Alert.alert(
+        t('climbing.location_deleted_title'),
+        t('climbing.location_deleted_message'),
+        [{ text: t('actions.ok'), onPress: () => navigation.goBack() }]
+      );
+    },
+    onError: (error) => {
+      Alert.alert(t('climbing.error'), error);
     },
   });
 
@@ -147,7 +182,7 @@ const LocationDetailScreen: FunctionComponent = () => {
       }
 
       const locationData = {
-        id: isEditMode ? locationId : undefined,
+        id: isCreateMode ? undefined : locationId,
         name: data.name,
         description: data.description,
         latitude: data.latitude,
@@ -166,7 +201,7 @@ const LocationDetailScreen: FunctionComponent = () => {
 
   // Pre-fill form when editing existing location (only once)
   useEffect(() => {
-    if (existingLocation && isEditMode && !initializedRef.current) {
+    if (existingLocation && !isCreateMode && !initializedRef.current) {
       reset({
         id: existingLocation.id,
         name: existingLocation.name,
@@ -178,46 +213,195 @@ const LocationDetailScreen: FunctionComponent = () => {
       });
       initializedRef.current = true;
     }
-  }, [existingLocation, isEditMode, reset]);
+  }, [existingLocation, isCreateMode, reset]);
+
+  const handleEnterEditMode = useCallback(() => {
+    if (existingLocation) {
+      reset({
+        id: existingLocation.id,
+        name: existingLocation.name,
+        description: existingLocation.description,
+        latitude: existingLocation.latitude,
+        longitude: existingLocation.longitude,
+        googleMapsId: existingLocation.googleMapsId,
+        sectors: existingLocation.sectors,
+      });
+    }
+    setIsEditMode(true);
+  }, [existingLocation, reset]);
+
+  const handleCancelEdit = useCallback(() => {
+    if (isDirty) {
+      Alert.alert(
+        t('climbing.unsaved_changes'),
+        t('climbing.discard_changes_message'),
+        [
+          { text: t('climbing.cancel'), style: 'cancel' },
+          {
+            text: t('climbing.discard'),
+            style: 'destructive',
+            onPress: () => {
+              reset();
+              setIsEditMode(false);
+            },
+          },
+        ]
+      );
+    } else {
+      setIsEditMode(false);
+    }
+  }, [isDirty, reset, t]);
 
   const handleBackPress = useCallback(() => {
-    if (!isDirty) {
+    if (isEditMode && isDirty) {
+      Alert.alert(
+        t('climbing.unsaved_changes'),
+        t('climbing.discard_changes_message'),
+        [
+          { text: t('climbing.cancel'), style: 'cancel' },
+          {
+            text: t('climbing.discard'),
+            style: 'destructive',
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      );
+    } else {
       navigation.goBack();
-      return;
     }
+  }, [navigation, isEditMode, isDirty, t]);
 
+  const handleDelete = () => {
+    if (!locationId) return;
     Alert.alert(
-      t('climbing.unsaved_changes'),
-      t('climbing.discard_changes_message'),
+      t('climbing.delete_location_title'),
+      t('climbing.delete_location_message'),
       [
-        { text: t('climbing.cancel'), style: 'cancel' },
+        { text: t('actions.cancel'), style: 'cancel' },
         {
-          text: t('climbing.discard'),
+          text: t('actions.delete'),
           style: 'destructive',
-          onPress: () => navigation.goBack(),
+          onPress: () => deleteLocation.mutate({ id: locationId }),
         },
       ]
     );
-  }, [navigation, isDirty, t]);
+  };
 
+  const handleOpenMap = useCallback(() => {
+    if (!existingLocation?.latitude || !existingLocation?.longitude) return;
+    const { latitude, longitude } = existingLocation;
+    const label = encodeURIComponent(existingLocation.name || 'Location');
+    const url =
+      Platform.OS === 'ios'
+        ? `maps:0,0?q=${label}@${latitude},${longitude}`
+        : `geo:0,0?q=${latitude},${longitude}(${label})`;
+    Linking.openURL(url);
+  }, [existingLocation]);
+
+  // Header
   useEffect(() => {
     navigation.setOptions({
       gestureEnabled: !isDirty,
       header: () => (
         <Header
           title={
-            isEditMode
-              ? t('climbing.update_location_title')
-              : t('climbing.create_location_title')
+            isCreateMode
+              ? t('climbing.create_location_title')
+              : existingLocation?.name
           }
+          action={
+            !isCreateMode ? (
+              <View style={{ flexDirection: 'row', gap: 8 }}>
+                {existingLocation?.latitude && existingLocation?.longitude && (
+                  <IconButton icon="📍" onPress={handleOpenMap} />
+                )}
+                <IconButton
+                  icon="✏️"
+                  onPress={isEditMode ? handleCancelEdit : handleEnterEditMode}
+                  style={
+                    isEditMode
+                      ? {
+                          backgroundColor: colors.actionPrimary,
+                          borderRadius: 8,
+                        }
+                      : undefined
+                  }
+                />
+              </View>
+            ) : undefined
+          }
+          loading={isLoadingLocation}
           mode="modal"
           back
           onBackPress={handleBackPress}
         />
       ),
     });
-  }, [navigation, isDirty, isEditMode, t, handleBackPress]);
+  }, [
+    navigation,
+    isCreateMode,
+    isEditMode,
+    isDirty,
+    existingLocation,
+    isLoadingLocation,
+    t,
+    handleBackPress,
+    handleCancelEdit,
+    handleEnterEditMode,
+    handleOpenMap,
+  ]);
 
+  // Loading state for detail mode
+  if (!isCreateMode && isLoadingLocation) {
+    return (
+      <LoadingState
+        isLoading
+        style={{ backgroundColor: colors.screenBackground }}
+      />
+    );
+  }
+
+  if (!isCreateMode && !existingLocation) {
+    return <EmptyState message={t('climbing.location_not_found')} />;
+  }
+
+  // View mode (non-edit, existing location)
+  if (!isCreateMode && !isEditMode && existingLocation) {
+    return (
+      <Screen
+        footer={
+          <Button
+            variant="destructive"
+            title={
+              deleteLocation.isPending
+                ? t('climbing.deleting')
+                : t('climbing.delete_location_button')
+            }
+            onPress={handleDelete}
+            disabled={deleteLocation.isPending}
+          />
+        }
+      >
+        {existingLocation.description && (
+          <Section spacing="lg" title={t('climbing.description')}>
+            <Text>{existingLocation.description}</Text>
+          </Section>
+        )}
+
+        {existingLocation.sectors.length > 0 && (
+          <Section spacing="lg" title={t('climbing.sectors')}>
+            {existingLocation.sectors.map((sector) => (
+              <Text key={sector.id ?? sector.name} style={{ marginBottom: 4 }}>
+                {sector.name}
+              </Text>
+            ))}
+          </Section>
+        )}
+      </Screen>
+    );
+  }
+
+  // Edit mode (create or edit existing)
   const isSubmitDisabled =
     !isValid || !isDirty || locationsPut.isPending || isLoadingLocation;
 
@@ -227,20 +411,40 @@ const LocationDetailScreen: FunctionComponent = () => {
         keyboardAvoiding
         scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
         footer={
-          <Button
-            variant="primary"
-            title={
-              isLoadingLocation
-                ? t('climbing.loading')
-                : locationsPut.isPending
-                  ? t('climbing.saving')
-                  : isEditMode
-                    ? t('climbing.update_location')
+          isCreateMode ? (
+            <Button
+              variant="primary"
+              title={
+                isLoadingLocation
+                  ? t('climbing.loading')
+                  : locationsPut.isPending
+                    ? t('climbing.saving')
                     : t('climbing.create_location')
-            }
-            onPress={handleSubmit(onSubmit)}
-            disabled={isSubmitDisabled}
-          />
+              }
+              onPress={handleSubmit(onSubmit)}
+              disabled={isSubmitDisabled}
+            />
+          ) : (
+            <View style={{ flexDirection: 'row', gap: 12 }}>
+              <Button
+                variant="destructive"
+                title={t('actions.cancel')}
+                onPress={handleCancelEdit}
+                style={{ flex: 1 }}
+              />
+              <Button
+                variant="primary"
+                title={
+                  locationsPut.isPending
+                    ? t('climbing.saving')
+                    : t('actions.save')
+                }
+                onPress={handleSubmit(onSubmit)}
+                disabled={isSubmitDisabled}
+                style={{ flex: 1 }}
+              />
+            </View>
+          )
         }
       >
         <UnsavedBanner
@@ -255,7 +459,7 @@ const LocationDetailScreen: FunctionComponent = () => {
             maxLength={100}
             required
             showCharacterCount
-            autoFocus
+            autoFocus={isCreateMode}
           />
         </Section>
 
