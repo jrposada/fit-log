@@ -47,6 +47,7 @@ const ClimbingStack: FunctionComponent = () => {
         options={{
           header: () => <ClimbDetailHeader />,
           presentation: 'modal',
+          gestureEnabled: true,
         }}
       />
     </Stack.Navigator>
