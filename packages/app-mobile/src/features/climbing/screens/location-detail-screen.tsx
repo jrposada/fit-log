@@ -15,11 +15,12 @@ import {
 } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Alert, Linking, Platform, Text, View } from 'react-native';
+import { Alert, Linking, Platform, View } from 'react-native';
 
 import Button from '../../../library/button';
 import EmptyState from '../../../library/empty-state';
 import FormMapPointPicker from '../../../library/form/form-map-point-picker';
+import { FormReadonlyProvider } from '../../../library/form/form-readonly-context';
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
 import IconButton from '../../../library/icon-button';
@@ -365,127 +366,114 @@ const LocationDetailScreen: FunctionComponent = () => {
     return <EmptyState message={t('climbing.location_not_found')} />;
   }
 
-  // View mode (non-edit, existing location)
-  if (!isCreateMode && !isEditMode && existingLocation) {
-    return (
-      <Screen
-        footer={
-          <Button
-            variant="destructive"
-            title={
-              deleteLocation.isPending
-                ? t('climbing.deleting')
-                : t('climbing.delete_location_button')
-            }
-            onPress={handleDelete}
-            disabled={deleteLocation.isPending}
-          />
-        }
-      >
-        {existingLocation.description && (
-          <Section spacing="lg" title={t('climbing.description')}>
-            <Text>{existingLocation.description}</Text>
-          </Section>
-        )}
-
-        {existingLocation.sectors.length > 0 && (
-          <Section spacing="lg" title={t('climbing.sectors')}>
-            {existingLocation.sectors.map((sector) => (
-              <Text key={sector.id ?? sector.name} style={{ marginBottom: 4 }}>
-                {sector.name}
-              </Text>
-            ))}
-          </Section>
-        )}
-      </Screen>
-    );
-  }
-
-  // Edit mode (create or edit existing)
   const isSubmitDisabled =
     !isValid || !isDirty || locationsPut.isPending || isLoadingLocation;
 
+  const footer = (() => {
+    if (!isEditMode) {
+      return undefined;
+    }
+    if (isCreateMode) {
+      return (
+        <Button
+          variant="primary"
+          title={
+            isLoadingLocation
+              ? t('climbing.loading')
+              : locationsPut.isPending
+                ? t('climbing.saving')
+                : t('climbing.create_location')
+          }
+          onPress={handleSubmit(onSubmit)}
+          disabled={isSubmitDisabled}
+        />
+      );
+    }
+    return (
+      <View style={{ gap: 12 }}>
+        <View style={{ flexDirection: 'row', gap: 12 }}>
+          <Button
+            variant="outline"
+            title={t('actions.cancel')}
+            onPress={handleCancelEdit}
+            style={{ flex: 1 }}
+          />
+          <Button
+            variant="primary"
+            title={
+              locationsPut.isPending ? t('climbing.saving') : t('actions.save')
+            }
+            onPress={handleSubmit(onSubmit)}
+            disabled={isSubmitDisabled}
+            style={{ flex: 1 }}
+          />
+        </View>
+        <Button
+          variant="destructive"
+          title={
+            deleteLocation.isPending
+              ? t('climbing.deleting')
+              : t('climbing.delete_location_button')
+          }
+          onPress={handleDelete}
+          disabled={deleteLocation.isPending}
+        />
+      </View>
+    );
+  })();
+
   return (
     <FormProvider {...methods}>
-      <Screen
-        keyboardAvoiding
-        scrollViewProps={{ keyboardShouldPersistTaps: 'handled' }}
-        footer={
-          isCreateMode ? (
-            <Button
-              variant="primary"
-              title={
-                isLoadingLocation
-                  ? t('climbing.loading')
-                  : locationsPut.isPending
-                    ? t('climbing.saving')
-                    : t('climbing.create_location')
-              }
-              onPress={handleSubmit(onSubmit)}
-              disabled={isSubmitDisabled}
+      <FormReadonlyProvider readonly={!isEditMode}>
+        <Screen
+          keyboardAvoiding={isEditMode}
+          scrollViewProps={
+            isEditMode ? { keyboardShouldPersistTaps: 'handled' } : undefined
+          }
+          footer={footer}
+        >
+          {isEditMode && (
+            <UnsavedBanner
+              isDirty={isDirty}
+              message={t('climbing.unsaved_changes_banner')}
             />
-          ) : (
-            <View style={{ flexDirection: 'row', gap: 12 }}>
-              <Button
-                variant="destructive"
-                title={t('actions.cancel')}
-                onPress={handleCancelEdit}
-                style={{ flex: 1 }}
-              />
-              <Button
-                variant="primary"
-                title={
-                  locationsPut.isPending
-                    ? t('climbing.saving')
-                    : t('actions.save')
-                }
-                onPress={handleSubmit(onSubmit)}
-                disabled={isSubmitDisabled}
-                style={{ flex: 1 }}
-              />
-            </View>
-          )
-        }
-      >
-        <UnsavedBanner
-          isDirty={isDirty}
-          message={t('climbing.unsaved_changes_banner')}
-        />
-        <Section spacing="lg">
-          <FormTextInput
-            name="name"
-            label={t('climbing.location_name')}
-            placeholder={t('climbing.enter_location_name')}
-            maxLength={100}
-            required
-            showCharacterCount
-            autoFocus={isCreateMode}
-          />
-        </Section>
+          )}
+          <Section spacing="lg">
+            <FormTextInput
+              name="name"
+              label={t('climbing.location_name')}
+              placeholder={t('climbing.enter_location_name')}
+              maxLength={100}
+              required
+              showCharacterCount
+              autoFocus={isCreateMode}
+            />
+          </Section>
 
-        <Section spacing="lg">
-          <FormTextArea
-            name="description"
-            label={t('climbing.description')}
-            placeholder={t('climbing.add_description')}
-            maxLength={500}
-            numberOfLines={4}
-          />
-        </Section>
+          <Section spacing="lg">
+            <FormTextArea
+              name="description"
+              label={t('climbing.description')}
+              placeholder={t('climbing.add_description')}
+              maxLength={500}
+              numberOfLines={4}
+            />
+          </Section>
 
-        <Section spacing="lg">
-          <FormMapPointPicker
-            latitudeName="latitude"
-            longitudeName="longitude"
-            googleMapsIdName="googleMapsId"
-            label={t('climbing.location')}
-          />
-        </Section>
+          <Section spacing="lg">
+            <FormMapPointPicker
+              latitudeName="latitude"
+              longitudeName="longitude"
+              googleMapsIdName="googleMapsId"
+              label={t('climbing.location')}
+            />
+          </Section>
 
-        <Section spacing="lg">
-          <FormLocationSectors />
-        </Section>
-      </Screen>
+          <Section spacing="lg">
+            <FormLocationSectors />
+          </Section>
+        </Screen>
+      </FormReadonlyProvider>
     </FormProvider>
   );
 };
