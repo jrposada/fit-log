@@ -32,6 +32,7 @@ import { z } from 'zod';
 
 import Button from '../../../library/button';
 import EmptyState from '../../../library/empty-state';
+import { FormReadonlyProvider } from '../../../library/form/form-readonly-context';
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
 import IconButton from '../../../library/icon-button';
@@ -429,109 +430,225 @@ const ClimbDetailScreen: FunctionComponent = () => {
     return <EmptyState message={t('climbing.climb_not_found')} />;
   }
 
-  // View mode (non-edit, existing climb)
-  if (!isCreateMode && !isEditMode && climb) {
-    return (
-      <Screen
-        scrollViewProps={{ onLayout: handleScrollLayout }}
-        footer={
-          <Button
-            variant="destructive"
-            title={
-              deleteClimb.isPending
-                ? t('climbing.deleting')
-                : t('climbing.delete_climb_button')
-            }
-            onPress={handleDelete}
-            disabled={deleteClimb.isPending}
-          />
-        }
-      >
-        <ClimbImage
-          source={{ uri: climb.image.imageUrl }}
-          holds={climb.holds}
-          style={{ height: scrollHeight }}
-        />
-
-        {climb.description && (
-          <Section spacing="lg" title={t('climbing.description')}>
-            <Text>{climb.description}</Text>
-          </Section>
-        )}
-      </Screen>
-    );
-  }
-
-  // Edit mode (create or edit existing)
   const selectedSector = sectors.find((s) => s.id === watchedSector);
   const isSubmitDisabled =
     !isValid || !isDirty || climbsPut.isPending || imagesPost.isPending;
 
+  const footer = (() => {
+    if (!isEditMode) {
+      return undefined;
+    }
+    if (isCreateMode) {
+      return (
+        <Button
+          variant="primary"
+          title={
+            climbsPut.isPending
+              ? t('climbing.saving')
+              : t('climbing.create_climb_title')
+          }
+          onPress={handleSubmit(onSubmit)}
+          disabled={isSubmitDisabled}
+        />
+      );
+    }
+    return (
+      <View style={{ gap: 12 }}>
+        <View style={{ flexDirection: 'row', gap: 12 }}>
+          <Button
+            variant="outline"
+            title={t('actions.cancel')}
+            onPress={handleCancelEdit}
+            style={{ flex: 1 }}
+          />
+          <Button
+            variant="primary"
+            title={
+              climbsPut.isPending ? t('climbing.saving') : t('actions.save')
+            }
+            onPress={handleSubmit(onSubmit)}
+            disabled={isSubmitDisabled}
+            style={{ flex: 1 }}
+          />
+        </View>
+        <Button
+          variant="destructive"
+          title={
+            deleteClimb.isPending
+              ? t('climbing.deleting')
+              : t('climbing.delete_climb_button')
+          }
+          onPress={handleDelete}
+          disabled={deleteClimb.isPending}
+        />
+      </View>
+    );
+  })();
+
   return (
     <FormProvider {...methods}>
-      <Screen
-        keyboardAvoiding
-        scrollViewProps={{
-          keyboardShouldPersistTaps: 'handled',
-          onLayout: handleScrollLayout,
-        }}
-        footer={
-          isCreateMode ? (
-            <Button
-              variant="primary"
-              title={
-                climbsPut.isPending
-                  ? t('climbing.saving')
-                  : t('climbing.create_climb_title')
-              }
-              onPress={handleSubmit(onSubmit)}
-              disabled={isSubmitDisabled}
+      <FormReadonlyProvider readonly={!isEditMode}>
+        <Screen
+          keyboardAvoiding={isEditMode}
+          scrollViewProps={{
+            ...(isEditMode && { keyboardShouldPersistTaps: 'handled' }),
+            onLayout: handleScrollLayout,
+          }}
+          footer={footer}
+        >
+          {isEditMode && (
+            <UnsavedBanner
+              isDirty={isDirty}
+              message={t('climbing.unsaved_changes_banner')}
             />
-          ) : (
-            <View style={{ flexDirection: 'row', gap: 12 }}>
-              <Button
-                variant="destructive"
-                title={t('actions.cancel')}
-                onPress={handleCancelEdit}
-                style={{ flex: 1 }}
-              />
-              <Button
-                variant="primary"
-                title={
-                  climbsPut.isPending ? t('climbing.saving') : t('actions.save')
-                }
-                onPress={handleSubmit(onSubmit)}
-                disabled={isSubmitDisabled}
-                style={{ flex: 1 }}
-              />
-            </View>
-          )
-        }
-      >
-        <UnsavedBanner
-          isDirty={isDirty}
-          message={t('climbing.unsaved_changes_banner')}
-        />
+          )}
 
-        {isCreateMode && (
-          <>
-            <Section spacing="lg">
-              <LoadingState isLoading={isLoadingLocation}>
-                <Text style={{ fontWeight: '600', marginBottom: 8 }}>
-                  {t('climbing.sector')}
-                </Text>
-                <Select
-                  options={sectors.map((s) => s.name)}
-                  value={selectedSector?.name || ''}
-                  onChange={handleSectorChange}
-                  placeholder={t('climbing.select_sector')}
-                  searchPlaceholder={t('climbing.search_sector')}
-                  closeButtonLabel={t('actions.close')}
-                  emptyStateMessage={t('climbing.no_sectors_found')}
+          {/* Create-only fields: sector, name, grade, image picker */}
+          {isCreateMode && (
+            <>
+              <Section spacing="lg">
+                <LoadingState isLoading={isLoadingLocation}>
+                  <Text style={{ fontWeight: '600', marginBottom: 8 }}>
+                    {t('climbing.sector')}
+                  </Text>
+                  <Select
+                    options={sectors.map((s) => s.name)}
+                    value={selectedSector?.name || ''}
+                    onChange={handleSectorChange}
+                    placeholder={t('climbing.select_sector')}
+                    searchPlaceholder={t('climbing.search_sector')}
+                    closeButtonLabel={t('actions.close')}
+                    emptyStateMessage={t('climbing.no_sectors_found')}
+                  />
+                </LoadingState>
+              </Section>
+
+              <Section spacing="lg">
+                <FormTextInput
+                  name="name"
+                  label={t('climbing.climb_name')}
+                  placeholder={t('climbing.enter_climb_name')}
+                  maxLength={100}
+                  required
+                  showCharacterCount
                 />
-              </LoadingState>
-            </Section>
+              </Section>
 
+              <Section spacing="lg">
+                <Text style={{ fontWeight: '600', marginBottom: 8 }}>
+                  {t('climbing.grade')}
+                </Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ gap: 8 }}
+                >
+                  {GRADE_OPTIONS.map((grade) => (
+                    <TouchableOpacity
+                      key={grade}
+                      onPress={() => handleGradeSelect(grade)}
+                      style={{
+                        paddingHorizontal: 12,
+                        paddingVertical: 8,
+                        borderRadius: 16,
+                        backgroundColor:
+                          watchedGrade === grade
+                            ? colors.actionPrimary
+                            : colors.cardBackground,
+                        borderWidth: 1,
+                        borderColor:
+                          watchedGrade === grade
+                            ? colors.actionPrimary
+                            : colors.border,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color:
+                            watchedGrade === grade
+                              ? colors.cardBackground
+                              : colors.textPrimary,
+                          fontWeight: watchedGrade === grade ? '600' : '400',
+                        }}
+                      >
+                        {grade}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              </Section>
+
+              <Section spacing="lg">
+                <Text style={{ fontWeight: '600', marginBottom: 8 }}>
+                  {t('climbing.select_image')}
+                </Text>
+                {watchedImage && imageUri ? (
+                  <View>
+                    <ClimbImage
+                      source={{ uri: imageUri }}
+                      holds={watchedHolds}
+                      style={{ height: scrollHeight * 0.6 }}
+                      editable
+                      onHoldAdd={handleHoldAdd}
+                      onHoldRemove={handleHoldRemove}
+                    />
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        marginTop: 8,
+                        color: colors.textSecondary,
+                        fontSize: 13,
+                      }}
+                    >
+                      {t('climbing.mark_holds_hint')}
+                    </Text>
+                  </View>
+                ) : (
+                  <Button
+                    variant="primary"
+                    title={
+                      imagesPost.isPending
+                        ? t('climbing.uploading_image')
+                        : t('climbing.select_image')
+                    }
+                    onPress={() => setImagePickerVisible(true)}
+                    disabled={imagesPost.isPending}
+                  />
+                )}
+              </Section>
+            </>
+          )}
+
+          {/* Existing climb: image */}
+          {!isCreateMode && watchedImage && imageUri && (
+            <View>
+              <ClimbImage
+                source={{ uri: imageUri }}
+                holds={watchedHolds}
+                style={{
+                  height: isEditMode ? scrollHeight * 0.6 : scrollHeight,
+                }}
+                editable={isEditMode}
+                onHoldAdd={handleHoldAdd}
+                onHoldRemove={handleHoldRemove}
+              />
+              {isEditMode && (
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    marginTop: 8,
+                    color: colors.textSecondary,
+                    fontSize: 13,
+                  }}
+                >
+                  {t('climbing.mark_holds_hint')}
+                </Text>
+              )}
+            </View>
+          )}
+
+          {/* Existing climb: name */}
+          {!isCreateMode && (
             <Section spacing="lg">
               <FormTextInput
                 name="name"
@@ -542,145 +659,29 @@ const ClimbDetailScreen: FunctionComponent = () => {
                 showCharacterCount
               />
             </Section>
+          )}
 
-            <Section spacing="lg">
-              <Text style={{ fontWeight: '600', marginBottom: 8 }}>
-                {t('climbing.grade')}
-              </Text>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ gap: 8 }}
-              >
-                {GRADE_OPTIONS.map((grade) => (
-                  <TouchableOpacity
-                    key={grade}
-                    onPress={() => handleGradeSelect(grade)}
-                    style={{
-                      paddingHorizontal: 12,
-                      paddingVertical: 8,
-                      borderRadius: 16,
-                      backgroundColor:
-                        watchedGrade === grade
-                          ? colors.actionPrimary
-                          : colors.cardBackground,
-                      borderWidth: 1,
-                      borderColor:
-                        watchedGrade === grade
-                          ? colors.actionPrimary
-                          : colors.border,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color:
-                          watchedGrade === grade
-                            ? colors.cardBackground
-                            : colors.textPrimary,
-                        fontWeight: watchedGrade === grade ? '600' : '400',
-                      }}
-                    >
-                      {grade}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </Section>
-
-            <Section spacing="lg">
-              <Text style={{ fontWeight: '600', marginBottom: 8 }}>
-                {t('climbing.select_image')}
-              </Text>
-              {watchedImage && imageUri ? (
-                <View>
-                  <ClimbImage
-                    source={{ uri: imageUri }}
-                    holds={watchedHolds}
-                    style={{ height: scrollHeight * 0.6 }}
-                    editable
-                    onHoldAdd={handleHoldAdd}
-                    onHoldRemove={handleHoldRemove}
-                  />
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      marginTop: 8,
-                      color: colors.textSecondary,
-                      fontSize: 13,
-                    }}
-                  >
-                    {t('climbing.mark_holds_hint')}
-                  </Text>
-                </View>
-              ) : (
-                <Button
-                  variant="primary"
-                  title={
-                    imagesPost.isPending
-                      ? t('climbing.uploading_image')
-                      : t('climbing.select_image')
-                  }
-                  onPress={() => setImagePickerVisible(true)}
-                  disabled={imagesPost.isPending}
-                />
-              )}
-            </Section>
-          </>
-        )}
-
-        {!isCreateMode && (
+          {/* Shared: description */}
           <Section spacing="lg">
-            <FormTextInput
-              name="name"
-              label={t('climbing.climb_name')}
-              placeholder={t('climbing.enter_climb_name')}
-              maxLength={100}
-              required
-              showCharacterCount
+            <FormTextArea
+              name="description"
+              label={t('climbing.description')}
+              placeholder={t('climbing.add_description')}
+              maxLength={500}
+              numberOfLines={4}
             />
           </Section>
-        )}
 
-        {!isCreateMode && watchedImage && imageUri && (
-          <View>
-            <ClimbImage
-              source={{ uri: imageUri }}
-              holds={watchedHolds}
-              style={{ height: scrollHeight * 0.6 }}
-              editable
-              onHoldAdd={handleHoldAdd}
-              onHoldRemove={handleHoldRemove}
+          {isEditMode && (
+            <ImagePicker
+              visible={imagePickerVisible}
+              onImageSelected={handleImageSelected}
+              onCancel={() => setImagePickerVisible(false)}
+              title={t('climbing.select_image')}
             />
-            <Text
-              style={{
-                textAlign: 'center',
-                marginTop: 8,
-                color: colors.textSecondary,
-                fontSize: 13,
-              }}
-            >
-              {t('climbing.mark_holds_hint')}
-            </Text>
-          </View>
-        )}
-
-        <Section spacing="lg">
-          <FormTextArea
-            name="description"
-            label={t('climbing.description')}
-            placeholder={t('climbing.add_description')}
-            maxLength={500}
-            numberOfLines={4}
-          />
-        </Section>
-
-        <ImagePicker
-          visible={imagePickerVisible}
-          onImageSelected={handleImageSelected}
-          onCancel={() => setImagePickerVisible(false)}
-          title={t('climbing.select_image')}
-        />
-      </Screen>
+          )}
+        </Screen>
+      </FormReadonlyProvider>
     </FormProvider>
   );
 };
