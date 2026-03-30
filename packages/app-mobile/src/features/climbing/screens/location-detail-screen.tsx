@@ -23,17 +23,17 @@ import { formDataSchema } from '../components/form-location';
 import FormLocationSectors from '../components/form-location-sectors';
 import { ClimbingParamList } from '../types';
 
-type CreateLocationNavigationProp = NativeStackNavigationProp<
+type LocationDetailNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,
-  'CreateLocation'
+  'LocationDetail'
 >;
 
-type CreateLocationRouteProp = RouteProp<ClimbingParamList, 'CreateLocation'>;
+type LocationDetailRouteProp = RouteProp<ClimbingParamList, 'LocationDetail'>;
 
-const CreateLocationScreen: FunctionComponent = () => {
+const LocationDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
-  const navigation = useNavigation<CreateLocationNavigationProp>();
-  const route = useRoute<CreateLocationRouteProp>();
+  const navigation = useNavigation<LocationDetailNavigationProp>();
+  const route = useRoute<LocationDetailRouteProp>();
 
   const locationId = route.params?.locationId;
   const isEditMode = !!locationId;
@@ -286,4 +286,4 @@ const CreateLocationScreen: FunctionComponent = () => {
   );
 };
 
-export default CreateLocationScreen;
+export default LocationDetailScreen;

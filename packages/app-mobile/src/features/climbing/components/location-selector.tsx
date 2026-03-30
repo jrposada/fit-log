@@ -46,12 +46,12 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
   );
 
   const handleAddNew = (newLocationName: string) => {
-    navigation.navigate('CreateLocation', { initialName: newLocationName });
+    navigation.navigate('LocationDetail', { initialName: newLocationName });
   };
 
   const handleEditLocation = () => {
     if (selectedLocation) {
-      navigation.navigate('CreateLocation', {
+      navigation.navigate('LocationDetail', {
         locationId: selectedLocation.id,
       });
     }

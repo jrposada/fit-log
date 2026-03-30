@@ -6,7 +6,7 @@ import Header from '../../navigation/header';
 import ClimbDetailHeader from './climb-detail-header';
 import ClimbDetailScreen from './screens/climb-detail-screen';
 import ClimbingScreen from './screens/climbing-screen';
-import CreateLocationScreen from './screens/create-location-screen';
+import LocationDetailScreen from './screens/location-detail-screen';
 import { ClimbingParamList } from './types';
 
 const Stack = createNativeStackNavigator<ClimbingParamList>();
@@ -24,8 +24,8 @@ const ClimbingStack: FunctionComponent = () => {
         }}
       />
       <Stack.Screen
-        name="CreateLocation"
-        component={CreateLocationScreen}
+        name="LocationDetail"
+        component={LocationDetailScreen}
         options={({ route }) => ({
           header: () => (
             <Header
