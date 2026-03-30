@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -7,25 +9,35 @@ import Screen from '../../../library/screen';
 import Tabs, { TabBarItem, TabContentItem } from '../../../library/tabs';
 import BrowseTab from '../components/browse-tab';
 import QuickLogTab from '../components/quick-log-tab';
+import { ClimbingParamList } from '../types';
+
+type ClimbingNavigationProp = NativeStackNavigationProp<
+  ClimbingParamList,
+  'ClimbingMain'
+>;
 
 type Tab = 'quick-log' | 'browse' | 'projects' | 'stats';
 
 const ClimbingScreen: FunctionComponent = () => {
   const { t } = useTranslation();
+  const navigation = useNavigation<ClimbingNavigationProp>();
   const [activeTab, setActiveTab] = useState<Tab>('quick-log');
+  const [locationId, setLocationId] = useState<string>('');
 
   const items: (TabBarItem<Tab> & TabContentItem<Tab>)[] = [
     {
       id: 'quick-log',
       label: t('climbing.quick_log'),
-      content: <QuickLogTab />,
-      footer: (
+      content: (
+        <QuickLogTab locationId={locationId} onLocationChange={setLocationId} />
+      ),
+      footer: locationId ? (
         <Button
           title={`+ ${t('climbing.log_custom_climb')}`}
-          onPress={() => {}}
+          onPress={() => navigation.navigate('ClimbDetail', { locationId })}
           variant="primary"
         />
-      ),
+      ) : undefined,
     },
     {
       id: 'browse',

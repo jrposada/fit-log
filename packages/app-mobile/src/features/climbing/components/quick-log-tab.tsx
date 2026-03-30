@@ -1,5 +1,5 @@
 import { useClimbHistories } from '@shared-react/api/climb-histories/use-climb-histories';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LoadingState from '../../../library/loading-state';
@@ -9,10 +9,16 @@ import { useSwipeHint } from '../hooks/use-swipe-hint';
 import ClimbCard from './climb-card';
 import LocationSelector from './location-selector';
 
-const QuickLogTab: FunctionComponent = () => {
-  const { t } = useTranslation();
+interface QuickLogTabProps {
+  locationId: string;
+  onLocationChange: (locationId: string) => void;
+}
 
-  const [locationId, setLocationId] = useState<string>('');
+const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
+  locationId,
+  onLocationChange,
+}) => {
+  const { t } = useTranslation();
 
   const { data: climbHistories = [], isLoading: isLoadingClimbHistories } =
     useClimbHistories({
@@ -26,7 +32,7 @@ const QuickLogTab: FunctionComponent = () => {
   return (
     <LoadingState isLoading={isLoadingClimbHistories}>
       <Section title={t('climbing.recent_climbs')}>
-        <LocationSelector value={locationId} onChange={setLocationId} />
+        <LocationSelector value={locationId} onChange={onLocationChange} />
 
         <Separator />
 
