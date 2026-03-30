@@ -3,12 +3,15 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLocations } from '@shared-react/api/locations/use-locations';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text } from 'react-native';
 
+import Button from '../../../library/button';
+import Card from '../../../library/card';
 import LoadingState from '../../../library/loading-state';
+import Section from '../../../library/section';
 import Select from '../../../library/select';
+import { colors } from '../../../library/theme';
 import { ClimbingParamList } from '../types';
-import { styles } from './location-selector.styles';
 
 type LocationSelectorNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,
@@ -59,48 +62,39 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
 
   return (
     <LoadingState isLoading={isLoadingLocations}>
-      <View style={styles.container}>
-        <Text style={styles.label}>{t('climbing.current_location')}</Text>
-        <View style={styles.selectWrapper}>
-          <Select
-            options={locations.map((loc) => loc.name)}
-            value={selectedLocation?.name || ''}
-            onChange={(name) => {
-              const loc = locations.find((l) => l.name === name);
-              if (loc) onChange(loc.id);
-            }}
-            onAddNew={handleAddNew}
-            onClear={() => onChange('')}
-            placeholder={t('climbing.select_location')}
-            searchPlaceholder={t('climbing.search_location')}
-            addButtonLabel={t('actions.add')}
-            closeButtonLabel={t('actions.close')}
-            emptyStateMessage={t('climbing.no_locations_found')}
-            allowAddNew
-          />
-        </View>
+      <Section title={t('climbing.current_location')} gap="sm">
+        <Select
+          options={locations.map((loc) => loc.name)}
+          value={selectedLocation?.name || ''}
+          onChange={(name) => {
+            const loc = locations.find((l) => l.name === name);
+            if (loc) onChange(loc.id);
+          }}
+          onAddNew={handleAddNew}
+          onClear={() => onChange('')}
+          placeholder={t('climbing.select_location')}
+          searchPlaceholder={t('climbing.search_location')}
+          addButtonLabel={t('actions.add')}
+          closeButtonLabel={t('actions.close')}
+          emptyStateMessage={t('climbing.no_locations_found')}
+          allowAddNew
+        />
         {selectedLocation && (
-          <View style={styles.infoContainer}>
-            <View style={styles.selectedContainer}>
-              <View style={styles.selectedTextContainer}>
-                <Text style={styles.selectedStats}>
-                  {t('climbing.climbs_count', { count: numClimbs })} •{' '}
-                  {t('climbing.sectors_count', { count: numSectors })}
-                </Text>
-              </View>
-              <TouchableOpacity
-                onPress={handleEditLocation}
-                style={styles.editButton}
-                activeOpacity={0.6}
-              >
-                <Text style={styles.editButtonText}>
-                  ✏️ {t('actions.edit')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          <Card variant="subdued" direction="horizontal">
+            <Text style={{ fontSize: 13, color: colors.textSecondary }}>
+              {t('climbing.climbs_count', { count: numClimbs })} •{' '}
+              {t('climbing.sectors_count', { count: numSectors })}
+            </Text>
+            <Button
+              title={t('actions.edit')}
+              icon="✏️"
+              variant="ghost"
+              size="sm"
+              onPress={handleEditLocation}
+            />
+          </Card>
         )}
-      </View>
+      </Section>
     </LoadingState>
   );
 };
