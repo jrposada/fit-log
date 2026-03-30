@@ -8,10 +8,19 @@ export const styles = StyleSheet.create({
     borderRadius: radii.card,
     padding: spacing.lg,
   },
+  noPadding: {
+    paddingHorizontal: 0,
+  },
   title: {
-    fontSize: 16,
     fontWeight: '600',
-    color: colors.textPrimary,
     marginBottom: spacing.sm,
+  },
+  titleLevel1: {
+    fontSize: 16,
+    color: colors.textPrimary,
+  },
+  titleLevel2: {
+    fontSize: 14,
+    color: colors.textSecondary,
   },
 });
