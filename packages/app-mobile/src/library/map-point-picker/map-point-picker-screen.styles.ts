@@ -1,32 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from './theme';
+import { colors, radii, spacing } from '../theme';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.cardBackground,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  cancelButton: {
-    fontSize: 16,
-    color: colors.actionPrimary,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#000',
-  },
-  headerPlaceholder: {
-    width: 60,
   },
   searchContainer: {
     padding: spacing.lg,
@@ -70,6 +49,7 @@ export const styles = StyleSheet.create({
     padding: spacing.lg,
     borderTopWidth: 1,
     borderTopColor: colors.border,
+    backgroundColor: colors.cardBackground,
   },
   addressCard: {
     flexDirection: 'row',
@@ -87,20 +67,5 @@ export const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: colors.textSecondary,
-  },
-  confirmButton: {
-    backgroundColor: colors.actionPrimary,
-    borderRadius: radii.card,
-    padding: spacing.lg,
-    alignItems: 'center',
-  },
-  confirmButtonDisabled: {
-    backgroundColor: colors.disabled,
-    opacity: 0.6,
-  },
-  confirmButtonText: {
-    color: colors.textOnAction,
-    fontSize: 18,
-    fontWeight: '600',
   },
 });

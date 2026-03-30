@@ -1,4 +1,6 @@
-import { FunctionComponent, useCallback, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,7 +17,7 @@ import MapView, {
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 
-import MapPointPicker from '../../library/map-point-picker';
+import { MapPointPickerEvents } from '../map-point-picker';
 import FormField from './form-field';
 import { styles } from './form-map-point-picker.styles';
 import { useFormReadonly } from './use-form-readonly';
@@ -28,6 +30,10 @@ interface FormMapPointPickerProps {
   readonly?: boolean;
 }
 
+type NavigationProp = NativeStackNavigationProp<{
+  MapPointPicker: { latitude?: number; longitude?: number } | undefined;
+}>;
+
 const FormMapPointPicker: FunctionComponent<FormMapPointPickerProps> = ({
   latitudeName,
   longitudeName,
@@ -37,16 +43,34 @@ const FormMapPointPicker: FunctionComponent<FormMapPointPickerProps> = ({
 }) => {
   const { t } = useTranslation();
   const isReadonly = useFormReadonly(readonly);
+  const navigation = useNavigation<NavigationProp>();
   const { control, setValue } = useFormContext();
 
   const latitude = useWatch({ control, name: latitudeName });
   const longitude = useWatch({ control, name: longitudeName });
 
-  const [showMapPicker, setShowMapPicker] = useState(false);
-
   const hasLocation = latitude !== undefined && longitude !== undefined;
 
   const [isOpeningMap, setIsOpeningMap] = useState(false);
+
+  // Subscribe to map picker results
+  useEffect(() => {
+    const unsubscribe = MapPointPickerEvents.subscribe((result) => {
+      setValue(latitudeName, result.latitude, { shouldDirty: true });
+      setValue(longitudeName, result.longitude, { shouldDirty: true });
+      if (result.placeId) {
+        setValue(googleMapsIdName, result.placeId, { shouldDirty: true });
+      }
+    });
+    return unsubscribe;
+  }, [latitudeName, longitudeName, googleMapsIdName, setValue]);
+
+  const handleOpenPicker = useCallback(() => {
+    navigation.navigate(
+      'MapPointPicker',
+      hasLocation ? { latitude, longitude } : undefined
+    );
+  }, [navigation, hasLocation, latitude, longitude]);
 
   const handleOpenMap = useCallback(() => {
     if (!hasLocation) return;
@@ -122,37 +146,20 @@ const FormMapPointPicker: FunctionComponent<FormMapPointPickerProps> = ({
               {latitude.toFixed(4)}, {longitude.toFixed(4)}
             </Text>
           </View>
-          <Pressable onPress={() => setShowMapPicker(true)}>
+          <Pressable onPress={handleOpenPicker}>
             <Text style={styles.changeButton}>
               {t('climbing.location_change')}
             </Text>
           </Pressable>
         </View>
       ) : (
-        <Pressable
-          style={styles.mapPlaceholder}
-          onPress={() => setShowMapPicker(true)}
-        >
+        <Pressable style={styles.mapPlaceholder} onPress={handleOpenPicker}>
           <Text style={styles.mapPlaceholderIcon}>📍</Text>
           <Text style={styles.mapPlaceholderText}>
             {t('climbing.location_tap_to_set')}
           </Text>
         </Pressable>
       )}
-
-      <MapPointPicker
-        visible={showMapPicker}
-        initialLocation={hasLocation ? { latitude, longitude } : undefined}
-        onConfirm={(data) => {
-          setValue(latitudeName, data.latitude, { shouldDirty: true });
-          setValue(longitudeName, data.longitude, { shouldDirty: true });
-          if (data.placeId) {
-            setValue(googleMapsIdName, data.placeId, { shouldDirty: true });
-          }
-          setShowMapPicker(false);
-        }}
-        onCancel={() => setShowMapPicker(false)}
-      />
     </FormField>
   );
 };

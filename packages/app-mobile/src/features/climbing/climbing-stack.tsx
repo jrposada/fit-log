@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ImagePickerScreen } from '../../library/image-picker';
+import { MapPointPickerScreen } from '../../library/map-point-picker';
 import Header from '../../navigation/header';
 import ClimbDetailHeader from './climb-detail-header';
 import ClimbDetailScreen from './screens/climb-detail-screen';
@@ -48,6 +50,20 @@ const ClimbingStack: FunctionComponent = () => {
           header: () => <ClimbDetailHeader />,
           presentation: 'modal',
           gestureEnabled: true,
+        }}
+      />
+      <Stack.Screen
+        name="MapPointPicker"
+        component={MapPointPickerScreen}
+        options={{
+          presentation: 'modal',
+        }}
+      />
+      <Stack.Screen
+        name="ImagePicker"
+        component={ImagePickerScreen}
+        options={{
+          presentation: 'modal',
         }}
       />
     </Stack.Navigator>
