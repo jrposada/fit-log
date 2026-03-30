@@ -62,7 +62,7 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
 
   return (
     <LoadingState isLoading={isLoadingLocations}>
-      <Section title={t('climbing.current_location')} gap="sm">
+      <Section title={t('climbing.current_location')} noPadding gap="sm">
         <Select
           options={locations.map((loc) => loc.name)}
           value={selectedLocation?.name || ''}
