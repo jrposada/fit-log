@@ -7,12 +7,14 @@ import { styles } from './section.styles';
 export interface SectionProps {
   title?: string;
   spacing?: keyof typeof spacingTokens;
+  gap?: keyof typeof spacingTokens;
   style?: StyleProp<ViewStyle>;
 }
 
 const Section: FunctionComponent<PropsWithChildren<SectionProps>> = ({
   title,
   spacing,
+  gap,
   style,
   children,
 }) => {
@@ -21,6 +23,7 @@ const Section: FunctionComponent<PropsWithChildren<SectionProps>> = ({
       style={[
         styles.base,
         spacing != null && { marginTop: spacingTokens[spacing] },
+        gap != null && { gap: spacingTokens[gap] },
         style,
       ]}
     >
