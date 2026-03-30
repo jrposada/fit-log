@@ -1,13 +1,15 @@
-import { FunctionComponent, ReactNode } from 'react';
+import { FunctionComponent, ReactNode, useCallback, useRef } from 'react';
 import {
   Image,
   ImageSourcePropType,
   ImageStyle,
+  LayoutChangeEvent,
   StyleProp,
   ViewStyle,
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -23,6 +25,7 @@ interface InteractiveImageProps {
   minScale?: number;
   maxScale?: number;
   doubleTapScale?: number;
+  onTap?: (point: { x: number; y: number }) => void;
 }
 
 const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
@@ -33,6 +36,7 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
   minScale = 1,
   maxScale = 4,
   doubleTapScale = 2,
+  onTap,
 }) => {
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
@@ -40,6 +44,13 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
   const translateY = useSharedValue(0);
   const savedTranslateX = useSharedValue(0);
   const savedTranslateY = useSharedValue(0);
+  const wasMultiTouch = useSharedValue(false);
+  const containerSize = useRef({ width: 0, height: 0 });
+
+  const handleLayout = useCallback((event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    containerSize.current = { width, height };
+  }, []);
 
   const resetTransform = () => {
     'worklet';
@@ -52,6 +63,9 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
   };
 
   const pinchGesture = Gesture.Pinch()
+    .onStart(() => {
+      wasMultiTouch.value = true;
+    })
     .onUpdate((event) => {
       const newScale = savedScale.value * event.scale;
       scale.value = Math.min(Math.max(newScale, minScale), maxScale);
@@ -65,6 +79,9 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
 
   const panGesture = Gesture.Pan()
     .minPointers(2)
+    .onStart(() => {
+      wasMultiTouch.value = true;
+    })
     .onUpdate((event) => {
       if (scale.value > 1) {
         translateX.value = savedTranslateX.value + event.translationX;
@@ -82,6 +99,51 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
       }
     });
 
+  const handleTap = useCallback(
+    (
+      tapX: number,
+      tapY: number,
+      currentScale: number,
+      currentTranslateX: number,
+      currentTranslateY: number
+    ) => {
+      if (!onTap) return;
+      const { width, height } = containerSize.current;
+      if (width === 0 || height === 0) return;
+
+      // The animated view has transform: [translateX, translateY, scale]
+      // Scale applies around the view center (RN default transform-origin).
+      // A point (vx, vy) in the original view maps to screen coords:
+      //   screenX = cx + (vx + tx - cx) * s
+      // Inverting:
+      //   vx = (screenX - cx) / s + cx - tx
+      const cx = width / 2;
+      const cy = height / 2;
+      const imageX = (tapX - cx) / currentScale + cx - currentTranslateX;
+      const imageY = (tapY - cy) / currentScale + cy - currentTranslateY;
+
+      onTap({ x: imageX / width, y: imageY / height });
+    },
+    [onTap]
+  );
+
+  const singleTapGesture = Gesture.Tap()
+    .numberOfTaps(1)
+    .onBegin(() => {
+      wasMultiTouch.value = false;
+    })
+    .onEnd((event) => {
+      if (onTap && !wasMultiTouch.value) {
+        runOnJS(handleTap)(
+          event.x,
+          event.y,
+          scale.value,
+          translateX.value,
+          translateY.value
+        );
+      }
+    });
+
   const doubleTapGesture = Gesture.Tap()
     .numberOfTaps(2)
     .onEnd(() => {
@@ -93,8 +155,13 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
       }
     });
 
+  // Double tap wins over single tap; taps run alongside pinch/pan
+  const tapGestures = onTap
+    ? Gesture.Exclusive(doubleTapGesture, singleTapGesture)
+    : doubleTapGesture;
+
   const composedGesture = Gesture.Simultaneous(
-    doubleTapGesture,
+    tapGestures,
     Gesture.Simultaneous(pinchGesture, panGesture)
   );
 
@@ -108,7 +175,7 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
 
   return (
     <GestureDetector gesture={composedGesture}>
-      <Animated.View style={[styles.container, style]}>
+      <Animated.View style={[styles.container, style]} onLayout={handleLayout}>
         <Animated.View style={[styles.animatedContainer, animatedStyle]}>
           <Image source={source} style={[styles.image, imageStyle]} />
           {children}
