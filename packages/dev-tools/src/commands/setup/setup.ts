@@ -46,9 +46,10 @@ export function registerSetupCommand(setupCmd: Command): void {
           await FilesService.ensureDirectories();
           const imageProcessor = new ImageProcessor();
 
-          console.log(`Creating ${numClimbs} images...`);
+          const numImages = Math.min(30, numClimbs);
+          console.log(`Creating ${numImages} images...`);
           const images = [];
-          for (let i = 0; i < numClimbs; i++) {
+          for (let i = 0; i < numImages; i++) {
             const imageData = await fakeImage(imageProcessor);
             const image = await Image.create(imageData);
             images.push(image);

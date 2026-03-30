@@ -3,13 +3,22 @@ import { IImage } from '@backend/models/image';
 import { ImageProcessor } from '@backend/services/image-processor';
 import sharp from 'sharp';
 
-export async function fakeImage(
-  imageProcessor: ImageProcessor
-): Promise<Partial<Omit<IImage, '_id' | 'createdAt' | 'updatedAt'>>> {
-  const width = faker.number.int({ min: 800, max: 2400 });
-  const height = faker.number.int({ min: 600, max: 1800 });
+async function fetchRandomImage(
+  width: number,
+  height: number
+): Promise<Buffer> {
+  const response = await fetch(`https://picsum.photos/${width}/${height}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch image: ${response.status}`);
+  }
+  return Buffer.from(await response.arrayBuffer());
+}
 
-  const buffer = await sharp({
+function generateColorRectangle(
+  width: number,
+  height: number
+): Promise<Buffer> {
+  return sharp({
     create: {
       width,
       height,
@@ -23,6 +32,20 @@ export async function fakeImage(
   })
     .jpeg()
     .toBuffer();
+}
+
+export async function fakeImage(
+  imageProcessor: ImageProcessor
+): Promise<Partial<Omit<IImage, '_id' | 'createdAt' | 'updatedAt'>>> {
+  const width = faker.number.int({ min: 800, max: 2400 });
+  const height = faker.number.int({ min: 600, max: 1800 });
+
+  let buffer: Buffer;
+  try {
+    buffer = await fetchRandomImage(width, height);
+  } catch {
+    buffer = await generateColorRectangle(width, height);
+  }
 
   const processed = await imageProcessor.processImageFromBuffer(
     buffer,
