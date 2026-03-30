@@ -15,4 +15,11 @@ export const styles = StyleSheet.create({
   textArea: {
     minHeight: 100,
   },
+  inputReadonly: {
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    minHeight: undefined,
+  },
 });

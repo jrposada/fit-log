@@ -5,6 +5,7 @@ import { TextInput, TextInputProps } from 'react-native';
 
 import FormField from './form-field';
 import { styles } from './form-text-area.styles';
+import { useFormReadonly } from './use-form-readonly';
 
 interface FormTextAreaProps
   extends Omit<
@@ -14,6 +15,7 @@ interface FormTextAreaProps
   name: string;
   label?: string;
   required?: boolean;
+  readonly?: boolean;
   showCharacterCount?: boolean;
   numberOfLines?: number;
 }
@@ -22,12 +24,14 @@ const FormTextArea: FunctionComponent<FormTextAreaProps> = ({
   name,
   label,
   required = false,
+  readonly,
   showCharacterCount = true,
   maxLength,
   numberOfLines = 4,
   ...textInputProps
 }) => {
   const { t } = useTranslation();
+  const isReadonly = useFormReadonly(readonly);
   const {
     control,
     formState: { errors },
@@ -37,7 +41,7 @@ const FormTextArea: FunctionComponent<FormTextAreaProps> = ({
   const error = errors[name];
 
   const helperText =
-    showCharacterCount && maxLength
+    !isReadonly && showCharacterCount && maxLength
       ? t('common.characters_count', {
           count: value.length ?? 0,
           max: maxLength,
@@ -48,6 +52,7 @@ const FormTextArea: FunctionComponent<FormTextAreaProps> = ({
     <FormField
       label={label}
       required={required}
+      readonly={isReadonly}
       error={error?.message as string | undefined}
       helperText={helperText}
     >
@@ -56,14 +61,21 @@ const FormTextArea: FunctionComponent<FormTextAreaProps> = ({
         name={name}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            style={[styles.input, styles.textArea]}
+            style={[
+              styles.input,
+              styles.textArea,
+              isReadonly && styles.inputReadonly,
+            ]}
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
             multiline
-            numberOfLines={numberOfLines}
+            numberOfLines={isReadonly ? undefined : numberOfLines}
             maxLength={maxLength}
             textAlignVertical="top"
+            editable={!isReadonly}
+            pointerEvents={isReadonly ? 'none' : 'auto'}
+            caretHidden={isReadonly}
             {...textInputProps}
           />
         )}

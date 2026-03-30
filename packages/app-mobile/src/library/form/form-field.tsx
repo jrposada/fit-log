@@ -2,12 +2,14 @@ import { FunctionComponent, ReactNode } from 'react';
 import { Text, View } from 'react-native';
 
 import { styles } from './form-field.styles';
+import { useFormReadonly } from './use-form-readonly';
 
 interface FormFieldProps {
   label?: string;
   required?: boolean;
   error?: string;
   helperText?: string;
+  readonly?: boolean;
   children: ReactNode;
 }
 
@@ -16,20 +18,24 @@ const FormField: FunctionComponent<FormFieldProps> = ({
   required = false,
   error,
   helperText,
+  readonly,
   children,
 }) => {
+  const isReadonly = useFormReadonly(readonly);
+
   return (
     <View style={styles.container}>
       {label && (
         <Text style={styles.label}>
-          {label} {required && <Text style={styles.required}>*</Text>}
+          {label}{' '}
+          {required && !isReadonly && <Text style={styles.required}>*</Text>}
         </Text>
       )}
       {children}
-      {helperText && !error && (
+      {!isReadonly && helperText && !error && (
         <Text style={styles.helperText}>{helperText}</Text>
       )}
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {!isReadonly && error && <Text style={styles.errorText}>{error}</Text>}
     </View>
   );
 };

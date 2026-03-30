@@ -25,6 +25,7 @@ export interface SelectProps {
   closeButtonLabel?: string;
   emptyStateMessage?: string;
   allowAddNew?: boolean;
+  readonly?: boolean;
 }
 
 function Select({
@@ -39,6 +40,7 @@ function Select({
   closeButtonLabel = 'Close',
   emptyStateMessage = 'No options found',
   allowAddNew = true,
+  readonly = false,
 }: SelectProps): React.ReactElement {
   const flatListRef = useRef<FlatList<string>>(null);
 
@@ -103,6 +105,14 @@ function Select({
     onAddNew?.(debouncedSearchTerm.trim());
     closeModal();
   };
+
+  if (readonly) {
+    return (
+      <View style={[styles.valueButton, styles.valueReadonly]}>
+        <Text style={styles.valueText}>{value}</Text>
+      </View>
+    );
+  }
 
   return (
     <View>

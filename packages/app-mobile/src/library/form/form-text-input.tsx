@@ -5,12 +5,14 @@ import { TextInput, TextInputProps } from 'react-native';
 
 import FormField from './form-field';
 import { styles } from './form-text-input.styles';
+import { useFormReadonly } from './use-form-readonly';
 
 interface FormTextInputProps
   extends Omit<TextInputProps, 'value' | 'onChangeText' | 'onBlur'> {
   name: string;
   label?: string;
   required?: boolean;
+  readonly?: boolean;
   showCharacterCount?: boolean;
 }
 
@@ -18,11 +20,13 @@ const FormTextInput: FunctionComponent<FormTextInputProps> = ({
   name,
   label,
   required = false,
+  readonly,
   showCharacterCount = false,
   maxLength,
   ...textInputProps
 }) => {
   const { t } = useTranslation();
+  const isReadonly = useFormReadonly(readonly);
   const {
     control,
     formState: { errors },
@@ -32,7 +36,7 @@ const FormTextInput: FunctionComponent<FormTextInputProps> = ({
   const error = errors[name];
 
   const helperText =
-    showCharacterCount && maxLength
+    !isReadonly && showCharacterCount && maxLength
       ? t('common.characters_count', { count: value.length, max: maxLength })
       : undefined;
 
@@ -40,6 +44,7 @@ const FormTextInput: FunctionComponent<FormTextInputProps> = ({
     <FormField
       label={label}
       required={required}
+      readonly={isReadonly}
       error={error?.message as string | undefined}
       helperText={helperText}
     >
@@ -50,12 +55,16 @@ const FormTextInput: FunctionComponent<FormTextInputProps> = ({
           <TextInput
             style={[
               styles.input,
-              error && value.length > 0 && styles.inputError,
+              isReadonly && styles.inputReadonly,
+              !isReadonly && error && value.length > 0 && styles.inputError,
             ]}
             value={value}
             onChangeText={onChange}
             onBlur={onBlur}
             maxLength={maxLength}
+            editable={!isReadonly}
+            pointerEvents={isReadonly ? 'none' : 'auto'}
+            caretHidden={isReadonly}
             {...textInputProps}
           />
         )}

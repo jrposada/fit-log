@@ -15,4 +15,10 @@ export const styles = StyleSheet.create({
   inputError: {
     borderColor: '#ff3b30',
   },
+  inputReadonly: {
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+  },
 });

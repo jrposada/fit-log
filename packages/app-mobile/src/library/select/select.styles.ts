@@ -37,6 +37,11 @@ export const styles = StyleSheet.create({
   placeholderText: {
     color: colors.textDisabled,
   },
+  valueReadonly: {
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    paddingHorizontal: 0,
+  },
   searchContainer: {
     position: 'relative',
   },
