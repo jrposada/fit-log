@@ -46,4 +46,32 @@ export const styles = StyleSheet.create({
     color: colors.actionPrimary,
     fontWeight: '500',
   },
+  locationCardReadonly: {
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+    paddingHorizontal: 0,
+  },
+  mapPreviewContainer: {},
+  mapPreviewPressed: {
+    opacity: 0.7,
+  },
+  mapPreviewMapContainer: {
+    borderRadius: radii.card,
+    overflow: 'hidden',
+  },
+  mapPreview: {
+    height: 180,
+  },
+  mapPreviewOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mapPreviewHint: {
+    textAlign: 'center',
+    marginTop: spacing.sm,
+    fontSize: 13,
+    color: colors.textSecondary,
+  },
 });

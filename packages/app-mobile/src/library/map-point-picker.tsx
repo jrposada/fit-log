@@ -1,6 +1,18 @@
 import { FunctionComponent, useState } from 'react';
-import { Alert, Modal, Pressable, Text, TextInput, View } from 'react-native';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import {
+  Alert,
+  Modal,
+  Platform,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import MapView, {
+  Marker,
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+} from 'react-native-maps';
 
 import { styles } from './map-point-picker.styles';
 
@@ -114,7 +126,9 @@ const MapPointPicker: FunctionComponent<MapPointPickerProps> = ({
 
         <View style={styles.mapContainer}>
           <MapView
-            provider={PROVIDER_GOOGLE}
+            provider={
+              Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE
+            }
             style={styles.map}
             region={region}
             onRegionChangeComplete={setRegion}

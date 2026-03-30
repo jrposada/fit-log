@@ -104,6 +104,7 @@
   "climbing.location_set": "Location set",
   "climbing.location_tap_to_set": "Tap to set pin on map",
   "climbing.location_change": "Change",
+  "climbing.tap_to_open_map": "Tap to open in Maps",
   "climbing.log_action": "✓ Log",
   "climbing.log_custom_climb": "Log Custom climb",
   "climbing.log_new_climb_description": "Record a new climbing attempt",
