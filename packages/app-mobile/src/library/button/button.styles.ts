@@ -12,10 +12,52 @@ export const variantColors = {
   ghost: 'transparent',
 } as const;
 
+export const sizeStyles = StyleSheet.create({
+  sm: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: radii.sm,
+  },
+  md: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: radii.button,
+  },
+  lg: {
+    padding: spacing.lg,
+    borderRadius: radii.button,
+  },
+});
+
+export const sizeTextStyles = StyleSheet.create({
+  sm: {
+    fontSize: 13,
+  },
+  md: {
+    fontSize: 15,
+  },
+  lg: {
+    fontSize: 16,
+  },
+});
+
+export const sizeIconStyles = StyleSheet.create({
+  sm: {
+    fontSize: 14,
+    marginRight: spacing.xs,
+  },
+  md: {
+    fontSize: 17,
+    marginRight: spacing.sm,
+  },
+  lg: {
+    fontSize: 20,
+    marginRight: spacing.md,
+  },
+});
+
 export const styles = StyleSheet.create({
   base: {
-    borderRadius: radii.button,
-    padding: spacing.lg,
     alignItems: 'center',
   },
   baseWithIcon: {
@@ -32,7 +74,6 @@ export const styles = StyleSheet.create({
   },
   text: {
     color: colors.textOnAction,
-    fontSize: 16,
     fontWeight: '600',
   },
   textOutline: {
@@ -41,8 +82,5 @@ export const styles = StyleSheet.create({
   textGhost: {
     color: colors.headerBackground,
   },
-  icon: {
-    fontSize: 20,
-    marginRight: spacing.md,
-  },
+  icon: {},
 });
