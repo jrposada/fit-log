@@ -4,10 +4,8 @@ import { colors, spacing } from '../theme';
 
 export const styles = StyleSheet.create({
   layout: {
-    padding: spacing.xl,
     flexDirection: 'row',
     alignItems: 'center',
-    borderLeftWidth: 4,
   },
   icon: {
     fontSize: 40,

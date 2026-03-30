@@ -26,7 +26,7 @@ const IconCard: FunctionComponent<IconCardProps> = ({
   return (
     <Card
       variant="elevatedStrong"
-      borderLeftColor={color}
+      highlight={color}
       onPress={onPress}
       style={[styles.layout, style]}
     >

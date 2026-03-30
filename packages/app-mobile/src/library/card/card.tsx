@@ -1,28 +1,35 @@
 import { FunctionComponent, PropsWithChildren } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 
-import { styles } from './card.styles';
+import { highlightWidths, sizeStyles, styles } from './card.styles';
 
 export interface CardProps {
-  variant?: 'elevated' | 'elevatedStrong' | 'flat';
-  borderLeftColor?: string;
-  borderLeftWidth?: number;
+  variant?: 'elevated' | 'elevatedStrong' | 'flat' | 'subdued';
+  direction?: 'vertical' | 'horizontal';
+  size?: 'sm' | 'md' | 'lg';
+  highlight?: string;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
 }
 
 const Card: FunctionComponent<PropsWithChildren<CardProps>> = ({
   variant = 'elevated',
-  borderLeftColor,
-  borderLeftWidth = 4,
+  direction = 'vertical',
+  size = 'md',
+  highlight,
   onPress,
   style,
   children,
 }) => {
   const cardStyle = [
     styles.base,
+    sizeStyles[size],
     styles[variant],
-    borderLeftColor !== undefined && { borderLeftColor, borderLeftWidth },
+    direction === 'horizontal' && styles.horizontal,
+    highlight !== undefined && {
+      borderLeftColor: highlight,
+      borderLeftWidth: highlightWidths[size],
+    },
     style,
   ];
 
