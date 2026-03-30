@@ -1,33 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, shadows, spacing } from './theme';
+import { colors, radii, shadows, spacing } from '../theme';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.screenBackground,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-    backgroundColor: colors.cardBackground,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  cancelButton: {
-    fontSize: 16,
-    color: colors.actionPrimary,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#000',
-  },
-  headerPlaceholder: {
-    width: 60,
   },
   selectionContainer: {
     flex: 1,

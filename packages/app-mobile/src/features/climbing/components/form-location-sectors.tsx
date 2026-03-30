@@ -1,5 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
 import { useImagesPost } from '@shared-react/api/images/use-images-post';
-import { FunctionComponent, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useMemo, useRef } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -15,26 +16,59 @@ import {
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
 import { useFormReadonly } from '../../../library/form/use-form-readonly';
-import ImagePicker, { ImagePickerProps } from '../../../library/image-picker';
+import { ImagePickerEvents } from '../../../library/image-picker';
 import { FormData } from './form-location';
 import { styles } from './form-location-sectors.styles';
 
 const FormLocationSectors: FunctionComponent = () => {
   const { t } = useTranslation();
   const isReadonly = useFormReadonly();
+  const navigation = useNavigation();
   const { control, setValue } = useFormContext<FormData>();
-  const allSectors = useWatch({ control, name: 'sectors' }) || [];
+  const watchedSectors = useWatch({ control, name: 'sectors' });
+  const allSectors = useMemo(() => watchedSectors || [], [watchedSectors]);
   const sectors = isReadonly
     ? allSectors.filter((s) => s._status !== 'deleted')
     : allSectors;
 
-  const [showSectorPicker, setShowSectorPicker] = useState(false);
-  const [editingSectorIndex, setEditingSectorIndex] = useState<number | null>(
-    null
-  );
+  const editingSectorIndexRef = useRef<number | null>(null);
   const tempIdCounter = useRef(0);
 
   const imagePost = useImagesPost();
+
+  // Subscribe to image picker results
+  useEffect(() => {
+    const unsubscribe = ImagePickerEvents.subscribe(async (imageData) => {
+      if (editingSectorIndexRef.current === null) return;
+
+      try {
+        const savedImage = await imagePost.mutateAsync({
+          base64: imageData.base64,
+          mimeType: imageData.mimeType,
+        });
+
+        const currentSectors = [...allSectors];
+        const existingSector = currentSectors[editingSectorIndexRef.current];
+        existingSector.images = [...existingSector.images, savedImage];
+
+        setValue('sectors', currentSectors, { shouldDirty: true });
+
+        Alert.alert(
+          t('climbing.success'),
+          t('climbing.image_uploaded_successfully')
+        );
+      } catch (error) {
+        console.error('Failed to upload image:', error);
+        Alert.alert(
+          t('climbing.error'),
+          t('climbing.failed_upload_image', {
+            error: error instanceof Error ? error.message : 'Unknown error',
+          })
+        );
+      }
+    });
+    return unsubscribe;
+  }, [allSectors, imagePost, setValue, t]);
 
   const handleAddSector = () => {
     const updatedSectors = [...sectors];
@@ -54,13 +88,13 @@ const FormLocationSectors: FunctionComponent = () => {
     updatedSectors.push(newSector);
 
     setValue('sectors', updatedSectors, { shouldDirty: true });
-    setEditingSectorIndex(updatedSectors.length - 1);
-    setShowSectorPicker(true);
+    editingSectorIndexRef.current = updatedSectors.length - 1;
+    navigation.navigate('ImagePicker' as never);
   };
 
   const handleEditSector = (index: number) => {
-    setEditingSectorIndex(index);
-    setShowSectorPicker(true);
+    editingSectorIndexRef.current = index;
+    navigation.navigate('ImagePicker' as never);
   };
 
   const handleDeleteSector = (index: number) => {
@@ -77,43 +111,7 @@ const FormLocationSectors: FunctionComponent = () => {
     }
 
     setValue('sectors', updatedSectors, { shouldDirty: true });
-    setEditingSectorIndex(null);
-    setShowSectorPicker(false);
-  };
-
-  const handleImagePick: ImagePickerProps['onImageSelected'] = async (
-    imageData
-  ) => {
-    if (editingSectorIndex === null) {
-      return;
-    }
-
-    try {
-      const savedImage = await imagePost.mutateAsync({
-        base64: imageData.base64,
-        mimeType: imageData.mimeType,
-      });
-
-      const updatedSectors = [...sectors];
-      const existingSector = updatedSectors[editingSectorIndex];
-      existingSector.images = [...existingSector.images, savedImage];
-
-      setValue('sectors', updatedSectors, { shouldDirty: true });
-      setShowSectorPicker(false);
-
-      Alert.alert(
-        t('climbing.success'),
-        t('climbing.image_uploaded_successfully')
-      );
-    } catch (error) {
-      console.error('Failed to upload image:', error);
-      Alert.alert(
-        t('climbing.error'),
-        t('climbing.failed_upload_image', {
-          error: error instanceof Error ? error.message : 'Unknown error',
-        })
-      );
-    }
+    editingSectorIndexRef.current = null;
   };
 
   if (isReadonly && sectors.length === 0) {
@@ -226,29 +224,15 @@ const FormLocationSectors: FunctionComponent = () => {
         </Pressable>
       )}
 
-      {!isReadonly && (
-        <>
-          <ImagePicker
-            visible={showSectorPicker}
-            onImageSelected={handleImagePick}
-            onCancel={() => {
-              setShowSectorPicker(false);
-              setEditingSectorIndex(null);
-            }}
-            title={'Add Image'}
-          />
-
-          {imagePost.isPending && (
-            <View style={styles.uploadingOverlay}>
-              <View style={styles.uploadingContainer}>
-                <ActivityIndicator size="large" color="#007AFF" />
-                <Text style={styles.uploadingText}>
-                  {t('climbing.uploading_image')}
-                </Text>
-              </View>
-            </View>
-          )}
-        </>
+      {!isReadonly && imagePost.isPending && (
+        <View style={styles.uploadingOverlay}>
+          <View style={styles.uploadingContainer}>
+            <ActivityIndicator size="large" color="#007AFF" />
+            <Text style={styles.uploadingText}>
+              {t('climbing.uploading_image')}
+            </Text>
+          </View>
+        </View>
       )}
     </>
   );

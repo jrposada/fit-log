@@ -36,7 +36,7 @@ import { FormReadonlyProvider } from '../../../library/form/form-readonly-contex
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
 import IconButton from '../../../library/icon-button';
-import ImagePicker, { ImagePickerResult } from '../../../library/image-picker';
+import { ImagePickerEvents } from '../../../library/image-picker';
 import LoadingState from '../../../library/loading-state';
 import Screen from '../../../library/screen';
 import Section from '../../../library/section';
@@ -104,7 +104,6 @@ const ClimbDetailScreen: FunctionComponent = () => {
 
   const [isEditMode, setIsEditMode] = useState(isCreateMode);
   const [scrollHeight, setScrollHeight] = useState(0);
-  const [imagePickerVisible, setImagePickerVisible] = useState(false);
   const [uploadedImageUri, setUploadedImageUri] = useState<string | undefined>(
     undefined
   );
@@ -336,19 +335,22 @@ const ClimbDetailScreen: FunctionComponent = () => {
     Linking.openURL(url);
   }, [climb]);
 
-  const handleImageSelected = async (imageData: ImagePickerResult) => {
-    setImagePickerVisible(false);
-    try {
-      const savedImage = await imagesPost.mutateAsync({
-        base64: imageData.base64,
-        mimeType: imageData.mimeType,
-      });
-      setUploadedImageUri(savedImage.imageUrl);
-      setValue('image', savedImage.id, { shouldDirty: true });
-    } catch {
-      // Error handled by imagesPost onError
-    }
-  };
+  // Subscribe to image picker results
+  useEffect(() => {
+    const unsubscribe = ImagePickerEvents.subscribe(async (imageData) => {
+      try {
+        const savedImage = await imagesPost.mutateAsync({
+          base64: imageData.base64,
+          mimeType: imageData.mimeType,
+        });
+        setUploadedImageUri(savedImage.imageUrl);
+        setValue('image', savedImage.id, { shouldDirty: true });
+      } catch {
+        // Error handled by imagesPost onError
+      }
+    });
+    return unsubscribe;
+  }, [imagesPost, setValue]);
 
   const handleSectorChange = (sectorName: string) => {
     const sector = sectors.find((s) => s.name === sectorName);
@@ -611,7 +613,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
                         ? t('climbing.uploading_image')
                         : t('climbing.select_image')
                     }
-                    onPress={() => setImagePickerVisible(true)}
+                    onPress={() => navigation.navigate('ImagePicker' as never)}
                     disabled={imagesPost.isPending}
                   />
                 )}
@@ -671,15 +673,6 @@ const ClimbDetailScreen: FunctionComponent = () => {
               numberOfLines={4}
             />
           </Section>
-
-          {isEditMode && (
-            <ImagePicker
-              visible={imagePickerVisible}
-              onImageSelected={handleImageSelected}
-              onCancel={() => setImagePickerVisible(false)}
-              title={t('climbing.select_image')}
-            />
-          )}
         </Screen>
       </FormReadonlyProvider>
     </FormProvider>
