@@ -106,11 +106,8 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
   const loginWithIdp = useCallback(
     async (idp: 'google' | 'apple') => {
       try {
-        // const keycloakUrl = process.env.EXPO_PUBLIC_KEYCLOAK_URL;
-        // const realm = process.env.EXPO_PUBLIC_KEYCLOAK_REALM;
         const clientId = process.env.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID;
 
-        // Create auth request with IDP hint
         const request = new AuthSession.AuthRequest({
           clientId: clientId!,
           redirectUri,
@@ -148,7 +145,6 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
       const realm = process.env.EXPO_PUBLIC_KEYCLOAK_REALM;
       const clientId = process.env.EXPO_PUBLIC_KEYCLOAK_CLIENT_ID;
 
-      // Open Keycloak registration page
       const registrationUrl = `${keycloakUrl}/realms/${realm}/protocol/openid-connect/registrations?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=openid%20profile%20email`;
 
       const result = await WebBrowser.openAuthSessionAsync(
@@ -157,7 +153,6 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
       );
 
       if (result.type === 'success') {
-        // Extract code from URL
         const url = new URL(result.url);
         const code = url.searchParams.get('code');
 
