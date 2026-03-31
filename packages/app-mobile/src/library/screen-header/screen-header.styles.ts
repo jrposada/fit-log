@@ -8,20 +8,23 @@ export const styles = StyleSheet.create({
   header: {
     backgroundColor: colors.headerBackground,
     flexDirection: 'row',
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.md,
     paddingBottom: spacing.sm,
     minHeight: HEADER_FIXED_HEIGHT,
+    gap: spacing.md,
   },
   leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.md,
+    gap: spacing.sm,
     flex: 1,
   },
   titleText: {
     fontSize: 17,
     fontWeight: '600',
     color: colors.headerText,
+  },
+  titleContainer: {
     flexShrink: 1,
   },
   subtitleText: {

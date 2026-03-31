@@ -44,7 +44,7 @@ const ScreenHeader: FunctionComponent<ScreenHeaderProps> = ({
             size="lg"
           />
         )}
-        <View>
+        <View style={styles.titleContainer}>
           <Text style={styles.titleText} numberOfLines={1}>
             {title}
             {loading ? '...' : ''}
