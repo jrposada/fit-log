@@ -7,8 +7,8 @@ import Button from '../../../library/button';
 import EmptyState from '../../../library/empty-state';
 import Screen from '../../../library/screen';
 import Tabs, { TabBarItem, TabContentItem } from '../../../library/tabs';
-import BrowseTab from '../components/browse-tab';
-import QuickLogTab from '../components/quick-log-tab';
+import BrowseTab from '../components/browse-tab/browse-tab';
+import QuickLogTab from '../components/quick-log-tab/quick-log-tab';
 import { ClimbingParamList } from '../types';
 
 type ClimbingNavigationProp = NativeStackNavigationProp<

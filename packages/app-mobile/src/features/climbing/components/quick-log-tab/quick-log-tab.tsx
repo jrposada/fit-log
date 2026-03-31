@@ -1,12 +1,12 @@
 import { useClimbHistories } from '@shared-react/api/climb-histories/use-climb-histories';
 import { FunctionComponent } from 'react';
 
-import LoadingState from '../../../library/loading-state';
-import Section from '../../../library/section';
-import Separator from '../../../library/separator';
-import { useSwipeHint } from '../hooks/use-swipe-hint';
+import LoadingState from '../../../../library/loading-state';
+import Section from '../../../../library/section';
+import Separator from '../../../../library/separator';
+import { useSwipeHint } from '../../hooks/use-swipe-hint';
+import LocationSelector from '../common/location-selector';
 import ClimbCard from './climb-card';
-import LocationSelector from './location-selector';
 
 interface QuickLogTabProps {
   locationId: string;

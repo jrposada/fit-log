@@ -30,9 +30,9 @@ import Section from '../../../library/section';
 import { colors } from '../../../library/theme';
 import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
-import type { FormData } from '../components/form-location';
-import { formDataSchema } from '../components/form-location';
-import FormLocationSectors from '../components/form-location-sectors';
+import type { FormData } from '../components/location-detail/form-location';
+import { formDataSchema } from '../components/location-detail/form-location';
+import FormLocationSectors from '../components/location-detail/form-location-sectors';
 import { ClimbingParamList } from '../types';
 
 type LocationDetailNavigationProp = NativeStackNavigationProp<

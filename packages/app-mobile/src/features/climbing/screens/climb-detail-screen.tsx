@@ -45,8 +45,8 @@ import Select from '../../../library/select';
 import { colors } from '../../../library/theme';
 import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
-import ClimbImage from '../components/climb-image';
-import GradeBadge from '../components/grade-badge';
+import ClimbImage from '../components/climb-detail/climb-image';
+import GradeBadge from '../components/common/grade-badge';
 import { ClimbingParamList } from '../types';
 
 type ClimbDetailNavigationProp = NativeStackNavigationProp<

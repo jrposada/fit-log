@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import InteractiveImage from '../../../../library/interactive-image';
+import InteractiveImage from '../../../../../library/interactive-image';
 import { styles } from './climb-image.styles';
 
 interface ClimbImageProps {

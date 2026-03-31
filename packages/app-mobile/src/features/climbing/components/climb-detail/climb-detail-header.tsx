@@ -3,9 +3,9 @@ import { useClimbsById } from '@shared-react/api/climbs/use-climbs-by-id';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Header from '../../navigation/header';
-import GradeBadge from './components/grade-badge';
-import { ClimbDetailRouteProp } from './screens/climb-detail-screen';
+import Header from '../../../../navigation/header';
+import { ClimbDetailRouteProp } from '../../screens/climb-detail-screen';
+import GradeBadge from '../common/grade-badge';
 
 const ClimbDetailHeader: FunctionComponent = () => {
   const { t } = useTranslation();

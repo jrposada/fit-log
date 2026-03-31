@@ -5,13 +5,13 @@ import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text } from 'react-native';
 
-import Button from '../../../library/button';
-import Card from '../../../library/card';
-import LoadingState from '../../../library/loading-state';
-import Section from '../../../library/section';
-import Select from '../../../library/select';
-import { colors } from '../../../library/theme';
-import { ClimbingParamList } from '../types';
+import Button from '../../../../library/button';
+import Card from '../../../../library/card';
+import LoadingState from '../../../../library/loading-state';
+import Section from '../../../../library/section';
+import Select from '../../../../library/select';
+import { colors } from '../../../../library/theme';
+import { ClimbingParamList } from '../../types';
 
 type LocationSelectorNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,

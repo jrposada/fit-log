@@ -16,17 +16,17 @@ import { useTranslation } from 'react-i18next';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { z } from 'zod';
 
-import CollapsibleSection from '../../../library/collapsible-section';
-import EmptyState from '../../../library/empty-state';
-import LoadingState from '../../../library/loading-state';
-import Modal from '../../../library/modal';
-import Separator from '../../../library/separator';
-import { ClimbingParamList } from '../types';
+import CollapsibleSection from '../../../../library/collapsible-section';
+import EmptyState from '../../../../library/empty-state';
+import LoadingState from '../../../../library/loading-state';
+import Modal from '../../../../library/modal';
+import Separator from '../../../../library/separator';
+import { ClimbingParamList } from '../../types';
+import GradeBadge from '../common/grade-badge';
+import LocationSelector from '../common/location-selector';
 import { styles } from './browse-tab.styles';
 import FormGradeChips from './form-grade-chips';
 import FormSearchInput from './form-search-input';
-import GradeBadge from './grade-badge';
-import LocationSelector from './location-selector';
 
 type ClimbCardNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,

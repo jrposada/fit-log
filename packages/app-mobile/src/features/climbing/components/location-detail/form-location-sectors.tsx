@@ -21,12 +21,12 @@ import {
 } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
-import FormTextArea from '../../../library/form/form-text-area';
-import FormTextInput from '../../../library/form/form-text-input';
-import { useFormReadonly } from '../../../library/form/use-form-readonly';
-import IconButton from '../../../library/icon-button/icon-button';
-import { ImageGalleryModal } from '../../../library/image-gallery-modal';
-import { ImagePickerEvents } from '../../../library/image-picker';
+import FormTextArea from '../../../../library/form/form-text-area';
+import FormTextInput from '../../../../library/form/form-text-input';
+import { useFormReadonly } from '../../../../library/form/use-form-readonly';
+import IconButton from '../../../../library/icon-button/icon-button';
+import { ImageGalleryModal } from '../../../../library/image-gallery-modal';
+import { ImagePickerEvents } from '../../../../library/image-picker';
 import { FormData } from './form-location';
 import { styles } from './form-location-sectors.styles';
 

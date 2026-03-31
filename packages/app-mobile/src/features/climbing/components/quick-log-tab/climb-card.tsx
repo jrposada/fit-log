@@ -14,7 +14,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-import { ClimbingParamList } from '../types';
+import { ClimbingParamList } from '../../types';
 import { ACTION_WIDTH, styles } from './climb-card.styles';
 
 type Data = Omit<Climb, 'image' | 'location'> & {

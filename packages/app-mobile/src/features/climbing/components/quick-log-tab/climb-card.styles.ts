@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, shadows, spacing } from '../../../library/theme';
+import { colors, radii, shadows, spacing } from '../../../../library/theme';
 
 const ACTION_BUTTON_WIDTH = 72;
 
