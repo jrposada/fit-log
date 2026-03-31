@@ -28,6 +28,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
 import { z } from 'zod';
 
 import Button from '../../../library/button';
@@ -623,7 +624,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
 
           {/* Existing climb: image */}
           {!isCreateMode && watchedImage && imageUri && (
-            <View>
+            <Animated.View layout={LinearTransition}>
               <ClimbImage
                 source={{ uri: imageUri }}
                 holds={watchedHolds}
@@ -635,7 +636,8 @@ const ClimbDetailScreen: FunctionComponent = () => {
                 onHoldRemove={handleHoldRemove}
               />
               {isEditMode && (
-                <Text
+                <Animated.Text
+                  entering={FadeIn.duration(200)}
                   style={{
                     textAlign: 'center',
                     marginTop: 8,
@@ -644,9 +646,9 @@ const ClimbDetailScreen: FunctionComponent = () => {
                   }}
                 >
                   {t('climbing.mark_holds_hint')}
-                </Text>
+                </Animated.Text>
               )}
-            </View>
+            </Animated.View>
           )}
 
           {/* Existing climb: name */}

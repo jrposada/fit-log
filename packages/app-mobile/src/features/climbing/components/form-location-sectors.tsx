@@ -12,6 +12,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
@@ -126,9 +127,11 @@ const FormLocationSectors: FunctionComponent = () => {
           : t('climbing.sectors_walls_optional')}
       </Text>
       {!isReadonly && (
-        <Text style={styles.sectionDescription}>
-          {t('climbing.sectors_description')}
-        </Text>
+        <Animated.View entering={FadeIn.duration(200)}>
+          <Text style={styles.sectionDescription}>
+            {t('climbing.sectors_description')}
+          </Text>
+        </Animated.View>
       )}
 
       {sectors.length > 0 && (
@@ -184,7 +187,10 @@ const FormLocationSectors: FunctionComponent = () => {
                   </View>
                 )}
                 {!isReadonly && (
-                  <View style={styles.sectorActions}>
+                  <Animated.View
+                    entering={FadeIn.duration(200)}
+                    style={styles.sectorActions}
+                  >
                     <Pressable
                       style={styles.actionButton}
                       onPress={() => handleEditSector(actualIndex)}
@@ -206,7 +212,7 @@ const FormLocationSectors: FunctionComponent = () => {
                         {t('climbing.delete')}
                       </Text>
                     </Pressable>
-                  </View>
+                  </Animated.View>
                 )}
               </View>
             );
@@ -215,13 +221,15 @@ const FormLocationSectors: FunctionComponent = () => {
       )}
 
       {!isReadonly && (
-        <Pressable style={styles.addSectorButton} onPress={handleAddSector}>
-          <Text style={styles.addSectorButtonText}>
-            {sectors.length > 0
-              ? t('climbing.add_another_sector')
-              : t('climbing.add_first_sector')}
-          </Text>
-        </Pressable>
+        <Animated.View entering={FadeIn.duration(200)}>
+          <Pressable style={styles.addSectorButton} onPress={handleAddSector}>
+            <Text style={styles.addSectorButtonText}>
+              {sectors.length > 0
+                ? t('climbing.add_another_sector')
+                : t('climbing.add_first_sector')}
+            </Text>
+          </Pressable>
+        </Animated.View>
       )}
 
       {!isReadonly && imagePost.isPending && (
