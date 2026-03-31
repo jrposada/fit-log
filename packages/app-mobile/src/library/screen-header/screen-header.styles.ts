@@ -12,6 +12,7 @@ export const styles = StyleSheet.create({
     paddingBottom: spacing.sm,
     minHeight: HEADER_FIXED_HEIGHT,
     gap: spacing.md,
+    alignItems: 'center',
   },
   leftSection: {
     flexDirection: 'row',
