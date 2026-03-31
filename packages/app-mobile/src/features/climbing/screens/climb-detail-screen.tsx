@@ -374,6 +374,11 @@ const ClimbDetailScreen: FunctionComponent = () => {
       header: () => (
         <Header
           title={isCreateMode ? t('climbing.create_climb_title') : climb?.name}
+          subtitle={
+            !isCreateMode && !isEditMode && climb
+              ? `${climb.location.name} · ${climb.sector.name}`
+              : undefined
+          }
           extra={
             !isCreateMode && climb ? (
               <GradeBadge grade={climb.grade} />
