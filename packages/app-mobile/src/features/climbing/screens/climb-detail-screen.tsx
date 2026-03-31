@@ -45,6 +45,7 @@ import Screen from '../../../library/screen';
 import Section from '../../../library/section';
 import Select from '../../../library/select';
 import { accent, borders, ink, surfaces } from '../../../library/theme';
+import { useToast } from '../../../library/toast';
 import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
 import ClimbImage from '../components/climb-detail/climb-image';
@@ -98,6 +99,7 @@ type FormData = z.infer<typeof formSchema>;
 
 const ClimbDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
+  const toast = useToast();
   const navigation = useNavigation<ClimbDetailNavigationProp>();
   const route = useRoute<ClimbDetailRouteProp>();
 
@@ -187,47 +189,32 @@ const ClimbDetailScreen: FunctionComponent = () => {
   const climbsPut = useClimbsPut({
     onSuccess: () => {
       if (isCreateMode) {
-        Alert.alert(
-          t('climbing.climb_created_title'),
-          t('climbing.climb_created_message'),
-          [{ text: t('actions.ok'), onPress: () => navigation.goBack() }]
-        );
+        toast.show(t('climbing.climb_created_message'), 'success');
+        navigation.goBack();
       } else {
         setIsEditMode(false);
         initializedRef.current = false;
-        Alert.alert(
-          t('climbing.climb_updated_title'),
-          t('climbing.climb_updated_message')
-        );
+        toast.show(t('climbing.climb_updated_message'), 'success');
       }
     },
     onError: (error) => {
-      Alert.alert(
-        t('climbing.error'),
-        t('climbing.failed_save_climb', { error })
-      );
+      toast.show(t('climbing.failed_save_climb', { error }), 'destructive');
     },
   });
 
   const deleteClimb = useClimbsDelete({
     onSuccess: () => {
-      Alert.alert(
-        t('climbing.climb_deleted_title'),
-        t('climbing.climb_deleted_message'),
-        [{ text: t('actions.ok'), onPress: () => navigation.goBack() }]
-      );
+      toast.show(t('climbing.climb_deleted_message'), 'success');
+      navigation.goBack();
     },
     onError: (error) => {
-      Alert.alert(t('climbing.error'), error);
+      toast.show(error, 'destructive');
     },
   });
 
   const imagesPost = useImagesPost({
     onError: (error) => {
-      Alert.alert(
-        t('climbing.error'),
-        t('climbing.failed_upload_image', { error })
-      );
+      toast.show(t('climbing.failed_upload_image', { error }), 'destructive');
     },
   });
 

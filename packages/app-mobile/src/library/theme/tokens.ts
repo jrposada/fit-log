@@ -58,8 +58,11 @@ export const semantic = {
   error: '#C1292E',
 
   successSubtle: 'rgba(45, 106, 79, 0.08)',
+  successMuted: '#EAF4EF',
   destructiveSubtle: 'rgba(193, 41, 46, 0.08)',
+  destructiveMuted: '#FCEAEA',
   warningSubtle: 'rgba(212, 135, 14, 0.08)',
+  warningMuted: '#FDF3E4',
 } as const;
 
 // ---------------------------------------------------------------------------

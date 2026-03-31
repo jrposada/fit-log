@@ -29,6 +29,7 @@ import LoadingState from '../../../library/loading-state';
 import Screen from '../../../library/screen';
 import Section from '../../../library/section';
 import { accent, surfaces } from '../../../library/theme';
+import { useToast } from '../../../library/toast';
 import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
 import type { FormData } from '../components/location-detail/form-location';
@@ -45,6 +46,7 @@ type LocationDetailRouteProp = RouteProp<ClimbingParamList, 'LocationDetail'>;
 
 const LocationDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
+  const toast = useToast();
   const navigation = useNavigation<LocationDetailNavigationProp>();
   const route = useRoute<LocationDetailRouteProp>();
 
@@ -79,54 +81,39 @@ const LocationDetailScreen: FunctionComponent = () => {
       } else {
         setIsEditMode(false);
         initializedRef.current = false;
-        Alert.alert(
-          t('climbing.location_updated_title'),
-          t('climbing.location_updated_message')
-        );
+        toast.show(t('climbing.location_updated_message'), 'success');
       }
     },
     onError: (error) => {
-      Alert.alert(
-        t('climbing.error'),
-        t('climbing.failed_create_location', { error })
+      toast.show(
+        t('climbing.failed_create_location', { error }),
+        'destructive'
       );
     },
   });
   const sectorsBatchPut = useSectorsBatchPut({
     onError: (error) => {
-      Alert.alert(
-        t('climbing.error'),
-        t('climbing.failed_save_sectors', { error })
-      );
+      toast.show(t('climbing.failed_save_sectors', { error }), 'destructive');
     },
   });
   const sectorsBatchDelete = useSectorsBatchDelete({
     onError: (error) => {
-      Alert.alert(
-        t('climbing.error'),
-        t('climbing.failed_delete_sectors', { error })
-      );
+      toast.show(t('climbing.failed_delete_sectors', { error }), 'destructive');
     },
   });
 
   const imagesPost = useImagesPost({
     onError: (error) => {
-      Alert.alert(
-        t('climbing.error'),
-        t('climbing.failed_upload_image', { error })
-      );
+      toast.show(t('climbing.failed_upload_image', { error }), 'destructive');
     },
   });
   const deleteLocation = useLocationsDelete({
     onSuccess: () => {
-      Alert.alert(
-        t('climbing.location_deleted_title'),
-        t('climbing.location_deleted_message'),
-        [{ text: t('actions.ok'), onPress: () => navigation.goBack() }]
-      );
+      toast.show(t('climbing.location_deleted_message'), 'success');
+      navigation.goBack();
     },
     onError: (error) => {
-      Alert.alert(t('climbing.error'), error);
+      toast.show(error, 'destructive');
     },
   });
 
@@ -229,9 +216,9 @@ const LocationDetailScreen: FunctionComponent = () => {
       };
       locationsPut.mutate(locationData);
     } catch (error) {
-      Alert.alert(
-        t('climbing.error'),
-        t('climbing.failed_process_sectors', { error })
+      toast.show(
+        t('climbing.failed_process_sectors', { error }),
+        'destructive'
       );
     }
   };

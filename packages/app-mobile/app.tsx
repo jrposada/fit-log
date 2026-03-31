@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import AuthProvider from './src/features/auth/auth-provider';
 import i18n from './src/i18n';
+import { ToastProvider } from './src/library/toast';
 import Root from './src/navigation/root';
 
 const queryClient = new QueryClient();
@@ -15,9 +16,11 @@ export default function App() {
       <I18nextProvider i18n={i18n}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SafeAreaProvider>
-            <AuthProvider>
-              <Root />
-            </AuthProvider>
+            <ToastProvider>
+              <AuthProvider>
+                <Root />
+              </AuthProvider>
+            </ToastProvider>
           </SafeAreaProvider>
         </GestureHandlerRootView>
       </I18nextProvider>

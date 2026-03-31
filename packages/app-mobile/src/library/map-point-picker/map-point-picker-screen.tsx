@@ -2,14 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Alert,
-  Platform,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { Platform, Pressable, Text, TextInput, View } from 'react-native';
 import MapView, {
   Marker,
   PROVIDER_DEFAULT,
@@ -20,6 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Header from '../../navigation/header';
 import Button from '../button';
 import { spacing } from '../theme';
+import { useToast } from '../toast';
 import { MapPointPickerEvents } from './map-point-picker-events';
 import { styles } from './map-point-picker-screen.styles';
 
@@ -31,6 +25,7 @@ type Props = NativeStackScreenProps<MapPointPickerParams, 'MapPointPicker'>;
 
 const MapPointPickerScreen: FunctionComponent<Props> = ({ route }) => {
   const { t } = useTranslation();
+  const toast = useToast();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
@@ -75,12 +70,12 @@ const MapPointPickerScreen: FunctionComponent<Props> = ({ route }) => {
 
   const handleMyLocation = async () => {
     try {
-      Alert.alert(
-        'Coming Soon',
-        'Current location detection will be available soon'
+      toast.show(
+        'Current location detection will be available soon',
+        'success'
       );
     } catch {
-      Alert.alert('Error', 'Failed to get current location');
+      toast.show('Failed to get current location', 'destructive');
     }
   };
 
@@ -95,9 +90,9 @@ const MapPointPickerScreen: FunctionComponent<Props> = ({ route }) => {
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
     try {
-      Alert.alert('Coming Soon', 'Address search will be available soon');
+      toast.show('Address search will be available soon', 'success');
     } catch {
-      Alert.alert('Error', 'Search failed');
+      toast.show('Search failed', 'destructive');
     }
   };
 
