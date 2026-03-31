@@ -26,6 +26,7 @@ interface InteractiveImageProps {
   maxScale?: number;
   doubleTapScale?: number;
   onTap?: (point: { x: number; y: number }) => void;
+  onScaleChange?: (scale: number) => void;
 }
 
 const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
@@ -37,6 +38,7 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
   maxScale = 4,
   doubleTapScale = 2,
   onTap,
+  onScaleChange,
 }) => {
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
@@ -74,6 +76,9 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
       savedScale.value = scale.value;
       if (scale.value < minScale) {
         resetTransform();
+        if (onScaleChange) runOnJS(onScaleChange)(1);
+      } else {
+        if (onScaleChange) runOnJS(onScaleChange)(scale.value);
       }
     });
 
@@ -149,9 +154,11 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
     .onEnd(() => {
       if (scale.value > 1) {
         resetTransform();
+        if (onScaleChange) runOnJS(onScaleChange)(1);
       } else {
         scale.value = withSpring(doubleTapScale);
         savedScale.value = doubleTapScale;
+        if (onScaleChange) runOnJS(onScaleChange)(doubleTapScale);
       }
     });
 
