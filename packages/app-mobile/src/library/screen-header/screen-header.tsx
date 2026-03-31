@@ -1,13 +1,14 @@
 import { FunctionComponent, ReactNode } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { spacing } from '../theme';
+import IconButton from '../icon-button';
+import { colors, spacing } from '../theme';
 import { styles } from './screen-header.styles';
 
 export interface ScreenHeaderProps {
   title: string | undefined;
-  back?: boolean;
+  subtitle?: string;
   onBackPress?: () => void;
   extra?: ReactNode;
   action?: ReactNode;
@@ -17,7 +18,7 @@ export interface ScreenHeaderProps {
 
 const ScreenHeader: FunctionComponent<ScreenHeaderProps> = ({
   title = '',
-  back = false,
+  subtitle,
   onBackPress,
   extra,
   action,
@@ -34,15 +35,26 @@ const ScreenHeader: FunctionComponent<ScreenHeaderProps> = ({
       ]}
     >
       <View style={styles.leftSection}>
-        {back && (
-          <Pressable onPress={onBackPress} style={styles.backButton}>
-            <Text style={styles.backButtonText}>←</Text>
-          </Pressable>
+        {onBackPress && (
+          <IconButton
+            variant="ghost"
+            icon="←"
+            onPress={onBackPress}
+            color={colors.headerText}
+            iconSize={28}
+          />
         )}
-        <Text style={styles.title} numberOfLines={1}>
-          {title}
-          {loading ? '...' : ''}
-        </Text>
+        <View>
+          <Text style={styles.titleText} numberOfLines={1}>
+            {title}
+            {loading ? '...' : ''}
+          </Text>
+          {subtitle && (
+            <Text style={styles.subtitleText} numberOfLines={1}>
+              {subtitle}
+            </Text>
+          )}
+        </View>
         {extra && <View style={styles.extra}>{extra}</View>}
       </View>
       {action}

@@ -8,8 +8,6 @@ export const styles = StyleSheet.create({
   header: {
     backgroundColor: colors.headerBackground,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.sm,
     minHeight: HEADER_FIXED_HEIGHT,
@@ -17,24 +15,20 @@ export const styles = StyleSheet.create({
   leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: spacing.md,
     flex: 1,
   },
-  backButton: {
-    width: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  backButtonText: {
-    fontSize: 28,
-    fontWeight: '600',
-    color: colors.headerText,
-  },
-  title: {
+  titleText: {
     fontSize: 17,
     fontWeight: '600',
     color: colors.headerText,
     flexShrink: 1,
+  },
+  subtitleText: {
+    fontSize: 13,
+    fontWeight: '400',
+    color: colors.textSecondary,
+    marginTop: 4,
   },
   extra: {
     marginLeft: spacing.sm,
