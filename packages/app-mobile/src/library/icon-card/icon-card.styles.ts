@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, spacing } from '../theme';
+import { ink, spacing, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   layout: {
@@ -15,21 +15,21 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   statTitle: {
-    fontSize: 14,
-    color: colors.textSecondary,
+    ...typography.callout,
+    color: ink.secondary,
     marginBottom: spacing.xs,
   },
   statSubtitle: {
-    fontSize: 24,
+    ...typography.display,
     fontWeight: 'bold',
   },
   descriptionTitle: {
-    fontSize: 18,
+    ...typography.heading,
     fontWeight: 'bold',
     marginBottom: spacing.xs,
   },
   descriptionSubtitle: {
-    fontSize: 14,
-    color: colors.textSecondary,
+    ...typography.callout,
+    color: ink.secondary,
   },
 });

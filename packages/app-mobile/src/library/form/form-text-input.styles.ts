@@ -1,19 +1,27 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from '../theme';
+import {
+  borders,
+  ink,
+  radii,
+  semantic,
+  spacing,
+  surfaces,
+  typography,
+} from '../theme';
 
 export const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: borders.subtle,
     borderRadius: radii.md,
     padding: spacing.md,
-    fontSize: 16,
-    color: '#000',
-    backgroundColor: colors.cardBackground,
+    ...typography.body,
+    color: ink.primary,
+    backgroundColor: surfaces.base,
   },
   inputError: {
-    borderColor: '#ff3b30',
+    borderColor: semantic.error,
   },
   inputReadonly: {
     borderWidth: 0,

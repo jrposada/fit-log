@@ -1,6 +1,15 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, shadows, spacing } from '../../../../library/theme';
+import {
+  accent,
+  ink,
+  radii,
+  semantic,
+  shadows,
+  spacing,
+  surfaces,
+  typography,
+} from '../../../../library/theme';
 
 const ACTION_BUTTON_WIDTH = 72;
 
@@ -14,7 +23,7 @@ export const styles = StyleSheet.create({
     overflow: 'visible',
   },
   card: {
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     borderRadius: radii.card,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
@@ -32,9 +41,9 @@ export const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   title: {
-    fontSize: 16,
+    ...typography.body,
     fontWeight: '600',
-    color: colors.textPrimary,
+    color: ink.primary,
     flex: 1,
   },
   contextRow: {
@@ -44,8 +53,8 @@ export const styles = StyleSheet.create({
     marginTop: spacing.xs,
   },
   contextText: {
-    fontSize: 13,
-    color: colors.textSecondary,
+    ...typography.callout,
+    color: ink.secondary,
   },
   metaRow: {
     flexDirection: 'row',
@@ -54,12 +63,12 @@ export const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   metaText: {
-    fontSize: 12,
-    color: colors.textDisabled,
+    ...typography.caption,
+    color: ink.tertiary,
   },
   metaDot: {
-    fontSize: 12,
-    color: colors.textDisabled,
+    ...typography.caption,
+    color: ink.tertiary,
   },
   // Status badges
   badgeBase: {
@@ -68,26 +77,26 @@ export const styles = StyleSheet.create({
     borderRadius: 6,
   },
   badgeText: {
-    fontSize: 11,
+    ...typography.overline,
     fontWeight: '700',
   },
   badgeSend: {
     backgroundColor: 'rgba(27, 94, 32, 0.12)',
   },
   badgeTextSend: {
-    color: colors.actionSuccess,
+    color: semantic.success,
   },
   badgeFlash: {
     backgroundColor: 'rgba(27, 94, 32, 0.12)',
   },
   badgeTextFlash: {
-    color: colors.actionSuccess,
+    color: semantic.success,
   },
   badgeProject: {
     backgroundColor: 'rgba(33, 150, 243, 0.12)',
   },
   badgeTextProject: {
-    color: colors.actionInfo,
+    color: accent.primary,
   },
   // Swipe actions
   rightActions: {
@@ -95,7 +104,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   actionButton: {
-    backgroundColor: colors.actionSuccess,
+    backgroundColor: semantic.success,
     justifyContent: 'center',
     alignItems: 'center',
     width: ACTION_BUTTON_WIDTH,
@@ -103,16 +112,16 @@ export const styles = StyleSheet.create({
     borderBottomRightRadius: radii.card,
   },
   actionText: {
-    color: colors.textOnAction,
-    fontSize: 14,
+    ...typography.callout,
     fontWeight: '600',
+    color: ink.inverse,
   },
   leftActions: {
     width: ACTION_BUTTON_WIDTH,
     flexDirection: 'row',
   },
   projectActionButton: {
-    backgroundColor: colors.actionInfo,
+    backgroundColor: accent.primary,
     justifyContent: 'center',
     alignItems: 'center',
     width: ACTION_BUTTON_WIDTH,

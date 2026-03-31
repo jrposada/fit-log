@@ -1,23 +1,23 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from '../theme';
+import { borders, ink, radii, spacing, surfaces, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
   },
   searchContainer: {
     padding: spacing.lg,
-    backgroundColor: colors.screenBackground,
+    backgroundColor: surfaces.page,
   },
   searchInput: {
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     borderRadius: radii.md,
     padding: spacing.md,
-    fontSize: 16,
+    ...typography.body,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: borders.subtle,
   },
   mapContainer: {
     flex: 1,
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -48,13 +48,13 @@ export const styles = StyleSheet.create({
   footer: {
     padding: spacing.lg,
     borderTopWidth: 1,
-    borderTopColor: colors.border,
-    backgroundColor: colors.cardBackground,
+    borderTopColor: borders.subtle,
+    backgroundColor: surfaces.base,
   },
   addressCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.screenBackground,
+    backgroundColor: surfaces.page,
     borderRadius: radii.md,
     padding: spacing.md,
     marginBottom: spacing.md,
@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
   },
   addressText: {
     flex: 1,
-    fontSize: 14,
-    color: colors.textSecondary,
+    ...typography.callout,
+    color: ink.secondary,
   },
 });

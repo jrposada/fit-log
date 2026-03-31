@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors } from '../../../../../library/theme';
+import { surfaces } from '../../../../../library/theme';
 
 export const styles = StyleSheet.create({
   container: {
@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: 'rgba(255, 0, 0, 0.5)',
     borderWidth: 2,
-    borderColor: colors.cardBackground,
+    borderColor: surfaces.base,
     marginLeft: -12,
     marginTop: -12,
     alignItems: 'center',
@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 0, 0, 0.7)',
   },
   holdRemoveIndicator: {
-    color: colors.cardBackground,
+    color: surfaces.base,
     fontSize: 10,
     fontWeight: 'bold',
     lineHeight: 12,

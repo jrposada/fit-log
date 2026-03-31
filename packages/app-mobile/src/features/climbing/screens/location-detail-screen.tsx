@@ -27,7 +27,7 @@ import IconButton from '../../../library/icon-button';
 import LoadingState from '../../../library/loading-state';
 import Screen from '../../../library/screen';
 import Section from '../../../library/section';
-import { colors } from '../../../library/theme';
+import { accent, surfaces } from '../../../library/theme';
 import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
 import type { FormData } from '../components/location-detail/form-location';
@@ -324,7 +324,7 @@ const LocationDetailScreen: FunctionComponent = () => {
                   style={
                     isEditMode
                       ? {
-                          backgroundColor: colors.actionPrimary,
+                          backgroundColor: accent.primary,
                           borderRadius: 8,
                         }
                       : undefined
@@ -357,10 +357,7 @@ const LocationDetailScreen: FunctionComponent = () => {
   // Loading state for detail mode
   if (!isCreateMode && isLoadingLocation) {
     return (
-      <LoadingState
-        isLoading
-        style={{ backgroundColor: colors.screenBackground }}
-      />
+      <LoadingState isLoading style={{ backgroundColor: surfaces.page }} />
     );
   }
 

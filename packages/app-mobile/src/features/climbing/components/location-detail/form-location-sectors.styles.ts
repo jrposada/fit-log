@@ -1,37 +1,46 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from '../../../../library/theme';
+import {
+  accent,
+  borders,
+  ink,
+  radii,
+  semantic,
+  spacing,
+  surfaces,
+  typography,
+} from '../../../../library/theme';
 
 export const styles = StyleSheet.create({
   sectionTitle: {
-    fontSize: 16,
+    ...typography.body,
     fontWeight: '500',
-    color: '#000',
+    color: ink.primary,
     marginBottom: spacing.sm,
   },
   sectionDescription: {
-    fontSize: 14,
-    color: colors.textSecondary,
+    ...typography.callout,
+    color: ink.secondary,
     marginBottom: spacing.md,
   },
   addSectorButton: {
     borderWidth: 2,
-    borderColor: colors.actionPrimary,
+    borderColor: accent.primary,
     borderRadius: radii.button,
     padding: spacing.lg,
     alignItems: 'center',
   },
   addSectorButtonText: {
-    fontSize: 16,
-    color: colors.actionPrimary,
+    ...typography.body,
     fontWeight: '500',
+    color: accent.primary,
   },
   sectorsList: {
     marginBottom: spacing.md,
   },
   sectorItem: {
     padding: spacing.md,
-    backgroundColor: colors.screenBackground,
+    backgroundColor: surfaces.page,
     borderRadius: radii.md,
     marginBottom: spacing.sm,
   },
@@ -44,8 +53,8 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   sectorDescription: {
-    fontSize: 14,
-    color: colors.textSecondary,
+    ...typography.callout,
+    color: ink.secondary,
     marginTop: spacing.xs,
   },
   sectorActions: {
@@ -57,21 +66,21 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.md,
     paddingVertical: 6,
     borderRadius: radii.sm,
-    backgroundColor: colors.actionPrimary,
+    backgroundColor: accent.primary,
   },
   actionButtonText: {
-    fontSize: 14,
-    color: colors.textOnAction,
+    ...typography.callout,
     fontWeight: '500',
+    color: ink.inverse,
   },
   deleteButton: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: semantic.error,
   },
   deleteButtonText: {
-    color: colors.textOnAction,
+    color: ink.inverse,
   },
   restoreButton: {
-    backgroundColor: colors.actionPrimary,
+    backgroundColor: accent.primary,
   },
   sectorItemDeleted: {
     opacity: 0.4,
@@ -91,24 +100,24 @@ export const styles = StyleSheet.create({
     zIndex: 1000,
   },
   uploadingContainer: {
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     borderRadius: radii.card,
-    padding: spacing.xxl,
+    padding: spacing['2xl'],
     alignItems: 'center',
     minWidth: 200,
   },
   uploadingText: {
     marginTop: spacing.md,
-    fontSize: 16,
-    color: '#000',
+    ...typography.body,
+    color: ink.primary,
   },
   imagesContainer: {
     marginTop: spacing.md,
   },
   imagesLabel: {
-    fontSize: 14,
+    ...typography.callout,
     fontWeight: '500',
-    color: '#000',
+    color: ink.primary,
     marginBottom: spacing.sm,
   },
   imagesScroll: {
@@ -126,7 +135,7 @@ export const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: radii.md,
-    backgroundColor: colors.border,
+    backgroundColor: borders.default,
   },
   deleteImageButton: {
     position: 'absolute',
@@ -139,13 +148,13 @@ export const styles = StyleSheet.create({
     height: 100,
     borderRadius: radii.md,
     borderWidth: 2,
-    borderColor: colors.border,
+    borderColor: borders.subtle,
     borderStyle: 'dashed',
     justifyContent: 'center',
     alignItems: 'center',
   },
   addImageIcon: {
-    fontSize: 28,
-    color: colors.textSecondary,
+    ...typography.display,
+    color: ink.secondary,
   },
 });

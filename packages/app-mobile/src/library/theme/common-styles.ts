@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors } from './tokens';
+import { ink } from './tokens';
 
 export const commonStyles = StyleSheet.create({
   loadingContainer: {
@@ -14,7 +14,7 @@ export const commonStyles = StyleSheet.create({
   },
   emptyStateText: {
     fontSize: 16,
-    color: colors.textSecondary,
+    color: ink.secondary,
     textAlign: 'center',
   },
 });

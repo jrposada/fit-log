@@ -1,50 +1,58 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from '../theme';
+import {
+  accent,
+  borders,
+  ink,
+  radii,
+  spacing,
+  surfaces,
+  typography,
+} from '../theme';
 
 export const styles = StyleSheet.create({
   mapPlaceholder: {
     borderWidth: 2,
-    borderColor: colors.border,
+    borderColor: borders.subtle,
     borderStyle: 'dashed',
     borderRadius: radii.card,
-    padding: 32,
+    padding: spacing['3xl'],
     alignItems: 'center',
-    backgroundColor: '#fafafa',
+    backgroundColor: surfaces.raised,
   },
   mapPlaceholderIcon: {
     fontSize: 48,
     marginBottom: spacing.sm,
   },
   mapPlaceholderText: {
-    fontSize: 16,
-    color: colors.textSecondary,
+    ...typography.body,
+    color: ink.secondary,
   },
   locationCard: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: borders.subtle,
     borderRadius: radii.card,
     padding: spacing.lg,
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
   },
   locationCardContent: {
     flex: 1,
   },
   locationAddress: {
-    fontSize: 16,
-    color: colors.actionPrimary,
+    ...typography.body,
+    color: accent.primary,
     marginBottom: spacing.xs,
   },
   locationCoords: {
-    fontSize: 12,
-    color: colors.textDisabled,
+    ...typography.caption,
+    color: ink.tertiary,
   },
   changeButton: {
-    fontSize: 16,
-    color: colors.actionPrimary,
+    ...typography.body,
     fontWeight: '500',
+    color: accent.primary,
   },
   locationCardReadonly: {
     borderWidth: 0,
@@ -71,7 +79,7 @@ export const styles = StyleSheet.create({
   mapPreviewHint: {
     textAlign: 'center',
     marginTop: spacing.sm,
-    fontSize: 13,
-    color: colors.textSecondary,
+    ...typography.callout,
+    color: ink.secondary,
   },
 });

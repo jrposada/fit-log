@@ -27,6 +27,7 @@ import { useFormReadonly } from '../../../../library/form/use-form-readonly';
 import IconButton from '../../../../library/icon-button/icon-button';
 import { ImageGalleryModal } from '../../../../library/image-gallery-modal';
 import { ImagePickerEvents } from '../../../../library/image-picker';
+import { accent } from '../../../../library/theme';
 import { FormData } from './form-location';
 import { styles } from './form-location-sectors.styles';
 
@@ -353,7 +354,7 @@ const FormLocationSectors: FunctionComponent = () => {
       {!isReadonly && imagePost.isPending && (
         <View style={styles.uploadingOverlay}>
           <View style={styles.uploadingContainer}>
-            <ActivityIndicator size="large" color="#007AFF" />
+            <ActivityIndicator size="large" color={accent.primary} />
             <Text style={styles.uploadingText}>
               {t('climbing.uploading_image')}
             </Text>

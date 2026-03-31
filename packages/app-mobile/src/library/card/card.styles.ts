@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, shadows, spacing } from '../theme';
+import { radii, shadows, spacing, surfaces } from '../theme';
 
 export const sizeStyles = StyleSheet.create({
   sm: {
@@ -22,7 +22,7 @@ export const highlightWidths = {
 
 export const styles = StyleSheet.create({
   base: {
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     borderRadius: radii.card,
   },
   elevated: {
@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
   },
   flat: {},
   subdued: {
-    backgroundColor: colors.screenBackground,
+    backgroundColor: surfaces.page,
   },
   horizontal: {
     flexDirection: 'row',

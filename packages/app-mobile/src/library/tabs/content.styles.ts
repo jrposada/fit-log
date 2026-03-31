@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
   },
   inner: {
-    padding: 20,
+    padding: spacing.xl,
   },
   footer: {
     padding: spacing.lg,

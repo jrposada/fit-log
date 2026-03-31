@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from '../theme';
+import { ink, radii, spacing, surfaces, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   base: {
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     borderRadius: radii.card,
     padding: spacing.lg,
   },
@@ -12,15 +12,16 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   title: {
-    fontWeight: '600',
     marginBottom: spacing.sm,
   },
   titleLevel1: {
-    fontSize: 16,
-    color: colors.textPrimary,
+    ...typography.body,
+    fontWeight: '600',
+    color: ink.primary,
   },
   titleLevel2: {
-    fontSize: 14,
-    color: colors.textSecondary,
+    ...typography.callout,
+    fontWeight: '600',
+    color: ink.secondary,
   },
 });

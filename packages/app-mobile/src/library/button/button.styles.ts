@@ -1,14 +1,23 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, shadows, spacing } from '../theme';
+import {
+  accent,
+  ink,
+  radii,
+  semantic,
+  shadows,
+  spacing,
+  surfaces,
+  typography,
+} from '../theme';
 
 export const variantColors = {
-  primary: colors.actionPrimary,
-  success: colors.actionSuccess,
-  destructive: colors.actionDestructive,
-  warning: colors.actionWarning,
-  info: colors.actionInfo,
-  outline: colors.cardBackground,
+  primary: accent.primary,
+  success: semantic.success,
+  destructive: semantic.destructive,
+  warning: semantic.warning,
+  info: accent.primary,
+  outline: surfaces.base,
   ghost: 'transparent',
 } as const;
 
@@ -31,13 +40,13 @@ export const sizeStyles = StyleSheet.create({
 
 export const sizeTextStyles = StyleSheet.create({
   sm: {
-    fontSize: 13,
+    ...typography.callout,
   },
   md: {
-    fontSize: 15,
+    ...typography.body,
   },
   lg: {
-    fontSize: 16,
+    ...typography.body,
   },
 });
 
@@ -65,7 +74,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   disabled: {
-    backgroundColor: colors.disabled,
+    backgroundColor: ink.disabled,
     opacity: 0.6,
   },
   outline: {
@@ -73,14 +82,14 @@ export const styles = StyleSheet.create({
     ...shadows.cardElevated,
   },
   text: {
-    color: colors.textOnAction,
+    color: ink.inverse,
     fontWeight: '600',
   },
   textOutline: {
-    color: colors.textHeading,
+    color: ink.primary,
   },
   textGhost: {
-    color: colors.headerBackground,
+    color: accent.primary,
   },
   icon: {},
 });

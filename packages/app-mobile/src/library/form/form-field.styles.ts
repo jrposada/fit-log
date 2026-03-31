@@ -1,28 +1,28 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, spacing } from '../theme';
+import { ink, semantic, spacing, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   container: {
     marginBottom: spacing.lg,
   },
   label: {
-    fontSize: 16,
+    ...typography.body,
     fontWeight: '500',
-    color: '#000',
+    color: ink.primary,
     marginBottom: spacing.sm,
   },
   required: {
-    color: '#ff3b30',
+    color: semantic.error,
   },
   helperText: {
-    fontSize: 12,
-    color: colors.textDisabled,
+    ...typography.caption,
+    color: ink.tertiary,
     marginTop: spacing.xs,
   },
   errorText: {
-    fontSize: 12,
-    color: '#ff3b30',
+    ...typography.caption,
+    color: semantic.error,
     marginTop: spacing.xs,
   },
 });

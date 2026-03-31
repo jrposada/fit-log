@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 import { Text, View } from 'react-native';
 
-import { colors } from '../theme';
+import { borders } from '../theme';
 import { styles } from './separator.styles';
 
 export interface SeparatorProps {
@@ -14,7 +14,7 @@ export interface SeparatorProps {
 const Separator: FunctionComponent<SeparatorProps> = ({
   insetHorizontal = 0,
   marginVertical = 12,
-  color = colors.borderLight,
+  color = borders.default,
   label,
 }) => {
   if (label) {

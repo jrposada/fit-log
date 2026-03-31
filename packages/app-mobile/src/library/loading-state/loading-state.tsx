@@ -1,7 +1,7 @@
 import { FunctionComponent, PropsWithChildren } from 'react';
 import { ActivityIndicator, StyleProp, View, ViewStyle } from 'react-native';
 
-import { colors } from '../theme';
+import { accent } from '../theme';
 import { styles } from './loading-state.styles';
 
 export interface LoadingStateProps {
@@ -14,7 +14,7 @@ export interface LoadingStateProps {
 const LoadingState: FunctionComponent<PropsWithChildren<LoadingStateProps>> = ({
   isLoading,
   children,
-  color = colors.actionPrimary,
+  color = accent.primary,
   size = 'large',
   style,
 }) => {

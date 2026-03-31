@@ -1,15 +1,15 @@
 import { StyleSheet } from 'react-native';
 
-import { colors } from '../theme';
+import { ink, spacing, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   base: {
-    padding: 40,
+    padding: spacing['4xl'],
     alignItems: 'center',
   },
   text: {
-    fontSize: 16,
-    color: colors.textSecondary,
+    ...typography.body,
+    color: ink.secondary,
     textAlign: 'center',
   },
 });

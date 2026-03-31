@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, spacing } from '../theme';
+import { ink, spacing, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   base: {
@@ -16,8 +16,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   labelText: {
+    ...typography.callout,
     marginHorizontal: spacing.lg,
-    color: colors.textSecondary,
-    fontSize: 14,
+    color: ink.secondary,
   },
 });

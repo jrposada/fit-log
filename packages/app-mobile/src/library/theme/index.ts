@@ -1,2 +1,13 @@
 export { commonStyles } from './common-styles';
-export { colors, radii, shadows, spacing } from './tokens';
+export {
+  accent,
+  borders,
+  ink,
+  palette,
+  radii,
+  semantic,
+  shadows,
+  spacing,
+  surfaces,
+  typography,
+} from './tokens';

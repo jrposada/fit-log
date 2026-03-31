@@ -1,19 +1,18 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, spacing } from '../../library/theme';
+import { ink, spacing, typography } from '../../library/theme';
 
 export const styles = StyleSheet.create({
   container: {
     padding: spacing.xl,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    ...typography.display,
     marginBottom: spacing.xl,
-    marginTop: 10,
-    color: colors.textHeading,
+    marginTop: spacing.md,
+    color: ink.primary,
   },
   cardsContainer: {
-    gap: 15,
+    gap: spacing.lg,
   },
 });

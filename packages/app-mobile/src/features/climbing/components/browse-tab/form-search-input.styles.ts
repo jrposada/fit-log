@@ -1,12 +1,19 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, shadows, spacing } from '../../../../library/theme';
+import {
+  ink,
+  radii,
+  shadows,
+  spacing,
+  surfaces,
+  typography,
+} from '../../../../library/theme';
 
 export const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     borderRadius: radii.lg,
     paddingHorizontal: spacing.md,
     marginBottom: spacing.md,
@@ -15,14 +22,15 @@ export const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 44,
-    fontSize: 16,
-    color: colors.textHeading,
+    ...typography.body,
+    color: ink.primary,
   },
   clearButton: {
     padding: spacing.sm,
   },
   clearButtonText: {
-    fontSize: 20,
-    color: colors.textDisabled,
+    ...typography.heading,
+    fontWeight: '400',
+    color: ink.tertiary,
   },
 });

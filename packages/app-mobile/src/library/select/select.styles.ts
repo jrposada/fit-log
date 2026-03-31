@@ -1,25 +1,33 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, spacing } from '../theme';
+import {
+  accent,
+  borders,
+  ink,
+  radii,
+  spacing,
+  surfaces,
+  typography,
+} from '../theme';
 
 export const styles = StyleSheet.create({
   valueButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     borderRadius: radii.md,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.lg,
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: borders.subtle,
   },
   valueButtonClearable: {
     paddingRight: 40,
   },
   valueText: {
+    ...typography.body,
     flex: 1,
-    fontSize: 16,
-    color: colors.textPrimary,
+    color: ink.primary,
   },
   valueClearButton: {
     position: 'absolute',
@@ -30,12 +38,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
   },
   valueClearButtonText: {
-    fontSize: 20,
-    color: colors.textDisabled,
-    fontWeight: '600',
+    ...typography.heading,
+    color: ink.tertiary,
   },
   placeholderText: {
-    color: colors.textDisabled,
+    color: ink.tertiary,
   },
   valueReadonly: {
     borderWidth: 0,
@@ -47,11 +54,11 @@ export const styles = StyleSheet.create({
   },
   searchInput: {
     borderWidth: 1,
-    borderColor: colors.borderLight,
+    borderColor: borders.subtle,
     borderRadius: radii.md,
     padding: spacing.md,
     paddingRight: 40,
-    fontSize: 16,
+    ...typography.body,
   },
   clearButton: {
     position: 'absolute',
@@ -62,9 +69,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
   },
   clearButtonText: {
-    fontSize: 20,
-    color: colors.textDisabled,
-    fontWeight: '600',
+    ...typography.heading,
+    color: ink.tertiary,
   },
   listView: {
     height: 300,
@@ -80,26 +86,26 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   selectedItem: {
-    backgroundColor: '#e3f2fd',
+    backgroundColor: accent.subtle,
   },
   dropdownItemText: {
-    fontSize: 16,
-    color: colors.textHeading,
+    ...typography.body,
+    color: ink.primary,
   },
   selectedItemText: {
-    color: colors.actionInfo,
+    color: accent.primary,
     fontWeight: '600',
   },
   emptyState: {
-    paddingVertical: spacing.xxl,
+    paddingVertical: spacing['2xl'],
     alignItems: 'center',
   },
   emptyStateText: {
-    fontSize: 14,
-    color: colors.textDisabled,
+    ...typography.callout,
+    color: ink.tertiary,
   },
   addButton: {
-    backgroundColor: colors.actionInfo,
+    backgroundColor: accent.primary,
     borderRadius: radii.button,
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.xl,
@@ -107,8 +113,8 @@ export const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   addButtonText: {
-    color: colors.textOnAction,
-    fontSize: 16,
+    ...typography.body,
+    color: ink.inverse,
     fontWeight: '600',
     textAlign: 'center',
   },
@@ -117,8 +123,8 @@ export const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   closeButtonText: {
-    color: colors.actionInfo,
-    fontSize: 16,
+    ...typography.body,
+    color: accent.primary,
     fontWeight: '600',
   },
 });

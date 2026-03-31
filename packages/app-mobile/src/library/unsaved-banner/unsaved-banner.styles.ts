@@ -1,18 +1,18 @@
 import { StyleSheet } from 'react-native';
 
-import { spacing } from '../theme';
+import { semantic, spacing, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   banner: {
-    backgroundColor: '#FFF3CD',
+    backgroundColor: semantic.warningSubtle,
     paddingHorizontal: spacing.lg,
-    paddingVertical: 10,
+    paddingVertical: spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#FFECB5',
+    borderBottomColor: semantic.warning,
   },
   text: {
-    color: '#664D03',
-    fontSize: 13,
+    ...typography.callout,
+    color: semantic.warning,
     textAlign: 'center',
   },
 });

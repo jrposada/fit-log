@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, spacing } from '../theme';
+import { ink, spacing, surfaces, typography } from '../theme';
 
 const HEADER_FIXED_HEIGHT = 52;
 
 export const styles = StyleSheet.create({
   header: {
-    backgroundColor: colors.headerBackground,
+    backgroundColor: surfaces.base,
     flexDirection: 'row',
     paddingHorizontal: spacing.md,
     paddingBottom: spacing.sm,
@@ -20,17 +20,15 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   titleText: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: colors.headerText,
+    ...typography.title,
+    color: ink.primary,
   },
   titleContainer: {
     flexShrink: 1,
   },
   subtitleText: {
-    fontSize: 13,
-    fontWeight: '400',
-    color: colors.textSecondary,
+    ...typography.callout,
+    color: ink.secondary,
     marginTop: 4,
   },
   extra: {

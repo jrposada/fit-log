@@ -1,28 +1,27 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii, shadows, spacing } from '../theme';
+import { ink, radii, shadows, spacing, surfaces, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.screenBackground,
+    backgroundColor: surfaces.page,
   },
   selectionContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 32,
+    padding: spacing['3xl'],
   },
   selectionTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#000',
-    marginBottom: 32,
+    ...typography.heading,
+    color: ink.primary,
+    marginBottom: spacing['3xl'],
   },
   selectionButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     borderRadius: radii.card,
     padding: spacing.xl,
     marginBottom: spacing.lg,
@@ -34,8 +33,8 @@ export const styles = StyleSheet.create({
     marginRight: spacing.lg,
   },
   selectionButtonText: {
-    fontSize: 18,
+    ...typography.title,
     fontWeight: '500',
-    color: '#000',
+    color: ink.primary,
   },
 });

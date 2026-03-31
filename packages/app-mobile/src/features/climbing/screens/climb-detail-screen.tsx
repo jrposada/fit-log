@@ -44,7 +44,7 @@ import LoadingState from '../../../library/loading-state';
 import Screen from '../../../library/screen';
 import Section from '../../../library/section';
 import Select from '../../../library/select';
-import { colors } from '../../../library/theme';
+import { accent, borders, ink, surfaces } from '../../../library/theme';
 import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
 import ClimbImage from '../components/climb-detail/climb-image';
@@ -404,7 +404,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
                   style={
                     isEditMode
                       ? {
-                          backgroundColor: colors.actionPrimary,
+                          backgroundColor: accent.primary,
                           borderRadius: 8,
                         }
                       : undefined
@@ -437,10 +437,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
   // Loading state for detail mode
   if (!isCreateMode && isLoadingClimb) {
     return (
-      <LoadingState
-        isLoading
-        style={{ backgroundColor: colors.screenBackground }}
-      />
+      <LoadingState isLoading style={{ backgroundColor: surfaces.page }} />
     );
   }
 
@@ -571,21 +568,21 @@ const ClimbDetailScreen: FunctionComponent = () => {
                         borderRadius: 16,
                         backgroundColor:
                           watchedGrade === grade
-                            ? colors.actionPrimary
-                            : colors.cardBackground,
+                            ? accent.primary
+                            : surfaces.base,
                         borderWidth: 1,
                         borderColor:
                           watchedGrade === grade
-                            ? colors.actionPrimary
-                            : colors.border,
+                            ? accent.primary
+                            : borders.subtle,
                       }}
                     >
                       <Text
                         style={{
                           color:
                             watchedGrade === grade
-                              ? colors.cardBackground
-                              : colors.textPrimary,
+                              ? surfaces.base
+                              : ink.primary,
                           fontWeight: watchedGrade === grade ? '600' : '400',
                         }}
                       >
@@ -614,7 +611,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
                       style={{
                         textAlign: 'center',
                         marginTop: 8,
-                        color: colors.textSecondary,
+                        color: ink.secondary,
                         fontSize: 13,
                       }}
                     >
@@ -656,7 +653,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
                   style={{
                     textAlign: 'center',
                     marginTop: 8,
-                    color: colors.textSecondary,
+                    color: ink.secondary,
                     fontSize: 13,
                   }}
                 >
@@ -696,7 +693,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
             <Section spacing="lg">
               <View
                 style={{
-                  backgroundColor: colors.cardBackground,
+                  backgroundColor: surfaces.base,
                   borderRadius: 12,
                   padding: 16,
                   gap: 12,
@@ -706,12 +703,12 @@ const ClimbDetailScreen: FunctionComponent = () => {
                   style={{
                     fontSize: 14,
                     fontWeight: '600',
-                    color: colors.textHeading,
+                    color: ink.primary,
                   }}
                 >
                   {t('climbing.browse_your_status')}:
                 </Text>
-                <Text style={{ fontSize: 14, color: colors.textSecondary }}>
+                <Text style={{ fontSize: 14, color: ink.secondary }}>
                   {userStatus?.status === 'send' ||
                   userStatus?.status === 'flash'
                     ? `✓ ${t('climbing.browse_status_sent')}`

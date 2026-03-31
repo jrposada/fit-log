@@ -1,14 +1,16 @@
 import { StyleSheet } from 'react-native';
 
+import { ink, radii, spacing, typography } from '../../../../library/theme';
+
 export const styles = StyleSheet.create({
   badge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: radii.badge,
   },
   text: {
-    fontSize: 14,
+    ...typography.callout,
     fontWeight: 'bold',
-    color: '#fff',
+    color: ink.inverse,
   },
 });

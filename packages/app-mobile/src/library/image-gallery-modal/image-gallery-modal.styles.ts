@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { spacing } from '../theme';
+import { ink, spacing, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   overlay: {
@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
   },
   indicatorText: {
-    color: '#fff',
-    fontSize: 14,
+    color: ink.inverse,
+    ...typography.callout,
   },
 });

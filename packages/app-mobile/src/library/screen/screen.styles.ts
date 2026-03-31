@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, spacing } from '../theme';
+import { spacing, surfaces } from '../theme';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.screenBackground,
+    backgroundColor: surfaces.page,
   },
   flex: {
     flex: 1,
@@ -14,9 +14,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     padding: spacing.lg,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
   },
 });

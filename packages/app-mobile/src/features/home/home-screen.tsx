@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 
 import IconCard from '../../library/icon-card';
 import Screen from '../../library/screen';
+import { palette } from '../../library/theme';
 import { styles } from './home-screen.styles';
 
 type DashboardCard = {
@@ -23,42 +24,42 @@ const HomeScreen: FunctionComponent = () => {
       title: t('home.total_workouts'),
       value: '42',
       icon: '💪',
-      color: '#4CAF50',
+      color: palette.green,
     },
     {
       id: '2',
       title: t('home.this_week'),
       value: '5',
       icon: '📅',
-      color: '#2196F3',
+      color: palette.blue,
     },
     {
       id: '3',
       title: t('home.current_streak'),
       value: '7 days',
       icon: '🔥',
-      color: '#FF9800',
+      color: palette.amber,
     },
     {
       id: '4',
       title: t('home.total_time'),
       value: '24h 30m',
       icon: '⏱️',
-      color: '#9C27B0',
+      color: palette.plum,
     },
     {
       id: '5',
       title: t('home.climbs_completed'),
       value: '128',
       icon: '🧗',
-      color: '#F44336',
+      color: palette.coral,
     },
     {
       id: '6',
       title: t('home.personal_best'),
       value: 'V7',
       icon: '🏆',
-      color: '#FFD700',
+      color: palette.gold,
     },
   ];
 

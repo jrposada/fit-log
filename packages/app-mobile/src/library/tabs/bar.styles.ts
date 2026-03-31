@@ -1,32 +1,30 @@
 import { StyleSheet } from 'react-native';
 
-import { colors } from '../theme';
+import { accent, ink, spacing, surfaces, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   tabBar: {
     flexDirection: 'row',
-    backgroundColor: colors.cardBackground,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-    paddingTop: 10,
+    backgroundColor: surfaces.base,
+    paddingTop: spacing.md,
   },
   tab: {
     flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.sm,
     alignItems: 'center',
     borderBottomWidth: 2,
     borderBottomColor: 'transparent',
   },
   activeTab: {
-    borderBottomColor: colors.actionInfo,
+    borderBottomColor: accent.primary,
   },
   tabText: {
-    fontSize: 14,
+    ...typography.callout,
     fontWeight: '600',
-    color: colors.textSecondary,
+    color: ink.secondary,
   },
   activeTabText: {
-    color: colors.actionInfo,
+    color: accent.primary,
   },
 });

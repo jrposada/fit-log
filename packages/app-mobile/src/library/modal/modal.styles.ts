@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { colors, radii } from '../theme';
+import { radii, surfaces } from '../theme';
 
 export const styles = StyleSheet.create({
   overlay: {
@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     maxHeight: '90%',
     display: 'flex',
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     borderTopEndRadius: radii.md,
     borderTopStartRadius: radii.md,
     overflow: 'hidden',
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     display: 'flex',
-    backgroundColor: colors.cardBackground,
+    backgroundColor: surfaces.base,
     overflow: 'hidden',
   },
 });

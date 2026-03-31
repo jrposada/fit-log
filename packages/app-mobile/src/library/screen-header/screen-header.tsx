@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import IconButton from '../icon-button';
-import { colors, spacing } from '../theme';
+import { accent, spacing } from '../theme';
 import { styles } from './screen-header.styles';
 
 export interface ScreenHeaderProps {
@@ -40,7 +40,7 @@ const ScreenHeader: FunctionComponent<ScreenHeaderProps> = ({
             variant="ghost"
             icon="←"
             onPress={onBackPress}
-            color={colors.headerText}
+            color={accent.primary}
             size="lg"
           />
         )}

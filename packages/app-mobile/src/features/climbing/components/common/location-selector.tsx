@@ -10,7 +10,7 @@ import Card from '../../../../library/card';
 import LoadingState from '../../../../library/loading-state';
 import Section from '../../../../library/section';
 import Select from '../../../../library/select';
-import { colors } from '../../../../library/theme';
+import { ink } from '../../../../library/theme';
 import { ClimbingParamList } from '../../types';
 
 type LocationSelectorNavigationProp = NativeStackNavigationProp<
@@ -81,7 +81,7 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
         />
         {selectedLocation && (
           <Card variant="subdued" direction="horizontal">
-            <Text style={{ fontSize: 13, color: colors.textSecondary }}>
+            <Text style={{ fontSize: 13, color: ink.secondary }}>
               {t('climbing.climbs_count', { count: numClimbs })} •{' '}
               {t('climbing.sectors_count', { count: numSectors })}
             </Text>

@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 
 import IconCard from '../../library/icon-card';
 import Screen from '../../library/screen';
+import { palette } from '../../library/theme';
 import { styles } from './training-screen.styles';
 
 type TrainingCard = {
@@ -23,42 +24,42 @@ const TrainingScreen: FunctionComponent = () => {
       title: t('training.workout_plans'),
       description: t('training.workout_plans_description'),
       icon: '📋',
-      color: '#4CAF50',
+      color: palette.green,
     },
     {
       id: '2',
       title: t('training.strength_training'),
       description: t('training.strength_training_description'),
       icon: '🏋️',
-      color: '#2196F3',
+      color: palette.blue,
     },
     {
       id: '3',
       title: t('training.endurance'),
       description: t('training.endurance_description'),
       icon: '🏃',
-      color: '#FF9800',
+      color: palette.amber,
     },
     {
       id: '4',
       title: t('training.flexibility'),
       description: t('training.flexibility_description'),
       icon: '🧘',
-      color: '#9C27B0',
+      color: palette.plum,
     },
     {
       id: '5',
       title: t('training.training_stats'),
       description: t('training.training_stats_description'),
       icon: '📈',
-      color: '#F44336',
+      color: palette.coral,
     },
     {
       id: '6',
       title: t('training.personal_records'),
       description: t('training.personal_records_description'),
       icon: '🏆',
-      color: '#FFD700',
+      color: palette.gold,
     },
   ];
 

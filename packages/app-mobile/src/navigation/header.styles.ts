@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-import { colors } from '../library/theme';
+import { ink, typography } from '../library/theme';
 
 const styles = StyleSheet.create({
   versionText: {
-    fontSize: 11,
-    color: colors.headerText,
+    ...typography.overline,
+    color: ink.secondary,
     opacity: 0.8,
   },
 });

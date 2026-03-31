@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 
 import Header from '../../navigation/header';
-import { colors } from '../theme';
+import { accent } from '../theme';
 import { ImagePickerEvents, ImagePickerResult } from './image-picker-events';
 import { styles } from './image-picker-screen.styles';
 
@@ -92,7 +92,7 @@ const ImagePickerScreen: FunctionComponent = () => {
     <View style={styles.container}>
       <View style={styles.selectionContainer}>
         {isProcessing ? (
-          <ActivityIndicator size="large" color={colors.actionPrimary} />
+          <ActivityIndicator size="large" color={accent.primary} />
         ) : (
           <>
             <Text style={styles.selectionTitle}>

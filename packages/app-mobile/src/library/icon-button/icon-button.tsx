@@ -1,7 +1,7 @@
 import { FunctionComponent } from 'react';
 import { Pressable, StyleProp, Text, ViewStyle } from 'react-native';
 
-import { colors } from '../theme';
+import { ink, semantic, surfaces } from '../theme';
 import { styles } from './icon-button.styles';
 
 type IconButtonSize = 'xs' | 'sm' | 'md' | 'lg';
@@ -28,16 +28,16 @@ const IconButton: FunctionComponent<IconButtonProps> = ({
   onPress,
   variant = 'default',
   size = 'md',
-  backgroundColor = '#f0f0f0',
+  backgroundColor = surfaces.sunken,
   color,
   style,
 }) => {
   const { box, icon: iconFontSize } = SIZE_MAP[size];
 
   const resolvedBg =
-    variant === 'destructive' ? colors.actionDestructive : backgroundColor;
+    variant === 'destructive' ? semantic.destructive : backgroundColor;
   const resolvedColor =
-    color ?? (variant === 'destructive' ? '#fff' : undefined);
+    color ?? (variant === 'destructive' ? ink.inverse : undefined);
 
   return (
     <Pressable
