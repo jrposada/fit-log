@@ -70,6 +70,15 @@ export const styles = StyleSheet.create({
   deleteButtonText: {
     color: colors.textOnAction,
   },
+  restoreButton: {
+    backgroundColor: colors.actionPrimary,
+  },
+  sectorItemDeleted: {
+    opacity: 0.4,
+  },
+  imageDeleted: {
+    opacity: 0.4,
+  },
   uploadingOverlay: {
     position: 'absolute',
     top: 0,

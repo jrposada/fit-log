@@ -67,7 +67,22 @@ const FormLocationSectors: FunctionComponent = () => {
     (sectorIndex: number, imageIndex: number) => {
       const currentSectors = [...allSectors];
       const sector = { ...currentSectors[sectorIndex] };
-      sector.images = sector.images.filter((_, i) => i !== imageIndex);
+      sector.images = sector.images.map((img, i) =>
+        i === imageIndex ? { ...img, _status: 'deleted' as const } : img
+      );
+      currentSectors[sectorIndex] = sector;
+      setValue('sectors', currentSectors, { shouldDirty: true });
+    },
+    [allSectors, setValue]
+  );
+
+  const handleRestoreImage = useCallback(
+    (sectorIndex: number, imageIndex: number) => {
+      const currentSectors = [...allSectors];
+      const sector = { ...currentSectors[sectorIndex] };
+      sector.images = sector.images.map((img, i) =>
+        i === imageIndex ? { ...img, _status: undefined } : img
+      );
       currentSectors[sectorIndex] = sector;
       setValue('sectors', currentSectors, { shouldDirty: true });
     },
@@ -152,6 +167,15 @@ const FormLocationSectors: FunctionComponent = () => {
     editingSectorIndexRef.current = null;
   };
 
+  const handleRestoreSector = (index: number) => {
+    const updatedSectors = [...sectors];
+    updatedSectors[index] = {
+      ...updatedSectors[index],
+      _status: 'updated' as const,
+    };
+    setValue('sectors', updatedSectors, { shouldDirty: true });
+  };
+
   if (isReadonly && sectors.length === 0) {
     return null;
   }
@@ -175,98 +199,137 @@ const FormLocationSectors: FunctionComponent = () => {
         <View style={styles.sectorsList}>
           {sectors.map((sector, index) => {
             const actualIndex = allSectors.indexOf(sector);
+            const isSectorDeleted = sector._status === 'deleted';
+            const visibleImages = isReadonly
+              ? sector.images?.filter((img) => img._status !== 'deleted')
+              : sector.images;
             return (
-              <View
-                key={sector.id || sector._tempId || index}
-                style={styles.sectorItem}
-              >
-                <View style={styles.sectorMainContent}>
-                  <View style={styles.sectorTextContainer}>
-                    <FormTextInput
-                      name={`sectors.${actualIndex}.name`}
-                      label={t('climbing.sector_name')}
-                      placeholder={t('climbing.enter_sector_name')}
-                      maxLength={100}
-                      required
-                      showCharacterCount
-                    />
-                    <FormTextArea
-                      name={`sectors.${actualIndex}.description`}
-                      label={t('climbing.description')}
-                      placeholder={t('climbing.add_description')}
-                      maxLength={500}
-                      numberOfLines={4}
-                    />
+              <View key={sector.id || sector._tempId || index}>
+                <View
+                  style={[
+                    styles.sectorItem,
+                    isSectorDeleted && styles.sectorItemDeleted,
+                  ]}
+                >
+                  <View style={styles.sectorMainContent}>
+                    <View style={styles.sectorTextContainer}>
+                      <FormTextInput
+                        name={`sectors.${actualIndex}.name`}
+                        label={t('climbing.sector_name')}
+                        placeholder={t('climbing.enter_sector_name')}
+                        maxLength={100}
+                        required
+                        showCharacterCount
+                        readonly={isSectorDeleted || undefined}
+                      />
+                      <FormTextArea
+                        name={`sectors.${actualIndex}.description`}
+                        label={t('climbing.description')}
+                        placeholder={t('climbing.add_description')}
+                        maxLength={500}
+                        numberOfLines={4}
+                        readonly={isSectorDeleted || undefined}
+                      />
+                    </View>
                   </View>
-                </View>
-                {(sector.images?.length > 0 || !isReadonly) && (
-                  <View style={styles.imagesContainer}>
-                    <Text style={styles.imagesLabel}>
-                      {t('climbing.images')}
-                    </Text>
-                    <ScrollView
-                      horizontal
-                      showsHorizontalScrollIndicator={false}
-                      style={styles.imagesScroll}
-                      contentContainerStyle={
-                        !isReadonly ? styles.imagesScrollContent : undefined
-                      }
-                    >
-                      {sector.images?.map((image, imgIndex) => (
-                        <View key={image.id} style={styles.imageWrapper}>
-                          {!isReadonly && (
-                            <IconButton
-                              icon="✕"
-                              size="xs"
-                              variant="destructive"
-                              style={styles.deleteImageButton}
-                              onPress={() =>
-                                handleDeleteImage(actualIndex, imgIndex)
-                              }
-                            />
-                          )}
+                  {((visibleImages && visibleImages.length > 0) ||
+                    (!isReadonly && !isSectorDeleted)) && (
+                    <View style={styles.imagesContainer}>
+                      <Text style={styles.imagesLabel}>
+                        {t('climbing.images')}
+                      </Text>
+                      <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={styles.imagesScroll}
+                        contentContainerStyle={
+                          !isReadonly ? styles.imagesScrollContent : undefined
+                        }
+                      >
+                        {visibleImages?.map((image, imgIndex) => {
+                          const isImageDeleted = image._status === 'deleted';
+                          return (
+                            <View
+                              key={image.id}
+                              style={[
+                                styles.imageWrapper,
+                                isImageDeleted && styles.imageDeleted,
+                              ]}
+                            >
+                              {!isReadonly && !isSectorDeleted && (
+                                <IconButton
+                                  icon={isImageDeleted ? '↩' : '✕'}
+                                  size="xs"
+                                  variant={
+                                    isImageDeleted ? 'default' : 'destructive'
+                                  }
+                                  style={styles.deleteImageButton}
+                                  onPress={() =>
+                                    isImageDeleted
+                                      ? handleRestoreImage(
+                                          actualIndex,
+                                          imgIndex
+                                        )
+                                      : handleDeleteImage(actualIndex, imgIndex)
+                                  }
+                                />
+                              )}
+                              <Pressable
+                                disabled={isSectorDeleted}
+                                onPress={() =>
+                                  handleOpenGallery(actualIndex, imgIndex)
+                                }
+                              >
+                                <Image
+                                  source={{ uri: image.thumbnailUrl }}
+                                  style={styles.thumbnailImage}
+                                  resizeMode="cover"
+                                />
+                              </Pressable>
+                            </View>
+                          );
+                        })}
+                        {!isReadonly && !isSectorDeleted && (
                           <Pressable
-                            onPress={() =>
-                              handleOpenGallery(actualIndex, imgIndex)
-                            }
+                            style={styles.addImageTile}
+                            onPress={() => handleEditSector(actualIndex)}
                           >
-                            <Image
-                              source={{ uri: image.thumbnailUrl }}
-                              style={styles.thumbnailImage}
-                              resizeMode="cover"
-                            />
+                            <Text style={styles.addImageIcon}>+</Text>
                           </Pressable>
-                        </View>
-                      ))}
-                      {!isReadonly && (
-                        <Pressable
-                          style={styles.addImageTile}
-                          onPress={() => handleEditSector(actualIndex)}
-                        >
-                          <Text style={styles.addImageIcon}>+</Text>
-                        </Pressable>
-                      )}
-                    </ScrollView>
-                  </View>
-                )}
+                        )}
+                      </ScrollView>
+                    </View>
+                  )}
+                </View>
                 {!isReadonly && (
                   <Animated.View
                     entering={FadeIn.duration(200)}
                     style={styles.sectorActions}
                   >
-                    <Pressable
-                      style={[styles.actionButton, styles.deleteButton]}
-                      onPress={() => handleDeleteSector(actualIndex)}
-                    >
-                      <Text
-                        style={[
-                          styles.actionButtonText,
-                          styles.deleteButtonText,
-                        ]}
+                    {isSectorDeleted ? (
+                      <Pressable
+                        style={[styles.actionButton, styles.restoreButton]}
+                        onPress={() => handleRestoreSector(actualIndex)}
                       >
-                        {t('climbing.delete')}
-                      </Text>
-                    </Pressable>
+                        <Text style={styles.actionButtonText}>
+                          {t('climbing.restore')}
+                        </Text>
+                      </Pressable>
+                    ) : (
+                      <Pressable
+                        style={[styles.actionButton, styles.deleteButton]}
+                        onPress={() => handleDeleteSector(actualIndex)}
+                      >
+                        <Text
+                          style={[
+                            styles.actionButtonText,
+                            styles.deleteButtonText,
+                          ]}
+                        >
+                          {t('climbing.delete')}
+                        </Text>
+                      </Pressable>
+                    )}
                   </Animated.View>
                 )}
               </View>
@@ -301,7 +364,11 @@ const FormLocationSectors: FunctionComponent = () => {
       {galleryState.visible && (
         <ImageGalleryModal
           visible={galleryState.visible}
-          images={allSectors[galleryState.sectorIndex]?.images ?? []}
+          images={
+            allSectors[galleryState.sectorIndex]?.images?.filter(
+              (img) => img._status !== 'deleted'
+            ) ?? []
+          }
           initialIndex={galleryState.imageIndex}
           onClose={handleCloseGallery}
         />

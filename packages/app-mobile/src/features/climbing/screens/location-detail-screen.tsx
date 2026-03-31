@@ -176,7 +176,9 @@ const LocationDetailScreen: FunctionComponent = () => {
           sectors: sectorsData.map((sector) => ({
             ...sector,
             climbs: sector.climbs,
-            images: sector.images.map((image) => image.id),
+            images: sector.images
+              .filter((image) => image._status !== 'deleted')
+              .map((image) => image.id),
           })),
         });
         result.sectors.forEach((s) => sectorsId.add(s.id));

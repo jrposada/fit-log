@@ -14,6 +14,7 @@ const sectorsFormDataSchema = sectorsPutRequestSchema
         thumbnailUrl: z.string().nonempty(),
         imageWidth: z.number(),
         imageHeight: z.number(),
+        _status: z.enum(['active', 'deleted']).optional(),
       })
     ),
   });
