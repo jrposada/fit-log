@@ -5,8 +5,8 @@ import LoadingState from '../../../../library/loading-state';
 import Section from '../../../../library/section';
 import Separator from '../../../../library/separator';
 import { useSwipeHint } from '../../hooks/use-swipe-hint';
+import ClimbCard from '../common/climb-card';
 import LocationSelector from '../common/location-selector';
-import ClimbCard from './climb-card';
 
 interface QuickLogTabProps {
   locationId: string;
@@ -33,17 +33,37 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
 
         <Separator />
 
-        {climbHistories.map((climbHistory, index) => (
-          <ClimbCard
-            key={climbHistory.id}
-            climb={{
-              ...climbHistory.climb,
-              sector: climbHistory.sector,
-            }}
-            shouldPeek={index === 0 && shouldPeek}
-            onPeekDone={markShown}
-          />
-        ))}
+        {climbHistories.map((climbHistory, index) => {
+          const totalAttempts = climbHistory.tries.reduce(
+            (sum, t) => sum + (t.attempts ?? 0),
+            0
+          );
+          const lastTry = climbHistory.tries[climbHistory.tries.length - 1];
+
+          return (
+            <ClimbCard
+              key={climbHistory.id}
+              climb={{
+                ...climbHistory.climb,
+                location: {
+                  id: climbHistory.location.id,
+                  name: climbHistory.location.name,
+                },
+                sector: {
+                  id: climbHistory.sector.id,
+                  name: climbHistory.sector.name,
+                },
+                userStatus: {
+                  status: climbHistory.status,
+                  attempts: totalAttempts || undefined,
+                  lastTriedDate: lastTry?.date,
+                },
+              }}
+              shouldPeek={index === 0 && shouldPeek}
+              onPeekDone={markShown}
+            />
+          );
+        })}
       </Section>
     </LoadingState>
   );

@@ -28,6 +28,7 @@ export type ClimbSearchResult = Climb & {
   userStatus?: {
     status: 'send' | 'flash' | 'attempt' | 'project';
     attempts?: number;
+    lastTriedDate?: string;
   };
 };
 

@@ -1,41 +1,29 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ClimbGrade } from '@shared/models/climb/climb';
 import {
   ClimbSearchResult,
   climbsSearchQuerySchema,
 } from '@shared/models/climb/climb-search';
-import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { useClimbsSearch } from '@shared-react/api/climbs/use-climbs-search';
-import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { useDebounce } from '@shared-react/hooks/use-debounce';
 import { FunctionComponent, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { z } from 'zod';
 
 import CollapsibleSection from '../../../../library/collapsible-section';
 import EmptyState from '../../../../library/empty-state';
 import LoadingState from '../../../../library/loading-state';
-import Modal from '../../../../library/modal';
 import Separator from '../../../../library/separator';
-import { ClimbingParamList } from '../../types';
-import GradeBadge from '../common/grade-badge';
+import ClimbCard from '../common/climb-card';
 import LocationSelector from '../common/location-selector';
 import { styles } from './browse-tab.styles';
 import FormGradeChips from './form-grade-chips';
 import FormSearchInput from './form-search-input';
 
-type ClimbCardNavigationProp = NativeStackNavigationProp<
-  ClimbingParamList,
-  'ClimbingMain'
->;
-
 const BrowseTab: FunctionComponent = () => {
   const { t } = useTranslation();
-  const navigation = useNavigation<ClimbCardNavigationProp>();
 
   type FormData = z.input<typeof climbsSearchQuerySchema>;
 
@@ -51,8 +39,6 @@ const BrowseTab: FunctionComponent = () => {
   const [expandedSectors, setExpandedSectors] = useState<Set<string>>(
     new Set()
   );
-  const [quickViewClimb, setQuickViewClimb] =
-    useState<ClimbSearchResult | null>(null);
 
   // Watch form values
   const locationId = useWatch({ control: methods.control, name: 'locationId' });
@@ -67,8 +53,6 @@ const BrowseTab: FunctionComponent = () => {
     grade: grade && grade.length > 0 ? (grade as ClimbGrade[]) : undefined,
     search: debouncedSearch.trim() || undefined,
   });
-
-  const climbHistoriesPut = useClimbHistoriesPut();
 
   // Group climbs by sector (display organization only)
   const climbsBySector = useMemo(() => {
@@ -100,45 +84,6 @@ const BrowseTab: FunctionComponent = () => {
       }
       return next;
     });
-  };
-
-  const handleLogSend = (climb: ClimbSearchResult) => {
-    climbHistoriesPut.mutate({
-      climb: climb.id,
-      location:
-        typeof climb.location === 'string' ? climb.location : climb.location.id,
-      sector: climb.sector.id,
-      status: 'send',
-      attempts: 1,
-    });
-    setQuickViewClimb(null);
-  };
-
-  const handleAddProject = (climb: ClimbSearchResult) => {
-    climbHistoriesPut.mutate({
-      climb: climb.id,
-      location:
-        typeof climb.location === 'string' ? climb.location : climb.location.id,
-      sector: climb.sector.id,
-      status: 'project',
-    });
-    setQuickViewClimb(null);
-  };
-
-  const getStatusBadge = (climb: ClimbSearchResult) => {
-    const status = climb.userStatus?.status;
-    if (status === 'send' || status === 'flash') {
-      return <Text style={styles.sentBadge}>✓</Text>;
-    }
-    if (status === 'project') {
-      return <Text style={styles.projectBadge}>🎯</Text>;
-    }
-    if (status === 'attempt' && climb.userStatus?.attempts) {
-      return (
-        <Text style={styles.attemptBadge}>{climb.userStatus.attempts}x</Text>
-      );
-    }
-    return null;
   };
 
   return (
@@ -189,43 +134,29 @@ const BrowseTab: FunctionComponent = () => {
                       onToggle={() => toggleSector(sectorId)}
                     >
                       {sectorClimbs.map((climb) => (
-                        <TouchableOpacity
+                        <ClimbCard
                           key={climb.id}
-                          style={styles.climbCard}
-                          onPress={() => setQuickViewClimb(climb)}
-                          activeOpacity={0.7}
-                        >
-                          <View style={styles.climbInfo}>
-                            <View style={styles.climbTopRow}>
-                              <Text style={styles.climbTitle}>
-                                <Text
-                                  style={{
-                                    color: beautifyGradeColor(climb.grade),
-                                  }}
-                                >
-                                  ●
-                                </Text>{' '}
-                                {climb.grade} | {climb.name}
-                              </Text>
-                              {getStatusBadge(climb)}
-                            </View>
-                            <Text style={styles.climbMeta}>
-                              {t('climbing.browse_created', {
-                                date: new Date(
-                                  climb.createdAt
-                                ).toLocaleDateString(),
-                              })}
-                            </Text>
-                          </View>
-                          <TouchableOpacity
-                            style={styles.quickViewButton}
-                            onPress={() => setQuickViewClimb(climb)}
-                          >
-                            <Text style={styles.quickViewButtonText}>
-                              {t('climbing.browse_quick_view')}
-                            </Text>
-                          </TouchableOpacity>
-                        </TouchableOpacity>
+                          climb={{
+                            id: climb.id,
+                            name: climb.name,
+                            grade: climb.grade,
+                            location: {
+                              id:
+                                typeof climb.location === 'string'
+                                  ? climb.location
+                                  : climb.location.id,
+                              name:
+                                typeof climb.location === 'string'
+                                  ? ''
+                                  : climb.location.name,
+                            },
+                            sector: {
+                              id: climb.sector.id,
+                              name: climb.sector.name,
+                            },
+                            userStatus: climb.userStatus,
+                          }}
+                        />
                       ))}
                     </CollapsibleSection>
                   );
@@ -233,112 +164,6 @@ const BrowseTab: FunctionComponent = () => {
               )
             )}
           </ScrollView>
-
-          {/* Quick View Modal */}
-          <Modal.Root
-            visible={quickViewClimb !== null}
-            onClose={() => setQuickViewClimb(null)}
-          >
-            {quickViewClimb && (
-              <>
-                <Modal.Header>
-                  <View style={styles.modalHeader}>
-                    <View style={styles.modalTitleRow}>
-                      <GradeBadge grade={quickViewClimb.grade} />
-                      <Text style={styles.modalTitle}>
-                        {quickViewClimb.name}
-                      </Text>
-                    </View>
-                    <Text style={styles.modalSubtitle}>
-                      {quickViewClimb.sector.name}
-                    </Text>
-                  </View>
-                </Modal.Header>
-                <Modal.Body>
-                  {quickViewClimb.image && (
-                    <Image
-                      source={{ uri: quickViewClimb.image.imageUrl }}
-                      style={styles.modalImage}
-                      resizeMode="cover"
-                    />
-                  )}
-
-                  {quickViewClimb.description && (
-                    <Text style={styles.modalDescription}>
-                      {quickViewClimb.description}
-                    </Text>
-                  )}
-
-                  <View style={styles.statusSection}>
-                    <Text style={styles.statusLabel}>
-                      {t('climbing.browse_your_status')}:
-                    </Text>
-                    {quickViewClimb.userStatus ? (
-                      <View style={styles.statusInfo}>
-                        {getStatusBadge(quickViewClimb)}
-                        <Text style={styles.statusText}>
-                          {quickViewClimb.userStatus.status === 'send' ||
-                          quickViewClimb.userStatus.status === 'flash'
-                            ? t('climbing.browse_status_sent')
-                            : quickViewClimb.userStatus.status === 'project'
-                              ? t('climbing.browse_status_project')
-                              : t('climbing.browse_status_attempted', {
-                                  count:
-                                    quickViewClimb.userStatus.attempts || 0,
-                                })}
-                        </Text>
-                      </View>
-                    ) : (
-                      <Text style={styles.statusText}>
-                        {t('climbing.browse_status_not_tried')}
-                      </Text>
-                    )}
-                  </View>
-
-                  <View style={styles.actionButtons}>
-                    {quickViewClimb.userStatus?.status !== 'send' &&
-                      quickViewClimb.userStatus?.status !== 'flash' && (
-                        <TouchableOpacity
-                          style={styles.logSendButton}
-                          onPress={() => handleLogSend(quickViewClimb)}
-                          disabled={climbHistoriesPut.isPending}
-                        >
-                          <Text style={styles.logSendButtonText}>
-                            ✓ {t('climbing.browse_log_send')}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                    {quickViewClimb.userStatus?.status !== 'project' &&
-                      quickViewClimb.userStatus?.status !== 'send' &&
-                      quickViewClimb.userStatus?.status !== 'flash' && (
-                        <TouchableOpacity
-                          style={styles.projectButton}
-                          onPress={() => handleAddProject(quickViewClimb)}
-                          disabled={climbHistoriesPut.isPending}
-                        >
-                          <Text style={styles.projectButtonText}>
-                            + {t('climbing.project_action')}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
-                    <TouchableOpacity
-                      style={styles.detailsButton}
-                      onPress={() => {
-                        setQuickViewClimb(null);
-                        navigation.navigate('ClimbDetail', {
-                          climbId: quickViewClimb.id,
-                        });
-                      }}
-                    >
-                      <Text style={styles.detailsButtonText}>
-                        {t('climbing.browse_view_details')}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </Modal.Body>
-              </>
-            )}
-          </Modal.Root>
         </View>
       </FormProvider>
     </LoadingState>
