@@ -3,6 +3,8 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ClimbGrade } from '@shared/models/climb/climb';
 import { Hold } from '@shared/models/climb/climb';
+import { useClimbHistories } from '@shared-react/api/climb-histories/use-climb-histories';
+import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { useClimbsById } from '@shared-react/api/climbs/use-climbs-by-id';
 import { useClimbsDelete } from '@shared-react/api/climbs/use-climbs-delete';
 import { useClimbsPut } from '@shared-react/api/climbs/use-climbs-put';
@@ -121,6 +123,14 @@ const ClimbDetailScreen: FunctionComponent = () => {
   const { data: location, isLoading: isLoadingLocation } = useLocationsById({
     id: (isCreateMode ? locationId : climb?.location?.id) || '',
   });
+
+  const { data: climbHistories = [] } = useClimbHistories({
+    climbId: climbId || '',
+    limit: 1,
+  });
+  const userStatus = climbHistories[0];
+
+  const climbHistoriesPut = useClimbHistoriesPut();
 
   const sectors = useMemo(() => location?.sectors ?? [], [location]);
 
@@ -680,6 +690,83 @@ const ClimbDetailScreen: FunctionComponent = () => {
               numberOfLines={4}
             />
           </Section>
+
+          {/* View mode: status + actions */}
+          {!isCreateMode && !isEditMode && (
+            <Section spacing="lg">
+              <View
+                style={{
+                  backgroundColor: colors.cardBackground,
+                  borderRadius: 12,
+                  padding: 16,
+                  gap: 12,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    color: colors.textHeading,
+                  }}
+                >
+                  {t('climbing.browse_your_status')}:
+                </Text>
+                <Text style={{ fontSize: 14, color: colors.textSecondary }}>
+                  {userStatus?.status === 'send' ||
+                  userStatus?.status === 'flash'
+                    ? `✓ ${t('climbing.browse_status_sent')}`
+                    : userStatus?.status === 'project'
+                      ? `🎯 ${t('climbing.browse_status_project')}`
+                      : userStatus?.status === 'attempt'
+                        ? t('climbing.browse_status_attempted', {
+                            count: userStatus.tries.reduce(
+                              (sum, tr) => sum + (tr.attempts || 0),
+                              0
+                            ),
+                          })
+                        : t('climbing.browse_status_not_tried')}
+                </Text>
+                <View
+                  style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap' }}
+                >
+                  {userStatus?.status !== 'send' &&
+                    userStatus?.status !== 'flash' && (
+                      <Button
+                        variant="primary"
+                        title={`✓ ${t('climbing.browse_log_send')}`}
+                        onPress={() => {
+                          climbHistoriesPut.mutate({
+                            climb: climbId!,
+                            location: climb!.location.id,
+                            sector: climb!.sector.id,
+                            status: 'send',
+                            attempts: 1,
+                          });
+                        }}
+                        disabled={climbHistoriesPut.isPending}
+                      />
+                    )}
+                  {userStatus?.status !== 'project' &&
+                    userStatus?.status !== 'send' &&
+                    userStatus?.status !== 'flash' && (
+                      <Button
+                        variant="outline"
+                        title={`+ ${t('climbing.project_action')}`}
+                        onPress={() => {
+                          climbHistoriesPut.mutate({
+                            climb: climbId!,
+                            location: climb!.location.id,
+                            sector: climb!.sector.id,
+                            status: 'project',
+                          });
+                        }}
+                        disabled={climbHistoriesPut.isPending}
+                      />
+                    )}
+                </View>
+              </View>
+            </Section>
+          )}
         </Screen>
       </FormReadonlyProvider>
     </FormProvider>
