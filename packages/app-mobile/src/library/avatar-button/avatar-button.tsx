@@ -36,8 +36,7 @@ const AvatarButton: FunctionComponent<AvatarButtonProps> = ({
     <IconButton
       icon={initials}
       onPress={onPress}
-      size={32}
-      iconSize={12}
+      size="sm"
       backgroundColor="rgba(255, 255, 255, 0.2)"
       color="#fff"
     />

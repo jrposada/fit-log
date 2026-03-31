@@ -41,7 +41,7 @@ const ScreenHeader: FunctionComponent<ScreenHeaderProps> = ({
             icon="←"
             onPress={onBackPress}
             color={colors.headerText}
-            iconSize={28}
+            size="lg"
           />
         )}
         <View>
