@@ -9,12 +9,16 @@ const sectorsFormDataSchema = sectorsPutRequestSchema
     _tempId: z.string().optional(),
     images: z.array(
       z.object({
-        id: z.string(),
-        imageUrl: z.string().nonempty(),
-        thumbnailUrl: z.string().nonempty(),
-        imageWidth: z.number(),
-        imageHeight: z.number(),
-        _status: z.enum(['active', 'deleted']).optional(),
+        id: z.string().optional(),
+        imageUrl: z.string().optional(),
+        thumbnailUrl: z.string().optional(),
+        imageWidth: z.number().optional(),
+        imageHeight: z.number().optional(),
+        _status: z.enum(['active', 'deleted', 'new']).optional(),
+        _tempId: z.string().optional(),
+        base64: z.string().optional(),
+        mimeType: z.string().optional(),
+        uri: z.string().optional(),
       })
     ),
   });

@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useImagesPost } from '@shared-react/api/images/use-images-post';
 import { useLocationsById } from '@shared-react/api/locations/use-locations-by-id';
 import { useLocationsDelete } from '@shared-react/api/locations/use-locations-delete';
 import { useLocationsPut } from '@shared-react/api/locations/use-locations-put';
@@ -108,6 +109,14 @@ const LocationDetailScreen: FunctionComponent = () => {
     },
   });
 
+  const imagesPost = useImagesPost({
+    onError: (error) => {
+      Alert.alert(
+        t('climbing.error'),
+        t('climbing.failed_upload_image', { error })
+      );
+    },
+  });
   const deleteLocation = useLocationsDelete({
     onSuccess: () => {
       Alert.alert(
@@ -122,7 +131,31 @@ const LocationDetailScreen: FunctionComponent = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    const sectorsWithUpdatedStatus = data.sectors.map((sector, index) => {
+    // Upload pending images first
+    const sectorsWithImages = await (async () => {
+      const result = [...data.sectors];
+      for (let sIdx = 0; sIdx < result.length; sIdx++) {
+        const sector = result[sIdx];
+        if (sector._status === 'deleted') continue;
+
+        const updatedImages = [];
+        for (const image of sector.images) {
+          if (image._status === 'new' && image.base64 && image.mimeType) {
+            const savedImage = await imagesPost.mutateAsync({
+              base64: image.base64,
+              mimeType: image.mimeType,
+            });
+            updatedImages.push(savedImage);
+          } else {
+            updatedImages.push(image);
+          }
+        }
+        result[sIdx] = { ...sector, images: updatedImages };
+      }
+      return result;
+    })();
+
+    const sectorsWithUpdatedStatus = sectorsWithImages.map((sector, index) => {
       const sectorDirtyFields = methods.formState.dirtyFields.sectors?.[index];
 
       if (
@@ -178,7 +211,8 @@ const LocationDetailScreen: FunctionComponent = () => {
             climbs: sector.climbs,
             images: sector.images
               .filter((image) => image._status !== 'deleted')
-              .map((image) => image.id),
+              .map((image) => image.id)
+              .filter((id): id is string => !!id),
           })),
         });
         result.sectors.forEach((s) => sectorsId.add(s.id));
@@ -365,8 +399,13 @@ const LocationDetailScreen: FunctionComponent = () => {
     return <EmptyState message={t('climbing.location_not_found')} />;
   }
 
+  const isSubmitting =
+    imagesPost.isPending ||
+    sectorsBatchPut.isPending ||
+    sectorsBatchDelete.isPending ||
+    locationsPut.isPending;
   const isSubmitDisabled =
-    !isValid || !isDirty || locationsPut.isPending || isLoadingLocation;
+    !isValid || !isDirty || isSubmitting || isLoadingLocation;
 
   const footer = (() => {
     if (!isEditMode) {
@@ -379,7 +418,7 @@ const LocationDetailScreen: FunctionComponent = () => {
           title={
             isLoadingLocation
               ? t('climbing.loading')
-              : locationsPut.isPending
+              : isSubmitting
                 ? t('climbing.saving')
                 : t('climbing.create_location')
           }
@@ -399,9 +438,7 @@ const LocationDetailScreen: FunctionComponent = () => {
           />
           <Button
             variant="primary"
-            title={
-              locationsPut.isPending ? t('climbing.saving') : t('actions.save')
-            }
+            title={isSubmitting ? t('climbing.saving') : t('actions.save')}
             onPress={handleSubmit(onSubmit)}
             disabled={isSubmitDisabled}
             style={{ flex: 1 }}

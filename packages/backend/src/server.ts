@@ -15,7 +15,7 @@ async function main() {
   await FilesService.ensureDirectories();
 
   app.use(cors());
-  app.use(express.json());
+  app.use(express.json({ limit: '50mb' }));
 
   app.use('/files', express.static(FilesService.publicDir()));
   app.use('/api', router);

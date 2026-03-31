@@ -1,5 +1,4 @@
 import { useNavigation } from '@react-navigation/native';
-import { useImagesPost } from '@shared-react/api/images/use-images-post';
 import {
   FunctionComponent,
   useCallback,
@@ -10,15 +9,7 @@ import {
 } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native';
+import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import FormTextArea from '../../../../library/form/form-text-area';
@@ -27,7 +18,6 @@ import { useFormReadonly } from '../../../../library/form/use-form-readonly';
 import IconButton from '../../../../library/icon-button/icon-button';
 import { ImageGalleryModal } from '../../../../library/image-gallery-modal';
 import { ImagePickerEvents } from '../../../../library/image-picker';
-import { accent } from '../../../../library/theme';
 import { FormData } from './form-location';
 import { styles } from './form-location-sectors.styles';
 
@@ -44,8 +34,7 @@ const FormLocationSectors: FunctionComponent = () => {
 
   const editingSectorIndexRef = useRef<number | null>(null);
   const tempIdCounter = useRef(0);
-
-  const imagePost = useImagesPost();
+  const imageTempIdCounter = useRef(0);
 
   const [galleryState, setGalleryState] = useState<{
     visible: boolean;
@@ -68,9 +57,18 @@ const FormLocationSectors: FunctionComponent = () => {
     (sectorIndex: number, imageIndex: number) => {
       const currentSectors = [...allSectors];
       const sector = { ...currentSectors[sectorIndex] };
-      sector.images = sector.images.map((img, i) =>
-        i === imageIndex ? { ...img, _status: 'deleted' as const } : img
-      );
+      const image = sector.images[imageIndex];
+
+      if (image._status === 'new') {
+        // New image not yet uploaded — just remove it
+        sector.images = sector.images.filter((_, i) => i !== imageIndex);
+      } else {
+        // Existing image — soft-delete
+        sector.images = sector.images.map((img, i) =>
+          i === imageIndex ? { ...img, _status: 'deleted' as const } : img
+        );
+      }
+
       currentSectors[sectorIndex] = sector;
       setValue('sectors', currentSectors, { shouldDirty: true });
     },
@@ -90,39 +88,30 @@ const FormLocationSectors: FunctionComponent = () => {
     [allSectors, setValue]
   );
 
-  // Subscribe to image picker results
+  // Subscribe to image picker results — store locally, upload deferred to submit
   useEffect(() => {
-    const unsubscribe = ImagePickerEvents.subscribe(async (imageData) => {
+    const unsubscribe = ImagePickerEvents.subscribe((imageData) => {
       if (editingSectorIndexRef.current === null) return;
 
-      try {
-        const savedImage = await imagePost.mutateAsync({
-          base64: imageData.base64,
-          mimeType: imageData.mimeType,
-        });
+      imageTempIdCounter.current += 1;
+      const pendingImage: FormData['sectors'][number]['images'][number] = {
+        _status: 'new',
+        _tempId: `img-temp-${imageTempIdCounter.current}`,
+        base64: imageData.base64,
+        mimeType: imageData.mimeType,
+        uri: imageData.uri,
+        imageWidth: imageData.width,
+        imageHeight: imageData.height,
+      };
 
-        const currentSectors = [...allSectors];
-        const existingSector = currentSectors[editingSectorIndexRef.current];
-        existingSector.images = [...existingSector.images, savedImage];
+      const currentSectors = [...allSectors];
+      const existingSector = currentSectors[editingSectorIndexRef.current];
+      existingSector.images = [...existingSector.images, pendingImage];
 
-        setValue('sectors', currentSectors, { shouldDirty: true });
-
-        Alert.alert(
-          t('climbing.success'),
-          t('climbing.image_uploaded_successfully')
-        );
-      } catch (error) {
-        console.error('Failed to upload image:', error);
-        Alert.alert(
-          t('climbing.error'),
-          t('climbing.failed_upload_image', {
-            error: error instanceof Error ? error.message : 'Unknown error',
-          })
-        );
-      }
+      setValue('sectors', currentSectors, { shouldDirty: true });
     });
     return unsubscribe;
-  }, [allSectors, imagePost, setValue, t]);
+  }, [allSectors, setValue]);
 
   const handleAddSector = () => {
     const updatedSectors = [...sectors];
@@ -249,9 +238,13 @@ const FormLocationSectors: FunctionComponent = () => {
                       >
                         {visibleImages?.map((image, imgIndex) => {
                           const isImageDeleted = image._status === 'deleted';
+                          const isImageNew = image._status === 'new';
+                          const imageSource = isImageNew
+                            ? image.uri
+                            : image.thumbnailUrl;
                           return (
                             <View
-                              key={image.id}
+                              key={image.id || image._tempId}
                               style={[
                                 styles.imageWrapper,
                                 isImageDeleted && styles.imageDeleted,
@@ -282,7 +275,7 @@ const FormLocationSectors: FunctionComponent = () => {
                                 }
                               >
                                 <Image
-                                  source={{ uri: image.thumbnailUrl }}
+                                  source={{ uri: imageSource }}
                                   style={styles.thumbnailImage}
                                   resizeMode="cover"
                                 />
@@ -351,24 +344,19 @@ const FormLocationSectors: FunctionComponent = () => {
         </Animated.View>
       )}
 
-      {!isReadonly && imagePost.isPending && (
-        <View style={styles.uploadingOverlay}>
-          <View style={styles.uploadingContainer}>
-            <ActivityIndicator size="large" color={accent.primary} />
-            <Text style={styles.uploadingText}>
-              {t('climbing.uploading_image')}
-            </Text>
-          </View>
-        </View>
-      )}
-
       {galleryState.visible && (
         <ImageGalleryModal
           visible={galleryState.visible}
           images={
-            allSectors[galleryState.sectorIndex]?.images?.filter(
-              (img) => img._status !== 'deleted'
-            ) ?? []
+            allSectors[galleryState.sectorIndex]?.images
+              ?.filter((img) => img._status !== 'deleted')
+              .map((img) => ({
+                id: img.id || img._tempId || '',
+                imageUrl:
+                  img._status === 'new'
+                    ? (img.uri ?? '')
+                    : (img.imageUrl ?? ''),
+              })) ?? []
           }
           initialIndex={galleryState.imageIndex}
           onClose={handleCloseGallery}
