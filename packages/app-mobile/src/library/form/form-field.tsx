@@ -1,5 +1,6 @@
 import { FunctionComponent, ReactNode } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
 
 import { styles } from './form-field.styles';
 import { useFormReadonly } from './use-form-readonly';
@@ -24,7 +25,7 @@ const FormField: FunctionComponent<FormFieldProps> = ({
   const isReadonly = useFormReadonly(readonly);
 
   return (
-    <View style={styles.container}>
+    <Animated.View layout={LinearTransition} style={styles.container}>
       {label && (
         <Text style={styles.label}>
           {label}{' '}
@@ -33,10 +34,19 @@ const FormField: FunctionComponent<FormFieldProps> = ({
       )}
       {children}
       {!isReadonly && helperText && !error && (
-        <Text style={styles.helperText}>{helperText}</Text>
+        <Animated.Text
+          entering={FadeIn.duration(200)}
+          style={styles.helperText}
+        >
+          {helperText}
+        </Animated.Text>
       )}
-      {!isReadonly && error && <Text style={styles.errorText}>{error}</Text>}
-    </View>
+      {!isReadonly && error && (
+        <Animated.Text entering={FadeIn.duration(200)} style={styles.errorText}>
+          {error}
+        </Animated.Text>
+      )}
+    </Animated.View>
   );
 };
 

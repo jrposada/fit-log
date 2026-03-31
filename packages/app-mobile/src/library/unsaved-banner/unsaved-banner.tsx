@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
 
 import { styles } from './unsaved-banner.styles';
 
@@ -17,9 +18,9 @@ const UnsavedBanner: FunctionComponent<UnsavedBannerProps> = ({
   }
 
   return (
-    <View style={styles.banner}>
+    <Animated.View entering={FadeIn.duration(200)} style={styles.banner}>
       <Text style={styles.text}>{message}</Text>
-    </View>
+    </Animated.View>
   );
 };
 

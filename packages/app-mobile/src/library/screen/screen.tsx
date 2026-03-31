@@ -5,9 +5,9 @@ import {
   ScrollView,
   ScrollViewProps,
   StyleProp,
-  View,
   ViewStyle,
 } from 'react-native';
+import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { spacing } from '../theme';
@@ -39,7 +39,8 @@ const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
         {children}
       </ScrollView>
       {footer && (
-        <View
+        <Animated.View
+          entering={FadeIn.duration(200)}
           style={[
             styles.footer,
             { paddingBottom: spacing.lg + insets.bottom },
@@ -47,13 +48,13 @@ const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
           ]}
         >
           {footer}
-        </View>
+        </Animated.View>
       )}
     </>
   );
 
   return (
-    <View style={[styles.container, style]}>
+    <Animated.View layout={LinearTransition} style={[styles.container, style]}>
       {keyboardAvoiding ? (
         <KeyboardAvoidingView
           style={styles.flex}
@@ -64,7 +65,7 @@ const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
       ) : (
         content
       )}
-    </View>
+    </Animated.View>
   );
 };
 

@@ -1,5 +1,6 @@
 import { FunctionComponent, PropsWithChildren } from 'react';
-import { StyleProp, Text, View, ViewStyle } from 'react-native';
+import { StyleProp, Text, ViewStyle } from 'react-native';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 
 import { spacing as spacingTokens } from '../theme';
 import { styles } from './section.styles';
@@ -28,7 +29,8 @@ const Section: FunctionComponent<PropsWithChildren<SectionProps>> = ({
   children,
 }) => {
   return (
-    <View
+    <Animated.View
+      layout={LinearTransition}
       style={[
         styles.base,
         noPadding && styles.noPadding,
@@ -41,7 +43,7 @@ const Section: FunctionComponent<PropsWithChildren<SectionProps>> = ({
         <Text style={[styles.title, titleLevelStyles[level]]}>{title}</Text>
       )}
       {children}
-    </View>
+    </Animated.View>
   );
 };
 
