@@ -10,10 +10,12 @@ import ScreenHeader, {
 import styles from './header.styles';
 
 type HeaderProps = Omit<ScreenHeaderProps, 'onBackPress'> & {
+  back?: boolean;
   onBackPress?: () => void;
 };
 
 const Header: FunctionComponent<HeaderProps> = ({
+  back = false,
   onBackPress,
   action,
   ...rest
@@ -38,7 +40,7 @@ const Header: FunctionComponent<HeaderProps> = ({
   return (
     <ScreenHeader
       {...rest}
-      onBackPress={handleBackPress}
+      onBackPress={back ? handleBackPress : undefined}
       action={resolvedAction}
     />
   );

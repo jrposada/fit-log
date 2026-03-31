@@ -6,6 +6,7 @@ import { styles } from './icon-button.styles';
 export interface IconButtonProps {
   icon: string;
   onPress: () => void;
+  variant?: 'default' | 'ghost';
   size?: number;
   iconSize?: number;
   backgroundColor?: string;
@@ -16,6 +17,7 @@ export interface IconButtonProps {
 const IconButton: FunctionComponent<IconButtonProps> = ({
   icon,
   onPress,
+  variant = 'default',
   size = 40,
   iconSize = 20,
   backgroundColor = '#f0f0f0',
@@ -27,12 +29,14 @@ const IconButton: FunctionComponent<IconButtonProps> = ({
       onPress={onPress}
       style={[
         styles.base,
-        {
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          backgroundColor,
-        },
+        variant === 'ghost'
+          ? { width: size, height: size }
+          : {
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+              backgroundColor,
+            },
         style,
       ]}
     >
