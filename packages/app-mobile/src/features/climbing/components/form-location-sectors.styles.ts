@@ -105,13 +105,38 @@ export const styles = StyleSheet.create({
   imagesScroll: {
     flexDirection: 'row',
   },
+  imagesScrollContent: {
+    paddingTop: spacing.sm,
+    paddingRight: spacing.sm,
+  },
   imageWrapper: {
     marginRight: spacing.sm,
+    position: 'relative',
   },
   thumbnailImage: {
     width: 100,
     height: 100,
     borderRadius: radii.md,
     backgroundColor: colors.border,
+  },
+  deleteImageButton: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    zIndex: 1,
+  },
+  addImageTile: {
+    width: 100,
+    height: 100,
+    borderRadius: radii.md,
+    borderWidth: 2,
+    borderColor: colors.border,
+    borderStyle: 'dashed',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  addImageIcon: {
+    fontSize: 28,
+    color: colors.textSecondary,
   },
 });

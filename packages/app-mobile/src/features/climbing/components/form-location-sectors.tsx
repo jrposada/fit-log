@@ -1,6 +1,13 @@
 import { useNavigation } from '@react-navigation/native';
 import { useImagesPost } from '@shared-react/api/images/use-images-post';
-import { FunctionComponent, useEffect, useMemo, useRef } from 'react';
+import {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,6 +24,8 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import FormTextArea from '../../../library/form/form-text-area';
 import FormTextInput from '../../../library/form/form-text-input';
 import { useFormReadonly } from '../../../library/form/use-form-readonly';
+import IconButton from '../../../library/icon-button/icon-button';
+import { ImageGalleryModal } from '../../../library/image-gallery-modal';
 import { ImagePickerEvents } from '../../../library/image-picker';
 import { FormData } from './form-location';
 import { styles } from './form-location-sectors.styles';
@@ -36,6 +45,34 @@ const FormLocationSectors: FunctionComponent = () => {
   const tempIdCounter = useRef(0);
 
   const imagePost = useImagesPost();
+
+  const [galleryState, setGalleryState] = useState<{
+    visible: boolean;
+    sectorIndex: number;
+    imageIndex: number;
+  }>({ visible: false, sectorIndex: 0, imageIndex: 0 });
+
+  const handleOpenGallery = useCallback(
+    (sectorIndex: number, imageIndex: number) => {
+      setGalleryState({ visible: true, sectorIndex, imageIndex });
+    },
+    []
+  );
+
+  const handleCloseGallery = useCallback(() => {
+    setGalleryState((prev) => ({ ...prev, visible: false }));
+  }, []);
+
+  const handleDeleteImage = useCallback(
+    (sectorIndex: number, imageIndex: number) => {
+      const currentSectors = [...allSectors];
+      const sector = { ...currentSectors[sectorIndex] };
+      sector.images = sector.images.filter((_, i) => i !== imageIndex);
+      currentSectors[sectorIndex] = sector;
+      setValue('sectors', currentSectors, { shouldDirty: true });
+    },
+    [allSectors, setValue]
+  );
 
   // Subscribe to image picker results
   useEffect(() => {
@@ -162,7 +199,7 @@ const FormLocationSectors: FunctionComponent = () => {
                     />
                   </View>
                 </View>
-                {sector.images && sector.images.length > 0 && (
+                {(sector.images?.length > 0 || !isReadonly) && (
                   <View style={styles.imagesContainer}>
                     <Text style={styles.imagesLabel}>
                       {t('climbing.images')}
@@ -171,18 +208,44 @@ const FormLocationSectors: FunctionComponent = () => {
                       horizontal
                       showsHorizontalScrollIndicator={false}
                       style={styles.imagesScroll}
+                      contentContainerStyle={
+                        !isReadonly ? styles.imagesScrollContent : undefined
+                      }
                     >
-                      {sector.images.map((image) => (
+                      {sector.images?.map((image, imgIndex) => (
                         <View key={image.id} style={styles.imageWrapper}>
-                          <Image
-                            source={{
-                              uri: image.thumbnailUrl,
-                            }}
-                            style={styles.thumbnailImage}
-                            resizeMode="cover"
-                          />
+                          {!isReadonly && (
+                            <IconButton
+                              icon="✕"
+                              size="xs"
+                              variant="destructive"
+                              style={styles.deleteImageButton}
+                              onPress={() =>
+                                handleDeleteImage(actualIndex, imgIndex)
+                              }
+                            />
+                          )}
+                          <Pressable
+                            onPress={() =>
+                              handleOpenGallery(actualIndex, imgIndex)
+                            }
+                          >
+                            <Image
+                              source={{ uri: image.thumbnailUrl }}
+                              style={styles.thumbnailImage}
+                              resizeMode="cover"
+                            />
+                          </Pressable>
                         </View>
                       ))}
+                      {!isReadonly && (
+                        <Pressable
+                          style={styles.addImageTile}
+                          onPress={() => handleEditSector(actualIndex)}
+                        >
+                          <Text style={styles.addImageIcon}>+</Text>
+                        </Pressable>
+                      )}
                     </ScrollView>
                   </View>
                 )}
@@ -191,14 +254,6 @@ const FormLocationSectors: FunctionComponent = () => {
                     entering={FadeIn.duration(200)}
                     style={styles.sectorActions}
                   >
-                    <Pressable
-                      style={styles.actionButton}
-                      onPress={() => handleEditSector(actualIndex)}
-                    >
-                      <Text style={styles.actionButtonText}>
-                        {t('climbing.edit')}
-                      </Text>
-                    </Pressable>
                     <Pressable
                       style={[styles.actionButton, styles.deleteButton]}
                       onPress={() => handleDeleteSector(actualIndex)}
@@ -241,6 +296,15 @@ const FormLocationSectors: FunctionComponent = () => {
             </Text>
           </View>
         </View>
+      )}
+
+      {galleryState.visible && (
+        <ImageGalleryModal
+          visible={galleryState.visible}
+          images={allSectors[galleryState.sectorIndex]?.images ?? []}
+          initialIndex={galleryState.imageIndex}
+          onClose={handleCloseGallery}
+        />
       )}
     </>
   );
