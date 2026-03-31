@@ -15,6 +15,7 @@ import { styles } from './screen.styles';
 
 export interface ScreenProps {
   footer?: ReactNode;
+  noFooterInsetBottom?: boolean;
   footerStyle?: StyleProp<ViewStyle>;
   keyboardAvoiding?: boolean;
   scrollViewProps?: ScrollViewProps;
@@ -25,6 +26,7 @@ export interface ScreenProps {
 const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
   children,
   footer,
+  noFooterInsetBottom = false,
   footerStyle,
   keyboardAvoiding = false,
   scrollViewProps,
@@ -43,7 +45,11 @@ const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
           entering={FadeIn.duration(200)}
           style={[
             styles.footer,
-            { paddingBottom: spacing.lg + insets.bottom },
+            {
+              paddingBottom: noFooterInsetBottom
+                ? spacing.lg
+                : spacing.lg + insets.bottom,
+            },
             footerStyle,
           ]}
         >
