@@ -5,8 +5,8 @@ export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt' | 'project';
 export const STATUS_PRIORITY: Record<ClimbHistoryStatus, number> = {
   flash: 4,
   send: 3,
-  attempt: 2,
-  project: 1,
+  project: 2,
+  attempt: 1,
 };
 
 export const STATUS_LIST = Object.keys(STATUS_PRIORITY) as ClimbHistoryStatus[];
