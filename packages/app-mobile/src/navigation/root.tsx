@@ -13,7 +13,6 @@ import HomeScreen from '../features/home/home-screen';
 import TrainingScreen from '../features/training/training-screen';
 import LoadingState from '../library/loading-state';
 import { surfaces } from '../library/theme';
-import { ToastContainer } from '../library/toast';
 import { RootParamList } from '../types/routes';
 import Header from './header';
 import { styles } from './root.styles';
@@ -44,7 +43,6 @@ const Root: FunctionComponent = () => {
 
   return (
     <NavigationContainer>
-      <ToastContainer />
       <StatusBar style="auto" />
       <Tab.Navigator
         initialRouteName="Home"
