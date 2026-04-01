@@ -121,6 +121,7 @@
   "climbing.progress_tracker_description": "Track your climbing improvements",
   "climbing.progress_tracker": "Progress Tracker",
   "climbing.project_action": "Project",
+  "climbing.unproject_action": "Unproject",
   "climbing.projects_content": "Track current projects and progress details.",
   "climbing.projects": "Projects",
   "climbing.quick_log_content": "Log a climb attempt fast (grade, tries, send).",

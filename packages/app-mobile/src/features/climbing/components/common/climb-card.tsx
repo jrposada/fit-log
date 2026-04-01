@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ClimbGrade } from '@shared/models/climb/climb';
 import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
+import { useClimbHistoryProject } from '@shared-react/api/climb-histories/use-climb-history-project';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +28,8 @@ export interface ClimbCardData {
   location: { id: string; name: string };
   sector: { id: string; name: string };
   userStatus?: {
-    status: 'send' | 'flash' | 'attempt' | 'project';
+    status: 'send' | 'flash' | 'attempt';
+    isProject: boolean;
     attempts?: number;
     lastTriedDate?: string;
   };
@@ -68,43 +70,40 @@ function formatRelativeDate(
   });
 }
 
-function StatusBadge({
+function StatusBadges({
   status,
+  isProject,
   t,
 }: {
-  status: 'send' | 'flash' | 'attempt' | 'project';
+  status: 'send' | 'flash' | 'attempt';
+  isProject: boolean;
   t: (key: string, opts?: Record<string, unknown>) => string;
 }) {
-  switch (status) {
-    case 'send':
-      return (
-        <View style={[styles.badgeBase, styles.badgeSend]}>
-          <Text style={[styles.badgeText, styles.badgeTextSend]}>
-            {t('climbing.status_sent')}
-          </Text>
-        </View>
-      );
-    case 'flash':
-      return (
-        <View style={[styles.badgeBase, styles.badgeFlash]}>
-          <Text style={[styles.badgeText, styles.badgeTextFlash]}>
-            {t('climbing.status_flash')}
-          </Text>
-        </View>
-      );
-    case 'project':
-      return (
+  return (
+    <View style={{ flexDirection: 'row', gap: 4 }}>
+      {isProject && (
         <View style={[styles.badgeBase, styles.badgeProject]}>
           <Text style={[styles.badgeText, styles.badgeTextProject]}>
             {t('climbing.status_project_label')}
           </Text>
         </View>
-      );
-    case 'attempt':
-      return null;
-    default:
-      return null;
-  }
+      )}
+      {status === 'send' && (
+        <View style={[styles.badgeBase, styles.badgeSend]}>
+          <Text style={[styles.badgeText, styles.badgeTextSend]}>
+            {t('climbing.status_sent')}
+          </Text>
+        </View>
+      )}
+      {status === 'flash' && (
+        <View style={[styles.badgeBase, styles.badgeFlash]}>
+          <Text style={[styles.badgeText, styles.badgeTextFlash]}>
+            {t('climbing.status_flash')}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
 }
 
 function RightAction(
@@ -173,13 +172,14 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
   const swipeableRef = useRef<SwipeableMethods>(null);
   const lastDrag = useSharedValue(0);
   const climbHistoriesPut = useClimbHistoriesPut();
-  const loading = climbHistoriesPut.isPending;
+  const climbHistoryProject = useClimbHistoryProject();
+  const loading = climbHistoriesPut.isPending || climbHistoryProject.isPending;
 
   const status = climb.userStatus?.status;
   const isCompleted = status === 'send' || status === 'flash';
-  const isProject = status === 'project';
+  const isProject = climb.userStatus?.isProject ?? false;
   const showLogSwipe = !isCompleted;
-  const showProjectSwipe = !isCompleted && !isProject;
+  const showProjectSwipe = !isCompleted;
 
   const showMetaRow =
     climb.userStatus?.lastTriedDate &&
@@ -213,14 +213,14 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
     });
   }, [climb, climbHistoriesPut]);
 
-  const handleAddProject = useCallback(() => {
-    climbHistoriesPut.mutate({
+  const handleToggleProject = useCallback(() => {
+    climbHistoryProject.mutate({
       climb: climb.id,
       location: climb.location.id,
       sector: climb.sector.id,
-      status: 'project',
+      isProject: !isProject,
     });
-  }, [climb, climbHistoriesPut]);
+  }, [climb, climbHistoryProject, isProject]);
 
   const handleLogPress = useCallback(() => {
     swipeableRef.current?.close();
@@ -229,8 +229,12 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
 
   const handleProjectPress = useCallback(() => {
     swipeableRef.current?.close();
-    handleAddProject();
-  }, [handleAddProject]);
+    handleToggleProject();
+  }, [handleToggleProject]);
+
+  const projectLabel = isProject
+    ? t('climbing.unproject_action')
+    : t('climbing.project_action');
 
   const handleSwipeableWillOpen = useCallback(
     (direction: 'left' | 'right') => {
@@ -238,12 +242,12 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
 
       swipeableRef.current?.close();
       if (direction === 'right' && showProjectSwipe) {
-        handleAddProject();
+        handleToggleProject();
       } else if (direction === 'left' && showLogSwipe) {
         handleLog();
       }
     },
-    [handleLog, handleAddProject, lastDrag, showLogSwipe, showProjectSwipe]
+    [handleLog, handleToggleProject, lastDrag, showLogSwipe, showProjectSwipe]
   );
 
   const handleLongPress = () => {
@@ -255,8 +259,8 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
     }
     if (showProjectSwipe) {
       buttons.push({
-        text: t('climbing.project_action'),
-        onPress: handleAddProject,
+        text: projectLabel,
+        onPress: handleToggleProject,
       });
     }
     buttons.push({
@@ -286,7 +290,7 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
     LeftAction(prog, drag, {
       onProject: handleProjectPress,
       disabled: loading || !showProjectSwipe,
-      label: t('climbing.project_action'),
+      label: projectLabel,
       lastDrag,
     });
 
@@ -324,7 +328,11 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
               | {climb.name}
             </Text>
             {climb.userStatus && (
-              <StatusBadge status={climb.userStatus.status} t={t} />
+              <StatusBadges
+                status={climb.userStatus.status}
+                isProject={climb.userStatus.isProject}
+                t={t}
+              />
             )}
           </View>
 

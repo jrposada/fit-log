@@ -55,6 +55,7 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
                 },
                 userStatus: {
                   status: climbHistory.status,
+                  isProject: climbHistory.isProject,
                   attempts: totalAttempts || undefined,
                   lastTriedDate: lastTry?.date,
                 },

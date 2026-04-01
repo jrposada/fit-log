@@ -67,6 +67,7 @@ const handler = toApiResponse<ClimbsSearchResponse, unknown, ClimbsSearchQuery>(
           h.climb.toString(),
           {
             status: h.status,
+            isProject: h.isProject,
             attempts: totalAttempts || undefined,
             lastTriedDate: lastTry?.date
               ? lastTry.date.toISOString()

@@ -23,11 +23,14 @@ const handler = toApiResponse<
   const { limit, climbId, locationId, sectorId, status, startDate, endDate } =
     request.query;
 
-  const query = ClimbHistory.find({
+  // Split 'project' out of status array into an isProject filter
+  const includeProjects = status?.includes('project') ?? false;
+  const dbStatuses = status?.filter((s) => s !== 'project');
+
+  const baseFilter: Record<string, unknown> = {
     ...(climbId ? { climb: climbId } : {}),
     ...(locationId ? { location: locationId } : {}),
     ...(sectorId ? { sector: sectorId } : {}),
-    ...(status ? { status: { $in: status } } : {}),
     ...(startDate || endDate
       ? {
           updatedAt: {
@@ -36,7 +39,17 @@ const handler = toApiResponse<
           },
         }
       : {}),
-  });
+  };
+
+  if (dbStatuses?.length && includeProjects) {
+    baseFilter.$or = [{ status: { $in: dbStatuses } }, { isProject: true }];
+  } else if (dbStatuses?.length) {
+    baseFilter.status = { $in: dbStatuses };
+  } else if (includeProjects) {
+    baseFilter.isProject = true;
+  }
+
+  const query = ClimbHistory.find(baseFilter);
 
   if (limit) {
     query.limit(limit);

@@ -9,7 +9,7 @@ export type ClimbsSearchQuery = {
   limit?: number;
   locationId?: string;
   search?: string;
-  status?: ClimbHistoryStatus;
+  status?: ClimbHistoryStatus | 'project';
 };
 
 export const climbsSearchQuerySchema = z.object({
@@ -26,7 +26,8 @@ export const climbsSearchQuerySchema = z.object({
 
 export type ClimbSearchResult = Climb & {
   userStatus?: {
-    status: 'send' | 'flash' | 'attempt' | 'project';
+    status: ClimbHistoryStatus;
+    isProject: boolean;
     attempts?: number;
     lastTriedDate?: string;
   };

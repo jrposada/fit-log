@@ -5,6 +5,7 @@ import { ClimbGrade } from '@shared/models/climb/climb';
 import { Hold } from '@shared/models/climb/climb';
 import { useClimbHistories } from '@shared-react/api/climb-histories/use-climb-histories';
 import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
+import { useClimbHistoryProject } from '@shared-react/api/climb-histories/use-climb-history-project';
 import { useClimbsById } from '@shared-react/api/climbs/use-climbs-by-id';
 import { useClimbsDelete } from '@shared-react/api/climbs/use-climbs-delete';
 import { useClimbsPut } from '@shared-react/api/climbs/use-climbs-put';
@@ -133,6 +134,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
   const userStatus = climbHistories[0];
 
   const climbHistoriesPut = useClimbHistoriesPut();
+  const climbHistoryProject = useClimbHistoryProject();
 
   const sectors = useMemo(() => location?.sectors ?? [], [location]);
 
@@ -699,16 +701,17 @@ const ClimbDetailScreen: FunctionComponent = () => {
                   {userStatus?.status === 'send' ||
                   userStatus?.status === 'flash'
                     ? `✓ ${t('climbing.browse_status_sent')}`
-                    : userStatus?.status === 'project'
-                      ? `🎯 ${t('climbing.browse_status_project')}`
-                      : userStatus?.status === 'attempt'
-                        ? t('climbing.browse_status_attempted', {
-                            count: userStatus.tries.reduce(
-                              (sum, tr) => sum + (tr.attempts || 0),
-                              0
-                            ),
-                          })
-                        : t('climbing.browse_status_not_tried')}
+                    : userStatus?.status === 'attempt'
+                      ? t('climbing.browse_status_attempted', {
+                          count: userStatus.tries.reduce(
+                            (sum, tr) => sum + (tr.attempts || 0),
+                            0
+                          ),
+                        })
+                      : t('climbing.browse_status_not_tried')}
+                  {userStatus?.isProject
+                    ? ` · 🎯 ${t('climbing.browse_status_project')}`
+                    : ''}
                 </Text>
                 <View
                   style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap' }}
@@ -730,21 +733,24 @@ const ClimbDetailScreen: FunctionComponent = () => {
                         disabled={climbHistoriesPut.isPending}
                       />
                     )}
-                  {userStatus?.status !== 'project' &&
-                    userStatus?.status !== 'send' &&
+                  {userStatus?.status !== 'send' &&
                     userStatus?.status !== 'flash' && (
                       <Button
                         variant="outline"
-                        title={`+ ${t('climbing.project_action')}`}
+                        title={
+                          userStatus?.isProject
+                            ? t('climbing.unproject_action')
+                            : `+ ${t('climbing.project_action')}`
+                        }
                         onPress={() => {
-                          climbHistoriesPut.mutate({
+                          climbHistoryProject.mutate({
                             climb: climbId!,
                             location: climb!.location.id,
                             sector: climb!.sector.id,
-                            status: 'project',
+                            isProject: !userStatus?.isProject,
                           });
                         }}
-                        disabled={climbHistoriesPut.isPending}
+                        disabled={climbHistoryProject.isPending}
                       />
                     )}
                 </View>

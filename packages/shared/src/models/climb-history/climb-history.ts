@@ -2,7 +2,7 @@ import { Climb } from '../climb/climb';
 import { Location } from '../location/location';
 import { Sector } from '../sector/sector';
 
-export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt' | 'project';
+export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt';
 
 export type ClimbHistoryTry = {
   id: string;
@@ -16,6 +16,7 @@ export type ClimbHistory = {
   /* Data */
   id: string;
   status: ClimbHistoryStatus;
+  isProject: boolean;
   tries: ClimbHistoryTry[];
 
   /* References */

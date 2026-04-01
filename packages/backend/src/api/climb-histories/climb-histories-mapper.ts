@@ -24,6 +24,7 @@ function toApiClimbHistory(
     /* Data */
     id: model._id.toString(),
     status: model.status,
+    isProject: model.isProject,
     tries: model.tries.map((t) => ({
       id: t._id.toString(),
       status: t.status,

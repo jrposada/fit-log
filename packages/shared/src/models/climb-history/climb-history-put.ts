@@ -3,7 +3,7 @@ import z from 'zod';
 export type ClimbHistoriesPutRequest = {
   tryId?: string;
 
-  status: 'send' | 'flash' | 'attempt' | 'project';
+  status: 'send' | 'flash' | 'attempt';
   attempts?: number;
   notes?: string;
   date?: string;
@@ -15,7 +15,7 @@ export type ClimbHistoriesPutRequest = {
 
 export const climbHistoriesPutRequestSchema = z.object({
   tryId: z.string().optional(),
-  status: z.enum(['send', 'flash', 'attempt', 'project']),
+  status: z.enum(['send', 'flash', 'attempt']),
   attempts: z.number().int().positive().optional(),
   notes: z.string().optional(),
   date: z.string().datetime().optional(),

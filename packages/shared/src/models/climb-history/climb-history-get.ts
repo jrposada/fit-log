@@ -2,12 +2,14 @@ import z from 'zod';
 
 import { ClimbHistory, ClimbHistoryStatus } from './climb-history';
 
+export type ClimbHistoriesGetQueryStatus = ClimbHistoryStatus | 'project';
+
 export type ClimbHistoriesGetQuery = {
   limit?: number;
   climbId?: string;
   locationId?: string;
   sectorId?: string;
-  status?: ClimbHistoryStatus[];
+  status?: ClimbHistoriesGetQueryStatus[];
   startDate?: string;
   endDate?: string;
 };
