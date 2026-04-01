@@ -1,6 +1,14 @@
 import { StyleSheet } from 'react-native';
 
-import { ink, radii, shadows, spacing, surfaces, typography } from '../theme';
+import {
+  ink,
+  radii,
+  semantic,
+  shadows,
+  spacing,
+  surfaces,
+  typography,
+} from '../theme';
 
 export const styles = StyleSheet.create({
   container: {
@@ -36,5 +44,17 @@ export const styles = StyleSheet.create({
     ...typography.title,
     fontWeight: '500',
     color: ink.primary,
+  },
+  selectionButtonDisabled: {
+    opacity: 0.5,
+  },
+  selectionButtonTextDisabled: {
+    color: ink.disabled,
+  },
+  permissionHint: {
+    ...typography.caption,
+    color: semantic.error,
+    marginTop: spacing.xs,
+    textDecorationLine: 'underline',
   },
 });
