@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { styles } from './interactive-image.styles';
 
@@ -76,9 +76,9 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
       savedScale.value = scale.value;
       if (scale.value < minScale) {
         resetTransform();
-        if (onScaleChange) runOnJS(onScaleChange)(1);
+        if (onScaleChange) scheduleOnRN(onScaleChange, 1);
       } else {
-        if (onScaleChange) runOnJS(onScaleChange)(scale.value);
+        if (onScaleChange) scheduleOnRN(onScaleChange, scale.value);
       }
     });
 
@@ -139,7 +139,8 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
     })
     .onEnd((event) => {
       if (onTap && !wasMultiTouch.value) {
-        runOnJS(handleTap)(
+        scheduleOnRN(
+          handleTap,
           event.x,
           event.y,
           scale.value,
@@ -154,11 +155,11 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
     .onEnd(() => {
       if (scale.value > 1) {
         resetTransform();
-        if (onScaleChange) runOnJS(onScaleChange)(1);
+        if (onScaleChange) scheduleOnRN(onScaleChange, 1);
       } else {
         scale.value = withSpring(doubleTapScale);
         savedScale.value = doubleTapScale;
-        if (onScaleChange) runOnJS(onScaleChange)(doubleTapScale);
+        if (onScaleChange) scheduleOnRN(onScaleChange, doubleTapScale);
       }
     });
 
