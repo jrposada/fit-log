@@ -12,10 +12,13 @@ import ReanimatedSwipeable, {
 import Animated, {
   SharedValue,
   useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated';
 
 import { ClimbingParamList } from '../../types';
 import { ACTION_WIDTH, styles } from './climb-card.styles';
+
+const LONG_SWIPE_THRESHOLD = ACTION_WIDTH * 2;
 
 export interface ClimbCardData {
   id: string;
@@ -107,11 +110,17 @@ function StatusBadge({
 function RightAction(
   _prog: SharedValue<number>,
   drag: SharedValue<number>,
-  props: { onLog: () => void; logDisabled: boolean; label: string }
+  props: {
+    onLog: () => void;
+    logDisabled: boolean;
+    label: string;
+    lastDrag: SharedValue<number>;
+  }
 ) {
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: drag.value + ACTION_WIDTH }],
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    props.lastDrag.value = drag.value;
+    return { transform: [{ translateX: drag.value + ACTION_WIDTH }] };
+  });
 
   return (
     <Animated.View style={[styles.rightActions, animatedStyle]}>
@@ -133,11 +142,13 @@ function LeftAction(
     onProject: () => void;
     disabled: boolean;
     label: string;
+    lastDrag: SharedValue<number>;
   }
 ) {
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: drag.value - ACTION_WIDTH }],
-  }));
+  const animatedStyle = useAnimatedStyle(() => {
+    props.lastDrag.value = drag.value;
+    return { transform: [{ translateX: drag.value - ACTION_WIDTH }] };
+  });
 
   return (
     <Animated.View style={[styles.leftActions, animatedStyle]}>
@@ -160,6 +171,7 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
   const { t } = useTranslation();
   const navigation = useNavigation<ClimbCardNavigationProp>();
   const swipeableRef = useRef<SwipeableMethods>(null);
+  const lastDrag = useSharedValue(0);
   const climbHistoriesPut = useClimbHistoriesPut();
   const loading = climbHistoriesPut.isPending;
 
@@ -220,6 +232,20 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
     handleAddProject();
   }, [handleAddProject]);
 
+  const handleSwipeableWillOpen = useCallback(
+    (direction: 'left' | 'right') => {
+      if (Math.abs(lastDrag.value) < LONG_SWIPE_THRESHOLD) return;
+
+      swipeableRef.current?.close();
+      if (direction === 'right' && showProjectSwipe) {
+        handleAddProject();
+      } else if (direction === 'left' && showLogSwipe) {
+        handleLog();
+      }
+    },
+    [handleLog, handleAddProject, lastDrag, showLogSwipe, showProjectSwipe]
+  );
+
   const handleLongPress = () => {
     const buttons: { text: string; onPress?: () => void; style?: 'cancel' }[] =
       [];
@@ -242,23 +268,27 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
     Alert.alert(climb.name, undefined, buttons);
   };
 
-  const renderRightActions = showLogSwipe
-    ? (prog: SharedValue<number>, drag: SharedValue<number>) =>
-        RightAction(prog, drag, {
-          onLog: handleLogPress,
-          logDisabled: loading,
-          label: t('climbing.log_action'),
-        })
-    : undefined;
+  const renderRightActions = (
+    prog: SharedValue<number>,
+    drag: SharedValue<number>
+  ) =>
+    RightAction(prog, drag, {
+      onLog: handleLogPress,
+      logDisabled: loading || !showLogSwipe,
+      label: t('climbing.log_action'),
+      lastDrag,
+    });
 
-  const renderLeftActions = showProjectSwipe
-    ? (prog: SharedValue<number>, drag: SharedValue<number>) =>
-        LeftAction(prog, drag, {
-          onProject: handleProjectPress,
-          disabled: loading,
-          label: t('climbing.project_action'),
-        })
-    : undefined;
+  const renderLeftActions = (
+    prog: SharedValue<number>,
+    drag: SharedValue<number>
+  ) =>
+    LeftAction(prog, drag, {
+      onProject: handleProjectPress,
+      disabled: loading || !showProjectSwipe,
+      label: t('climbing.project_action'),
+      lastDrag,
+    });
 
   return (
     <View style={styles.container}>
@@ -267,6 +297,9 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
         friction={2}
         rightThreshold={40}
         leftThreshold={40}
+        overshootRight={true}
+        overshootLeft={true}
+        onSwipeableWillOpen={handleSwipeableWillOpen}
         renderRightActions={renderRightActions}
         renderLeftActions={renderLeftActions}
         containerStyle={styles.swipeableRow}
