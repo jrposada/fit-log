@@ -93,6 +93,13 @@ export const borders = {
 // Typography – 7-rung semantic scale (system fonts only)
 // ---------------------------------------------------------------------------
 export const typography = {
+  /** Large brand text. App name, splash text. */
+  jumbo: {
+    fontSize: 32,
+    lineHeight: 38,
+    fontWeight: '700' as const,
+    letterSpacing: -0.4,
+  },
   /** Large screen titles. */
   display: {
     fontSize: 28,
