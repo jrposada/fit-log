@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
   },
   noPadding: {
     paddingHorizontal: 0,
+    paddingVertical: 0,
   },
   title: {
     marginBottom: spacing.sm,

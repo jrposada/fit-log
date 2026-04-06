@@ -28,7 +28,7 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
 
   return (
     <LoadingState isLoading={isLoadingClimbHistories}>
-      <Section>
+      <Section gap="md">
         <LocationSelector value={locationId} onChange={onLocationChange} />
 
         <Separator />
