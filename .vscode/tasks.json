@@ -35,6 +35,9 @@
         "focus": false,
         "clear": false
       },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
     },
     {
       "label": "Shared-React: Build (Watch)",
@@ -70,6 +73,9 @@
         "focus": false,
         "clear": false
       },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
     },
     {
       "label": "Backend: Dev",
@@ -101,6 +107,9 @@
         "focus": false,
         "clear": true
       },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
     },
   ]
 }
