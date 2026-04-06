@@ -7,16 +7,25 @@ import { Sector } from '@shared/models/sector/sector';
 import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { useClimbHistoryProject } from '@shared-react/api/climb-histories/use-climb-history-project';
 import { formatRelativeDate } from '@shared-react/beautifiers/date';
-import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
-import { Badge } from '../../../../library/badge';
 import Card, { SwipeAction } from '../../../../library/card';
+import Separator from '../../../../library/separator';
+import Stack from '../../../../library/stack';
+import { accent, semantic } from '../../../../library/theme';
 import { Typography } from '../../../../library/typography';
 import { ClimbingParamList } from '../../types';
-import { styles, SWIPE_COLORS } from './climb-card.styles';
+import ClimbStatusBadge from './climb-status-badge';
+import GradeBadge from './grade-badge';
+
+const SWIPE_COLORS = {
+  rightBase: semantic.success,
+  rightEmphasis: accent.emphasis,
+  leftBase: accent.primary,
+  leftEmphasis: accent.emphasis,
+} as const;
 
 type ClimbCardNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,
@@ -119,63 +128,63 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
       onPeekDone={onPeekDone}
       onPress={handleClimbPress}
       disabled={loading}
-      style={[styles.card, loading && styles.cardLoading]}
     >
-      {/* Row 1: Grade + Name + Status Badge */}
-      <View style={styles.topRow}>
+      <Stack direction="horizontal" align="center" gap="sm" spacer="xs">
+        <GradeBadge grade={climb.grade} variant="ghost" />
+        <Separator
+          direction="vertical"
+          size="md"
+          variant="strong"
+          inset="2xs"
+        />
         <Typography size="body" weight="semibold" style={{ flex: 1 }}>
-          <Typography style={{ color: beautifyGradeColor(climb.grade) }}>
-            ● {climb.grade}
-          </Typography>{' '}
-          | {climb.name}
+          {climb.name}
         </Typography>
         {history?.status && (
-          <View style={styles.badgeRow}>
-            {history.isProject && (
-              <Badge
-                label={t('climbing.status_project_label')}
-                variant="info"
-              />
-            )}
-            {history.status === 'send' && (
-              <Badge label={t('climbing.status_sent')} variant="success" />
-            )}
-            {history.status === 'flash' && (
-              <Badge label={t('climbing.status_flash')} variant="success" />
-            )}
-          </View>
+          <ClimbStatusBadge
+            status={history.status}
+            isProject={history.isProject}
+          />
         )}
-      </View>
+      </Stack>
 
-      {/* Row 2: Sector · Location */}
-      <View style={styles.contextRow}>
-        <Typography size="callout" color="secondary">
-          {sector.name} · {location.name}
-        </Typography>
+      <Stack
+        direction="horizontal"
+        align="center"
+        justify="between"
+        spacer="xs"
+      >
+        <Stack direction="horizontal" align="center" gap="sm">
+          <Typography size="callout" color="secondary">
+            {sector.name}
+          </Typography>
+          <Separator direction="dot" />
+          <Typography size="callout" color="secondary">
+            {location.name}
+          </Typography>
+        </Stack>
         {loading && <ActivityIndicator size="small" />}
-      </View>
+      </Stack>
 
       {/* Row 3: Meta (conditional) */}
       {lastTry?.date && (
-        <View style={styles.metaRow}>
+        <Stack direction="horizontal" align="center" gap="sm">
           <Typography size="caption" color="tertiary">
             {t('climbing.last_tried', {
               date: formatRelativeDate(lastTry.date, t),
             })}
           </Typography>
-          {totalAttempts ? (
+          {totalAttempts && (
             <>
-              <Typography size="caption" color="tertiary">
-                ·
-              </Typography>
+              <Separator direction="dot" />
               <Typography size="caption" color="tertiary">
                 {t('climbing.attempts_count', {
                   count: totalAttempts,
                 })}
               </Typography>
             </>
-          ) : null}
-        </View>
+          )}
+        </Stack>
       )}
     </Card>
   );
