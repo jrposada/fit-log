@@ -42,7 +42,10 @@ const handler = toApiResponse<
   };
 
   if (dbStatuses?.length && includeProjects) {
-    baseFilter.$or = [{ status: { $in: dbStatuses } }, { isProject: true }];
+    baseFilter.$or = [
+      { status: { $in: dbStatuses } },
+      { isProject: true, status: { $nin: ['send', 'flash'] } },
+    ];
   } else if (dbStatuses?.length) {
     baseFilter.status = { $in: dbStatuses };
   } else if (includeProjects) {
