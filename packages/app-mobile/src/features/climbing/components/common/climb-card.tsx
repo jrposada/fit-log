@@ -166,7 +166,6 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
         {loading && <ActivityIndicator size="small" />}
       </Stack>
 
-      {/* Row 3: Meta (conditional) */}
       {lastTry?.date && (
         <Stack direction="horizontal" align="center" gap="sm">
           <Typography size="caption" color="tertiary">

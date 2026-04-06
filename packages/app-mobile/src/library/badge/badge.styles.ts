@@ -4,15 +4,33 @@ import { accent, radii, semantic, spacing, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   base: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 2,
     borderRadius: radii.badge,
   },
   text: {
-    ...typography.overline,
     fontWeight: '700',
   },
 });
+
+const sizeStyles = {
+  sm: {
+    container: {
+      paddingHorizontal: spacing.sm,
+      paddingVertical: 2,
+    },
+    text: typography.overline,
+  },
+  md: {
+    container: {
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.xs,
+    },
+    text: typography.callout,
+  },
+} as const;
+
+export type BadgeSize = keyof typeof sizeStyles;
+
+export { sizeStyles };
 
 const variantStyles = {
   success: {

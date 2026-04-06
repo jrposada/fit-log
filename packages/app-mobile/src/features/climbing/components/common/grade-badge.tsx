@@ -1,10 +1,8 @@
 import { Climb } from '@shared/models/climb/climb';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
-import { View } from 'react-native';
 
-import { Typography } from '../../../../library/typography';
-import { styles } from './grade-badge.styles';
+import { Badge } from '../../../../library/badge';
 
 type GradeBadgeProps = {
   grade: Climb['grade'];
@@ -19,21 +17,13 @@ const GradeBadge: FunctionComponent<GradeBadgeProps> = ({
   const isFilled = variant === 'filled';
 
   return (
-    <View
-      style={[
-        isFilled && styles.badge,
-        isFilled && { backgroundColor: gradeColor },
-      ]}
-    >
-      <Typography
-        size="callout"
-        weight="bold"
-        style={isFilled ? undefined : { color: gradeColor }}
-        color={isFilled ? 'inverse' : undefined}
-      >
-        {grade}
-      </Typography>
-    </View>
+    <Badge
+      label={grade}
+      size="md"
+      variant="info"
+      style={{ backgroundColor: isFilled ? gradeColor : 'transparent' }}
+      textStyle={{ color: isFilled ? '#FFFFFF' : gradeColor }}
+    />
   );
 };
 
