@@ -1,0 +1,215 @@
+import * as Haptics from 'expo-haptics';
+import {
+  FunctionComponent,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+} from 'react';
+import { Pressable, View } from 'react-native';
+import { Text } from 'react-native';
+import ReanimatedSwipeable, {
+  SwipeableMethods,
+} from 'react-native-gesture-handler/ReanimatedSwipeable';
+import Animated, {
+  interpolateColor,
+  SharedValue,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
+
+import { ACTION_WIDTH, styles } from './swipeable-card.styles';
+
+const LONG_SWIPE_THRESHOLD = ACTION_WIDTH * 2;
+
+export interface SwipeAction {
+  label: string;
+  icon: string;
+  baseColor: string;
+  emphasisColor: string;
+  onAction: () => void;
+}
+
+export interface SwipeableCardProps {
+  /** Action revealed when swiping right (left side background) */
+  leftAction?: SwipeAction | false;
+  /** Action revealed when swiping left (right side background) */
+  rightAction?: SwipeAction | false;
+  /** If true, the card auto-peeks to hint at the swipe action */
+  shouldPeek?: boolean;
+  /** Called after peek animation completes */
+  onPeekDone?: () => void;
+  /** Called when the card content is pressed */
+  onPress?: () => void;
+  /** Disables press interaction */
+  disabled?: boolean;
+}
+
+function triggerHaptic() {
+  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+}
+
+interface SwipeBackgroundProps {
+  side: 'left' | 'right';
+  label: string;
+  icon: string;
+  baseColor: string;
+  emphasisColor: string;
+  lastDrag: SharedValue<number>;
+  drag: SharedValue<number>;
+}
+
+function SwipeBackground({ drag, ...props }: SwipeBackgroundProps) {
+  const hasTriggeredHaptic = useSharedValue(false);
+
+  const thresholdCrossed = useDerivedValue(() => {
+    props.lastDrag.value = drag.value;
+    return Math.abs(drag.value) >= LONG_SWIPE_THRESHOLD;
+  });
+
+  useDerivedValue(() => {
+    if (thresholdCrossed.value && !hasTriggeredHaptic.value) {
+      hasTriggeredHaptic.value = true;
+      scheduleOnRN(triggerHaptic);
+    } else if (!thresholdCrossed.value) {
+      hasTriggeredHaptic.value = false;
+    }
+  });
+
+  const backgroundStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      Math.abs(drag.value),
+      [0, LONG_SWIPE_THRESHOLD],
+      [props.baseColor, props.emphasisColor]
+    ),
+  }));
+
+  const iconStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        scale: withSpring(thresholdCrossed.value ? 1.2 : 1.0, { damping: 12 }),
+      },
+    ],
+  }));
+
+  const containerStyle =
+    props.side === 'right'
+      ? styles.swipeBackgroundRight
+      : styles.swipeBackgroundLeft;
+
+  return (
+    <Animated.View style={[containerStyle, backgroundStyle]}>
+      <Animated.View style={[styles.swipeContent, iconStyle]}>
+        <Text style={styles.swipeIcon}>{props.icon}</Text>
+        <Text style={styles.swipeLabel}>{props.label}</Text>
+      </Animated.View>
+    </Animated.View>
+  );
+}
+
+const SwipeableCard: FunctionComponent<
+  PropsWithChildren<SwipeableCardProps>
+> = ({
+  leftAction,
+  rightAction,
+  shouldPeek,
+  onPeekDone,
+  onPress,
+  disabled,
+  children,
+}) => {
+  const lastDrag = useSharedValue(0);
+  const swipeableRef = useRef<SwipeableMethods>(null);
+
+  useEffect(() => {
+    if (shouldPeek) {
+      const timer = setTimeout(() => {
+        swipeableRef.current?.openRight();
+        setTimeout(() => {
+          swipeableRef.current?.close();
+          onPeekDone?.();
+        }, 800);
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [shouldPeek, onPeekDone]);
+
+  const handleSwipeableWillOpen = useCallback(
+    (direction: 'left' | 'right') => {
+      swipeableRef.current?.close();
+      if (Math.abs(lastDrag.value) < LONG_SWIPE_THRESHOLD) return;
+
+      if (direction === 'right' && leftAction) {
+        leftAction.onAction();
+      } else if (direction === 'left' && rightAction) {
+        rightAction.onAction();
+      }
+    },
+    [lastDrag, leftAction, rightAction]
+  );
+
+  const renderRightActions = rightAction
+    ? (_prog: SharedValue<number>, drag: SharedValue<number>) => (
+        <SwipeBackground
+          side="right"
+          label={rightAction.label}
+          icon={rightAction.icon}
+          baseColor={rightAction.baseColor}
+          emphasisColor={rightAction.emphasisColor}
+          lastDrag={lastDrag}
+          drag={drag}
+        />
+      )
+    : undefined;
+
+  const renderLeftActions = leftAction
+    ? (_prog: SharedValue<number>, drag: SharedValue<number>) => (
+        <SwipeBackground
+          side="left"
+          label={leftAction.label}
+          icon={leftAction.icon}
+          baseColor={leftAction.baseColor}
+          emphasisColor={leftAction.emphasisColor}
+          lastDrag={lastDrag}
+          drag={drag}
+        />
+      )
+    : undefined;
+
+  return (
+    <View style={styles.container}>
+      <ReanimatedSwipeable
+        ref={swipeableRef}
+        friction={1}
+        rightThreshold={40}
+        leftThreshold={40}
+        overshootRight={true}
+        overshootLeft={true}
+        onSwipeableWillOpen={handleSwipeableWillOpen}
+        renderRightActions={renderRightActions}
+        renderLeftActions={renderLeftActions}
+        containerStyle={styles.swipeableRow}
+      >
+        {onPress ? (
+          <Pressable
+            style={({ pressed }) => [
+              pressed && styles.pressed,
+              disabled && styles.disabled,
+            ]}
+            onPress={onPress}
+            disabled={disabled}
+          >
+            {children}
+          </Pressable>
+        ) : (
+          children
+        )}
+      </ReanimatedSwipeable>
+    </View>
+  );
+};
+
+export default SwipeableCard;
