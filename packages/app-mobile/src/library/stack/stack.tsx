@@ -13,6 +13,7 @@ export interface StackProps {
   padding?: SpacingToken;
   paddingHorizontal?: SpacingToken;
   paddingVertical?: SpacingToken;
+  spacer?: SpacingToken;
   flex?: boolean;
   style?: StyleProp<ViewStyle>;
 }
@@ -39,6 +40,7 @@ const Stack: FunctionComponent<PropsWithChildren<StackProps>> = ({
   padding,
   paddingHorizontal,
   paddingVertical,
+  spacer,
   flex,
   style,
   children,
@@ -55,6 +57,7 @@ const Stack: FunctionComponent<PropsWithChildren<StackProps>> = ({
     ...(paddingVertical != null && {
       paddingVertical: spacingTokens[paddingVertical],
     }),
+    ...(spacer != null && { marginBottom: spacingTokens[spacer] }),
     ...(flex && { flex: 1 }),
   };
 

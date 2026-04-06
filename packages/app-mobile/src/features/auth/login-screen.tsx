@@ -8,7 +8,6 @@ import { Icon } from '../../library/icon';
 import Screen from '../../library/screen';
 import Separator from '../../library/separator';
 import Stack from '../../library/stack';
-import { spacing } from '../../library/theme';
 import { Typography } from '../../library/typography';
 
 const LoginScreen: FunctionComponent = () => {
@@ -28,8 +27,8 @@ const LoginScreen: FunctionComponent = () => {
       centered
       paddingHorizontal="2xl"
     >
-      <Stack align="center" gap="sm" style={{ marginBottom: spacing['5xl'] }}>
-        <Icon icon="💪" size="xl" style={{ marginBottom: spacing.md }} />
+      <Stack align="center" gap="sm" spacer="5xl">
+        <Icon icon="💪" size="xl" spacer="md" />
         <Typography size="jumbo" color="accent">
           {t('auth.appName')}
         </Typography>
