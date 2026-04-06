@@ -173,6 +173,7 @@ const FormLocationSectors: FunctionComponent = () => {
   return (
     <>
       <Text style={styles.sectionTitle}>
+        📸{' '}
         {isReadonly
           ? t('climbing.sectors')
           : t('climbing.sectors_walls_optional')}

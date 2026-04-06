@@ -33,38 +33,17 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
 
         <Separator />
 
-        {climbHistories.map((climbHistory, index) => {
-          const totalAttempts = climbHistory.tries.reduce(
-            (sum, t) => sum + (t.attempts ?? 0),
-            0
-          );
-          const lastTry = climbHistory.tries[climbHistory.tries.length - 1];
-
-          return (
-            <ClimbCard
-              key={climbHistory.id}
-              climb={{
-                ...climbHistory.climb,
-                location: {
-                  id: climbHistory.location.id,
-                  name: climbHistory.location.name,
-                },
-                sector: {
-                  id: climbHistory.sector.id,
-                  name: climbHistory.sector.name,
-                },
-                userStatus: {
-                  status: climbHistory.status,
-                  isProject: climbHistory.isProject,
-                  attempts: totalAttempts || undefined,
-                  lastTriedDate: lastTry?.date,
-                },
-              }}
-              shouldPeek={index === 0 && shouldPeek}
-              onPeekDone={markShown}
-            />
-          );
-        })}
+        {climbHistories.map((climbHistory, index) => (
+          <ClimbCard
+            key={climbHistory.id}
+            climb={climbHistory.climb}
+            location={climbHistory.location}
+            sector={climbHistory.sector}
+            history={climbHistory}
+            shouldPeek={index === 0 && shouldPeek}
+            onPeekDone={markShown}
+          />
+        ))}
       </Section>
     </LoadingState>
   );

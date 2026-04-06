@@ -136,25 +136,20 @@ const BrowseTab: FunctionComponent = () => {
                       {sectorClimbs.map((climb) => (
                         <ClimbCard
                           key={climb.id}
-                          climb={{
-                            id: climb.id,
-                            name: climb.name,
-                            grade: climb.grade,
-                            location: {
-                              id:
-                                typeof climb.location === 'string'
-                                  ? climb.location
-                                  : climb.location.id,
-                              name:
-                                typeof climb.location === 'string'
-                                  ? ''
-                                  : climb.location.name,
-                            },
-                            sector: {
-                              id: climb.sector.id,
-                              name: climb.sector.name,
-                            },
-                            userStatus: climb.userStatus,
+                          climb={climb}
+                          location={{
+                            id:
+                              typeof climb.location === 'string'
+                                ? climb.location
+                                : climb.location.id,
+                            name:
+                              typeof climb.location === 'string'
+                                ? ''
+                                : climb.location.name,
+                          }}
+                          sector={{
+                            id: climb.sector.id,
+                            name: climb.sector.name,
                           }}
                         />
                       ))}

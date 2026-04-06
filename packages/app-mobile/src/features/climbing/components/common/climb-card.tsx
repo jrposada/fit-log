@@ -1,203 +1,59 @@
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ClimbGrade } from '@shared/models/climb/climb';
+import { Climb } from '@shared/models/climb/climb';
+import { ClimbHistory } from '@shared/models/climb-history/climb-history';
+import { Location } from '@shared/models/location/location';
+import { Sector } from '@shared/models/sector/sector';
 import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { useClimbHistoryProject } from '@shared-react/api/climb-histories/use-climb-history-project';
+import { formatRelativeDate } from '@shared-react/beautifiers/date';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
-import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
+import { FunctionComponent, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
-import ReanimatedSwipeable, {
-  SwipeableMethods,
-} from 'react-native-gesture-handler/ReanimatedSwipeable';
-import Animated, {
-  SharedValue,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
+import { ActivityIndicator, Text, View } from 'react-native';
 
+import { Badge } from '../../../../library/badge';
+import SwipeableCard, { SwipeAction } from '../../../../library/swipeable-card';
 import { ClimbingParamList } from '../../types';
-import { ACTION_WIDTH, styles } from './climb-card.styles';
-
-const LONG_SWIPE_THRESHOLD = ACTION_WIDTH * 2;
-
-export interface ClimbCardData {
-  id: string;
-  name: string;
-  grade: ClimbGrade;
-  location: { id: string; name: string };
-  sector: { id: string; name: string };
-  userStatus?: {
-    status: 'send' | 'flash' | 'attempt';
-    isProject: boolean;
-    attempts?: number;
-    lastTriedDate?: string;
-  };
-}
-
-export interface ClimbCardProps {
-  climb: ClimbCardData;
-  /** If true, the card auto-peeks to hint at the swipe action */
-  shouldPeek?: boolean;
-  /** Called after peek animation completes */
-  onPeekDone?: () => void;
-}
+import { styles, SWIPE_COLORS } from './climb-card.styles';
 
 type ClimbCardNavigationProp = NativeStackNavigationProp<
   ClimbingParamList,
   'ClimbingMain'
 >;
 
-function formatRelativeDate(
-  isoDate: string,
-  t: (key: string, opts?: Record<string, unknown>) => string
-): string {
-  const now = new Date();
-  const date = new Date(isoDate);
-  const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 0) return t('climbing.relative_today');
-  if (diffDays === 1) return t('climbing.relative_yesterday');
-  if (diffDays < 14)
-    return t('climbing.relative_days_ago', { count: diffDays });
-  if (diffDays < 60)
-    return t('climbing.relative_weeks_ago', {
-      count: Math.floor(diffDays / 7),
-    });
-  return t('climbing.relative_months_ago', {
-    count: Math.floor(diffDays / 30),
-  });
-}
-
-function StatusBadges({
-  status,
-  isProject,
-  t,
-}: {
-  status: 'send' | 'flash' | 'attempt';
-  isProject: boolean;
-  t: (key: string, opts?: Record<string, unknown>) => string;
-}) {
-  return (
-    <View style={{ flexDirection: 'row', gap: 4 }}>
-      {isProject && (
-        <View style={[styles.badgeBase, styles.badgeProject]}>
-          <Text style={[styles.badgeText, styles.badgeTextProject]}>
-            {t('climbing.status_project_label')}
-          </Text>
-        </View>
-      )}
-      {status === 'send' && (
-        <View style={[styles.badgeBase, styles.badgeSend]}>
-          <Text style={[styles.badgeText, styles.badgeTextSend]}>
-            {t('climbing.status_sent')}
-          </Text>
-        </View>
-      )}
-      {status === 'flash' && (
-        <View style={[styles.badgeBase, styles.badgeFlash]}>
-          <Text style={[styles.badgeText, styles.badgeTextFlash]}>
-            {t('climbing.status_flash')}
-          </Text>
-        </View>
-      )}
-    </View>
-  );
-}
-
-function RightAction(
-  _prog: SharedValue<number>,
-  drag: SharedValue<number>,
-  props: {
-    onLog: () => void;
-    logDisabled: boolean;
-    label: string;
-    lastDrag: SharedValue<number>;
-  }
-) {
-  const animatedStyle = useAnimatedStyle(() => {
-    props.lastDrag.value = drag.value;
-    return { transform: [{ translateX: drag.value + ACTION_WIDTH }] };
-  });
-
-  return (
-    <Animated.View style={[styles.rightActions, animatedStyle]}>
-      <Pressable
-        style={styles.actionButton}
-        onPress={props.onLog}
-        disabled={props.logDisabled}
-      >
-        <Text style={styles.actionText}>{props.label}</Text>
-      </Pressable>
-    </Animated.View>
-  );
-}
-
-function LeftAction(
-  _prog: SharedValue<number>,
-  drag: SharedValue<number>,
-  props: {
-    onProject: () => void;
-    disabled: boolean;
-    label: string;
-    lastDrag: SharedValue<number>;
-  }
-) {
-  const animatedStyle = useAnimatedStyle(() => {
-    props.lastDrag.value = drag.value;
-    return { transform: [{ translateX: drag.value - ACTION_WIDTH }] };
-  });
-
-  return (
-    <Animated.View style={[styles.leftActions, animatedStyle]}>
-      <Pressable
-        style={styles.projectActionButton}
-        onPress={props.onProject}
-        disabled={props.disabled}
-      >
-        <Text style={styles.actionText}>{props.label}</Text>
-      </Pressable>
-    </Animated.View>
-  );
+interface ClimbCardProps {
+  climb: Omit<Climb, 'image' | 'location' | 'sector'>;
+  location: Pick<Location, 'id' | 'name'>;
+  sector: Pick<Sector, 'id' | 'name'>;
+  history?: ClimbHistory;
+  shouldPeek?: boolean;
+  onPeekDone?: () => void;
 }
 
 const ClimbCard: FunctionComponent<ClimbCardProps> = ({
   climb,
+  location,
+  sector,
+  history,
   shouldPeek,
   onPeekDone,
 }) => {
   const { t } = useTranslation();
   const navigation = useNavigation<ClimbCardNavigationProp>();
-  const swipeableRef = useRef<SwipeableMethods>(null);
-  const lastDrag = useSharedValue(0);
+
   const climbHistoriesPut = useClimbHistoriesPut();
   const climbHistoryProject = useClimbHistoryProject();
+
   const loading = climbHistoriesPut.isPending || climbHistoryProject.isPending;
 
-  const status = climb.userStatus?.status;
-  const isCompleted = status === 'send' || status === 'flash';
-  const isProject = climb.userStatus?.isProject ?? false;
-  const showLogSwipe = !isCompleted;
-  const showProjectSwipe = !isCompleted;
-
-  const showMetaRow =
-    climb.userStatus?.lastTriedDate &&
-    !isCompleted &&
-    (status === 'attempt' || (isProject && climb.userStatus?.attempts));
-
-  useEffect(() => {
-    if (shouldPeek) {
-      const timer = setTimeout(() => {
-        swipeableRef.current?.openRight();
-        setTimeout(() => {
-          swipeableRef.current?.close();
-          onPeekDone?.();
-        }, 800);
-      }, 600);
-      return () => clearTimeout(timer);
-    }
-  }, [shouldPeek, onPeekDone]);
+  const isCompleted = history?.status === 'send' || history?.status === 'flash';
+  const totalAttempts = history?.tries.reduce(
+    (sum, t) => sum + (t.attempts ?? 0),
+    0
+  );
+  const lastTry: ClimbHistory['tries'][number] | undefined =
+    history?.tries[history.tries?.length - 1];
 
   const handleClimbPress = () => {
     navigation.navigate('ClimbDetail', { climbId: climb.id });
@@ -206,167 +62,120 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
   const handleLog = useCallback(() => {
     climbHistoriesPut.mutate({
       climb: climb.id,
-      location: climb.location.id,
-      sector: climb.sector.id,
+      location: location.id,
+      sector: sector.id,
       status: 'send',
       attempts: 1,
     });
-  }, [climb, climbHistoriesPut]);
+  }, [climb.id, climbHistoriesPut, location.id, sector.id]);
 
   const handleToggleProject = useCallback(() => {
     climbHistoryProject.mutate({
       climb: climb.id,
-      location: climb.location.id,
-      sector: climb.sector.id,
-      isProject: !isProject,
+      location: location.id,
+      sector: sector.id,
+      isProject: !history?.isProject,
     });
-  }, [climb, climbHistoryProject, isProject]);
+  }, [
+    climb.id,
+    climbHistoryProject,
+    history?.isProject,
+    location.id,
+    sector.id,
+  ]);
 
-  const handleLogPress = useCallback(() => {
-    swipeableRef.current?.close();
-    handleLog();
-  }, [handleLog]);
-
-  const handleProjectPress = useCallback(() => {
-    swipeableRef.current?.close();
-    handleToggleProject();
-  }, [handleToggleProject]);
-
-  const projectLabel = isProject
-    ? t('climbing.unproject_action')
-    : t('climbing.project_action');
-
-  const handleSwipeableWillOpen = useCallback(
-    (direction: 'left' | 'right') => {
-      if (Math.abs(lastDrag.value) < LONG_SWIPE_THRESHOLD) return;
-
-      swipeableRef.current?.close();
-      if (direction === 'right' && showProjectSwipe) {
-        handleToggleProject();
-      } else if (direction === 'left' && showLogSwipe) {
-        handleLog();
-      }
-    },
-    [handleLog, handleToggleProject, lastDrag, showLogSwipe, showProjectSwipe]
+  const rightAction = useMemo<SwipeAction | false>(
+    () =>
+      !isCompleted && {
+        label: t('climbing.log_action'),
+        icon: '✓',
+        baseColor: SWIPE_COLORS.rightBase,
+        emphasisColor: SWIPE_COLORS.rightEmphasis,
+        onAction: handleLog,
+      },
+    [handleLog, isCompleted, t]
   );
 
-  const handleLongPress = () => {
-    const buttons: { text: string; onPress?: () => void; style?: 'cancel' }[] =
-      [];
-
-    if (!isCompleted) {
-      buttons.push({ text: t('climbing.log_action'), onPress: handleLog });
-    }
-    if (showProjectSwipe) {
-      buttons.push({
-        text: projectLabel,
-        onPress: handleToggleProject,
-      });
-    }
-    buttons.push({
-      text: t('climbing.browse_view_details'),
-      onPress: handleClimbPress,
-    });
-    buttons.push({ text: t('actions.cancel'), style: 'cancel' });
-
-    Alert.alert(climb.name, undefined, buttons);
-  };
-
-  const renderRightActions = (
-    prog: SharedValue<number>,
-    drag: SharedValue<number>
-  ) =>
-    RightAction(prog, drag, {
-      onLog: handleLogPress,
-      logDisabled: loading || !showLogSwipe,
-      label: t('climbing.log_action'),
-      lastDrag,
-    });
-
-  const renderLeftActions = (
-    prog: SharedValue<number>,
-    drag: SharedValue<number>
-  ) =>
-    LeftAction(prog, drag, {
-      onProject: handleProjectPress,
-      disabled: loading || !showProjectSwipe,
-      label: projectLabel,
-      lastDrag,
-    });
+  const leftAction = useMemo<SwipeAction | false>(
+    () =>
+      !isCompleted && {
+        label: history?.isProject
+          ? t('climbing.unproject_action')
+          : t('climbing.project_action'),
+        icon: '★',
+        baseColor: SWIPE_COLORS.leftBase,
+        emphasisColor: SWIPE_COLORS.leftEmphasis,
+        onAction: handleToggleProject,
+      },
+    [handleToggleProject, history?.isProject, isCompleted, t]
+  );
 
   return (
-    <View style={styles.container}>
-      <ReanimatedSwipeable
-        ref={swipeableRef}
-        friction={2}
-        rightThreshold={40}
-        leftThreshold={40}
-        overshootRight={true}
-        overshootLeft={true}
-        onSwipeableWillOpen={handleSwipeableWillOpen}
-        renderRightActions={renderRightActions}
-        renderLeftActions={renderLeftActions}
-        containerStyle={styles.swipeableRow}
-      >
-        <Pressable
-          style={({ pressed }) => [
-            styles.card,
-            pressed && styles.cardPressed,
-            loading && styles.cardLoading,
-          ]}
-          onPress={handleClimbPress}
-          onLongPress={handleLongPress}
-          delayLongPress={400}
-          disabled={loading}
-        >
-          {/* Row 1: Grade + Name + Status Badge */}
-          <View style={styles.topRow}>
-            <Text style={styles.title}>
-              <Text style={{ color: beautifyGradeColor(climb.grade) }}>
-                ● {climb.grade}
-              </Text>{' '}
-              | {climb.name}
-            </Text>
-            {climb.userStatus && (
-              <StatusBadges
-                status={climb.userStatus.status}
-                isProject={climb.userStatus.isProject}
-                t={t}
-              />
-            )}
-          </View>
-
-          {/* Row 2: Sector · Location */}
-          <View style={styles.contextRow}>
-            <Text style={styles.contextText}>
-              {climb.sector.name} · {climb.location.name}
-            </Text>
-            {loading && <ActivityIndicator size="small" />}
-          </View>
-
-          {/* Row 3: Meta (conditional) */}
-          {showMetaRow && (
-            <View style={styles.metaRow}>
-              <Text style={styles.metaText}>
-                {t('climbing.last_tried', {
-                  date: formatRelativeDate(climb.userStatus!.lastTriedDate!, t),
-                })}
-              </Text>
-              {climb.userStatus!.attempts ? (
-                <>
-                  <Text style={styles.metaDot}>·</Text>
-                  <Text style={styles.metaText}>
-                    {t('climbing.attempts_count', {
-                      count: climb.userStatus!.attempts,
-                    })}
-                  </Text>
-                </>
-              ) : null}
+    <SwipeableCard
+      leftAction={leftAction}
+      rightAction={rightAction}
+      shouldPeek={shouldPeek}
+      onPeekDone={onPeekDone}
+      onPress={handleClimbPress}
+      disabled={loading}
+    >
+      <View style={[styles.card, loading && styles.cardLoading]}>
+        {/* Row 1: Grade + Name + Status Badge */}
+        <View style={styles.topRow}>
+          <Text style={styles.title}>
+            <Text style={{ color: beautifyGradeColor(climb.grade) }}>
+              ● {climb.grade}
+            </Text>{' '}
+            | {climb.name}
+          </Text>
+          {history?.status && (
+            <View style={styles.badgeRow}>
+              {history.isProject && (
+                <Badge
+                  label={t('climbing.status_project_label')}
+                  variant="info"
+                />
+              )}
+              {history.status === 'send' && (
+                <Badge label={t('climbing.status_sent')} variant="success" />
+              )}
+              {history.status === 'flash' && (
+                <Badge label={t('climbing.status_flash')} variant="success" />
+              )}
             </View>
           )}
-        </Pressable>
-      </ReanimatedSwipeable>
-    </View>
+        </View>
+
+        {/* Row 2: Sector · Location */}
+        <View style={styles.contextRow}>
+          <Text style={styles.contextText}>
+            {sector.name} · {location.name}
+          </Text>
+          {loading && <ActivityIndicator size="small" />}
+        </View>
+
+        {/* Row 3: Meta (conditional) */}
+        {lastTry?.date && (
+          <View style={styles.metaRow}>
+            <Text style={styles.metaText}>
+              {t('climbing.last_tried', {
+                date: formatRelativeDate(lastTry.date, t),
+              })}
+            </Text>
+            {totalAttempts ? (
+              <>
+                <Text style={styles.metaDot}>·</Text>
+                <Text style={styles.metaText}>
+                  {t('climbing.attempts_count', {
+                    count: totalAttempts,
+                  })}
+                </Text>
+              </>
+            ) : null}
+          </View>
+        )}
+      </View>
+    </SwipeableCard>
   );
 };
 
