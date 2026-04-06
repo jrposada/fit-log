@@ -12,13 +12,13 @@ import ReanimatedSwipeable, {
 } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import Animated, {
   interpolateColor,
-  runOnJS,
   SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import {
   ACTION_WIDTH,
@@ -82,7 +82,7 @@ function SwipeBackground({
   useAnimatedReaction(
     () => drag.value,
     (current) => {
-      runOnJS(onDragUpdate)(current);
+      scheduleOnRN(onDragUpdate, current);
     }
   );
 
@@ -90,7 +90,7 @@ function SwipeBackground({
     () => thresholdCrossed.value,
     (crossed, previousCrossed) => {
       if (crossed && !previousCrossed) {
-        runOnJS(triggerHaptic)();
+        scheduleOnRN(triggerHaptic);
       }
     }
   );
