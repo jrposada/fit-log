@@ -3,14 +3,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLocations } from '@shared-react/api/locations/use-locations';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text } from 'react-native';
 
 import Button from '../../../../library/button';
 import Card from '../../../../library/card';
 import LoadingState from '../../../../library/loading-state';
 import Section from '../../../../library/section';
 import Select from '../../../../library/select';
-import { ink } from '../../../../library/theme';
+import { Typography } from '../../../../library/typography';
 import { ClimbingParamList } from '../../types';
 
 type LocationSelectorNavigationProp = NativeStackNavigationProp<
@@ -81,10 +80,10 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
         />
         {selectedLocation && (
           <Card variant="subdued" direction="horizontal">
-            <Text style={{ fontSize: 13, color: ink.secondary }}>
+            <Typography size="callout" color="secondary">
               {t('climbing.climbs_count', { count: numClimbs })} •{' '}
               {t('climbing.sectors_count', { count: numSectors })}
-            </Text>
+            </Typography>
             <Button
               title={t('actions.view')}
               icon="👁️"

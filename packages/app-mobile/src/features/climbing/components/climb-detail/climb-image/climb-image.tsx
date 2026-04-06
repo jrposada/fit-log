@@ -1,14 +1,9 @@
 import { Hold } from '@shared/models/climb/climb';
 import { FunctionComponent, useCallback } from 'react';
-import {
-  ImageSourcePropType,
-  StyleProp,
-  Text,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { ImageSourcePropType, StyleProp, View, ViewStyle } from 'react-native';
 
 import InteractiveImage from '../../../../../library/interactive-image';
+import { Typography } from '../../../../../library/typography';
 import { styles } from './climb-image.styles';
 
 interface ClimbImageProps {
@@ -71,7 +66,11 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
                 },
               ]}
             >
-              {editable && <Text style={styles.holdRemoveIndicator}>x</Text>}
+              {editable && (
+                <Typography size="overline" color="inverse" weight="bold">
+                  x
+                </Typography>
+              )}
             </View>
           ))}
         </View>

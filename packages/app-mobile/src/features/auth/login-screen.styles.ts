@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { accent, ink, spacing, typography } from '../../library/theme';
+import { spacing } from '../../library/theme';
 
 export const styles = StyleSheet.create({
   content: {
@@ -11,20 +11,6 @@ export const styles = StyleSheet.create({
   logoContainer: {
     alignItems: 'center',
     marginBottom: spacing['5xl'],
-  },
-  logoText: {
-    fontSize: 48,
-    marginBottom: spacing.lg,
-  },
-  appName: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: accent.primary,
-    marginBottom: spacing.sm,
-  },
-  tagline: {
-    ...typography.body,
-    color: ink.secondary,
   },
   buttonsContainer: {
     gap: spacing.md,

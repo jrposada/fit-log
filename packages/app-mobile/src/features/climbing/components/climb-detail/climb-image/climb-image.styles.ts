@@ -26,10 +26,4 @@ export const styles = StyleSheet.create({
   holdEditable: {
     backgroundColor: 'rgba(255, 0, 0, 0.7)',
   },
-  holdRemoveIndicator: {
-    color: surfaces.base,
-    fontSize: 10,
-    fontWeight: 'bold',
-    lineHeight: 12,
-  },
 });

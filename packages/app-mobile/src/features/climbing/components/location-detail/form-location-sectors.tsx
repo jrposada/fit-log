@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { Image, Pressable, ScrollView, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import FormTextArea from '../../../../library/form/form-text-area';
@@ -18,6 +18,8 @@ import { useFormReadonly } from '../../../../library/form/use-form-readonly';
 import IconButton from '../../../../library/icon-button/icon-button';
 import { ImageGalleryModal } from '../../../../library/image-gallery-modal';
 import { ImagePickerEvents } from '../../../../library/image-picker';
+import { spacing } from '../../../../library/theme';
+import { Typography } from '../../../../library/typography';
 import { FormData } from './form-location';
 import { styles } from './form-location-sectors.styles';
 
@@ -172,17 +174,21 @@ const FormLocationSectors: FunctionComponent = () => {
 
   return (
     <>
-      <Text style={styles.sectionTitle}>
+      <Typography weight="medium" style={{ marginBottom: spacing.sm }}>
         📸{' '}
         {isReadonly
           ? t('climbing.sectors')
           : t('climbing.sectors_walls_optional')}
-      </Text>
+      </Typography>
       {!isReadonly && (
         <Animated.View entering={FadeIn.duration(200)}>
-          <Text style={styles.sectionDescription}>
+          <Typography
+            size="callout"
+            color="secondary"
+            style={{ marginBottom: spacing.md }}
+          >
             {t('climbing.sectors_description')}
-          </Text>
+          </Typography>
         </Animated.View>
       )}
 
@@ -226,9 +232,13 @@ const FormLocationSectors: FunctionComponent = () => {
                   {((visibleImages && visibleImages.length > 0) ||
                     (!isReadonly && !isSectorDeleted)) && (
                     <View style={styles.imagesContainer}>
-                      <Text style={styles.imagesLabel}>
+                      <Typography
+                        size="callout"
+                        weight="medium"
+                        style={{ marginBottom: spacing.sm }}
+                      >
                         {t('climbing.images')}
-                      </Text>
+                      </Typography>
                       <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
@@ -289,7 +299,9 @@ const FormLocationSectors: FunctionComponent = () => {
                             style={styles.addImageTile}
                             onPress={() => handleEditSector(actualIndex)}
                           >
-                            <Text style={styles.addImageIcon}>+</Text>
+                            <Typography size="display" color="secondary">
+                              +
+                            </Typography>
                           </Pressable>
                         )}
                       </ScrollView>
@@ -306,23 +318,26 @@ const FormLocationSectors: FunctionComponent = () => {
                         style={[styles.actionButton, styles.restoreButton]}
                         onPress={() => handleRestoreSector(actualIndex)}
                       >
-                        <Text style={styles.actionButtonText}>
+                        <Typography
+                          size="callout"
+                          color="inverse"
+                          weight="medium"
+                        >
                           {t('climbing.restore')}
-                        </Text>
+                        </Typography>
                       </Pressable>
                     ) : (
                       <Pressable
                         style={[styles.actionButton, styles.deleteButton]}
                         onPress={() => handleDeleteSector(actualIndex)}
                       >
-                        <Text
-                          style={[
-                            styles.actionButtonText,
-                            styles.deleteButtonText,
-                          ]}
+                        <Typography
+                          size="callout"
+                          color="inverse"
+                          weight="medium"
                         >
                           {t('climbing.delete')}
-                        </Text>
+                        </Typography>
                       </Pressable>
                     )}
                   </Animated.View>
@@ -336,11 +351,11 @@ const FormLocationSectors: FunctionComponent = () => {
       {!isReadonly && (
         <Animated.View entering={FadeIn.duration(200)}>
           <Pressable style={styles.addSectorButton} onPress={handleAddSector}>
-            <Text style={styles.addSectorButtonText}>
+            <Typography color="accent" weight="medium">
               {sectors.length > 0
                 ? t('climbing.add_another_sector')
                 : t('climbing.add_first_sector')}
-            </Text>
+            </Typography>
           </Pressable>
         </Animated.View>
       )}

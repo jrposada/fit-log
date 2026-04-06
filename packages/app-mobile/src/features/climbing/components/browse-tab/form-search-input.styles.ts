@@ -28,9 +28,4 @@ export const styles = StyleSheet.create({
   clearButton: {
     padding: spacing.sm,
   },
-  clearButtonText: {
-    ...typography.heading,
-    fontWeight: '400',
-    color: ink.tertiary,
-  },
 });

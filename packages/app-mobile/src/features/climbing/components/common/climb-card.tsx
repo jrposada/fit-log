@@ -10,10 +10,11 @@ import { formatRelativeDate } from '@shared-react/beautifiers/date';
 import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 import { Badge } from '../../../../library/badge';
-import SwipeableCard, { SwipeAction } from '../../../../library/swipeable-card';
+import Card, { SwipeAction } from '../../../../library/card';
+import { Typography } from '../../../../library/typography';
 import { ClimbingParamList } from '../../types';
 import { styles, SWIPE_COLORS } from './climb-card.styles';
 
@@ -111,71 +112,72 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
   );
 
   return (
-    <SwipeableCard
+    <Card
       leftAction={leftAction}
       rightAction={rightAction}
       shouldPeek={shouldPeek}
       onPeekDone={onPeekDone}
       onPress={handleClimbPress}
       disabled={loading}
+      style={[styles.card, loading && styles.cardLoading]}
     >
-      <View style={[styles.card, loading && styles.cardLoading]}>
-        {/* Row 1: Grade + Name + Status Badge */}
-        <View style={styles.topRow}>
-          <Text style={styles.title}>
-            <Text style={{ color: beautifyGradeColor(climb.grade) }}>
-              ● {climb.grade}
-            </Text>{' '}
-            | {climb.name}
-          </Text>
-          {history?.status && (
-            <View style={styles.badgeRow}>
-              {history.isProject && (
-                <Badge
-                  label={t('climbing.status_project_label')}
-                  variant="info"
-                />
-              )}
-              {history.status === 'send' && (
-                <Badge label={t('climbing.status_sent')} variant="success" />
-              )}
-              {history.status === 'flash' && (
-                <Badge label={t('climbing.status_flash')} variant="success" />
-              )}
-            </View>
-          )}
-        </View>
-
-        {/* Row 2: Sector · Location */}
-        <View style={styles.contextRow}>
-          <Text style={styles.contextText}>
-            {sector.name} · {location.name}
-          </Text>
-          {loading && <ActivityIndicator size="small" />}
-        </View>
-
-        {/* Row 3: Meta (conditional) */}
-        {lastTry?.date && (
-          <View style={styles.metaRow}>
-            <Text style={styles.metaText}>
-              {t('climbing.last_tried', {
-                date: formatRelativeDate(lastTry.date, t),
-              })}
-            </Text>
-            {totalAttempts ? (
-              <>
-                <Text style={styles.metaDot}>·</Text>
-                <Text style={styles.metaText}>
-                  {t('climbing.attempts_count', {
-                    count: totalAttempts,
-                  })}
-                </Text>
-              </>
-            ) : null}
+      {/* Row 1: Grade + Name + Status Badge */}
+      <View style={styles.topRow}>
+        <Typography size="body" weight="semibold" style={{ flex: 1 }}>
+          <Typography style={{ color: beautifyGradeColor(climb.grade) }}>
+            ● {climb.grade}
+          </Typography>{' '}
+          | {climb.name}
+        </Typography>
+        {history?.status && (
+          <View style={styles.badgeRow}>
+            {history.isProject && (
+              <Badge
+                label={t('climbing.status_project_label')}
+                variant="info"
+              />
+            )}
+            {history.status === 'send' && (
+              <Badge label={t('climbing.status_sent')} variant="success" />
+            )}
+            {history.status === 'flash' && (
+              <Badge label={t('climbing.status_flash')} variant="success" />
+            )}
           </View>
         )}
       </View>
-    </SwipeableCard>
+
+      {/* Row 2: Sector · Location */}
+      <View style={styles.contextRow}>
+        <Typography size="callout" color="secondary">
+          {sector.name} · {location.name}
+        </Typography>
+        {loading && <ActivityIndicator size="small" />}
+      </View>
+
+      {/* Row 3: Meta (conditional) */}
+      {lastTry?.date && (
+        <View style={styles.metaRow}>
+          <Typography size="caption" color="tertiary">
+            {t('climbing.last_tried', {
+              date: formatRelativeDate(lastTry.date, t),
+            })}
+          </Typography>
+          {totalAttempts ? (
+            <>
+              <Typography size="caption" color="tertiary">
+                ·
+              </Typography>
+              <Typography size="caption" color="tertiary">
+                {t('climbing.attempts_count', {
+                  count: totalAttempts,
+                })}
+              </Typography>
+            </>
+          ) : null}
+        </View>
+      )}
+    </Card>
   );
 };
 

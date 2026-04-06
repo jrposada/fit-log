@@ -1,11 +1,14 @@
 import { useAuth } from '@shared-react/contexts/auth/use-auth';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, Text, View } from 'react-native';
+import { Platform, View } from 'react-native';
 
 import Button from '../../library/button';
+import { Icon } from '../../library/icon';
 import Screen from '../../library/screen';
 import Separator from '../../library/separator';
+import { spacing } from '../../library/theme';
+import { Typography } from '../../library/typography';
 import { styles } from './login-screen.styles';
 
 const LoginScreen: FunctionComponent = () => {
@@ -30,9 +33,15 @@ const LoginScreen: FunctionComponent = () => {
       }}
     >
       <View style={styles.logoContainer}>
-        <Text style={styles.logoText}>&#x1F4AA;</Text>
-        <Text style={styles.appName}>{t('auth.appName')}</Text>
-        <Text style={styles.tagline}>{t('auth.tagline')}</Text>
+        <Icon icon="&#x1F4AA;" size="xl" style={{ marginBottom: spacing.lg }} />
+        <Typography
+          size="jumbo"
+          color="accent"
+          style={{ marginBottom: spacing.sm }}
+        >
+          {t('auth.appName')}
+        </Typography>
+        <Typography color="secondary">{t('auth.tagline')}</Typography>
       </View>
 
       <View style={styles.buttonsContainer}>

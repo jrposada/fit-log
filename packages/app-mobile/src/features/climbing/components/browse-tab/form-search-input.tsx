@@ -1,13 +1,13 @@
 import { FunctionComponent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import {
-  Text,
   TextInput,
   TextInputProps,
   TouchableOpacity,
   View,
 } from 'react-native';
 
+import { Typography } from '../../../../library/typography';
 import { styles } from './form-search-input.styles';
 
 interface FormSearchInputProps
@@ -42,7 +42,9 @@ const FormSearchInput: FunctionComponent<FormSearchInputProps> = ({
               style={styles.clearButton}
               onPress={() => onChange('')}
             >
-              <Text style={styles.clearButtonText}>×</Text>
+              <Typography size="heading" color="tertiary" weight="regular">
+                ×
+              </Typography>
             </TouchableOpacity>
           )}
         </View>

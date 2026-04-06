@@ -3,37 +3,19 @@ import { StyleSheet } from 'react-native';
 import {
   accent,
   borders,
-  ink,
   radii,
   semantic,
   spacing,
   surfaces,
-  typography,
 } from '../../../../library/theme';
 
 export const styles = StyleSheet.create({
-  sectionTitle: {
-    ...typography.body,
-    fontWeight: '500',
-    color: ink.primary,
-    marginBottom: spacing.sm,
-  },
-  sectionDescription: {
-    ...typography.callout,
-    color: ink.secondary,
-    marginBottom: spacing.md,
-  },
   addSectorButton: {
     borderWidth: 2,
     borderColor: accent.primary,
     borderRadius: radii.button,
     padding: spacing.lg,
     alignItems: 'center',
-  },
-  addSectorButtonText: {
-    ...typography.body,
-    fontWeight: '500',
-    color: accent.primary,
   },
   sectorsList: {
     marginBottom: spacing.md,
@@ -52,11 +34,6 @@ export const styles = StyleSheet.create({
   sectorTextContainer: {
     flex: 1,
   },
-  sectorDescription: {
-    ...typography.callout,
-    color: ink.secondary,
-    marginTop: spacing.xs,
-  },
   sectorActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -68,16 +45,8 @@ export const styles = StyleSheet.create({
     borderRadius: radii.sm,
     backgroundColor: accent.primary,
   },
-  actionButtonText: {
-    ...typography.callout,
-    fontWeight: '500',
-    color: ink.inverse,
-  },
   deleteButton: {
     backgroundColor: semantic.error,
-  },
-  deleteButtonText: {
-    color: ink.inverse,
   },
   restoreButton: {
     backgroundColor: accent.primary,
@@ -90,12 +59,6 @@ export const styles = StyleSheet.create({
   },
   imagesContainer: {
     marginTop: spacing.md,
-  },
-  imagesLabel: {
-    ...typography.callout,
-    fontWeight: '500',
-    color: ink.primary,
-    marginBottom: spacing.sm,
   },
   imagesScroll: {
     flexDirection: 'row',
@@ -129,9 +92,5 @@ export const styles = StyleSheet.create({
     borderStyle: 'dashed',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  addImageIcon: {
-    ...typography.display,
-    color: ink.secondary,
   },
 });

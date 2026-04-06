@@ -2,8 +2,9 @@ import { ClimbGrade } from '@shared/models/climb/climb';
 import { FunctionComponent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 
+import { Typography } from '../../../../library/typography';
 import { styles } from './form-grade-chips.styles';
 
 const GRADE_OPTIONS: ClimbGrade[] = [
@@ -37,7 +38,7 @@ const FormGradeChips: FunctionComponent<FormGradeChipsProps> = ({ name }) => {
 
   return (
     <View style={styles.container}>
-      <Text>{t('climbing.browse_filters')}</Text>
+      <Typography>{t('climbing.browse_filters')}</Typography>
       <Controller
         control={control}
         name={name}
@@ -67,14 +68,14 @@ const FormGradeChips: FunctionComponent<FormGradeChipsProps> = ({ name }) => {
                   ]}
                   onPress={() => toggleGrade(grade)}
                 >
-                  <Text
-                    style={[
-                      styles.chipText,
-                      selectedGrades.includes(grade) && styles.chipTextSelected,
-                    ]}
+                  <Typography
+                    size="callout"
+                    color={
+                      selectedGrades.includes(grade) ? 'inverse' : 'primary'
+                    }
                   >
                     {grade}
-                  </Text>
+                  </Typography>
                 </TouchableOpacity>
               ))}
             </ScrollView>

@@ -1,10 +1,11 @@
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import IconCard from '../../library/icon-card';
 import Screen from '../../library/screen';
-import { palette } from '../../library/theme';
+import { palette, spacing } from '../../library/theme';
+import { Typography } from '../../library/typography';
 import { styles } from './training-screen.styles';
 
 type TrainingCard = {
@@ -65,7 +66,12 @@ const TrainingScreen: FunctionComponent = () => {
 
   return (
     <Screen contentStyle={styles.container}>
-      <Text style={styles.title}>{t('training.title')}</Text>
+      <Typography
+        size="display"
+        style={{ marginBottom: spacing.xl, marginTop: spacing.md }}
+      >
+        {t('training.title')}
+      </Typography>
       <View style={styles.cardsContainer}>
         {trainingCards.map((card) => (
           <IconCard

@@ -27,7 +27,6 @@ import {
   Linking,
   Platform,
   ScrollView,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -45,8 +44,9 @@ import LoadingState from '../../../library/loading-state';
 import Screen from '../../../library/screen';
 import Section from '../../../library/section';
 import Select from '../../../library/select';
-import { accent, borders, ink, surfaces } from '../../../library/theme';
+import { accent, borders, surfaces } from '../../../library/theme';
 import { useToast } from '../../../library/toast';
+import { Typography } from '../../../library/typography';
 import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
 import ClimbImage from '../components/climb-detail/climb-image';
@@ -512,9 +512,9 @@ const ClimbDetailScreen: FunctionComponent = () => {
             <>
               <Section spacing="lg">
                 <LoadingState isLoading={isLoadingLocation}>
-                  <Text style={{ fontWeight: '600', marginBottom: 8 }}>
+                  <Typography weight="semibold" style={{ marginBottom: 8 }}>
                     {t('climbing.sector')}
-                  </Text>
+                  </Typography>
                   <Select
                     options={sectors.map((s) => s.name)}
                     value={selectedSector?.name || ''}
@@ -539,9 +539,9 @@ const ClimbDetailScreen: FunctionComponent = () => {
               </Section>
 
               <Section spacing="lg">
-                <Text style={{ fontWeight: '600', marginBottom: 8 }}>
+                <Typography weight="semibold" style={{ marginBottom: 8 }}>
                   {t('climbing.grade')}
-                </Text>
+                </Typography>
                 <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator={false}
@@ -566,26 +566,21 @@ const ClimbDetailScreen: FunctionComponent = () => {
                             : borders.subtle,
                       }}
                     >
-                      <Text
-                        style={{
-                          color:
-                            watchedGrade === grade
-                              ? surfaces.base
-                              : ink.primary,
-                          fontWeight: watchedGrade === grade ? '600' : '400',
-                        }}
+                      <Typography
+                        color={watchedGrade === grade ? 'inverse' : 'primary'}
+                        weight={watchedGrade === grade ? 'semibold' : 'regular'}
                       >
                         {grade}
-                      </Text>
+                      </Typography>
                     </TouchableOpacity>
                   ))}
                 </ScrollView>
               </Section>
 
               <Section spacing="lg">
-                <Text style={{ fontWeight: '600', marginBottom: 8 }}>
+                <Typography weight="semibold" style={{ marginBottom: 8 }}>
                   {t('climbing.select_image')}
-                </Text>
+                </Typography>
                 {watchedImage && imageUri ? (
                   <View>
                     <ClimbImage
@@ -596,16 +591,13 @@ const ClimbDetailScreen: FunctionComponent = () => {
                       onHoldAdd={handleHoldAdd}
                       onHoldRemove={handleHoldRemove}
                     />
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        marginTop: 8,
-                        color: ink.secondary,
-                        fontSize: 13,
-                      }}
+                    <Typography
+                      size="callout"
+                      color="secondary"
+                      style={{ textAlign: 'center', marginTop: 8 }}
                     >
                       {t('climbing.mark_holds_hint')}
-                    </Text>
+                    </Typography>
                   </View>
                 ) : (
                   <Button
@@ -637,17 +629,15 @@ const ClimbDetailScreen: FunctionComponent = () => {
                 onHoldRemove={handleHoldRemove}
               />
               {isEditMode && (
-                <Animated.Text
-                  entering={FadeIn.duration(200)}
-                  style={{
-                    textAlign: 'center',
-                    marginTop: 8,
-                    color: ink.secondary,
-                    fontSize: 13,
-                  }}
-                >
-                  {t('climbing.mark_holds_hint')}
-                </Animated.Text>
+                <Animated.View entering={FadeIn.duration(200)}>
+                  <Typography
+                    size="callout"
+                    color="secondary"
+                    style={{ textAlign: 'center', marginTop: 8 }}
+                  >
+                    {t('climbing.mark_holds_hint')}
+                  </Typography>
+                </Animated.View>
               )}
             </Animated.View>
           )}
@@ -688,16 +678,10 @@ const ClimbDetailScreen: FunctionComponent = () => {
                   gap: 12,
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: '600',
-                    color: ink.primary,
-                  }}
-                >
+                <Typography size="callout" weight="semibold">
                   {t('climbing.browse_your_status')}:
-                </Text>
-                <Text style={{ fontSize: 14, color: ink.secondary }}>
+                </Typography>
+                <Typography size="callout" color="secondary">
                   {userStatus?.status === 'send' ||
                   userStatus?.status === 'flash'
                     ? `✓ ${t('climbing.browse_status_sent')}`
@@ -712,7 +696,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
                   {userStatus?.isProject
                     ? ` · 🎯 ${t('climbing.browse_status_project')}`
                     : ''}
-                </Text>
+                </Typography>
                 <View
                   style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap' }}
                 >
