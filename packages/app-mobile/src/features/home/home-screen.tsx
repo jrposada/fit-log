@@ -8,7 +8,6 @@ import { palette, spacing } from '../../library/theme';
 import { Typography } from '../../library/typography';
 import { styles } from './home-screen.styles';
 
-
 type DashboardCard = {
   id: string;
   title: string;

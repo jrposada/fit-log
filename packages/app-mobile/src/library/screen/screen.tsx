@@ -61,9 +61,7 @@ const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
         scrollEnabled={!centered}
         stickyHeaderIndices={stickyHeaderIndices}
         onLayout={onContentLayout}
-        keyboardShouldPersistTaps={
-          keyboardAvoiding ? 'handled' : undefined
-        }
+        keyboardShouldPersistTaps={keyboardAvoiding ? 'handled' : undefined}
       >
         {children}
       </ScrollView>

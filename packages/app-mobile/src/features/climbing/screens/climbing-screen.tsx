@@ -59,11 +59,7 @@ const ClimbingScreen: FunctionComponent = () => {
     ) : undefined;
 
   return (
-    <Screen
-      footer={footer}
-      noFooterInsetBottom
-      stickyHeaderIndices={[0]}
-    >
+    <Screen footer={footer} noFooterInsetBottom stickyHeaderIndices={[0]}>
       <Tabs.Bar<Tab>
         items={items}
         activeId={activeTab}

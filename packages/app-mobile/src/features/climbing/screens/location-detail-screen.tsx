@@ -448,10 +448,7 @@ const LocationDetailScreen: FunctionComponent = () => {
   return (
     <FormProvider {...methods}>
       <FormReadonlyProvider readonly={!isEditMode}>
-        <Screen
-          keyboardAvoiding={isEditMode}
-          footer={footer}
-        >
+        <Screen keyboardAvoiding={isEditMode} footer={footer}>
           {isEditMode && (
             <UnsavedBanner
               isDirty={isDirty}
