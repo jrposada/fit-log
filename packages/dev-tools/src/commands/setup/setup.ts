@@ -123,11 +123,17 @@ export function registerSetupCommand(setupCmd: Command): void {
           const climbHistoryPromises = [];
           for (const climb of climbs) {
             if (faker.datatype.boolean({ probability: climbHistoryChance })) {
+              const historyData = fakeClimbHistory();
+              const mostRecentTryDate =
+                historyData.tries[historyData.tries.length - 1].date;
+
               const climbHistoryData = {
-                ...fakeClimbHistory(),
+                ...historyData,
                 climb: climb._id,
                 location: climb.location,
                 sector: climb.sector,
+                createdAt: mostRecentTryDate,
+                updatedAt: mostRecentTryDate,
               };
               climbHistoryPromises.push(ClimbHistory.create(climbHistoryData));
             }
