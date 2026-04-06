@@ -50,21 +50,6 @@ export const sizeTextStyles = StyleSheet.create({
   },
 });
 
-export const sizeIconStyles = StyleSheet.create({
-  sm: {
-    fontSize: 14,
-    marginRight: spacing.xs,
-  },
-  md: {
-    fontSize: 17,
-    marginRight: spacing.sm,
-  },
-  lg: {
-    fontSize: 20,
-    marginRight: spacing.md,
-  },
-});
-
 export const styles = StyleSheet.create({
   base: {
     alignItems: 'center',
@@ -91,5 +76,4 @@ export const styles = StyleSheet.create({
   textGhost: {
     color: accent.primary,
   },
-  icon: {},
 });

@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'react';
 import { StyleProp, Text, TouchableOpacity, ViewStyle } from 'react-native';
 
+import { Icon, IconSize } from '../icon';
 import {
-  sizeIconStyles,
   sizeStyles,
   sizeTextStyles,
   styles,
@@ -18,6 +18,15 @@ export interface ButtonProps {
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
 }
+
+const buttonSizeToIconSize: Record<
+  NonNullable<ButtonProps['size']>,
+  IconSize
+> = {
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg',
+};
 
 const Button: FunctionComponent<ButtonProps> = ({
   title,
@@ -46,7 +55,7 @@ const Button: FunctionComponent<ButtonProps> = ({
       disabled={disabled}
       activeOpacity={0.7}
     >
-      {icon && <Text style={[styles.icon, sizeIconStyles[size]]}>{icon}</Text>}
+      {icon && <Icon icon={icon} size={buttonSizeToIconSize[size]} />}
       <Text
         style={[
           styles.text,
