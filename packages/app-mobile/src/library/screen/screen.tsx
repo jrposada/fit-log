@@ -1,56 +1,84 @@
 import { FunctionComponent, PropsWithChildren, ReactNode } from 'react';
 import {
   KeyboardAvoidingView,
+  LayoutChangeEvent,
   Platform,
   ScrollView,
-  ScrollViewProps,
-  StyleProp,
   ViewStyle,
 } from 'react-native';
 import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { spacing } from '../theme';
+import { spacing as spacingTokens } from '../theme';
 import { styles } from './screen.styles';
+
+type SpacingToken = keyof typeof spacingTokens;
 
 export interface ScreenProps {
   footer?: ReactNode;
   noFooterInsetBottom?: boolean;
-  footerStyle?: StyleProp<ViewStyle>;
+  footerVariant?: 'default' | 'transparent';
   keyboardAvoiding?: boolean;
-  scrollViewProps?: ScrollViewProps;
-  contentStyle?: StyleProp<ViewStyle>;
-  style?: StyleProp<ViewStyle>;
+  padding?: SpacingToken;
+  paddingHorizontal?: SpacingToken;
+  paddingVertical?: SpacingToken;
+  centered?: boolean;
+  stickyHeaderIndices?: number[];
+  onContentLayout?: (event: LayoutChangeEvent) => void;
 }
 
 const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
   children,
   footer,
   noFooterInsetBottom = false,
-  footerStyle,
+  footerVariant = 'default',
   keyboardAvoiding = false,
-  scrollViewProps,
-  contentStyle,
-  style,
+  padding,
+  paddingHorizontal,
+  paddingVertical,
+  centered = false,
+  stickyHeaderIndices,
+  onContentLayout,
 }) => {
   const insets = useSafeAreaInsets();
 
+  const contentContainerStyle: ViewStyle = {
+    ...(padding != null && { padding: spacingTokens[padding] }),
+    ...(paddingHorizontal != null && {
+      paddingHorizontal: spacingTokens[paddingHorizontal],
+    }),
+    ...(paddingVertical != null && {
+      paddingVertical: spacingTokens[paddingVertical],
+    }),
+    ...(centered && { flex: 1, justifyContent: 'center' }),
+  };
+
   const content = (
     <>
-      <ScrollView style={[styles.scroll, contentStyle]} {...scrollViewProps}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={contentContainerStyle}
+        scrollEnabled={!centered}
+        stickyHeaderIndices={stickyHeaderIndices}
+        onLayout={onContentLayout}
+        keyboardShouldPersistTaps={
+          keyboardAvoiding ? 'handled' : undefined
+        }
+      >
         {children}
       </ScrollView>
       {footer && (
         <Animated.View
           entering={FadeIn.duration(200)}
           style={[
-            styles.footer,
+            footerVariant === 'transparent'
+              ? styles.footerTransparent
+              : styles.footer,
             {
               paddingBottom: noFooterInsetBottom
-                ? spacing.lg
-                : spacing.lg + insets.bottom,
+                ? spacingTokens.lg
+                : spacingTokens.lg + insets.bottom,
             },
-            footerStyle,
           ]}
         >
           {footer}
@@ -60,7 +88,7 @@ const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
   );
 
   return (
-    <Animated.View layout={LinearTransition} style={[styles.container, style]}>
+    <Animated.View layout={LinearTransition} style={styles.container}>
       {keyboardAvoiding ? (
         <KeyboardAvoidingView
           style={styles.flex}

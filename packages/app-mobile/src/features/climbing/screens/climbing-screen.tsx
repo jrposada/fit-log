@@ -62,9 +62,7 @@ const ClimbingScreen: FunctionComponent = () => {
     <Screen
       footer={footer}
       noFooterInsetBottom
-      scrollViewProps={{
-        stickyHeaderIndices: [0],
-      }}
+      stickyHeaderIndices={[0]}
     >
       <Tabs.Bar<Tab>
         items={items}

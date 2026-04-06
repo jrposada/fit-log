@@ -494,10 +494,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
       <FormReadonlyProvider readonly={!isEditMode}>
         <Screen
           keyboardAvoiding={isEditMode}
-          scrollViewProps={{
-            ...(isEditMode && { keyboardShouldPersistTaps: 'handled' }),
-            onLayout: handleScrollLayout,
-          }}
+          onContentLayout={handleScrollLayout}
           footer={footer}
         >
           {isEditMode && (

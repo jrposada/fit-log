@@ -8,6 +8,7 @@ import { palette, spacing } from '../../library/theme';
 import { Typography } from '../../library/typography';
 import { styles } from './home-screen.styles';
 
+
 type DashboardCard = {
   id: string;
   title: string;
@@ -65,7 +66,7 @@ const HomeScreen: FunctionComponent = () => {
   ];
 
   return (
-    <Screen contentStyle={styles.container}>
+    <Screen padding="xl">
       <Typography
         size="display"
         style={{ marginBottom: spacing.xl, marginTop: spacing.md }}

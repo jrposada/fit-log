@@ -1,50 +1,42 @@
 import { useAuth } from '@shared-react/contexts/auth/use-auth';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, View } from 'react-native';
+import { Platform } from 'react-native';
 
 import Button from '../../library/button';
 import { Icon } from '../../library/icon';
 import Screen from '../../library/screen';
 import Separator from '../../library/separator';
+import Stack from '../../library/stack';
 import { spacing } from '../../library/theme';
 import { Typography } from '../../library/typography';
-import { styles } from './login-screen.styles';
 
 const LoginScreen: FunctionComponent = () => {
   const { t } = useTranslation();
   const { login, loginWithIdp, register } = useAuth();
 
-  const footer = (
-    <Button
-      title={t('auth.createAccount')}
-      onPress={register}
-      variant="ghost"
-    />
-  );
-
   return (
     <Screen
-      footer={footer}
-      footerStyle={styles.footer}
-      scrollViewProps={{
-        scrollEnabled: false,
-        contentContainerStyle: styles.content,
-      }}
+      footer={
+        <Button
+          title={t('auth.createAccount')}
+          onPress={register}
+          variant="ghost"
+        />
+      }
+      footerVariant="transparent"
+      centered
+      paddingHorizontal="2xl"
     >
-      <View style={styles.logoContainer}>
-        <Icon icon="&#x1F4AA;" size="xl" style={{ marginBottom: spacing.lg }} />
-        <Typography
-          size="jumbo"
-          color="accent"
-          style={{ marginBottom: spacing.sm }}
-        >
+      <Stack align="center" gap="sm" style={{ marginBottom: spacing['5xl'] }}>
+        <Icon icon="💪" size="xl" style={{ marginBottom: spacing.md }} />
+        <Typography size="jumbo" color="accent">
           {t('auth.appName')}
         </Typography>
         <Typography color="secondary">{t('auth.tagline')}</Typography>
-      </View>
+      </Stack>
 
-      <View style={styles.buttonsContainer}>
+      <Stack gap="md">
         <Button
           title={t('auth.signInWithEmail')}
           onPress={login}
@@ -68,7 +60,7 @@ const LoginScreen: FunctionComponent = () => {
             icon="&#xF8FF;"
           />
         )}
-      </View>
+      </Stack>
     </Screen>
   );
 };

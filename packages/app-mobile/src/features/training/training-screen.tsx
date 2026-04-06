@@ -65,7 +65,7 @@ const TrainingScreen: FunctionComponent = () => {
   ];
 
   return (
-    <Screen contentStyle={styles.container}>
+    <Screen padding="xl">
       <Typography
         size="display"
         style={{ marginBottom: spacing.xl, marginTop: spacing.md }}

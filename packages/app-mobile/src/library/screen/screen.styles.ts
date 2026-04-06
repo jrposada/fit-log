@@ -17,4 +17,8 @@ export const styles = StyleSheet.create({
     backgroundColor: surfaces.base,
     padding: spacing.lg,
   },
+  footerTransparent: {
+    padding: spacing.lg,
+    backgroundColor: 'transparent',
+  },
 });

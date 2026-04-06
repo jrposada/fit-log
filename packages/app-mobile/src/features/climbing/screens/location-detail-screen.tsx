@@ -450,9 +450,6 @@ const LocationDetailScreen: FunctionComponent = () => {
       <FormReadonlyProvider readonly={!isEditMode}>
         <Screen
           keyboardAvoiding={isEditMode}
-          scrollViewProps={
-            isEditMode ? { keyboardShouldPersistTaps: 'handled' } : undefined
-          }
           footer={footer}
         >
           {isEditMode && (
