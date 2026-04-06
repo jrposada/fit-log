@@ -27,6 +27,7 @@ import {
   styles,
 } from './card.styles';
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const LONG_SWIPE_THRESHOLD = ACTION_WIDTH * 2;
 
 export interface SwipeAction {
@@ -68,11 +69,13 @@ interface SwipeBackgroundProps {
   emphasisColor: string;
   drag: SharedValue<number>;
   onDragUpdate: (value: number) => void;
+  onPress: () => void;
 }
 
 function SwipeBackground({
   drag,
   onDragUpdate,
+  onPress,
   ...props
 }: SwipeBackgroundProps) {
   const thresholdCrossed = useDerivedValue(() => {
@@ -106,7 +109,7 @@ function SwipeBackground({
   const iconStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        scale: withSpring(thresholdCrossed.value ? 1.2 : 1.0, { damping: 12 }),
+        scale: thresholdCrossed.value ? withSpring(1.2, { damping: 12 }) : 1.0,
       },
     ],
   }));
@@ -117,12 +120,15 @@ function SwipeBackground({
       : styles.swipeBackgroundLeft;
 
   return (
-    <Animated.View style={[containerStyle, backgroundStyle]}>
+    <AnimatedPressable
+      onPress={onPress}
+      style={[containerStyle, backgroundStyle]}
+    >
       <Animated.View style={[styles.swipeContent, iconStyle]}>
         <Text style={styles.swipeIcon}>{props.icon}</Text>
         <Text style={styles.swipeLabel}>{props.label}</Text>
       </Animated.View>
-    </Animated.View>
+    </AnimatedPressable>
   );
 }
 
@@ -222,8 +228,9 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
 
   const handleSwipeableWillOpen = useCallback(
     (direction: 'left' | 'right') => {
-      swipeableRef.current?.close();
       if (Math.abs(lastDragRef.current) < LONG_SWIPE_THRESHOLD) return;
+
+      swipeableRef.current?.close();
 
       if (direction === 'right' && leftAction) {
         leftAction.onAction();
@@ -244,6 +251,7 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
           emphasisColor={rightAction.emphasisColor}
           drag={drag}
           onDragUpdate={handleDragUpdate}
+          onPress={rightAction.onAction}
         />
       )
     : undefined;
@@ -258,6 +266,7 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
           emphasisColor={leftAction.emphasisColor}
           drag={drag}
           onDragUpdate={handleDragUpdate}
+          onPress={leftAction.onAction}
         />
       )
     : undefined;
