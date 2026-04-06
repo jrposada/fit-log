@@ -14,9 +14,9 @@ import ReanimatedSwipeable, {
 import Animated, {
   interpolateColor,
   SharedValue,
+  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
-  useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
@@ -58,26 +58,34 @@ interface SwipeBackgroundProps {
   icon: string;
   baseColor: string;
   emphasisColor: string;
-  lastDrag: SharedValue<number>;
   drag: SharedValue<number>;
+  onDragUpdate: (value: number) => void;
 }
 
-function SwipeBackground({ drag, ...props }: SwipeBackgroundProps) {
-  const hasTriggeredHaptic = useSharedValue(false);
-
+function SwipeBackground({
+  drag,
+  onDragUpdate,
+  ...props
+}: SwipeBackgroundProps) {
   const thresholdCrossed = useDerivedValue(() => {
-    props.lastDrag.value = drag.value;
     return Math.abs(drag.value) >= LONG_SWIPE_THRESHOLD;
   });
 
-  useDerivedValue(() => {
-    if (thresholdCrossed.value && !hasTriggeredHaptic.value) {
-      hasTriggeredHaptic.value = true;
-      scheduleOnRN(triggerHaptic);
-    } else if (!thresholdCrossed.value) {
-      hasTriggeredHaptic.value = false;
+  useAnimatedReaction(
+    () => drag.value,
+    (current) => {
+      scheduleOnRN(() => onDragUpdate(current));
     }
-  });
+  );
+
+  useAnimatedReaction(
+    () => thresholdCrossed.value,
+    (crossed, previousCrossed) => {
+      if (crossed && !previousCrossed) {
+        scheduleOnRN(triggerHaptic);
+      }
+    }
+  );
 
   const backgroundStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
@@ -121,8 +129,12 @@ const SwipeableCard: FunctionComponent<
   disabled,
   children,
 }) => {
-  const lastDrag = useSharedValue(0);
+  const lastDragRef = useRef(0);
   const swipeableRef = useRef<SwipeableMethods>(null);
+
+  const handleDragUpdate = useCallback((value: number) => {
+    lastDragRef.current = value;
+  }, []);
 
   useEffect(() => {
     if (shouldPeek) {
@@ -140,7 +152,7 @@ const SwipeableCard: FunctionComponent<
   const handleSwipeableWillOpen = useCallback(
     (direction: 'left' | 'right') => {
       swipeableRef.current?.close();
-      if (Math.abs(lastDrag.value) < LONG_SWIPE_THRESHOLD) return;
+      if (Math.abs(lastDragRef.current) < LONG_SWIPE_THRESHOLD) return;
 
       if (direction === 'right' && leftAction) {
         leftAction.onAction();
@@ -148,7 +160,7 @@ const SwipeableCard: FunctionComponent<
         rightAction.onAction();
       }
     },
-    [lastDrag, leftAction, rightAction]
+    [leftAction, rightAction]
   );
 
   const renderRightActions = rightAction
@@ -159,8 +171,8 @@ const SwipeableCard: FunctionComponent<
           icon={rightAction.icon}
           baseColor={rightAction.baseColor}
           emphasisColor={rightAction.emphasisColor}
-          lastDrag={lastDrag}
           drag={drag}
+          onDragUpdate={handleDragUpdate}
         />
       )
     : undefined;
@@ -173,8 +185,8 @@ const SwipeableCard: FunctionComponent<
           icon={leftAction.icon}
           baseColor={leftAction.baseColor}
           emphasisColor={leftAction.emphasisColor}
-          lastDrag={lastDrag}
           drag={drag}
+          onDragUpdate={handleDragUpdate}
         />
       )
     : undefined;
