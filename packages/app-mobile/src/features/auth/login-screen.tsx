@@ -42,7 +42,7 @@ const LoginScreen: FunctionComponent = () => {
           variant="primary"
         />
 
-        <Separator label={t('auth.or')} marginVertical={24} />
+        <Separator label={t('auth.or')} inset="2xl" />
 
         <Button
           title={t('auth.signInWithGoogle')}
