@@ -38,6 +38,12 @@ export const sizeStyles = StyleSheet.create({
   },
 });
 
+export const sizeIconGapStyles = StyleSheet.create({
+  sm: { gap: spacing.xs },
+  md: { gap: spacing.sm },
+  lg: { gap: spacing.sm },
+});
+
 export const sizeTextStyles = StyleSheet.create({
   sm: {
     ...typography.callout,

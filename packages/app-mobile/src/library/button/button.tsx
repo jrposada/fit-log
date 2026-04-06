@@ -3,6 +3,7 @@ import { StyleProp, Text, TouchableOpacity, ViewStyle } from 'react-native';
 
 import { Icon, IconSize } from '../icon';
 import {
+  sizeIconGapStyles,
   sizeStyles,
   sizeTextStyles,
   styles,
@@ -46,6 +47,7 @@ const Button: FunctionComponent<ButtonProps> = ({
         styles.base,
         sizeStyles[size],
         icon && styles.baseWithIcon,
+        icon && sizeIconGapStyles[size],
         { backgroundColor: variantColors[variant] },
         isOutline && styles.outline,
         disabled && styles.disabled,
