@@ -16,6 +16,7 @@ import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
+  useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
@@ -208,10 +209,19 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
 }) => {
   const lastDragRef = useRef(0);
   const swipeableRef = useRef<SwipeableMethods>(null);
+  const swipeDrag = useSharedValue(0);
 
-  const handleDragUpdate = useCallback((value: number) => {
-    lastDragRef.current = value;
-  }, []);
+  const handleDragUpdate = useCallback(
+    (value: number) => {
+      lastDragRef.current = value;
+      swipeDrag.set(value);
+    },
+    [swipeDrag]
+  );
+
+  const swipeContentStyle = useAnimatedStyle(() => ({
+    opacity: swipeDrag.value !== 0 ? 0.7 : 1,
+  }));
 
   useEffect(() => {
     if (shouldPeek) {
@@ -226,11 +236,16 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
     }
   }, [shouldPeek, onPeekDone]);
 
+  const longSwipeTriggeredRef = useRef(false);
+
   const handleSwipeableWillOpen = useCallback(
     (direction: 'left' | 'right') => {
-      if (Math.abs(lastDragRef.current) < LONG_SWIPE_THRESHOLD) return;
+      if (Math.abs(lastDragRef.current) < LONG_SWIPE_THRESHOLD) {
+        longSwipeTriggeredRef.current = false;
+        return;
+      }
 
-      swipeableRef.current?.close();
+      longSwipeTriggeredRef.current = true;
 
       if (direction === 'right' && leftAction) {
         leftAction.onAction();
@@ -240,6 +255,22 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
     },
     [leftAction, rightAction]
   );
+
+  const handleSwipeableOpen = useCallback(() => {
+    if (longSwipeTriggeredRef.current) {
+      swipeableRef.current?.close();
+    }
+  }, []);
+
+  const handleRightActionPress = useCallback(() => {
+    swipeableRef.current?.close();
+    if (rightAction) rightAction.onAction();
+  }, [rightAction]);
+
+  const handleLeftActionPress = useCallback(() => {
+    swipeableRef.current?.close();
+    if (leftAction) leftAction.onAction();
+  }, [leftAction]);
 
   const renderRightActions = rightAction
     ? (_prog: SharedValue<number>, drag: SharedValue<number>) => (
@@ -251,7 +282,7 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
           emphasisColor={rightAction.emphasisColor}
           drag={drag}
           onDragUpdate={handleDragUpdate}
-          onPress={rightAction.onAction}
+          onPress={handleRightActionPress}
         />
       )
     : undefined;
@@ -266,7 +297,7 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
           emphasisColor={leftAction.emphasisColor}
           drag={drag}
           onDragUpdate={handleDragUpdate}
-          onPress={leftAction.onAction}
+          onPress={handleLeftActionPress}
         />
       )
     : undefined;
@@ -281,11 +312,12 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
         overshootRight={true}
         overshootLeft={true}
         onSwipeableWillOpen={handleSwipeableWillOpen}
+        onSwipeableOpen={handleSwipeableOpen}
         renderRightActions={renderRightActions}
         renderLeftActions={renderLeftActions}
         containerStyle={styles.swipeableRow}
       >
-        {children}
+        <Animated.View style={swipeContentStyle}>{children}</Animated.View>
       </ReanimatedSwipeable>
     </View>
   );
