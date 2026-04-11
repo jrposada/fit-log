@@ -8,6 +8,7 @@ import { styles } from './section.styles';
 export interface SectionProps {
   title?: string;
   level?: 1 | 2;
+  direction?: 'horizontal' | 'vertical';
   spacing?: keyof typeof spacingTokens;
   gap?: keyof typeof spacingTokens;
   noPadding?: boolean;
@@ -22,6 +23,7 @@ const titleLevelStyles = {
 const Section: FunctionComponent<PropsWithChildren<SectionProps>> = ({
   title,
   level = 1,
+  direction = 'vertical',
   spacing,
   gap,
   noPadding = false,
@@ -33,6 +35,7 @@ const Section: FunctionComponent<PropsWithChildren<SectionProps>> = ({
       layout={LinearTransition}
       style={[
         styles.base,
+        styles[direction],
         noPadding && styles.noPadding,
         spacing != null && { marginTop: spacingTokens[spacing] },
         gap != null && { gap: spacingTokens[gap] },

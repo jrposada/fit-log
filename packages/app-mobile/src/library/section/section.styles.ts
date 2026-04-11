@@ -8,6 +8,12 @@ export const styles = StyleSheet.create({
     borderRadius: radii.card,
     padding: spacing.lg,
   },
+  horizontal: {
+    flexDirection: 'row',
+  },
+  vertical: {
+    flexDirection: 'column',
+  },
   noPadding: {
     paddingHorizontal: 0,
     paddingVertical: 0,
