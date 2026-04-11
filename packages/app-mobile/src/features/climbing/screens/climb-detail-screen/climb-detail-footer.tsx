@@ -1,8 +1,8 @@
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 
 import Button from '../../../../library/button';
+import Section from '../../../../library/section';
 
 type ClimbDetailFooterProps = {
   isCreateMode: boolean;
@@ -39,8 +39,8 @@ const ClimbDetailFooter: FunctionComponent<ClimbDetailFooterProps> = ({
   }
 
   return (
-    <View style={{ gap: 12 }}>
-      <View style={{ flexDirection: 'row', gap: 12 }}>
+    <Section noPadding gap="md">
+      <Section direction="horizontal" noPadding gap="md">
         <Button
           variant="outline"
           title={t('actions.cancel')}
@@ -54,7 +54,7 @@ const ClimbDetailFooter: FunctionComponent<ClimbDetailFooterProps> = ({
           disabled={isSubmitDisabled}
           style={{ flex: 1 }}
         />
-      </View>
+      </Section>
       <Button
         variant="destructive"
         title={
@@ -65,7 +65,7 @@ const ClimbDetailFooter: FunctionComponent<ClimbDetailFooterProps> = ({
         onPress={onDelete}
         disabled={isDeleting}
       />
-    </View>
+    </Section>
   );
 };
 
