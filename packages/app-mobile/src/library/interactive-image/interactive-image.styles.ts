@@ -13,4 +13,7 @@ export const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'contain',
   },
+  imageBoundsOverlay: {
+    position: 'absolute',
+  },
 });
