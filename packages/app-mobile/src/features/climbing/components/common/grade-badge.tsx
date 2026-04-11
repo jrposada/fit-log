@@ -7,11 +7,13 @@ import { Badge } from '../../../../library/badge';
 type GradeBadgeProps = {
   grade: Climb['grade'];
   variant?: 'filled' | 'ghost';
+  onPress?: () => void;
 };
 
 const GradeBadge: FunctionComponent<GradeBadgeProps> = ({
   grade,
   variant = 'filled',
+  onPress,
 }) => {
   const gradeColor = beautifyGradeColor(grade);
   const isFilled = variant === 'filled';
@@ -23,6 +25,7 @@ const GradeBadge: FunctionComponent<GradeBadgeProps> = ({
       variant="info"
       style={{ backgroundColor: isFilled ? gradeColor : 'transparent' }}
       textStyle={{ color: isFilled ? '#FFFFFF' : gradeColor }}
+      onPress={onPress}
     />
   );
 };

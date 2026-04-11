@@ -1,5 +1,12 @@
 import { FunctionComponent } from 'react';
-import { StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
+import {
+  StyleProp,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import {
   BadgeSize,
@@ -15,6 +22,7 @@ export interface BadgeProps {
   size?: BadgeSize;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  onPress?: () => void;
 }
 
 const Badge: FunctionComponent<BadgeProps> = ({
@@ -23,14 +31,19 @@ const Badge: FunctionComponent<BadgeProps> = ({
   size = 'sm',
   style,
   textStyle,
+  onPress,
 }) => {
   const v = variantStyles[variant];
   const s = sizeStyles[size];
+  const Wrapper = onPress ? TouchableOpacity : View;
 
   return (
-    <View style={[styles.base, s.container, v.container, style]}>
+    <Wrapper
+      onPress={onPress}
+      style={[styles.base, s.container, v.container, style]}
+    >
       <Text style={[styles.text, s.text, v.text, textStyle]}>{label}</Text>
-    </View>
+    </Wrapper>
   );
 };
 
