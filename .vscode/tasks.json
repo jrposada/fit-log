@@ -111,5 +111,39 @@
         "runOn": "folderOpen"
       }
     },
+    {
+      "label": "Mobile: Dev",
+      "type": "shell",
+      "command": "npm",
+      "args": ["run", "dev"],
+      "options": {
+        "cwd": "${workspaceFolder}/packages/app-mobile"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*Starting Offline.*",
+          "endsPattern": ".*Server ready.*|.*Offline listening.*"
+        }
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": false,
+        "clear": true
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
   ]
 }
