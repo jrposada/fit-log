@@ -17,11 +17,40 @@ import { surfaces } from '../../../../library/theme';
 import { Typography } from '../../../../library/typography';
 import UnsavedBanner from '../../../../library/unsaved-banner';
 import ClimbImage from '../../components/climb-detail/climb-image';
+import { EditMode } from '../../components/climb-detail/climb-image/climb-image';
 import GradeBadge from '../../components/common/grade-badge';
 import ClimbDetailFooter from './climb-detail-footer';
 import { GRADE_OPTIONS } from './climb-detail-screen.types';
 import ClimbDetailStatusCard from './climb-detail-status-card';
 import useClimbDetail from './use-climb-detail';
+
+const EditModeToggle: FunctionComponent<{
+  editSubMode: EditMode;
+  onChangeMode: (mode: EditMode) => void;
+  t: (key: string) => string;
+}> = ({ editSubMode, onChangeMode, t }) => (
+  <View
+    style={{
+      flexDirection: 'row',
+      gap: 8,
+      paddingHorizontal: 20,
+      justifyContent: 'center',
+    }}
+  >
+    <Button
+      variant={editSubMode === 'holds' ? 'primary' : 'outline'}
+      title={t('climbing.edit_mode_holds')}
+      size="sm"
+      onPress={() => onChangeMode('holds')}
+    />
+    <Button
+      variant={editSubMode === 'spline' ? 'primary' : 'outline'}
+      title={t('climbing.edit_mode_spline')}
+      size="sm"
+      onPress={() => onChangeMode('spline')}
+    />
+  </View>
+);
 
 const ClimbDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -68,24 +97,35 @@ const ClimbDetailScreen: FunctionComponent = () => {
             <Animated.View layout={LinearTransition}>
               {detail.isEditMode && (
                 <Animated.View entering={FadeIn.duration(200)}>
+                  <EditModeToggle
+                    editSubMode={detail.editSubMode}
+                    onChangeMode={detail.setEditSubMode}
+                    t={t}
+                  />
                   <Typography
                     size="callout"
                     color="secondary"
                     style={{ textAlign: 'center', marginTop: 8 }}
                   >
-                    {t('climbing.mark_holds_hint')}
+                    {detail.editSubMode === 'spline'
+                      ? t('climbing.draw_spline_hint')
+                      : t('climbing.mark_holds_hint')}
                   </Typography>
                 </Animated.View>
               )}
               <ClimbImage
                 source={{ uri: detail.imageUri }}
                 holds={detail.watchedHolds}
+                spline={detail.watchedSpline}
                 style={{
                   height: detail.scrollHeight,
                 }}
                 editable={detail.isEditMode}
+                editMode={detail.editSubMode}
                 onHoldAdd={detail.handleHoldAdd}
                 onHoldRemove={detail.handleHoldRemove}
+                onSplinePointAdd={detail.handleSplinePointAdd}
+                onSplinePointRemoveLast={detail.handleSplinePointRemoveLast}
               />
             </Animated.View>
           )}
@@ -158,20 +198,33 @@ const ClimbDetailScreen: FunctionComponent = () => {
                 </Typography>
                 {detail.watchedImage && detail.imageUri ? (
                   <View>
+                    <EditModeToggle
+                      editSubMode={detail.editSubMode}
+                      onChangeMode={detail.setEditSubMode}
+                      t={t}
+                    />
                     <ClimbImage
                       source={{ uri: detail.imageUri }}
                       holds={detail.watchedHolds}
+                      spline={detail.watchedSpline}
                       style={{ height: detail.scrollHeight * 0.6 }}
                       editable
+                      editMode={detail.editSubMode}
                       onHoldAdd={detail.handleHoldAdd}
                       onHoldRemove={detail.handleHoldRemove}
+                      onSplinePointAdd={detail.handleSplinePointAdd}
+                      onSplinePointRemoveLast={
+                        detail.handleSplinePointRemoveLast
+                      }
                     />
                     <Typography
                       size="callout"
                       color="secondary"
                       style={{ textAlign: 'center', marginTop: 8 }}
                     >
-                      {t('climbing.mark_holds_hint')}
+                      {detail.editSubMode === 'spline'
+                        ? t('climbing.draw_spline_hint')
+                        : t('climbing.mark_holds_hint')}
                     </Typography>
                   </View>
                 ) : (

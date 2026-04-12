@@ -23,6 +23,7 @@ export const climbsPutRequestSchema = z.object({
   grade: z.string().nonempty(),
   description: z.string().optional(),
   holds: z.array(holdSchema),
+  spline: z.array(holdSchema),
 
   image: z.string().nonempty(),
   location: z.string().nonempty(),

@@ -28,6 +28,11 @@ export type Hold = {
   y: number;
 };
 
+export type SplinePoint = {
+  x: number;
+  y: number;
+};
+
 export type Climb = {
   /* Data */
   id: string;
@@ -35,6 +40,7 @@ export type Climb = {
   grade: ClimbGrade;
   description?: string;
   holds: Hold[];
+  spline: SplinePoint[];
 
   /* References */
   image: Image;

@@ -26,6 +26,7 @@ function toApiClimb(
     grade: model.grade,
     description: model.description,
     holds: model.holds,
+    spline: model.spline,
 
     /* References */
     image: toApiImage(model.image),
@@ -53,6 +54,7 @@ function toApiDepopulatedClimb(model: IClimb): Omit<
     grade: model.grade,
     description: model.description,
     holds: model.holds,
+    spline: model.spline,
 
     /* References */
     image: model.image._id.toString(),

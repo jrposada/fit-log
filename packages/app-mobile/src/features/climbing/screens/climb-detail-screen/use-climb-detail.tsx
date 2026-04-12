@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Hold } from '@shared/models/climb/climb';
+import { Hold, SplinePoint } from '@shared/models/climb/climb';
 import { useClimbHistories } from '@shared-react/api/climb-histories/use-climb-histories';
 import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { useClimbHistoryProject } from '@shared-react/api/climb-histories/use-climb-history-project';
@@ -25,6 +25,7 @@ import { ImagePickerEvents } from '../../../../library/image-picker';
 import { accent } from '../../../../library/theme';
 import { useToast } from '../../../../library/toast';
 import Header from '../../../../navigation/header';
+import { EditMode } from '../../components/climb-detail/climb-image/climb-image';
 import GradeBadge from '../../components/common/grade-badge';
 import {
   ClimbDetailNavigationProp,
@@ -44,6 +45,7 @@ const useClimbDetail = () => {
   const isCreateMode = !climbId;
 
   const [isEditMode, setIsEditMode] = useState(isCreateMode);
+  const [editSubMode, setEditSubMode] = useState<EditMode>('holds');
   const [scrollHeight, setScrollHeight] = useState(0);
   const [uploadedImageUri, setUploadedImageUri] = useState<string | undefined>(
     undefined
@@ -79,6 +81,7 @@ const useClimbDetail = () => {
       grade: '',
       description: '',
       holds: [],
+      spline: [],
       image: '',
       location: locationId || '',
       sector: '',
@@ -93,6 +96,7 @@ const useClimbDetail = () => {
   } = methods;
 
   const watchedHolds = useWatch({ control, name: 'holds' });
+  const watchedSpline = useWatch({ control, name: 'spline' });
   const watchedGrade = useWatch({ control, name: 'grade' });
   const watchedImage = useWatch({ control, name: 'image' });
   const watchedSector = useWatch({ control, name: 'sector' });
@@ -112,6 +116,7 @@ const useClimbDetail = () => {
         grade: climb.grade,
         description: climb.description ?? '',
         holds: climb.holds,
+        spline: climb.spline ?? [],
         image: climb.image.id,
         location: climb.location.id,
         sector: climb.sector.id,
@@ -161,6 +166,7 @@ const useClimbDetail = () => {
       grade: data.grade,
       description: data.description || undefined,
       holds: data.holds,
+      spline: data.spline,
       image: data.image,
       location: data.location,
       sector: data.sector,
@@ -185,6 +191,17 @@ const useClimbDetail = () => {
     [watchedHolds, setValue]
   );
 
+  const handleSplinePointAdd = useCallback(
+    (point: SplinePoint) => {
+      setValue('spline', [...watchedSpline, point], { shouldDirty: true });
+    },
+    [watchedSpline, setValue]
+  );
+
+  const handleSplinePointRemoveLast = useCallback(() => {
+    setValue('spline', watchedSpline.slice(0, -1), { shouldDirty: true });
+  }, [watchedSpline, setValue]);
+
   const handleDelete = () => {
     if (!climbId) return;
     Alert.alert(
@@ -208,11 +225,13 @@ const useClimbDetail = () => {
         grade: climb.grade,
         description: climb.description ?? '',
         holds: climb.holds,
+        spline: climb.spline ?? [],
         image: climb.image.id,
         location: climb.location.id,
         sector: climb.sector.id,
       });
     }
+    setEditSubMode('holds');
     setIsEditMode(true);
   }, [climb, reset]);
 
@@ -404,8 +423,13 @@ const useClimbDetail = () => {
     imageUri,
     scrollHeight,
 
+    // Edit sub-mode
+    editSubMode,
+    setEditSubMode,
+
     // Watched form values
     watchedHolds,
+    watchedSpline,
     watchedGrade,
     watchedImage,
 
@@ -421,6 +445,8 @@ const useClimbDetail = () => {
     onSubmit,
     handleHoldAdd,
     handleHoldRemove,
+    handleSplinePointAdd,
+    handleSplinePointRemoveLast,
     handleDelete,
     handleCancelEdit,
     handleScrollLayout,

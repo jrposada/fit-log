@@ -29,6 +29,7 @@ const handler = toApiResponse<
     grade: climbPutData.grade,
     description: climbPutData.description,
     holds: climbPutData.holds,
+    spline: climbPutData.spline,
 
     /* References */
     image: new Types.ObjectId(climbPutData.image),

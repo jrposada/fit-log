@@ -38,10 +38,17 @@ export function fakeClimb(): Partial<
   const numHolds = faker.number.int({ min: 4, max: 12 });
   const holds = Array.from({ length: numHolds }, () => fakeHold());
 
+  const spline = faker.datatype.boolean()
+    ? Array.from({ length: faker.number.int({ min: 3, max: 8 }) }, () =>
+        fakeHold()
+      )
+    : [];
+
   return {
     name: faker.word.words({ count: { min: 1, max: 3 } }),
     grade: faker.helpers.arrayElement(grades),
     description: faker.lorem.paragraph(),
     holds,
+    spline,
   };
 }

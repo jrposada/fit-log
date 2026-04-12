@@ -11,6 +11,7 @@ export interface IClimb extends WithTimestamps<Document> {
   grade: string;
   description?: string;
   holds: IHold[];
+  spline: IHold[];
 
   /* References */
   image: Types.ObjectId;
@@ -48,6 +49,11 @@ const climbSchema = new Schema<IClimb>(
       required: false,
     },
     holds: {
+      type: [holdSchema],
+      required: true,
+      default: [],
+    },
+    spline: {
       type: [holdSchema],
       required: true,
       default: [],
