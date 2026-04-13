@@ -8,7 +8,7 @@ import { styles } from './screen-header.styles';
 
 export interface ScreenHeaderProps {
   title: string | undefined;
-  subtitle?: string;
+  subtitle?: string | false;
   onBackPress?: () => void;
   extra?: ReactNode;
   action?: ReactNode;
@@ -41,7 +41,6 @@ const ScreenHeader: FunctionComponent<ScreenHeaderProps> = ({
             icon="←"
             onPress={onBackPress}
             color={accent.primary}
-            size="lg"
           />
         )}
         <View style={styles.titleContainer}>

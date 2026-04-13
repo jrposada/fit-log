@@ -1,4 +1,5 @@
 import ClimbDetailScreen from './climb-detail-screen';
+import type { ClimbDetailRouteProp } from './use-climb-detail';
 
 export default ClimbDetailScreen;
-export type { ClimbDetailRouteProp } from './climb-detail-screen.types';
+export type { ClimbDetailRouteProp };

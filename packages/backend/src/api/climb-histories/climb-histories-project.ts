@@ -12,6 +12,7 @@ import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
 import { toApiClimbHistory } from './climb-histories-mapper';
+import { hasValidRefs } from './climb-histories-utils';
 
 const handler = toApiResponse<
   ClimbHistoryProjectResponse,
@@ -66,6 +67,9 @@ const handler = toApiResponse<
     });
 
   assert(populated, { msg: 'ClimbHistory not found after save' });
+  if (!hasValidRefs(populated)) {
+    throw new Error('ClimbHistory references deleted documents');
+  }
 
   return {
     statusCode: 200,

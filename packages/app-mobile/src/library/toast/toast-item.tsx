@@ -10,7 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
-import { styles } from './toast.styles';
+import { styles, variantStyles } from './toast.styles';
 import type { ToastItem as ToastItemType } from './toast-context';
 
 const AUTO_DISMISS_MS = 3000;
@@ -78,7 +78,7 @@ const ToastItem: FunctionComponent<ToastItemProps> = ({ toast, onDismiss }) => {
         exiting={SlideOutUp.duration(200)}
         style={[
           styles.toast,
-          isDestructive ? styles.toastDestructive : styles.toastSuccess,
+          variantStyles[toast.variant],
           animatedStyle,
         ]}
       >

@@ -5,6 +5,12 @@ import { Climb } from './climb';
 const holdSchema = z.object({
   x: z.number().min(0).max(1),
   y: z.number().min(0).max(1),
+  radius: z.number().min(0.01).max(0.15),
+});
+
+const splinePointSchema = z.object({
+  x: z.number().min(0).max(1),
+  y: z.number().min(0).max(1),
 });
 
 export type ClimbsPutRequest = Omit<
@@ -23,7 +29,7 @@ export const climbsPutRequestSchema = z.object({
   grade: z.string().nonempty(),
   description: z.string().optional(),
   holds: z.array(holdSchema),
-  spline: z.array(holdSchema),
+  spline: z.array(splinePointSchema),
 
   image: z.string().nonempty(),
   location: z.string().nonempty(),

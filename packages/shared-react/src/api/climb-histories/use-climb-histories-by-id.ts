@@ -8,7 +8,7 @@ import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
 type UseClimbHistoriesById = {
-  id: string;
+  id: string | undefined;
 };
 
 function useClimbHistoriesById({ id }: UseClimbHistoriesById) {
@@ -23,7 +23,7 @@ function useClimbHistoriesById({ id }: UseClimbHistoriesById) {
       fn: async () => {
         const response = await axios.get<
           ApiResponse<ClimbHistoriesGetByIdResponse>
-        >(`${apiBaseUrl}/climb-histories/${encodeURIComponent(id)}`, {
+        >(`${apiBaseUrl}/climb-histories/${encodeURIComponent(id!)}`, {
           headers: {
             Authorization: `Bearer ${getToken()}`,
           },

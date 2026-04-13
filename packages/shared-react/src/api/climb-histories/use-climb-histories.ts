@@ -31,7 +31,6 @@ function useClimbHistories({
       defaultResponse: [],
       refreshToken,
       logout,
-
       fn: async () => {
         const params = new URLSearchParams();
         if (limit) {

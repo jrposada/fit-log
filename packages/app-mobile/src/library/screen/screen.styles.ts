@@ -2,6 +2,17 @@ import { StyleSheet } from 'react-native';
 
 import { spacing, surfaces } from '../theme';
 
+export const footerVariantStyles = StyleSheet.create({
+  default: {
+    backgroundColor: surfaces.base,
+    padding: spacing.lg,
+  },
+  transparent: {
+    backgroundColor: 'transparent',
+    padding: spacing.lg,
+  },
+});
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -12,13 +23,5 @@ export const styles = StyleSheet.create({
   },
   scroll: {
     flex: 1,
-  },
-  footer: {
-    backgroundColor: surfaces.base,
-    padding: spacing.lg,
-  },
-  footerTransparent: {
-    padding: spacing.lg,
-    backgroundColor: 'transparent',
   },
 });

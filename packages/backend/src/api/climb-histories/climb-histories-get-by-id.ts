@@ -13,6 +13,7 @@ import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
 import { toApiClimbHistory } from './climb-histories-mapper';
+import { hasValidRefs } from './climb-histories-utils';
 
 const handler = toApiResponse<
   ClimbHistoriesGetByIdResponse,
@@ -34,7 +35,7 @@ const handler = toApiResponse<
       populate: ['images'],
     });
 
-  if (!climbHistory) {
+  if (!climbHistory || !hasValidRefs(climbHistory)) {
     throw new ResourceNotFound(`ClimbHistory with id ${id} not found`);
   }
 

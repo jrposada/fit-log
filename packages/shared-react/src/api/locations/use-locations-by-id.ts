@@ -1,8 +1,5 @@
 import { ApiResponse } from '@shared/models/api-response';
-import {
-  LocationsGetByIdParams,
-  LocationsGetByIdResponse,
-} from '@shared/models/location/location-get-by-id';
+import { LocationsGetByIdResponse } from '@shared/models/location/location-get-by-id';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -10,7 +7,11 @@ import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
-function useLocationsById({ id }: LocationsGetByIdParams) {
+type UseLocationsById = {
+  id: string | undefined;
+};
+
+function useLocationsById({ id }: UseLocationsById) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
   const { getToken, refreshToken, logout } = useAuth();
 
@@ -21,7 +22,7 @@ function useLocationsById({ id }: LocationsGetByIdParams) {
       logout,
       fn: async () => {
         const response = await axios.get<ApiResponse<LocationsGetByIdResponse>>(
-          `${apiBaseUrl}/locations/${encodeURIComponent(id)}`,
+          `${apiBaseUrl}/locations/${encodeURIComponent(id!)}`,
           {
             headers: {
               Authorization: `Bearer ${getToken()}`,

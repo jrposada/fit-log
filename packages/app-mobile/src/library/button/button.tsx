@@ -15,6 +15,7 @@ export interface ButtonProps {
   onPress: () => void;
   variant?: keyof typeof variantColors;
   size?: 'sm' | 'md' | 'lg';
+  fullWidth?: boolean;
   icon?: string;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
@@ -34,6 +35,7 @@ const Button: FunctionComponent<ButtonProps> = ({
   onPress,
   variant = 'primary',
   size = 'lg',
+  fullWidth = false,
   icon,
   disabled = false,
   style,
@@ -46,6 +48,7 @@ const Button: FunctionComponent<ButtonProps> = ({
       style={[
         styles.base,
         sizeStyles[size],
+        fullWidth && styles.fullWidth,
         icon && styles.baseWithIcon,
         icon && sizeIconGapStyles[size],
         { backgroundColor: variantColors[variant] },

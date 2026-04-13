@@ -2,6 +2,17 @@ import { StyleSheet } from 'react-native';
 
 import { ink, radii, semantic, shadows, spacing, typography } from '../theme';
 
+export const variantStyles = StyleSheet.create({
+  success: {
+    backgroundColor: semantic.successMuted,
+    borderLeftColor: semantic.success,
+  },
+  destructive: {
+    backgroundColor: semantic.destructiveMuted,
+    borderLeftColor: semantic.error,
+  },
+});
+
 export const styles = StyleSheet.create({
   container: {
     position: 'absolute',
@@ -17,14 +28,6 @@ export const styles = StyleSheet.create({
     padding: spacing.md,
     borderLeftWidth: 4,
     ...shadows.card,
-  },
-  toastSuccess: {
-    backgroundColor: semantic.successMuted,
-    borderLeftColor: semantic.success,
-  },
-  toastDestructive: {
-    backgroundColor: semantic.destructiveMuted,
-    borderLeftColor: semantic.error,
   },
   toastMessage: {
     ...typography.callout,

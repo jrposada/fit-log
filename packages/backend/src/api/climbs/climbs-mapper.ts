@@ -5,6 +5,7 @@ import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
+import { WithRequiredRefs } from '../../utils/types';
 import { toApiImage } from '../images/images-mapper';
 import { toApiDepopulatedLocation } from '../locations/locations-mapper';
 import { toApiDepopulatedSector } from '../sectors/sectors-mapper';
@@ -39,10 +40,13 @@ function toApiClimb(
   };
 }
 
-function toApiDepopulatedClimb(model: IClimb): Omit<
-  Climb,
-  'image' | 'location' | 'sector'
-> & {
+function hasRequiredRefs(model: IClimb): model is WithRequiredRefs<IClimb> {
+  return model.image != null && model.location != null && model.sector != null;
+}
+
+function toApiDepopulatedClimb(
+  model: WithRequiredRefs<IClimb>
+): Omit<Climb, 'image' | 'location' | 'sector'> & {
   image: string;
   location: string;
   sector: string;
@@ -67,4 +71,4 @@ function toApiDepopulatedClimb(model: IClimb): Omit<
   };
 }
 
-export { toApiClimb, toApiDepopulatedClimb };
+export { hasRequiredRefs, toApiClimb, toApiDepopulatedClimb };

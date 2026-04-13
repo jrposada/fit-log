@@ -106,11 +106,11 @@ class Keycloak {
     }
 
     const parts = authorizationHeader.split(' ');
-    if (parts.length !== 2 || parts[0].toLowerCase() !== 'bearer') {
+    if (parts.length !== 2 || parts[0]?.toLowerCase() !== 'bearer') {
       return null;
     }
 
-    return parts[1];
+    return parts[1] ?? null;
   }
 
   private async getSigningKey(header: JwtHeader): Promise<string> {

@@ -23,10 +23,10 @@ export interface IClimbHistory extends WithTimestamps<Document> {
   isProject: boolean;
   tries: Types.DocumentArray<IClimbHistoryTry>;
 
-  /* References */
-  climb: Types.ObjectId;
-  location: Types.ObjectId;
-  sector: Types.ObjectId;
+  /* References – nullable after population if the referenced doc was deleted */
+  climb: Types.ObjectId | null;
+  location: Types.ObjectId | null;
+  sector: Types.ObjectId | null;
 }
 
 export function computeTopStatus(

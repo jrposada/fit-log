@@ -9,12 +9,13 @@ import {
 import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { spacing as spacingTokens } from '../theme';
-import { styles } from './screen.styles';
+import { spacing, spacing as spacingTokens } from '../theme';
+import { footerVariantStyles, styles } from './screen.styles';
 
 type SpacingToken = keyof typeof spacingTokens;
 
 export interface ScreenProps {
+  presentation?: 'modal' | 'fullscreen';
   footer?: ReactNode;
   noFooterInsetBottom?: boolean;
   footerVariant?: 'default' | 'transparent';
@@ -29,6 +30,7 @@ export interface ScreenProps {
 
 const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
   children,
+  presentation = 'fullscreen',
   footer,
   noFooterInsetBottom = false,
   footerVariant = 'default',
@@ -43,6 +45,10 @@ const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
   const insets = useSafeAreaInsets();
 
   const contentContainerStyle: ViewStyle = {
+    ...(presentation === 'modal' &&
+      footer === null && { paddingBottom: insets.bottom }),
+    ...(presentation === 'modal' &&
+      footer !== null && { paddingBottom: spacing.lg }),
     ...(padding != null && { padding: spacingTokens[padding] }),
     ...(paddingHorizontal != null && {
       paddingHorizontal: spacingTokens[paddingHorizontal],
@@ -61,7 +67,7 @@ const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
         scrollEnabled={!centered}
         stickyHeaderIndices={stickyHeaderIndices}
         onLayout={onContentLayout}
-        keyboardShouldPersistTaps={keyboardAvoiding ? 'handled' : undefined}
+        keyboardShouldPersistTaps={keyboardAvoiding ? 'handled' : 'never'}
       >
         {children}
       </ScrollView>
@@ -69,13 +75,12 @@ const Screen: FunctionComponent<PropsWithChildren<ScreenProps>> = ({
         <Animated.View
           entering={FadeIn.duration(200)}
           style={[
-            footerVariant === 'transparent'
-              ? styles.footerTransparent
-              : styles.footer,
+            footerVariantStyles[footerVariant],
             {
-              paddingBottom: noFooterInsetBottom
-                ? spacingTokens.lg
-                : spacingTokens.lg + insets.bottom,
+              paddingBottom:
+                noFooterInsetBottom && presentation !== 'modal'
+                  ? spacingTokens.lg
+                  : spacingTokens.lg + insets.bottom,
             },
           ]}
         >

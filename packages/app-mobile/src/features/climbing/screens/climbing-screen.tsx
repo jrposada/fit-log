@@ -49,17 +49,23 @@ const ClimbingScreen: FunctionComponent = () => {
     },
   ];
 
-  const footer =
-    activeTab === 'quick-log' && locationId ? (
-      <Button
-        title={`+ ${t('climbing.log_custom_climb')}`}
-        onPress={() => navigation.navigate('ClimbDetail', { locationId })}
-        variant="primary"
-      />
-    ) : undefined;
+
 
   return (
-    <Screen footer={footer} noFooterInsetBottom stickyHeaderIndices={[0]}>
+    <Screen
+      footer={
+        activeTab === 'quick-log' &&
+        locationId && (
+          <Button
+            title={`+ ${t('climbing.log_custom_climb')}`}
+            onPress={() => navigation.navigate('ClimbDetail', { locationId })}
+            variant="primary"
+          />
+        )
+      }
+      noFooterInsetBottom
+      stickyHeaderIndices={[0]}
+    >
       <Tabs.Bar<Tab>
         items={items}
         activeId={activeTab}

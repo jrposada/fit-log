@@ -25,7 +25,6 @@ function useClimbsSearch({
       defaultResponse: [],
       refreshToken,
       logout,
-
       fn: async () => {
         const params = new URLSearchParams();
 

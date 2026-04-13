@@ -82,6 +82,7 @@ export function registerSetupCommand(setupCmd: Command): void {
           console.log('Linking sectors to locations...');
           for (let i = 0; i < locations.length; i++) {
             const location = locations[i];
+            if (!location) continue;
             const locationSectors = sectors.slice(
               i * sectorsPerLocation,
               (i + 1) * sectorsPerLocation
@@ -124,8 +125,9 @@ export function registerSetupCommand(setupCmd: Command): void {
           for (const climb of climbs) {
             if (faker.datatype.boolean({ probability: climbHistoryChance })) {
               const historyData = fakeClimbHistory();
-              const mostRecentTryDate =
-                historyData.tries[historyData.tries.length - 1].date;
+              const lastTry = historyData.tries[historyData.tries.length - 1];
+              if (!lastTry) continue;
+              const mostRecentTryDate = lastTry.date;
 
               const climbHistoryData = {
                 ...historyData,

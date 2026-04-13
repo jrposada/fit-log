@@ -24,7 +24,7 @@ const ClimbStatusBadge: FunctionComponent<ClimbStatusBadgeProps> = ({
   }
 
   if (isProject) {
-    return <Badge label={t('climbing.status_project_label')} variant="info" />;
+    return <Badge label={t('climbing.status_project')} variant="info" />;
   }
 
   return null;

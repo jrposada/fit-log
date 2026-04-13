@@ -64,6 +64,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
+  fullWidth: {
+    flex: 1,
+  },
   disabled: {
     backgroundColor: ink.disabled,
     opacity: 0.6,

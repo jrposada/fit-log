@@ -1,4 +1,5 @@
 import { ClimbGrade } from '@shared/models/climb/climb';
+import { GRADE_OPTIONS } from '@shared/models/climb/climb-constants';
 import { FunctionComponent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -6,27 +7,6 @@ import { ScrollView, TouchableOpacity, View } from 'react-native';
 
 import { Typography } from '../../../../library/typography';
 import { styles } from './form-grade-chips.styles';
-
-const GRADE_OPTIONS: ClimbGrade[] = [
-  'V0',
-  'V1',
-  'V2',
-  'V3',
-  'V4',
-  'V5',
-  'V6',
-  'V7',
-  'V8',
-  'V9',
-  'V10',
-  'V11',
-  'V12',
-  'V13',
-  'V14',
-  'V15',
-  'V16',
-  'V17',
-];
 
 interface FormGradeChipsProps {
   name: string;

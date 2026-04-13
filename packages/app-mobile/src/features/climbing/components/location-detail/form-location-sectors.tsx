@@ -264,7 +264,7 @@ const FormLocationSectors: FunctionComponent = () => {
                               {!isReadonly && !isSectorDeleted && (
                                 <IconButton
                                   icon={isImageDeleted ? '↩' : '✕'}
-                                  size="xs"
+                                  size="sm"
                                   variant={
                                     isImageDeleted ? 'default' : 'destructive'
                                   }

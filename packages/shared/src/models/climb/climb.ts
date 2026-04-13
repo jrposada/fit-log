@@ -23,9 +23,12 @@ export type ClimbGrade =
   | 'V17'
   | (string & {});
 
+export const DEFAULT_HOLD_RADIUS = 0.03;
+
 export type Hold = {
   x: number;
   y: number;
+  radius: number; // normalized 0-1 (fraction of image width)
 };
 
 export type SplinePoint = {

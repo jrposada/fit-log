@@ -1,25 +1,11 @@
 import { ClimbHistory } from '@shared/models/climb-history/climb-history';
-import { MergeType } from 'mongoose';
 
-import { IClimb } from '../../models/climb';
-import { IClimbHistory } from '../../models/climb-history';
-import { IImage } from '../../models/image';
-import { ILocation } from '../../models/location';
-import { ISector } from '../../models/sector';
 import { toApiDepopulatedClimb } from '../climbs/climbs-mapper';
 import { toApiDepopulatedLocation } from '../locations/locations-mapper';
 import { toApiDepopulatedSector } from '../sectors/sectors-mapper';
+import { ValidClimbHistory } from './climb-histories-utils';
 
-function toApiClimbHistory(
-  model: MergeType<
-    IClimbHistory,
-    {
-      climb: IClimb;
-      location: ILocation;
-      sector: MergeType<ISector, { images: IImage[] }>;
-    }
-  >
-): ClimbHistory {
+function toApiClimbHistory(model: ValidClimbHistory): ClimbHistory {
   return {
     /* Data */
     id: model._id.toString(),

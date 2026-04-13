@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { ImagePickerScreen } from '../../library/image-picker';
 import { MapPointPickerScreen } from '../../library/map-point-picker';
 import Header from '../../navigation/header';
-import ClimbDetailHeader from './components/climb-detail/climb-detail-header';
 import ClimbDetailScreen from './screens/climb-detail-screen';
 import ClimbingScreen from './screens/climbing-screen';
 import LocationDetailScreen from './screens/location-detail-screen';
@@ -47,7 +46,6 @@ const ClimbingStack: FunctionComponent = () => {
         name="ClimbDetail"
         component={ClimbDetailScreen}
         options={{
-          header: () => <ClimbDetailHeader />,
           presentation: 'modal',
           gestureEnabled: true,
         }}

@@ -26,6 +26,14 @@ function fakeHold() {
   return {
     x: faker.number.float({ min: 0, max: 1, fractionDigits: 3 }),
     y: faker.number.float({ min: 0, max: 1, fractionDigits: 3 }),
+    radius: faker.number.float({ min: 0.01, max: 0.06, fractionDigits: 3 }),
+  };
+}
+
+function fakeSplinePoint() {
+  return {
+    x: faker.number.float({ min: 0, max: 1, fractionDigits: 3 }),
+    y: faker.number.float({ min: 0, max: 1, fractionDigits: 3 }),
   };
 }
 
@@ -40,7 +48,7 @@ export function fakeClimb(): Partial<
 
   const spline = faker.datatype.boolean()
     ? Array.from({ length: faker.number.int({ min: 3, max: 8 }) }, () =>
-        fakeHold()
+        fakeSplinePoint()
       )
     : [];
 

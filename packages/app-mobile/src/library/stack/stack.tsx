@@ -50,7 +50,14 @@ const Stack: FunctionComponent<PropsWithChildren<StackProps>> = ({
     ...(gap != null && { gap: spacingTokens[gap] }),
     ...(align != null && { alignItems: alignMap[align] }),
     ...(justify != null && { justifyContent: justifyMap[justify] }),
-    ...(padding != null && { padding: spacingTokens[padding] }),
+    ...(padding != null &&
+      direction === 'vertical' && {
+        paddingHorizontal: spacingTokens[padding],
+      }),
+    ...(padding != null &&
+      direction === 'horizontal' && {
+        paddingVertical: spacingTokens[padding],
+      }),
     ...(paddingHorizontal != null && {
       paddingHorizontal: spacingTokens[paddingHorizontal],
     }),

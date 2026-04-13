@@ -4,7 +4,7 @@ import { MergeType } from 'mongoose';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
 import { ISector } from '../../models/sector';
-import { toApiDepopulatedClimb } from '../climbs/climbs-mapper';
+import { hasRequiredRefs, toApiDepopulatedClimb } from '../climbs/climbs-mapper';
 import { toApiImage } from '../images/images-mapper';
 
 function toApiDepopulatedSector(
@@ -44,7 +44,9 @@ function toApiSector(
     googleMapsId: model.googleMapsId,
 
     /* References */
-    climbs: model.climbs.map(toApiDepopulatedClimb),
+    climbs: model.climbs.flatMap((c) =>
+      hasRequiredRefs(c) ? [toApiDepopulatedClimb(c)] : []
+    ),
     images: model.images.map(toApiImage),
 
     /* Timestamps */

@@ -12,6 +12,7 @@ import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
 import { toApiClimbHistory } from './climb-histories-mapper';
+import { hasValidRefs } from './climb-histories-utils';
 
 const handler = toApiResponse<
   ClimbHistoriesGetResponse,
@@ -72,12 +73,14 @@ const handler = toApiResponse<
       populate: ['images'],
     });
 
+  const validHistories = climbHistories.filter(hasValidRefs);
+
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        climbHistories: climbHistories.map(toApiClimbHistory),
+        climbHistories: validHistories.map(toApiClimbHistory),
       },
     },
   };

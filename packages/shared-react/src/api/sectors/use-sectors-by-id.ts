@@ -1,8 +1,5 @@
 import { ApiResponse } from '@shared/models/api-response';
-import {
-  SectorsGetByIdParams,
-  SectorsGetByIdResponse,
-} from '@shared/models/sector/sector-get-by-id';
+import { SectorsGetByIdResponse } from '@shared/models/sector/sector-get-by-id';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -10,7 +7,11 @@ import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
-function useSectorsById({ id }: SectorsGetByIdParams) {
+type UseSectorsById = {
+  id: string | undefined;
+};
+
+function useSectorsById({ id }: UseSectorsById) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
   const { getToken, refreshToken, logout } = useAuth();
 
@@ -21,7 +22,7 @@ function useSectorsById({ id }: SectorsGetByIdParams) {
       logout,
       fn: async () => {
         const response = await axios.get<ApiResponse<SectorsGetByIdResponse>>(
-          `${apiBaseUrl}/sectors/${encodeURIComponent(id)}`,
+          `${apiBaseUrl}/sectors/${encodeURIComponent(id!)}`,
           {
             headers: {
               Authorization: `Bearer ${getToken()}`,

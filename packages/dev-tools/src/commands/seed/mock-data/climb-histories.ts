@@ -35,7 +35,9 @@ export function fakeClimbHistory(): {
   tries.sort((a, b) => a.date.getTime() - b.date.getTime());
 
   // Compute top-level status from highest priority try
-  let bestStatus: ClimbHistoryStatus = tries[0].status;
+  const firstTry = tries[0];
+  if (!firstTry) throw new Error('tries must be non-empty');
+  let bestStatus: ClimbHistoryStatus = firstTry.status;
   for (const t of tries) {
     if (STATUS_PRIORITY[t.status] > STATUS_PRIORITY[bestStatus]) {
       bestStatus = t.status;

@@ -1,24 +1,24 @@
 import { FunctionComponent } from 'react';
 import { Pressable, StyleProp, Text, ViewStyle } from 'react-native';
 
-import { ink, semantic, surfaces } from '../theme';
-import { styles } from './icon-button.styles';
+import {
+  sizeStyles,
+  sizeTextStyles,
+  styles,
+  variantStyles,
+  variantTextColors,
+} from './icon-button.styles';
 
-type IconButtonSize = 'xs' | 'sm' | 'md' | 'lg';
-
-const SIZE_MAP: Record<IconButtonSize, { box: number; icon: number }> = {
-  xs: { box: 22, icon: 12 },
-  sm: { box: 32, icon: 16 },
-  md: { box: 40, icon: 20 },
-  lg: { box: 44, icon: 24 },
-};
+type IconButtonVariant = 'default' | 'primary' | 'ghost' | 'destructive';
+type IconButtonSize = 'sm' | 'md' | 'lg';
 
 export interface IconButtonProps {
   icon: string;
   onPress: () => void;
-  variant?: 'default' | 'ghost' | 'destructive';
+  disabled?: boolean;
+  variant?: IconButtonVariant;
   size?: IconButtonSize;
-  backgroundColor?: string;
+  rounded?: boolean;
   color?: string;
   style?: StyleProp<ViewStyle>;
 }
@@ -28,37 +28,33 @@ const IconButton: FunctionComponent<IconButtonProps> = ({
   onPress,
   variant = 'default',
   size = 'md',
-  backgroundColor = surfaces.sunken,
+  disabled = false,
+  rounded = false,
   color,
   style,
 }) => {
-  const { box, icon: iconFontSize } = SIZE_MAP[size];
-
-  const resolvedBg =
-    variant === 'destructive' ? semantic.destructive : backgroundColor;
-  const resolvedColor =
-    color ?? (variant === 'destructive' ? ink.inverse : undefined);
+  const resolvedColor = disabled
+    ? undefined
+    : (color ?? variantTextColors[variant]);
 
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={[
         styles.base,
-        variant === 'ghost'
-          ? { width: box, height: box }
-          : {
-              width: box,
-              height: box,
-              borderRadius: box / 2,
-              backgroundColor: resolvedBg,
-            },
+        sizeStyles[size],
+        variantStyles[variant],
+        rounded && styles.rounded,
+        disabled && styles.disabled,
         style,
       ]}
     >
       <Text
         style={[
           styles.label,
-          { fontSize: iconFontSize },
+          sizeTextStyles[size],
+          disabled && styles.disabledText,
           resolvedColor ? { color: resolvedColor } : undefined,
         ]}
       >

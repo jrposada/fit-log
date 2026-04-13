@@ -1,6 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Hold, SplinePoint } from '@shared/models/climb/climb';
+import { climbsPutRequestSchema } from '@shared/models/climb/climb-put';
 import { useClimbHistories } from '@shared-react/api/climb-histories/use-climb-histories';
 import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
 import { useClimbHistoryProject } from '@shared-react/api/climb-histories/use-climb-history-project';
@@ -12,27 +15,23 @@ import { useLocationsById } from '@shared-react/api/locations/use-locations-by-i
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import {
-  Alert,
-  LayoutChangeEvent,
-  Linking,
-  Platform,
-  View,
-} from 'react-native';
+import { Alert, LayoutChangeEvent, Linking, Platform } from 'react-native';
+import z from 'zod';
 
-import IconButton from '../../../../library/icon-button';
 import { ImagePickerEvents } from '../../../../library/image-picker';
-import { accent } from '../../../../library/theme';
 import { useToast } from '../../../../library/toast';
-import Header from '../../../../navigation/header';
-import { EditMode } from '../../components/climb-detail/climb-image/climb-image';
-import GradeBadge from '../../components/common/grade-badge';
-import {
-  ClimbDetailNavigationProp,
-  ClimbDetailRouteProp,
-  FormData,
-  formSchema,
-} from './climb-detail-screen.types';
+import { Selection } from '../../components/climb-detail/climb-image/climb-image';
+import { ClimbingParamList } from '../../types';
+import ClimbDetailHeader from './use-climb-detail-header';
+
+export type ClimbDetailNavigationProp = NativeStackNavigationProp<
+  ClimbingParamList,
+  'ClimbDetail'
+>;
+
+export type ClimbDetailRouteProp = RouteProp<ClimbingParamList, 'ClimbDetail'>;
+
+type FormData = z.infer<typeof climbsPutRequestSchema>;
 
 const useClimbDetail = () => {
   const { t } = useTranslation();
@@ -45,7 +44,8 @@ const useClimbDetail = () => {
   const isCreateMode = !climbId;
 
   const [isEditMode, setIsEditMode] = useState(isCreateMode);
-  const [editSubMode, setEditSubMode] = useState<EditMode>('holds');
+  const [selection, setSelection] = useState<Selection>(null);
+
   const [scrollHeight, setScrollHeight] = useState(0);
   const [uploadedImageUri, setUploadedImageUri] = useState<string | undefined>(
     undefined
@@ -53,14 +53,15 @@ const useClimbDetail = () => {
   const initializedRef = useRef(false);
 
   const handleScrollLayout = (event: LayoutChangeEvent) => {
-    setScrollHeight(event.nativeEvent.layout.height);
+    const { height } = event.nativeEvent.layout;
+    setScrollHeight((prev) => (prev === 0 ? height : prev));
   };
 
   const { data: climb, isLoading: isLoadingClimb } = useClimbsById({
-    id: climbId || '',
+    id: climbId,
   });
   const { data: location, isLoading: isLoadingLocation } = useLocationsById({
-    id: (isCreateMode ? locationId : climb?.location?.id) || '',
+    id: isCreateMode ? locationId : climb?.location?.id,
   });
 
   const { data: climbHistories = [] } = useClimbHistories({
@@ -75,7 +76,7 @@ const useClimbDetail = () => {
   const sectors = useMemo(() => location?.sectors ?? [], [location]);
 
   const methods = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(climbsPutRequestSchema),
     defaultValues: {
       name: '',
       grade: '',
@@ -198,9 +199,98 @@ const useClimbDetail = () => {
     [watchedSpline, setValue]
   );
 
-  const handleSplinePointRemoveLast = useCallback(() => {
-    setValue('spline', watchedSpline.slice(0, -1), { shouldDirty: true });
-  }, [watchedSpline, setValue]);
+  const handleSplinePointRemove = useCallback(
+    (index: number) => {
+      setValue(
+        'spline',
+        watchedSpline.filter((_, i) => i !== index),
+        { shouldDirty: true }
+      );
+    },
+    [watchedSpline, setValue]
+  );
+
+  const handleHoldResize = useCallback(
+    (index: number, radius: number) => {
+      setValue(
+        'holds',
+        watchedHolds.map((h, i) => (i === index ? { ...h, radius } : h)),
+        { shouldDirty: true }
+      );
+    },
+    [watchedHolds, setValue]
+  );
+
+  const handleHoldMove = useCallback(
+    (index: number, dx: number, dy: number) => {
+      const hold = watchedHolds[index];
+      if (!hold) return;
+      setValue(
+        'holds',
+        watchedHolds.map((h, i) =>
+          i === index
+            ? {
+                ...h,
+                x: Math.max(0, Math.min(1, h.x + dx)),
+                y: Math.max(0, Math.min(1, h.y + dy)),
+              }
+            : h
+        ),
+        { shouldDirty: true }
+      );
+    },
+    [watchedHolds, setValue]
+  );
+
+  const handleSplinePointMove = useCallback(
+    (index: number, dx: number, dy: number) => {
+      const point = watchedSpline[index];
+      if (!point) return;
+      setValue(
+        'spline',
+        watchedSpline.map((p, i) =>
+          i === index
+            ? {
+                ...p,
+                x: Math.max(0, Math.min(1, p.x + dx)),
+                y: Math.max(0, Math.min(1, p.y + dy)),
+              }
+            : p
+        ),
+        { shouldDirty: true }
+      );
+    },
+    [watchedSpline, setValue]
+  );
+
+  const RADIUS_MIN = 0.01;
+  const RADIUS_MAX = 0.15;
+
+  const handleSelectionMove = useCallback(
+    (dx: number, dy: number) => {
+      if (!selection) return;
+      if (selection.type === 'hold') {
+        handleHoldMove(selection.index, dx, dy);
+      } else {
+        handleSplinePointMove(selection.index, dx, dy);
+      }
+    },
+    [selection, handleHoldMove, handleSplinePointMove]
+  );
+
+  const handleSelectionResize = useCallback(
+    (scaleFactor: number) => {
+      if (!selection || selection.type !== 'hold') return;
+      const hold = watchedHolds[selection.index];
+      if (!hold) return;
+      const newRadius = Math.min(
+        RADIUS_MAX,
+        Math.max(RADIUS_MIN, hold.radius * scaleFactor)
+      );
+      handleHoldResize(selection.index, newRadius);
+    },
+    [selection, watchedHolds, handleHoldResize]
+  );
 
   const handleDelete = () => {
     if (!climbId) return;
@@ -231,7 +321,6 @@ const useClimbDetail = () => {
         sector: climb.sector.id,
       });
     }
-    setEditSubMode('holds');
     setIsEditMode(true);
   }, [climb, reset]);
 
@@ -247,12 +336,14 @@ const useClimbDetail = () => {
             style: 'destructive',
             onPress: () => {
               reset();
+              setSelection(null);
               setIsEditMode(false);
             },
           },
         ]
       );
     } else {
+      setSelection(null);
       setIsEditMode(false);
     }
   }, [isDirty, reset, t]);
@@ -346,41 +437,16 @@ const useClimbDetail = () => {
     navigation.setOptions({
       gestureEnabled: !isDirty,
       header: () => (
-        <Header
-          title={isCreateMode ? t('climbing.create_climb_title') : climb?.name}
-          subtitle={
-            !isCreateMode && !isEditMode && climb
-              ? `${climb.location.name} · ${climb.sector.name}`
-              : undefined
-          }
-          extra={
-            !isCreateMode && climb ? (
-              <GradeBadge grade={climb.grade} />
-            ) : undefined
-          }
-          action={
-            !isCreateMode ? (
-              <View style={{ flexDirection: 'row', gap: 8 }}>
-                <IconButton icon="📍" onPress={handleOpenMap} />
-                <IconButton
-                  icon="✏️"
-                  onPress={isEditMode ? handleCancelEdit : handleEnterEditMode}
-                  style={
-                    isEditMode
-                      ? {
-                          backgroundColor: accent.primary,
-                          borderRadius: 8,
-                        }
-                      : undefined
-                  }
-                />
-              </View>
-            ) : undefined
-          }
-          loading={isLoadingClimb}
-          mode="modal"
-          back
+        <ClimbDetailHeader
+          isCreateMode={isCreateMode}
+          isEditMode={isEditMode}
+          isDirty={isDirty}
+          isLoadingClimb={isLoadingClimb}
+          climb={climb}
           onBackPress={handleBackPress}
+          onCancelEdit={handleCancelEdit}
+          onEnterEditMode={handleEnterEditMode}
+          onOpenMap={handleOpenMap}
         />
       ),
     });
@@ -391,7 +457,6 @@ const useClimbDetail = () => {
     isDirty,
     climb,
     isLoadingClimb,
-    t,
     handleBackPress,
     handleCancelEdit,
     handleEnterEditMode,
@@ -422,10 +487,17 @@ const useClimbDetail = () => {
     userStatus,
     imageUri,
     scrollHeight,
+    isCompleted:
+      userStatus?.status === 'flash' || userStatus?.status === 'send',
+    attempts:
+      userStatus?.tries.reduce((sum, tr) => sum + (tr.attempts || 0), 0) ?? 0,
 
-    // Edit sub-mode
-    editSubMode,
-    setEditSubMode,
+    // Selection
+    selection,
+    setSelection,
+    hasSelection: selection !== null,
+    handleSelectionMove,
+    handleSelectionResize,
 
     // Watched form values
     watchedHolds,
@@ -445,8 +517,11 @@ const useClimbDetail = () => {
     onSubmit,
     handleHoldAdd,
     handleHoldRemove,
+    handleHoldResize,
+    handleHoldMove,
     handleSplinePointAdd,
-    handleSplinePointRemoveLast,
+    handleSplinePointRemove,
+    handleSplinePointMove,
     handleDelete,
     handleCancelEdit,
     handleScrollLayout,

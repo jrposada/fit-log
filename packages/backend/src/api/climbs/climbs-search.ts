@@ -56,7 +56,9 @@ const handler = toApiResponse<ClimbsSearchResponse, unknown, ClimbsSearchQuery>(
     });
 
     const statusMap = new Map(
-      histories.map((h) => {
+      histories.flatMap((h) => {
+        if (h.climb == null) return [];
+
         const totalAttempts = h.tries.reduce(
           (sum, t) => sum + (t.attempts ?? 0),
           0
@@ -64,15 +66,17 @@ const handler = toApiResponse<ClimbsSearchResponse, unknown, ClimbsSearchQuery>(
         const lastTry = h.tries[h.tries.length - 1];
 
         return [
-          h.climb.toString(),
-          {
-            status: h.status,
-            isProject: h.isProject,
-            attempts: totalAttempts || undefined,
-            lastTriedDate: lastTry?.date
-              ? lastTry.date.toISOString()
-              : undefined,
-          },
+          [
+            h.climb.toString(),
+            {
+              status: h.status,
+              isProject: h.isProject,
+              attempts: totalAttempts || undefined,
+              lastTriedDate: lastTry?.date
+                ? lastTry.date.toISOString()
+                : undefined,
+            },
+          ] as const,
         ];
       })
     );

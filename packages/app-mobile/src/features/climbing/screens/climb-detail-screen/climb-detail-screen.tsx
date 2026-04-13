@@ -1,8 +1,9 @@
+import { GRADE_OPTIONS } from '@shared/models/climb/climb-constants';
 import { FunctionComponent } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
-import Animated, { FadeIn, LinearTransition } from 'react-native-reanimated';
+import { ScrollView } from 'react-native';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 
 import Button from '../../../../library/button';
 import EmptyState from '../../../../library/empty-state';
@@ -13,44 +14,13 @@ import LoadingState from '../../../../library/loading-state';
 import Screen from '../../../../library/screen';
 import Section from '../../../../library/section';
 import Select from '../../../../library/select';
+import Stack from '../../../../library/stack';
 import { surfaces } from '../../../../library/theme';
 import { Typography } from '../../../../library/typography';
-import UnsavedBanner from '../../../../library/unsaved-banner';
 import ClimbImage from '../../components/climb-detail/climb-image';
-import { EditMode } from '../../components/climb-detail/climb-image/climb-image';
 import GradeBadge from '../../components/common/grade-badge';
 import ClimbDetailFooter from './climb-detail-footer';
-import { GRADE_OPTIONS } from './climb-detail-screen.types';
-import ClimbDetailStatusCard from './climb-detail-status-card';
 import useClimbDetail from './use-climb-detail';
-
-const EditModeToggle: FunctionComponent<{
-  editSubMode: EditMode;
-  onChangeMode: (mode: EditMode) => void;
-  t: (key: string) => string;
-}> = ({ editSubMode, onChangeMode, t }) => (
-  <View
-    style={{
-      flexDirection: 'row',
-      gap: 8,
-      paddingHorizontal: 20,
-      justifyContent: 'center',
-    }}
-  >
-    <Button
-      variant={editSubMode === 'holds' ? 'primary' : 'outline'}
-      title={t('climbing.edit_mode_holds')}
-      size="sm"
-      onPress={() => onChangeMode('holds')}
-    />
-    <Button
-      variant={editSubMode === 'spline' ? 'primary' : 'outline'}
-      title={t('climbing.edit_mode_spline')}
-      size="sm"
-      onPress={() => onChangeMode('spline')}
-    />
-  </View>
-);
 
 const ClimbDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -70,93 +40,93 @@ const ClimbDetailScreen: FunctionComponent = () => {
     <FormProvider {...detail.methods}>
       <FormReadonlyProvider readonly={!detail.isEditMode}>
         <Screen
+          presentation="modal"
+          footerVariant={
+            detail.isEditMode && detail.selection ? 'transparent' : 'default'
+          }
           keyboardAvoiding={detail.isEditMode}
           onContentLayout={detail.handleScrollLayout}
           footer={
-            detail.isEditMode && (
-              <ClimbDetailFooter
-                isCreateMode={detail.isCreateMode}
-                isSubmitDisabled={detail.isSubmitDisabled}
-                isSaving={detail.isClimbSaving}
-                isDeleting={detail.isClimbDeleting}
-                onSubmit={detail.handleSubmit(detail.onSubmit)}
-                onCancel={detail.handleCancelEdit}
-                onDelete={detail.handleDelete}
-              />
-            )
+            <ClimbDetailFooter
+              isCreateMode={detail.isCreateMode}
+              isEditMode={detail.isEditMode}
+              isSubmitDisabled={detail.isSubmitDisabled}
+              isSaving={detail.isClimbSaving}
+              isDeleting={detail.isClimbDeleting}
+              isHistoryPending={detail.isHistoryPending}
+              isProject={detail.userStatus?.isProject || false}
+              isProjectPending={detail.isProjectPending}
+              isCompleted={['flash', 'send'].includes(
+                detail.userStatus?.status ?? ''
+              )}
+              selection={detail.selection}
+              onSubmit={detail.handleSubmit(detail.onSubmit)}
+              onCancel={detail.handleCancelEdit}
+              onDelete={detail.handleDelete}
+              handleLogSend={detail.handleLogSend}
+              onToggleProject={detail.handleToggleProject}
+              onSelectionMove={detail.handleSelectionMove}
+              onSelectionResize={detail.handleSelectionResize}
+            />
           }
         >
-          {detail.isEditMode && (
-            <UnsavedBanner
-              isDirty={detail.isDirty}
-              message={t('climbing.unsaved_changes_banner')}
-            />
-          )}
-
-          {!detail.isCreateMode && detail.watchedImage && detail.imageUri && (
+          {detail.watchedImage && detail.imageUri ? (
             <Animated.View layout={LinearTransition}>
-              {detail.isEditMode && (
-                <Animated.View entering={FadeIn.duration(200)}>
-                  <EditModeToggle
-                    editSubMode={detail.editSubMode}
-                    onChangeMode={detail.setEditSubMode}
-                    t={t}
-                  />
-                  <Typography
-                    size="callout"
-                    color="secondary"
-                    style={{ textAlign: 'center', marginTop: 8 }}
-                  >
-                    {detail.editSubMode === 'spline'
-                      ? t('climbing.draw_spline_hint')
-                      : t('climbing.mark_holds_hint')}
-                  </Typography>
-                </Animated.View>
-              )}
               <ClimbImage
                 source={{ uri: detail.imageUri }}
                 holds={detail.watchedHolds}
                 spline={detail.watchedSpline}
+                selection={detail.selection}
+                onSelectionChange={detail.setSelection}
                 style={{
                   height: detail.scrollHeight,
                 }}
                 editable={detail.isEditMode}
-                editMode={detail.editSubMode}
                 onHoldAdd={detail.handleHoldAdd}
                 onHoldRemove={detail.handleHoldRemove}
                 onSplinePointAdd={detail.handleSplinePointAdd}
-                onSplinePointRemoveLast={detail.handleSplinePointRemoveLast}
+                onSplinePointRemove={detail.handleSplinePointRemove}
               />
             </Animated.View>
+          ) : (
+            <Section title={t('climbing.select_image')}>
+              <Button
+                variant="primary"
+                title={
+                  detail.isImageUploading
+                    ? t('climbing.uploading_image')
+                    : t('climbing.select_image')
+                }
+                onPress={detail.handleSelectImage}
+                disabled={detail.isImageUploading}
+              />
+            </Section>
           )}
 
-          <Section spacing="lg">
-            <FormTextInput
-              name="name"
-              label={t('climbing.climb_name')}
-              placeholder={t('climbing.enter_climb_name')}
-              maxLength={100}
-              required
-              showCharacterCount
-            />
-          </Section>
+          <Stack padding="lg" gap="lg">
+            <Section>
+              <FormTextInput
+                name="name"
+                label={t('climbing.climb_name')}
+                placeholder={t('climbing.enter_climb_name')}
+                maxLength={100}
+                required
+                showCharacterCount
+              />
+            </Section>
 
-          <Section spacing="lg">
-            <FormTextArea
-              name="description"
-              label={t('climbing.description')}
-              placeholder={t('climbing.add_description')}
-              maxLength={500}
-              numberOfLines={4}
-            />
-          </Section>
+            <Section>
+              <FormTextArea
+                name="description"
+                label={t('climbing.description')}
+                placeholder={t('climbing.add_description')}
+                maxLength={500}
+                numberOfLines={4}
+              />
+            </Section>
 
-          {detail.isCreateMode && (
-            <>
-              <Section spacing="lg">
-                <Typography weight="semibold" style={{ marginBottom: 8 }}>
-                  {t('climbing.grade')}
-                </Typography>
+            {detail.isEditMode && (
+              <Section title={t('climbing.grade')}>
                 <ScrollView
                   horizontal
                   showsHorizontalScrollIndicator={false}
@@ -174,12 +144,11 @@ const ClimbDetailScreen: FunctionComponent = () => {
                   ))}
                 </ScrollView>
               </Section>
+            )}
 
-              <Section spacing="lg">
+            {detail.isCreateMode && (
+              <Section title={t('climbing.sector')}>
                 <LoadingState isLoading={detail.isLoadingLocation}>
-                  <Typography weight="semibold" style={{ marginBottom: 8 }}>
-                    {t('climbing.sector')}
-                  </Typography>
                   <Select
                     options={detail.sectors.map((s) => s.name)}
                     value={detail.selectedSector?.name || ''}
@@ -191,67 +160,24 @@ const ClimbDetailScreen: FunctionComponent = () => {
                   />
                 </LoadingState>
               </Section>
+            )}
 
-              <Section spacing="lg">
-                <Typography weight="semibold" style={{ marginBottom: 8 }}>
-                  {t('climbing.select_image')}
+            {!detail.isCreateMode && !detail.isEditMode && (
+              <Section title={t('climbing.browse_your_status')}>
+                <Typography size="callout" color="secondary">
+                  {detail.userStatus?.status === 'flash' &&
+                    `✓ ${t('climbing.status_flash')}`}
+                  {detail.userStatus?.status === 'send' &&
+                    `✓ ${t('climbing.status_sent')}: ${t('climbing.attempts_count', { count: detail.attempts })}`}
+                  {detail.userStatus?.status === 'attempt' &&
+                    t('climbing.attempts_count', { count: detail.attempts })}
+                  {!detail.userStatus?.status && t('climbing.status_not_tried')}
+                  {detail.userStatus?.isProject &&
+                    ` · 🎯 ${t('climbing.status_project')}`}
                 </Typography>
-                {detail.watchedImage && detail.imageUri ? (
-                  <View>
-                    <EditModeToggle
-                      editSubMode={detail.editSubMode}
-                      onChangeMode={detail.setEditSubMode}
-                      t={t}
-                    />
-                    <ClimbImage
-                      source={{ uri: detail.imageUri }}
-                      holds={detail.watchedHolds}
-                      spline={detail.watchedSpline}
-                      style={{ height: detail.scrollHeight * 0.6 }}
-                      editable
-                      editMode={detail.editSubMode}
-                      onHoldAdd={detail.handleHoldAdd}
-                      onHoldRemove={detail.handleHoldRemove}
-                      onSplinePointAdd={detail.handleSplinePointAdd}
-                      onSplinePointRemoveLast={
-                        detail.handleSplinePointRemoveLast
-                      }
-                    />
-                    <Typography
-                      size="callout"
-                      color="secondary"
-                      style={{ textAlign: 'center', marginTop: 8 }}
-                    >
-                      {detail.editSubMode === 'spline'
-                        ? t('climbing.draw_spline_hint')
-                        : t('climbing.mark_holds_hint')}
-                    </Typography>
-                  </View>
-                ) : (
-                  <Button
-                    variant="primary"
-                    title={
-                      detail.isImageUploading
-                        ? t('climbing.uploading_image')
-                        : t('climbing.select_image')
-                    }
-                    onPress={detail.handleSelectImage}
-                    disabled={detail.isImageUploading}
-                  />
-                )}
               </Section>
-            </>
-          )}
-
-          {!detail.isCreateMode && !detail.isEditMode && (
-            <ClimbDetailStatusCard
-              userStatus={detail.userStatus}
-              isHistoryPending={detail.isHistoryPending}
-              isProjectPending={detail.isProjectPending}
-              onLogSend={detail.handleLogSend}
-              onToggleProject={detail.handleToggleProject}
-            />
-          )}
+            )}
+          </Stack>
         </Screen>
       </FormReadonlyProvider>
     </FormProvider>

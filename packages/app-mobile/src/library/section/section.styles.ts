@@ -4,9 +4,14 @@ import { ink, radii, spacing, surfaces, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   base: {
-    backgroundColor: surfaces.base,
     borderRadius: radii.card,
     padding: spacing.lg,
+  },
+  filled: {
+    backgroundColor: surfaces.base,
+  },
+  transparent: {
+    backgroundColor: 'transparent',
   },
   horizontal: {
     flexDirection: 'row',
