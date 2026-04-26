@@ -58,6 +58,9 @@ const FormLocationSectors: FunctionComponent = () => {
   const handleDeleteImage = useCallback(
     (sectorIndex: number, imageIndex: number) => {
       const currentSectors = [...allSectors];
+      if (!currentSectors[sectorIndex]) {
+        return;
+      }
       const sector = { ...currentSectors[sectorIndex] };
 
       if (!sector.images?.length) {
@@ -85,6 +88,9 @@ const FormLocationSectors: FunctionComponent = () => {
   const handleRestoreImage = useCallback(
     (sectorIndex: number, imageIndex: number) => {
       const currentSectors = [...allSectors];
+      if (!currentSectors[sectorIndex]) {
+        return;
+      }
       const sector = { ...currentSectors[sectorIndex] };
 
       if (!sector.images?.length) {
@@ -105,6 +111,13 @@ const FormLocationSectors: FunctionComponent = () => {
     const unsubscribe = ImagePickerEvents.subscribe((imageData) => {
       if (editingSectorIndexRef.current === null) return;
 
+
+      const currentSectors = [...allSectors];
+      const existingSector = currentSectors[editingSectorIndexRef.current];
+      if (!existingSector) {
+        return;
+      }
+
       imageTempIdCounter.current += 1;
       const pendingImage: FormData['sectors'][number]['images'][number] = {
         _status: 'new',
@@ -116,8 +129,7 @@ const FormLocationSectors: FunctionComponent = () => {
         imageHeight: imageData.height,
       };
 
-      const currentSectors = [...allSectors];
-      const existingSector = currentSectors[editingSectorIndexRef.current];
+
       existingSector.images = [...existingSector.images, pendingImage];
 
       setValue('sectors', currentSectors, { shouldDirty: true });
@@ -175,6 +187,9 @@ const FormLocationSectors: FunctionComponent = () => {
 
   const handleRestoreSector = (index: number) => {
     const updatedSectors = [...sectors];
+    if (!updatedSectors[index]) {
+      return;
+    }
     updatedSectors[index] = {
       ...updatedSectors[index],
       _status: 'updated' as const,
