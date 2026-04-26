@@ -88,12 +88,12 @@ const ImagePickerScreen: FunctionComponent = () => {
             ? await ExpoImagePicker.launchCameraAsync(options)
             : await ExpoImagePicker.launchImageLibraryAsync(options);
 
-        if (result.canceled || !result.assets || result.assets.length === 0) {
+        if (result.canceled || !result.assets || !result.assets.length) {
           setIsProcessing(false);
           return;
         }
 
-        const asset = result.assets[0];
+        const asset = result.assets[0]!;
         const basename = asset.uri.split('/').pop();
 
         if (!asset.base64 || !asset.mimeType || !asset.fileSize || !basename) {

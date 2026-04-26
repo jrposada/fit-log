@@ -11,21 +11,24 @@ type Point = { x: number; y: number };
 export function catmullRomToSvgPath(points: Point[], alpha = 0.5): string {
   if (points.length < 2) return '';
 
+  const point0 = points[0]!;
+  const point1 = points[1]!;
+
   if (points.length === 2) {
-    return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`;
+    return `M ${point0.x} ${point0.y} L ${point1.x} ${point1.y}`;
   }
 
   // Pad the array: duplicate first and last points so every interior
   // segment has four surrounding control points.
-  const pts: Point[] = [points[0], ...points, points[points.length - 1]];
+  const pts = [point0, ...points, points[points.length - 1]]!;
 
-  const parts: string[] = [`M ${points[0].x} ${points[0].y}`];
+  const parts: string[] = [`M ${point0.x} ${point0.y}`];
 
   for (let i = 0; i < pts.length - 3; i++) {
-    const p0 = pts[i];
-    const p1 = pts[i + 1];
-    const p2 = pts[i + 2];
-    const p3 = pts[i + 3];
+    const p0 = pts[i]!;
+    const p1 = pts[i + 1]!;
+    const p2 = pts[i + 2]!;
+    const p3 = pts[i + 3]!;
 
     // Knot intervals (centripetal parameterisation)
     const d1 = Math.pow(Math.hypot(p1.x - p0.x, p1.y - p0.y), alpha);

@@ -83,8 +83,8 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
     (point: { x: number; y: number }) => {
       if (editMode === 'spline') {
         for (let i = 0; i < spline.length; i++) {
-          const dx = point.x - spline[i].x;
-          const dy = point.y - spline[i].y;
+          const dx = point.x - spline[i]!.x;
+          const dy = point.y - spline[i]!.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           if (distance <= SPLINE_POINT_HIT_RADIUS) {
             if (selection?.type === 'spline' && selection.index === i) {
@@ -108,9 +108,9 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
 
       // Holds mode
       for (let i = 0; i < holds.length; i++) {
-        const hitRadius = Math.max(holds[i].radius, 0.05);
-        const dx = point.x - holds[i].x;
-        const dy = point.y - holds[i].y;
+        const hitRadius = Math.max(holds[i]!.radius, 0.05);
+        const dx = point.x - holds[i]!.x;
+        const dy = point.y - holds[i]!.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance <= hitRadius) {
           if (selection?.type === 'hold' && selection.index === i) {
