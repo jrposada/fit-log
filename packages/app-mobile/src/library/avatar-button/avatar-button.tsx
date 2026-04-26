@@ -12,13 +12,15 @@ const getInitials = (name?: string, email?: string): string => {
   if (name) {
     const parts = name.trim().split(/\s+/);
     if (parts.length >= 2) {
-      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      const first = parts[0]![0] ?? '';
+      const second = parts[parts.length - 1]![0] ?? '';
+      return `${first}${second}`.toUpperCase();
     }
     return name.slice(0, 2).toUpperCase();
   }
 
   if (email) {
-    const localPart = email.split('@')[0];
+    const localPart = email.split('@')[0]!;
     return localPart.slice(0, 2).toUpperCase();
   }
 

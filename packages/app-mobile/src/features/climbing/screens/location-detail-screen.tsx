@@ -122,7 +122,7 @@ const LocationDetailScreen: FunctionComponent = () => {
     const sectorsWithImages = await (async () => {
       const result = [...data.sectors];
       for (let sIdx = 0; sIdx < result.length; sIdx++) {
-        const sector = result[sIdx];
+        const sector = result[sIdx]!;
         if (sector._status === 'deleted') continue;
 
         const updatedImages = [];

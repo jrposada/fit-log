@@ -59,7 +59,12 @@ const FormLocationSectors: FunctionComponent = () => {
     (sectorIndex: number, imageIndex: number) => {
       const currentSectors = [...allSectors];
       const sector = { ...currentSectors[sectorIndex] };
-      const image = sector.images[imageIndex];
+
+      if (!sector.images?.length) {
+        return;
+      }
+
+      const image = sector.images[imageIndex]!;
 
       if (image._status === 'new') {
         // New image not yet uploaded — just remove it
@@ -81,6 +86,11 @@ const FormLocationSectors: FunctionComponent = () => {
     (sectorIndex: number, imageIndex: number) => {
       const currentSectors = [...allSectors];
       const sector = { ...currentSectors[sectorIndex] };
+
+      if (!sector.images?.length) {
+        return;
+      }
+
       sector.images = sector.images.map((img, i) =>
         i === imageIndex ? { ...img, _status: undefined } : img
       );
@@ -145,6 +155,10 @@ const FormLocationSectors: FunctionComponent = () => {
   const handleDeleteSector = (index: number) => {
     const updatedSectors = [...sectors];
     const sector = updatedSectors[index];
+
+    if (!sector) {
+      return;
+    }
 
     if (sector.id) {
       updatedSectors[index] = {
