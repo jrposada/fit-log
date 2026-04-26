@@ -90,7 +90,9 @@ const ClimbImageOverlay: FunctionComponent<ClimbImageOverlayProps> = ({
                   key={`sp-${i}`}
                   cx={p.x}
                   cy={p.y}
-                  r={isSelected ? SPLINE_SELECTED_RADIUS : SPLINE_CONTROL_RADIUS}
+                  r={
+                    isSelected ? SPLINE_SELECTED_RADIUS : SPLINE_CONTROL_RADIUS
+                  }
                   fill={accent.primary}
                   stroke={isSelected ? accent.primary : surfaces.base}
                   strokeWidth={
@@ -103,20 +105,14 @@ const ClimbImageOverlay: FunctionComponent<ClimbImageOverlayProps> = ({
           {/* Hold circles */}
           {holds.map((hold, i) => {
             const p = toPixel(hold);
-            const holdRadius =
-              hold.radius * width;
-            const isSelected =
-              selectedType === 'hold' && selectedIndex === i;
+            const holdRadius = hold.radius * width;
+            const isSelected = selectedType === 'hold' && selectedIndex === i;
             return (
               <Circle
                 key={`hold-${i}`}
                 cx={p.x}
                 cy={p.y}
-                r={
-                  isSelected
-                    ? holdRadius + SELECTED_RADIUS_BOOST
-                    : holdRadius
-                }
+                r={isSelected ? holdRadius + SELECTED_RADIUS_BOOST : holdRadius}
                 fill={editable ? HOLD_FILL_EDITABLE : HOLD_FILL}
                 stroke={isSelected ? accent.primary : surfaces.base}
                 strokeWidth={isSelected ? SELECTED_STROKE_WIDTH : HOLD_BORDER}

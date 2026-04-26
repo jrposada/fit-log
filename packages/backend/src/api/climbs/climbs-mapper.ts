@@ -44,9 +44,10 @@ function hasRequiredRefs(model: IClimb): model is WithRequiredRefs<IClimb> {
   return model.image != null && model.location != null && model.sector != null;
 }
 
-function toApiDepopulatedClimb(
-  model: WithRequiredRefs<IClimb>
-): Omit<Climb, 'image' | 'location' | 'sector'> & {
+function toApiDepopulatedClimb(model: WithRequiredRefs<IClimb>): Omit<
+  Climb,
+  'image' | 'location' | 'sector'
+> & {
   image: string;
   location: string;
   sector: string;

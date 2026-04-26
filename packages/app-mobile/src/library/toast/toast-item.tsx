@@ -76,11 +76,7 @@ const ToastItem: FunctionComponent<ToastItemProps> = ({ toast, onDismiss }) => {
       <Animated.View
         entering={SlideInDown.duration(250)}
         exiting={SlideOutUp.duration(200)}
-        style={[
-          styles.toast,
-          variantStyles[toast.variant],
-          animatedStyle,
-        ]}
+        style={[styles.toast, variantStyles[toast.variant], animatedStyle]}
       >
         <Text style={styles.toastMessage}>{toast.message}</Text>
         {isDestructive && (

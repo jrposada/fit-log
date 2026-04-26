@@ -4,7 +4,10 @@ import { MergeType } from 'mongoose';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
 import { ISector } from '../../models/sector';
-import { hasRequiredRefs, toApiDepopulatedClimb } from '../climbs/climbs-mapper';
+import {
+  hasRequiredRefs,
+  toApiDepopulatedClimb,
+} from '../climbs/climbs-mapper';
 import { toApiImage } from '../images/images-mapper';
 
 function toApiDepopulatedSector(

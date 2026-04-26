@@ -49,8 +49,6 @@ const ClimbingScreen: FunctionComponent = () => {
     },
   ];
 
-
-
   return (
     <Screen
       footer={

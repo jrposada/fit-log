@@ -6,7 +6,5 @@ import { Types } from 'mongoose';
  * and pointing at existing documents.
  */
 export type WithRequiredRefs<T> = {
-  [K in keyof T]: Types.ObjectId | null extends T[K]
-    ? NonNullable<T[K]>
-    : T[K];
+  [K in keyof T]: Types.ObjectId | null extends T[K] ? NonNullable<T[K]> : T[K];
 };
