@@ -1,3 +1,4 @@
+import { assert } from '@shared/utils/assert';
 import AuthContext, {
   AuthContextValue,
 } from '@shared-react/contexts/auth/auth-context';
@@ -123,6 +124,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
         const result = await request.promptAsync(discovery);
 
         if (result.type === 'success' && request.codeVerifier) {
+          assert(result.params.code, { msg: 'Expected `code` to be defined' });
           const tokens = await authService.exchangeCodeForTokens(
             result.params.code,
             request.codeVerifier
