@@ -1,5 +1,7 @@
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
+import { collaboratorSchema, ICollaborator } from './_collaborator';
+
 export interface ISector extends WithTimestamps<Document> {
   /* Data */
   name: string;
@@ -9,6 +11,10 @@ export interface ISector extends WithTimestamps<Document> {
   latitude: number;
   longitude: number;
   googleMapsId?: string;
+
+  /* Ownership */
+  owner: Types.ObjectId;
+  collaborators: ICollaborator[];
 
   /* References */
   images: Types.ObjectId[];
@@ -44,6 +50,18 @@ const sectorSchema = new Schema<ISector>(
       required: false,
     },
 
+    /* Ownership */
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    collaborators: {
+      type: [collaboratorSchema],
+      required: true,
+      default: [],
+    },
+
     /* References */
     images: {
       type: [Schema.Types.ObjectId],
@@ -62,8 +80,5 @@ const sectorSchema = new Schema<ISector>(
     timestamps: true,
   }
 );
-
-// Index for querying sectors by location
-// sectorSchema.index({ locationId: 1, sortOrder: 1 });
 
 export const Sector = model<ISector>('Sector', sectorSchema);

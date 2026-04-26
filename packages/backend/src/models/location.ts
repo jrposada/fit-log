@@ -1,5 +1,7 @@
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
+import { collaboratorSchema, ICollaborator } from './_collaborator';
+
 export interface ILocation extends WithTimestamps<Document> {
   /* Data */
   name: string;
@@ -8,6 +10,10 @@ export interface ILocation extends WithTimestamps<Document> {
   latitude: number;
   longitude: number;
   googleMapsId?: string;
+
+  /* Ownership */
+  owner: Types.ObjectId;
+  collaborators: ICollaborator[];
 
   /* References */
   sectors: Types.ObjectId[];
@@ -35,6 +41,18 @@ const locationSchema = new Schema<ILocation>(
     googleMapsId: {
       type: String,
       required: false,
+    },
+
+    /* Ownership */
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    collaborators: {
+      type: [collaboratorSchema],
+      required: true,
+      default: [],
     },
 
     /* References */

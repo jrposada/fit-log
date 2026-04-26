@@ -23,6 +23,9 @@ export interface IClimbHistory extends WithTimestamps<Document> {
   isProject: boolean;
   tries: Types.DocumentArray<IClimbHistoryTry>;
 
+  /* Ownership */
+  owner: Types.ObjectId;
+
   /* References – nullable after population if the referenced doc was deleted */
   climb: Types.ObjectId | null;
   location: Types.ObjectId | null;
@@ -85,6 +88,13 @@ const climbHistorySchema = new Schema<IClimbHistory>(
       default: [],
     },
 
+    /* Ownership */
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+
     /* References */
     climb: {
       type: Schema.Types.ObjectId,
@@ -107,7 +117,8 @@ const climbHistorySchema = new Schema<IClimbHistory>(
   }
 );
 
-climbHistorySchema.index({ climb: 1 }, { unique: true });
+climbHistorySchema.index({ climb: 1, owner: 1 }, { unique: true });
+climbHistorySchema.index({ owner: 1 });
 climbHistorySchema.index({ location: 1 });
 climbHistorySchema.index({ sector: 1 });
 climbHistorySchema.index({ status: 1 });
