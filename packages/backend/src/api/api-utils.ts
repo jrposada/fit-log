@@ -1,14 +1,21 @@
 import { ApiResponse } from '@shared/models/api-response';
 import { Request, Response } from 'express';
 
-function handleApiError<TError = unknown>(_error: TError, res: Response) {
-  console.error('API Error:', _error);
+import ForbiddenError from '../infrastructure/forbidden-error';
+import ResourceNotFound from '../infrastructure/not-found-error';
+
+function handleApiError<TError = unknown>(error: TError, res: Response) {
+  console.error('API Error:', error);
   const body: ApiResponse = {
     data: undefined,
     success: false,
   };
 
-  res.status(500).json(body);
+  let status = 500;
+  if (error instanceof ForbiddenError) status = 403;
+  else if (error instanceof ResourceNotFound) status = 404;
+
+  res.status(status).json(body);
 }
 
 type ApiResponseResult<TData = unknown> = {
