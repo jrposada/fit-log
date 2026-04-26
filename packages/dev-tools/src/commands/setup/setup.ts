@@ -7,6 +7,7 @@ import { Sector } from '@backend/models/sector';
 import { Climb } from '@backend/models/climb';
 import { ClimbHistory } from '@backend/models/climb-history';
 import { Image } from '@backend/models/image';
+import { User } from '@backend/models/user';
 import { ImageProcessor } from '@backend/services/image-processor';
 import { FilesService } from '@backend/services/files';
 
@@ -46,6 +47,30 @@ export function registerSetupCommand(setupCmd: Command): void {
           await FilesService.ensureDirectories();
           const imageProcessor = new ImageProcessor();
 
+          // Pick a seed owner: explicit env, first admin, oldest user, or
+          // create a synthetic seed user if the DB has none.
+          let seedOwner = process.env.BOOTSTRAP_OWNER_ID
+            ? await User.findById(process.env.BOOTSTRAP_OWNER_ID)
+            : null;
+          if (!seedOwner) {
+            seedOwner = await User.findOne({ roles: 'admin' });
+          }
+          if (!seedOwner) {
+            seedOwner = await User.findOne().sort({ createdAt: 1 });
+          }
+          if (!seedOwner) {
+            seedOwner = await User.create({
+              keycloakId: 'seed-owner',
+              email: 'seed-owner@example.com',
+              name: 'Seed Owner',
+              roles: ['admin'],
+            });
+            console.log(`✓ Created synthetic seed owner ${seedOwner.email}`);
+          } else {
+            console.log(`Using seed owner ${seedOwner.email}`);
+          }
+          const ownerId = seedOwner._id;
+
           const numImages = Math.min(30, numClimbs);
           console.log(`Creating ${numImages} images...`);
           const images = [];
@@ -59,7 +84,7 @@ export function registerSetupCommand(setupCmd: Command): void {
           console.log(`Creating ${numLocations} locations...`);
           const locationPromises = [];
           for (let i = 0; i < numLocations; i++) {
-            const locationData = fakeLocation();
+            const locationData = { ...fakeLocation(), owner: ownerId };
             locationPromises.push(Location.create(locationData));
           }
           const locations = await Promise.all(locationPromises);
@@ -72,7 +97,7 @@ export function registerSetupCommand(setupCmd: Command): void {
           const sectorPromises = [];
           for (let i = 0; i < numLocations; i++) {
             for (let j = 0; j < sectorsPerLocation; j++) {
-              const sectorData = fakeSector();
+              const sectorData = { ...fakeSector(), owner: ownerId };
               sectorPromises.push(Sector.create(sectorData));
             }
           }
@@ -104,6 +129,7 @@ export function registerSetupCommand(setupCmd: Command): void {
               location: randomLocation._id,
               sector: randomSector._id,
               image: randomImage._id,
+              owner: ownerId,
             };
             climbPromises.push(Climb.create(climbData));
           }
@@ -134,6 +160,7 @@ export function registerSetupCommand(setupCmd: Command): void {
                 climb: climb._id,
                 location: climb.location,
                 sector: climb.sector,
+                owner: ownerId,
                 createdAt: mostRecentTryDate,
                 updatedAt: mostRecentTryDate,
               };
