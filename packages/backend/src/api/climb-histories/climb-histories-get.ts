@@ -29,6 +29,7 @@ const handler = toApiResponse<
   const dbStatuses = status?.filter((s) => s !== 'project');
 
   const baseFilter: Record<string, unknown> = {
+    owner: request.user._id,
     ...(climbId ? { climb: climbId } : {}),
     ...(locationId ? { location: locationId } : {}),
     ...(sectorId ? { sector: sectorId } : {}),

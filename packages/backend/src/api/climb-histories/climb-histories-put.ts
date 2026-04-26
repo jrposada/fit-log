@@ -42,6 +42,7 @@ const handler = toApiResponse<
     climbHistory = await ClimbHistory.findOneAndUpdate(
       {
         climb: new Types.ObjectId(climb),
+        owner: request.user._id,
         'tries._id': new Types.ObjectId(tryId),
       },
       {
@@ -61,13 +62,14 @@ const handler = toApiResponse<
     await climbHistory.save();
   } else {
     climbHistory = await ClimbHistory.findOneAndUpdate(
-      { climb: new Types.ObjectId(climb) },
+      { climb: new Types.ObjectId(climb), owner: request.user._id },
       {
         $push: { tries: newTry },
         $setOnInsert: {
           climb: new Types.ObjectId(climb),
           location: new Types.ObjectId(location),
           sector: new Types.ObjectId(sector),
+          owner: request.user._id,
         },
       },
       { new: true, upsert: true }

@@ -19,6 +19,9 @@ function toApiClimbHistory(model: ValidClimbHistory): ClimbHistory {
       date: t.date.toISOString(),
     })),
 
+    /* Ownership */
+    owner: model.owner.toString(),
+
     /* References */
     climb: toApiDepopulatedClimb(model.climb),
     location: toApiDepopulatedLocation(model.location),

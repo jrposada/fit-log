@@ -28,6 +28,7 @@ const handler = toApiResponse<
   if (!isProject) {
     const existing = await ClimbHistory.findOne({
       climb: new Types.ObjectId(climb),
+      owner: request.user._id,
       tries: { $size: 0 },
     });
 
@@ -41,13 +42,14 @@ const handler = toApiResponse<
   }
 
   const climbHistory = await ClimbHistory.findOneAndUpdate(
-    { climb: new Types.ObjectId(climb) },
+    { climb: new Types.ObjectId(climb), owner: request.user._id },
     {
       $set: { isProject },
       $setOnInsert: {
         climb: new Types.ObjectId(climb),
         location: new Types.ObjectId(location),
         sector: new Types.ObjectId(sector),
+        owner: request.user._id,
         status: 'attempt',
       },
     },

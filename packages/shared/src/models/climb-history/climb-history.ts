@@ -19,6 +19,9 @@ export type ClimbHistory = {
   isProject: boolean;
   tries: ClimbHistoryTry[];
 
+  /* Ownership */
+  owner: string;
+
   /* References */
   climb: Omit<Climb, 'image' | 'location' | 'sector'> & {
     image: string;

@@ -19,19 +19,22 @@ const handler = toApiResponse<
   const { tryId } = request.query;
 
   if (tryId) {
-    const climbHistory = await ClimbHistory.findById(id);
+    const climbHistory = await ClimbHistory.findOne({
+      _id: id,
+      owner: request.user._id,
+    });
     assert(climbHistory, { msg: 'ClimbHistory not found' });
 
     climbHistory.tries.pull({ _id: tryId });
 
     if (climbHistory.tries.length === 0) {
-      await ClimbHistory.deleteOne({ _id: id });
+      await ClimbHistory.deleteOne({ _id: id, owner: request.user._id });
     } else {
       climbHistory.status = computeTopStatus(climbHistory.tries);
       await climbHistory.save();
     }
   } else {
-    await ClimbHistory.deleteOne({ _id: id });
+    await ClimbHistory.deleteOne({ _id: id, owner: request.user._id });
   }
 
   return {

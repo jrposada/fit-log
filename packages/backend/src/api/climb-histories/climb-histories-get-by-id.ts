@@ -23,7 +23,10 @@ const handler = toApiResponse<
 
   const { id } = request.params;
 
-  const climbHistory = await ClimbHistory.findById(id)
+  const climbHistory = await ClimbHistory.findOne({
+    _id: id,
+    owner: request.user._id,
+  })
     .populate<{
       climb: IClimb;
       location: ILocation;
