@@ -35,13 +35,7 @@ const AvatarButton: FunctionComponent<AvatarButtonProps> = ({
   const initials = getInitials(name, email);
 
   return (
-    <IconButton
-      icon={initials}
-      onPress={onPress}
-      size="sm"
-      backgroundColor="rgba(255, 255, 255, 0.2)"
-      color="#fff"
-    />
+    <IconButton icon={initials} onPress={onPress} size="sm" variant="primary" />
   );
 };
 
