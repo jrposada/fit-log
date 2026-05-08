@@ -29,8 +29,8 @@
 - [x] **Hold points misplaced when zoomed** _(bug)_ — Tapping to place holds does not position them correctly if the image is zoomed in. Tap coordinates are not properly translated to image-space at non-1x zoom levels.
 - [x] **Edit mode renders at different scale than view mode** _(bug)_ — Edit mode does not display at full screen like view mode. Some holds fall outside the visible area. Needs analysis: fix scale or fix seeder data.
 - [x] **Spline mode for hold connections** — Add a spline/path drawing mode so users can draw curved lines connecting holds, representing the climbing route/sequence.
-- [ ] **Selection + Removal + Hold Radius** — Tap-to-select interaction model, floating action toolbar (delete, resize), `radius` field on Hold type. See [`docs/tickets/001-selection-removal-hold-radius.md`](docs/tickets/001-selection-removal-hold-radius.md).
-- [ ] **Move / Drag** — Single-finger drag to reposition selected holds and spline points. See [`docs/tickets/002-move-drag.md`](docs/tickets/002-move-drag.md).
+- [x] **Selection + Removal + Hold Radius** — Tap-to-select interaction model, floating action toolbar (delete, resize), `radius` field on Hold type. See [`docs/tickets/001-selection-removal-hold-radius.md`](docs/tickets/001-selection-removal-hold-radius.md).
+- [x] **Move / Drag** — Single-finger drag to reposition selected holds and spline points. See [`docs/tickets/002-move-drag.md`](docs/tickets/002-move-drag.md).
 - [ ] **Spline Point Insertion** — Tap on the spline curve between two points to insert a new control point. See [`docs/tickets/003-spline-point-insertion.md`](docs/tickets/003-spline-point-insertion.md).
 - [ ] **Start/end/feet-only hold types** — Add hold type classification. Users mark holds as start, end, or feet-only with distinct visual indicators (color/shape). Requires updating the Hold model to include a type field.
 - [ ] **Change image during climb create** — Allow users to replace the selected image while creating a climb, rather than being locked into the first choice.
