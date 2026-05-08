@@ -48,3 +48,7 @@
 ## App
 
 - [ ] **User profile / Settings** — User model exists in backend (keycloakId, email, name, roles) but no profile screen or settings UI in the mobile app.
+
+## Tooling
+
+- [ ] **Bump mongoose to ^9.6.x** — currently pinned to `9.0.0` in `packages/backend` and `packages/dev-tools` because newer mongoose pulls in mongodb driver `~7.2`, whose stricter conditional types break `packages/backend/src/utils/batch-upsert-owned-document.ts` (`$setOnInsert` against generic `T` and `model.bulkWrite(ops, …)` overload mismatch) and `packages/dev-tools/src/commands/setup/nuke.ts` (`model.deleteMany({})` over a heterogeneous model array). Workarounds explored required `as unknown as Partial<T>` / `as Parameters<typeof model.bulkWrite>[0]` casts, which we don't want. Revisit when the mongoose/mongodb typings settle, or refactor the helper so the constraint propagates without casts (e.g. accept a concrete `Model<TConcrete>` per call site instead of generic).
