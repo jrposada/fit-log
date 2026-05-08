@@ -9,6 +9,7 @@ import { ImageSourcePropType, StyleProp, View, ViewStyle } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import Button from '../../../../../library/button';
+import IconButton from '../../../../../library/icon-button';
 import InteractiveImage from '../../../../../library/interactive-image';
 import ClimbImageOverlay from './climb-image-overlay';
 
@@ -35,14 +36,17 @@ interface ClimbImageProps {
 
 const SPLINE_POINT_HIT_RADIUS = 0.05;
 
-const EditModeToggle: FunctionComponent<{
+const ClimbImageToolbar: FunctionComponent<{
   editSubMode: EditMode;
   onChangeMode: (mode: EditMode) => void;
+  hasSelection: boolean;
+  onDelete: () => void;
   t: (key: string) => string;
-}> = ({ editSubMode, onChangeMode, t }) => (
+}> = ({ editSubMode, onChangeMode, hasSelection, onDelete, t }) => (
   <View
     style={{
       flexDirection: 'row',
+      alignItems: 'center',
       gap: 8,
       paddingHorizontal: 20,
       justifyContent: 'center',
@@ -59,6 +63,13 @@ const EditModeToggle: FunctionComponent<{
       title={t('climbing.edit_mode_spline')}
       size="sm"
       onPress={() => onChangeMode('spline')}
+    />
+    <IconButton
+      variant="destructive"
+      icon="🗑️"
+      size="sm"
+      onPress={onDelete}
+      disabled={!hasSelection}
     />
   </View>
 );
@@ -88,11 +99,9 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
           const distance = Math.sqrt(dx * dx + dy * dy);
           if (distance <= SPLINE_POINT_HIT_RADIUS) {
             if (selection?.type === 'spline' && selection.index === i) {
-              onSplinePointRemove?.(i);
-              onSelectionChange(null);
-            } else {
-              onSelectionChange({ type: 'spline', index: i });
+              return;
             }
+            onSelectionChange({ type: 'spline', index: i });
             return;
           }
         }
@@ -114,11 +123,9 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance <= hitRadius) {
           if (selection?.type === 'hold' && selection.index === i) {
-            onHoldRemove?.(i);
-            onSelectionChange(null);
-          } else {
-            onSelectionChange({ type: 'hold', index: i });
+            return;
           }
+          onSelectionChange({ type: 'hold', index: i });
           return;
         }
       }
@@ -137,19 +144,29 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
       selection,
       onSelectionChange,
       onHoldAdd,
-      onHoldRemove,
       onSplinePointAdd,
-      onSplinePointRemove,
     ]
   );
+
+  const handleDeleteSelected = useCallback(() => {
+    if (!selection) return;
+    if (selection.type === 'hold') {
+      onHoldRemove(selection.index);
+    } else {
+      onSplinePointRemove(selection.index);
+    }
+    onSelectionChange(null);
+  }, [selection, onHoldRemove, onSplinePointRemove, onSelectionChange]);
 
   return (
     <>
       {editable && (
         <Animated.View entering={FadeIn.duration(200)}>
-          <EditModeToggle
+          <ClimbImageToolbar
             editSubMode={editMode}
             onChangeMode={setEditMode}
+            hasSelection={!!selection}
+            onDelete={handleDeleteSelected}
             t={t}
           />
         </Animated.View>
