@@ -70,7 +70,7 @@ const useClimbDetail = () => {
     id: isCreateMode ? locationId : climb?.location?.id,
   });
 
-  const { data: climbHistories = [] } = useClimbHistories({
+  const { items: climbHistories } = useClimbHistories({
     climbId: climbId || '',
     limit: 1,
   });
