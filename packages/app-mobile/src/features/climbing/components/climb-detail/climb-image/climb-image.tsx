@@ -5,12 +5,13 @@ import {
 } from '@shared/models/climb/climb';
 import { FunctionComponent, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ImageSourcePropType, StyleProp, View, ViewStyle } from 'react-native';
+import { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import Button from '../../../../../library/button';
 import IconButton from '../../../../../library/icon-button';
 import InteractiveImage from '../../../../../library/interactive-image';
+import Stack from '../../../../../library/stack';
 import ClimbImageOverlay from './climb-image-overlay';
 
 type EditMode = 'holds' | 'spline';
@@ -43,14 +44,12 @@ const ClimbImageToolbar: FunctionComponent<{
   onDelete: () => void;
   t: (key: string) => string;
 }> = ({ editSubMode, onChangeMode, hasSelection, onDelete, t }) => (
-  <View
-    style={{
-      flexDirection: 'row',
-      alignItems: 'center',
-      gap: 8,
-      paddingHorizontal: 20,
-      justifyContent: 'center',
-    }}
+  <Stack
+    direction="horizontal"
+    gap="sm"
+    align="center"
+    justify="center"
+    paddingHorizontal="xl"
   >
     <Button
       variant={editSubMode === 'holds' ? 'primary' : 'outline'}
@@ -71,7 +70,7 @@ const ClimbImageToolbar: FunctionComponent<{
       onPress={onDelete}
       disabled={!hasSelection}
     />
-  </View>
+  </Stack>
 );
 
 const ClimbImage: FunctionComponent<ClimbImageProps> = ({
