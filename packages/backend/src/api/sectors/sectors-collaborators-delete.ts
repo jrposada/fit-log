@@ -10,28 +10,29 @@ import { removeCollaborator } from '../../utils/collaborator-mutators';
 import { toApiResponse } from '../api-utils';
 import { toApiSector } from './sectors-mapper';
 
-const handler = toApiResponse<SectorsCollaboratorsResponse, CollaboratorDeleteParams>(
-  async (request) => {
-    assert(request.user, { msg: 'Unauthorized' });
+const handler = toApiResponse<
+  SectorsCollaboratorsResponse,
+  CollaboratorDeleteParams
+>(async (request) => {
+  assert(request.user, { msg: 'Unauthorized' });
 
-    const { id, userId } = request.params;
+  const { id, userId } = request.params;
 
-    const sector = await removeCollaborator(
-      Sector,
-      id,
-      userId,
-      request.user
-    ).populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
+  const sector = await removeCollaborator(
+    Sector,
+    id,
+    userId,
+    request.user
+  ).populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
 
-    if (!sector) {
-      throw new ResourceNotFound(`Sector ${id} not found or not editable`);
-    }
-
-    return {
-      statusCode: 200,
-      body: { success: true, data: { sector: toApiSector(sector) } },
-    };
+  if (!sector) {
+    throw new ResourceNotFound(`Sector ${id} not found or not editable`);
   }
-);
+
+  return {
+    statusCode: 200,
+    body: { success: true, data: { sector: toApiSector(sector) } },
+  };
+});
 
 export { handler };

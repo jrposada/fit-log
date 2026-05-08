@@ -111,7 +111,6 @@ const FormLocationSectors: FunctionComponent = () => {
     const unsubscribe = ImagePickerEvents.subscribe((imageData) => {
       if (editingSectorIndexRef.current === null) return;
 
-
       const currentSectors = [...allSectors];
       const existingSector = currentSectors[editingSectorIndexRef.current];
       if (!existingSector) {
@@ -128,7 +127,6 @@ const FormLocationSectors: FunctionComponent = () => {
         imageWidth: imageData.width,
         imageHeight: imageData.height,
       };
-
 
       existingSector.images = [...existingSector.images, pendingImage];
 

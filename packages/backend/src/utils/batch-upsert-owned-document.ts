@@ -68,8 +68,7 @@ export async function batchUpsertOwnedDocument<T extends Document>(
 
   const result = await model.bulkWrite(ops, { ordered: false, session });
 
-  const matchedCount =
-    (result.matchedCount ?? 0) + (result.upsertedCount ?? 0);
+  const matchedCount = (result.matchedCount ?? 0) + (result.upsertedCount ?? 0);
 
   return { ids, matchedCount };
 }

@@ -1,7 +1,4 @@
-import {
-  connectToDatabase,
-  disconnectFromDatabase,
-} from '@backend/database';
+import { connectToDatabase, disconnectFromDatabase } from '@backend/database';
 import { Image, IImage } from '@backend/models/image';
 import { User } from '@backend/models/user';
 import { FilesService } from '@backend/services/files';
