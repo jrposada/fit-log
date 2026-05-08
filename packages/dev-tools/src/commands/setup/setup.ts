@@ -126,6 +126,7 @@ export function registerSetupCommand(setupCmd: Command): void {
         );
         const allClimbs = [];
         let totalSectors = 0;
+        const locationLogEvery = Math.max(1, Math.floor(numLocations / 20));
         for (let i = 0; i < numLocations; i++) {
           const owner = faker.helpers.arrayElement(locationOwnerPool);
           const { sectors, climbs } = await seedLocation({
@@ -136,6 +137,11 @@ export function registerSetupCommand(setupCmd: Command): void {
           });
           totalSectors += sectors.length;
           allClimbs.push(...climbs);
+          if ((i + 1) % locationLogEvery === 0 || i === numLocations - 1) {
+            console.log(
+              `  ...${i + 1}/${numLocations} locations (${totalSectors} sectors, ${allClimbs.length} climbs)`
+            );
+          }
         }
         console.log(
           `✓ Seeded ${numLocations} locations, ${totalSectors} sectors, ${allClimbs.length} climbs (+ images)`
@@ -148,8 +154,19 @@ export function registerSetupCommand(setupCmd: Command): void {
           `Seeding climb histories (${(climbHistoryChance * 100).toFixed(0)}% chance per climb, owned by any user)...`
         );
         let historyCount = 0;
+        let climbsProcessed = 0;
+        const climbLogEvery = Math.max(1, Math.floor(allClimbs.length / 20));
         for (const climb of allClimbs) {
+          climbsProcessed += 1;
           if (!faker.datatype.boolean({ probability: climbHistoryChance })) {
+            if (
+              climbsProcessed % climbLogEvery === 0 ||
+              climbsProcessed === allClimbs.length
+            ) {
+              console.log(
+                `  ...${climbsProcessed}/${allClimbs.length} climbs processed (${historyCount} histories)`
+              );
+            }
             continue;
           }
           if (!climb.location || !climb.sector) continue;
@@ -161,12 +178,24 @@ export function registerSetupCommand(setupCmd: Command): void {
             sector: climb.sector,
           });
           historyCount += 1;
+          if (
+            climbsProcessed % climbLogEvery === 0 ||
+            climbsProcessed === allClimbs.length
+          ) {
+            console.log(
+              `  ...${climbsProcessed}/${allClimbs.length} climbs processed (${historyCount} histories)`
+            );
+          }
         }
         console.log(`✓ Seeded ${historyCount} climb histories`);
 
         console.log(`Seeding ${numWorkouts} workouts...`);
+        const workoutLogEvery = Math.max(1, Math.floor(numWorkouts / 20));
         for (let i = 0; i < numWorkouts; i++) {
           await seedWorkout();
+          if ((i + 1) % workoutLogEvery === 0 || i === numWorkouts - 1) {
+            console.log(`  ...${i + 1}/${numWorkouts} workouts`);
+          }
         }
         console.log(`✓ Seeded ${numWorkouts} workouts`);
 
