@@ -59,6 +59,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
               isCompleted={['flash', 'send'].includes(
                 detail.userStatus?.status ?? ''
               )}
+              canDelete={detail.canDelete}
               selection={detail.selection}
               onSubmit={detail.handleSubmit(detail.onSubmit)}
               onCancel={detail.handleCancelEdit}

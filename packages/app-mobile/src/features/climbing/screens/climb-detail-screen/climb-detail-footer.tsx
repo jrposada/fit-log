@@ -18,6 +18,7 @@ type ClimbDetailFooterProps = {
   isProject: boolean;
   isProjectPending: boolean;
   isCompleted: boolean;
+  canDelete: boolean;
   selection: Selection;
   onSubmit: () => void;
   onCancel: () => void;
@@ -38,6 +39,7 @@ const ClimbDetailFooter: FunctionComponent<ClimbDetailFooterProps> = ({
   isProject,
   isProjectPending,
   isCompleted,
+  canDelete,
   selection,
   onSubmit,
   onCancel,
@@ -75,13 +77,15 @@ const ClimbDetailFooter: FunctionComponent<ClimbDetailFooterProps> = ({
   if (isEditMode) {
     return (
       <Stack direction="horizontal" gap="md">
-        <IconButton
-          variant="destructive"
-          icon="🗑️"
-          size="lg"
-          onPress={onDelete}
-          disabled={isDeleting}
-        />
+        {canDelete && (
+          <IconButton
+            variant="destructive"
+            icon="🗑️"
+            size="lg"
+            onPress={onDelete}
+            disabled={isDeleting}
+          />
+        )}
         <Button
           fullWidth
           variant="outline"

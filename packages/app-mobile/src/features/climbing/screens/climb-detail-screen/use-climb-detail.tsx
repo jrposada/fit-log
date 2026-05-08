@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { canDelete, canEdit } from '@shared/models/auth/with-ownership';
 import { Hold, SplinePoint } from '@shared/models/climb/climb';
 import { climbsPutRequestSchema } from '@shared/models/climb/climb-put';
 import { useClimbHistories } from '@shared-react/api/climb-histories/use-climb-histories';
@@ -12,6 +13,7 @@ import { useClimbsDelete } from '@shared-react/api/climbs/use-climbs-delete';
 import { useClimbsPut } from '@shared-react/api/climbs/use-climbs-put';
 import { useImagesPost } from '@shared-react/api/images/use-images-post';
 import { useLocationsById } from '@shared-react/api/locations/use-locations-by-id';
+import { useMe } from '@shared-react/api/me/use-me';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -57,9 +59,13 @@ const useClimbDetail = () => {
     setScrollHeight((prev) => (prev === 0 ? height : prev));
   };
 
+  const { data: me } = useMe();
   const { data: climb, isLoading: isLoadingClimb } = useClimbsById({
     id: climbId,
   });
+
+  const canEditClimb = !!me && !!climb && canEdit(me, climb);
+  const canDeleteClimb = !!me && !!climb && canDelete(me, climb);
   const { data: location, isLoading: isLoadingLocation } = useLocationsById({
     id: isCreateMode ? locationId : climb?.location?.id,
   });
@@ -443,6 +449,7 @@ const useClimbDetail = () => {
           isDirty={isDirty}
           isLoadingClimb={isLoadingClimb}
           climb={climb}
+          canEdit={canEditClimb}
           onBackPress={handleBackPress}
           onCancelEdit={handleCancelEdit}
           onEnterEditMode={handleEnterEditMode}
@@ -457,6 +464,7 @@ const useClimbDetail = () => {
     isDirty,
     climb,
     isLoadingClimb,
+    canEditClimb,
     handleBackPress,
     handleCancelEdit,
     handleEnterEditMode,
@@ -479,6 +487,8 @@ const useClimbDetail = () => {
     isEditMode,
     isLoadingClimb,
     isLoadingLocation,
+    canEdit: canEditClimb,
+    canDelete: canDeleteClimb,
 
     // Data
     climb,

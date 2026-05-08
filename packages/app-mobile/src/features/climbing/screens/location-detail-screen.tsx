@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { canDelete, canEdit } from '@shared/models/auth/with-ownership';
 import { useImagesPost } from '@shared-react/api/images/use-images-post';
 import { useLocationsById } from '@shared-react/api/locations/use-locations-by-id';
 import { useLocationsDelete } from '@shared-react/api/locations/use-locations-delete';
 import { useLocationsPut } from '@shared-react/api/locations/use-locations-put';
+import { useMe } from '@shared-react/api/me/use-me';
 import { useSectorsBatchDelete } from '@shared-react/api/sectors/use-sectors-batch-delete';
 import { useSectorsBatchPut } from '@shared-react/api/sectors/use-sectors-batch-put';
 import {
@@ -73,6 +75,12 @@ const LocationDetailScreen: FunctionComponent = () => {
     useLocationsById({
       id: locationId || '',
     });
+  const { data: me } = useMe();
+
+  const canEditLocation =
+    !!me && !!existingLocation && canEdit(me, existingLocation);
+  const canDeleteLocation =
+    !!me && !!existingLocation && canDelete(me, existingLocation);
 
   const locationsPut = useLocationsPut({
     onSuccess: (data) => {
@@ -339,18 +347,22 @@ const LocationDetailScreen: FunctionComponent = () => {
                 {existingLocation?.latitude && existingLocation?.longitude && (
                   <IconButton icon="📍" onPress={handleOpenMap} />
                 )}
-                <IconButton
-                  icon="✏️"
-                  onPress={isEditMode ? handleCancelEdit : handleEnterEditMode}
-                  style={
-                    isEditMode
-                      ? {
-                          backgroundColor: accent.primary,
-                          borderRadius: 8,
-                        }
-                      : undefined
-                  }
-                />
+                {canEditLocation && (
+                  <IconButton
+                    icon="✏️"
+                    onPress={
+                      isEditMode ? handleCancelEdit : handleEnterEditMode
+                    }
+                    style={
+                      isEditMode
+                        ? {
+                            backgroundColor: accent.primary,
+                            borderRadius: 8,
+                          }
+                        : undefined
+                    }
+                  />
+                )}
               </View>
             ) : undefined
           }
@@ -368,6 +380,7 @@ const LocationDetailScreen: FunctionComponent = () => {
     isDirty,
     existingLocation,
     isLoadingLocation,
+    canEditLocation,
     t,
     handleBackPress,
     handleCancelEdit,
@@ -431,16 +444,18 @@ const LocationDetailScreen: FunctionComponent = () => {
             style={{ flex: 1 }}
           />
         </View>
-        <Button
-          variant="destructive"
-          title={
-            deleteLocation.isPending
-              ? t('climbing.deleting')
-              : t('climbing.delete_location_button')
-          }
-          onPress={handleDelete}
-          disabled={deleteLocation.isPending}
-        />
+        {canDeleteLocation && (
+          <Button
+            variant="destructive"
+            title={
+              deleteLocation.isPending
+                ? t('climbing.deleting')
+                : t('climbing.delete_location_button')
+            }
+            onPress={handleDelete}
+            disabled={deleteLocation.isPending}
+          />
+        )}
       </View>
     );
   })();

@@ -58,6 +58,7 @@ import { handler as locationsDelete } from './api/locations/locations-delete';
 import { handler as locationsGet } from './api/locations/locations-get';
 import { handler as locationsGetById } from './api/locations/locations-get-by-id';
 import { handler as locationsPut } from './api/locations/locations-put';
+import { handler as meGet } from './api/me/me-get';
 import { handler as sectorsBatchDelete } from './api/sectors/sectors-batch-delete';
 import { handler as sectorsBatchPut } from './api/sectors/sectors-batch-put';
 import { handler as sectorsCollaboratorsDelete } from './api/sectors/sectors-collaborators-delete';
@@ -82,6 +83,9 @@ export const router = Router();
 
 // Version
 router.get('/version', versionGet);
+
+// Me
+router.get('/me', authenticateKeycloak, meGet);
 
 // Workouts
 router.get(

@@ -13,6 +13,7 @@ interface ClimbDetailHeaderProps {
   isDirty: boolean;
   isLoadingClimb: boolean;
   climb: Climb | undefined;
+  canEdit: boolean;
   onBackPress: () => void;
   onCancelEdit: () => void;
   onEnterEditMode: () => void;
@@ -25,6 +26,7 @@ const ClimbDetailHeader: FunctionComponent<ClimbDetailHeaderProps> = ({
   isDirty,
   isLoadingClimb,
   climb,
+  canEdit,
   onBackPress,
   onCancelEdit,
   onEnterEditMode,
@@ -45,11 +47,13 @@ const ClimbDetailHeader: FunctionComponent<ClimbDetailHeaderProps> = ({
         !isCreateMode && (
           <Stack direction="horizontal" gap="sm">
             <IconButton icon="📍" onPress={onOpenMap} />
-            <IconButton
-              icon={isEditMode && isDirty ? '⚠️' : '✏️'}
-              variant={isEditMode ? 'primary' : 'default'}
-              onPress={isEditMode ? onCancelEdit : onEnterEditMode}
-            />
+            {canEdit && (
+              <IconButton
+                icon={isEditMode && isDirty ? '⚠️' : '✏️'}
+                variant={isEditMode ? 'primary' : 'default'}
+                onPress={isEditMode ? onCancelEdit : onEnterEditMode}
+              />
+            )}
           </Stack>
         )
       }
