@@ -173,7 +173,7 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
               date: formatRelativeDate(lastTry.date, t),
             })}
           </Typography>
-          {totalAttempts && (
+          {Boolean(totalAttempts) && (
             <>
               <Separator direction="dot" />
               <Typography size="caption" color="tertiary">
