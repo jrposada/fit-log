@@ -13,7 +13,7 @@
   },
   "engines": {
     "node": "^22",
-    "npm": "^10"
+    "pnpm": "^10"
   },
   "scripts": {
     "build": "tsc",
@@ -28,12 +28,12 @@
     "lint": "run-p lint:*"
   },
   "dependencies": {
-    "@jrposada/fit-log-shared": "*",
+    "@jrposada/fit-log-shared": "workspace:*",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.3",
     "jwks-rsa": "^3.2.0",
-    "mongoose": "^9.0.0",
+    "mongoose": "9.0.0",
     "sharp": "^0.34.5",
     "uuid": "^11.0.5",
     "zod": "^3.24.2"

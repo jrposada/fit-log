@@ -12,14 +12,12 @@
   },
   "engines": {
     "node": "^22",
-    "npm": "^10"
+    "pnpm": "^10"
   },
-  "workspaces": [
-    "packages/*"
-  ],
+  "packageManager": "pnpm@10.18.2",
   "scripts": {
-    "cli": "npm run start -w packages/dev-tools --",
-    "lint": "npm run lint -ws --if-present"
+    "cli": "pnpm --filter @jrposada/fit-log-dev-tools start --",
+    "lint": "pnpm -r --if-present lint"
   },
   "devDependencies": {
     "@babel/types": "^7.26.8",

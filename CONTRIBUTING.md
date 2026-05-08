@@ -39,26 +39,26 @@ export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 
 1. Clone repository through ssh `git@github.com:jrposada/fit-log.git`
 
-2. Install dependencies `npm i && npx husky`
+2. Install dependencies `pnpm install && pnpm exec husky`
 
 3. Look for `.example.env` files. Create a new `.env` file for each of them and fill all the data.
 
 4. Run app in development mode
 
 ```
-npm -w packages/<app-name> run dev
+pnpm --filter <app-name> dev
 ```
 
 5. Initialize local database
 
 ```
-npm run cli nuke
+pnpm cli nuke
 ```
 
 To clear all data from the database:
 
 ```
-npm run cli nuke
+pnpm cli nuke
 ```
 
 ## Contributing

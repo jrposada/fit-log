@@ -13,7 +13,7 @@
   },
   "engines": {
     "node": "^22",
-    "npm": "^10"
+    "pnpm": "^10"
   },
   "scripts": {
     "dev": "expo start",
@@ -26,8 +26,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@jrposada/fit-log-shared": "*",
-    "@jrposada/fit-log-shared-react": "*",
+    "@jrposada/fit-log-shared": "workspace:*",
+    "@jrposada/fit-log-shared-react": "workspace:*",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-navigation/bottom-tabs": "^7.8.6",
     "@react-navigation/native": "^7.1.20",

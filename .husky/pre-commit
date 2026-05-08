@@ -4,4 +4,4 @@
 echo '-----------'
 echo '- Linting -'
 echo '-----------'
-npm run lint
+pnpm lint
