@@ -11,6 +11,8 @@ import { User } from '@backend/models/user';
 import { ImageProcessor } from '@backend/services/image-processor';
 import { FilesService } from '@backend/services/files';
 
+import { findKeycloakUserByEmail } from '../../utils/keycloak-admin';
+
 import { fakeClimb } from '../seed/mock-data/climbs';
 import { fakeClimbHistory } from '../seed/mock-data/climb-histories';
 import { fakeWorkout } from '../seed/mock-data/workouts';
@@ -47,25 +49,38 @@ export function registerSetupCommand(setupCmd: Command): void {
           await FilesService.ensureDirectories();
           const imageProcessor = new ImageProcessor();
 
-          // Pick a seed owner: explicit env, first admin, oldest user, or
-          // create a synthetic seed user if the DB has none.
-          let seedOwner = process.env.BOOTSTRAP_OWNER_ID
-            ? await User.findById(process.env.BOOTSTRAP_OWNER_ID)
-            : null;
+          // Pick a seed owner. Default to the realm's bootstrap user
+          // (`dev@example.com` from the Keycloak realm import) so that
+          // when they log in via the app, the auth middleware finds the
+          // existing Mongo user (matched by `keycloakId`) and the seeded
+          // data is theirs. Override with BOOTSTRAP_OWNER_EMAIL if needed.
+          const seedOwnerEmail =
+            process.env.BOOTSTRAP_OWNER_EMAIL ?? 'dev@example.com';
+
+          let seedOwner = await User.findOne({ email: seedOwnerEmail });
           if (!seedOwner) {
-            seedOwner = await User.findOne({ roles: 'admin' });
-          }
-          if (!seedOwner) {
-            seedOwner = await User.findOne().sort({ createdAt: 1 });
-          }
-          if (!seedOwner) {
+            const kcUser = await findKeycloakUserByEmail(seedOwnerEmail);
+            if (!kcUser) {
+              throw new Error(
+                `No Keycloak user found with email "${seedOwnerEmail}". ` +
+                  `Either create one in the realm or set BOOTSTRAP_OWNER_EMAIL.`
+              );
+            }
+
+            const fullName = [kcUser.firstName, kcUser.lastName]
+              .filter(Boolean)
+              .join(' ')
+              .trim();
+
             seedOwner = await User.create({
-              keycloakId: 'seed-owner',
-              email: 'seed-owner@example.com',
-              name: 'Seed Owner',
-              roles: ['admin'],
+              keycloakId: kcUser.id,
+              email: kcUser.email,
+              name: fullName || kcUser.email,
+              roles: [],
             });
-            console.log(`✓ Created synthetic seed owner ${seedOwner.email}`);
+            console.log(
+              `✓ Created Mongo user for Keycloak account ${seedOwner.email} (keycloakId=${kcUser.id})`
+            );
           } else {
             console.log(`Using seed owner ${seedOwner.email}`);
           }
@@ -76,7 +91,7 @@ export function registerSetupCommand(setupCmd: Command): void {
           const images = [];
           for (let i = 0; i < numImages; i++) {
             const imageData = await fakeImage(imageProcessor);
-            const image = await Image.create(imageData);
+            const image = await Image.create({ ...imageData, owner: ownerId });
             images.push(image);
           }
           console.log(`✓ Created ${images.length} images`);
