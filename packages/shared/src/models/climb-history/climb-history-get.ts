@@ -6,6 +6,7 @@ export type ClimbHistoriesGetQueryStatus = ClimbHistoryStatus | 'project';
 
 export type ClimbHistoriesGetQuery = {
   limit?: number;
+  cursor?: string;
   climbId?: string;
   locationId?: string;
   sectorId?: string;
@@ -15,7 +16,8 @@ export type ClimbHistoriesGetQuery = {
 };
 
 export const climbHistoriesGetQuerySchema = z.object({
-  limit: z.coerce.number().int().positive().optional(),
+  limit: z.coerce.number().int().positive().max(50).optional(),
+  cursor: z.string().optional(),
   climbId: z.string().optional(),
   locationId: z.string().optional(),
   sectorId: z.string().optional(),
@@ -32,4 +34,5 @@ export const climbHistoriesGetQuerySchema = z.object({
 
 export type ClimbHistoriesGetResponse = {
   climbHistories: ClimbHistory[];
+  nextCursor: string | null;
 };

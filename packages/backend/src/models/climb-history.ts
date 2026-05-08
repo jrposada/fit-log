@@ -124,6 +124,7 @@ climbHistorySchema.index({ sector: 1 });
 climbHistorySchema.index({ status: 1 });
 climbHistorySchema.index({ isProject: 1 });
 climbHistorySchema.index({ createdAt: -1 });
+climbHistorySchema.index({ owner: 1, updatedAt: -1, _id: -1 });
 
 export const ClimbHistory = model<IClimbHistory>(
   'ClimbHistory',
