@@ -50,6 +50,7 @@ const ClimbImageToolbar: FunctionComponent<{
     align="center"
     justify="center"
     paddingHorizontal="xl"
+    paddingVertical="sm"
   >
     <Button
       variant={editSubMode === 'holds' ? 'primary' : 'outline'}
