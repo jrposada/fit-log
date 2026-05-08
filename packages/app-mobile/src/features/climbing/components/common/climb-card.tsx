@@ -33,7 +33,7 @@ type ClimbCardNavigationProp = NativeStackNavigationProp<
 >;
 
 interface ClimbCardProps {
-  climb: Omit<Climb, 'image' | 'location' | 'sector'>;
+  climb: Pick<Climb, 'id' | 'name' | 'grade'>;
   location: Pick<Location, 'id' | 'name'>;
   sector: Pick<Sector, 'id' | 'name'>;
   history?: ClimbHistory;
