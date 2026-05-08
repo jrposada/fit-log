@@ -22,7 +22,7 @@ const ClimbingScreen: FunctionComponent = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<ClimbingNavigationProp>();
   const [activeTab, setActiveTab] = useState<Tab>('quick-log');
-  const [locationId, setLocationId] = useState<string>('');
+  const [locationId, setLocationId] = useState<string>();
 
   const items: (TabBarItem<Tab> & TabContentItem<Tab>)[] = [
     {

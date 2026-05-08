@@ -7,11 +7,10 @@
 ## Home
 
 - [ ] **Dashboard with real data** — Screen exists with 6 stat cards but all values are hardcoded mocks (42 workouts, 5 this week, 7-day streak, 24h 30m, 128 climbs, V7 PB). Needs API integration to pull real stats.
-- [ ] **History screen** — No history/activity feed screen exists. TODO comment found in app-bar.
 
 ## Climbing
 
-- [x] **Quick Log tab** — Shows last 3 climb attempts/projects for selected location. Location selector dropdown. Climb cards with quick status update (send, flash, attempt). "Log Custom Climb" button. Swipe hint animation.
+- [x] **Quick Log tab** — Paginated climb-history feed (cursor-based) with status filter (in progress / completed / all) and optional location scoping. Location selector dropdown (clear = all locations). Climb cards with quick status update (send, flash, attempt). "Log Custom Climb" button (per-location). Swipe hint animation on first card.
 - [x] **Browse tab** — Search climbs across all locations. Location filter dropdown. Grade filter chips (V0-V17). 300ms debounced search input. Climbs grouped by sector with collapsible sections. Climb cards showing user status.
 - [x] **Climb detail / Create & Edit** — Create/update climb modal with name, grade (V0-V17), description. Interactive image with hold marking (tap to add/remove). Sector selector. Image selection (camera/library). History quick-log. Project/unproject toggle. Delete with confirmation.
 - [x] **Location detail / Create & Edit** — Create/update location modal with name, description, lat/lng. Map point picker. Sectors CRUD (add/edit/delete with name, description, image). Image picker for sectors. Unsaved changes banner. Delete confirmation dialogs.

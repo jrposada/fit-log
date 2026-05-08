@@ -1,5 +1,6 @@
 {
   "actions.add": "Add",
+  "actions.load_more": "Load more",
   "auth.createAccount": "Create Account",
   "auth.logout": "Log Out",
   "auth.logoutConfirmMessage": "Are you sure you want to log out?",
@@ -120,6 +121,10 @@
   "climbing.projects_content": "Track current projects and progress details.",
   "climbing.projects": "Projects",
   "climbing.quick_log_content": "Log a climb attempt fast (grade, tries, send).",
+  "climbing.quick_log_empty": "No climbs to show.",
+  "climbing.quick_log_filter_all": "All",
+  "climbing.quick_log_filter_completed": "Completed",
+  "climbing.quick_log_filter_in_progress": "In progress",
   "climbing.quick_log": "Quick Log",
   "climbing.recent_climbs_description": "View your latest climbing sessions",
   "climbing.recent_climbs": "Recent Climbs",
