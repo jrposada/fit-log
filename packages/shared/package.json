@@ -23,6 +23,16 @@
     "lint": "run-p lint:*"
   },
   "dependencies": {
-    "zod": "^3.24.2"
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-simple-import-sort": "catalog:",
+    "globals": "catalog:",
+    "npm-run-all": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   }
 }

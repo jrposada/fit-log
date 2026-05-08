@@ -30,20 +30,29 @@
   "dependencies": {
     "@jrposada/fit-log-shared": "workspace:*",
     "cors": "^2.8.5",
+    "dotenv": "catalog:",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.3",
     "jwks-rsa": "^3.2.0",
     "mongoose": "9.0.0",
     "sharp": "^0.34.5",
-    "uuid": "^11.0.5",
-    "zod": "^3.24.2"
+    "uuid": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
+    "@eslint/js": "catalog:",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^22.13.1",
-    "@types/uuid": "^10.0.0",
-    "tsx": "^4.19.2"
+    "@types/node": "catalog:",
+    "@types/uuid": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-simple-import-sort": "catalog:",
+    "globals": "catalog:",
+    "npm-run-all": "catalog:",
+    "prettier": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   }
 }

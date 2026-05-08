@@ -24,16 +24,26 @@
   },
   "peerDependencies": {
     "@jrposada/fit-log-shared": "workspace:*",
-    "@tanstack/react-query": "^5.90.5",
-    "i18next": "^25.6.0",
-    "react": "19.1.0"
+    "@tanstack/react-query": "catalog:",
+    "i18next": "catalog:",
+    "react": "catalog:"
   },
   "dependencies": {
     "axios": "^1.13.2"
   },
   "devDependencies": {
-    "eslint-plugin-react-hooks": "^7.0.0",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "eslint-plugin-react": "^7.37.5"
+    "@eslint/js": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "eslint-plugin-react-refresh": "catalog:",
+    "eslint-plugin-react": "catalog:",
+    "eslint-plugin-simple-import-sort": "catalog:",
+    "globals": "catalog:",
+    "npm-run-all": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   }
 }

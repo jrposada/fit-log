@@ -29,10 +29,21 @@
     "@faker-js/faker": "^10.0.0",
     "@inquirer/prompts": "^8.3.2",
     "commander": "^14.0.0",
-    "uuid": "^11.0.5"
+    "dotenv": "catalog:",
+    "mongoose": "9.0.0",
+    "sharp": "^0.34.5",
+    "uuid": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^22.13.1",
-    "@types/uuid": "^10.0.0"
+    "@eslint/js": "catalog:",
+    "@types/node": "catalog:",
+    "@types/uuid": "catalog:",
+    "eslint": "catalog:",
+    "globals": "catalog:",
+    "npm-run-all": "catalog:",
+    "prettier": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "typescript-eslint": "catalog:"
   }
 }
