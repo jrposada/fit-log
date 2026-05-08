@@ -5,6 +5,7 @@ import { registerSeedClimbsCommand } from './climbs';
 import { registerSeedImagesCommand } from './images';
 import { registerSeedLocationsCommand } from './locations';
 import { registerSeedSectorsCommand } from './sectors';
+import { registerSeedWorkoutsCommand } from './workouts';
 
 export default function registerSeedCommand(program: Command): void {
   const seedCmd = program
@@ -16,6 +17,7 @@ export default function registerSeedCommand(program: Command): void {
   registerSeedSectorsCommand(seedCmd);
   registerSeedLocationsCommand(seedCmd);
   registerSeedClimbHistoriesCommand(seedCmd);
+  registerSeedWorkoutsCommand(seedCmd);
 
   seedCmd.action(() => {
     console.log();
@@ -34,6 +36,7 @@ export default function registerSeedCommand(program: Command): void {
     console.log(
       '  dev-tools seed climb-histories   Seed a climb history for a climb'
     );
+    console.log('  dev-tools seed workouts          Seed N workouts');
     console.log();
   });
 }
