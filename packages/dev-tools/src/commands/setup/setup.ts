@@ -1,205 +1,180 @@
-import type { Command } from 'commander';
-import { faker } from '@faker-js/faker';
 import { connectToDatabase, disconnectFromDatabase } from '@backend/database';
-import { Workout } from '@backend/models/workout';
-import { Location } from '@backend/models/location';
-import { Sector } from '@backend/models/sector';
-import { Climb } from '@backend/models/climb';
-import { ClimbHistory } from '@backend/models/climb-history';
-import { Image } from '@backend/models/image';
 import { User } from '@backend/models/user';
-import { ImageProcessor } from '@backend/services/image-processor';
 import { FilesService } from '@backend/services/files';
+import { ImageProcessor } from '@backend/services/image-processor';
+import { faker } from '@faker-js/faker';
+import type { Command } from 'commander';
+import { Types } from 'mongoose';
 
+import { seedClimbHistory } from '../seed/climb-histories';
+import { seedLocation } from '../seed/locations';
+import { seedWorkout } from '../seed/workouts';
 import { findKeycloakUserByEmail } from '../../utils/keycloak-admin';
 
-import { fakeClimb } from '../seed/mock-data/climbs';
-import { fakeClimbHistory } from '../seed/mock-data/climb-histories';
-import { fakeWorkout } from '../seed/mock-data/workouts';
-import { fakeLocation } from '../seed/mock-data/locations';
-import { fakeImage } from '../seed/mock-data/images';
-import { fakeSector } from '../seed/mock-data/sectors';
+interface CliOptions {
+  numLocations: string;
+  sectorsPerLocation: string;
+  climbsPerSector: string;
+  numWorkouts: string;
+  climbHistoryChance: string;
+}
 
 export function registerSetupCommand(setupCmd: Command): void {
   setupCmd
     .command('data')
     .description('Seed DB with mock data')
+    .option('--num-locations <value>', 'Number of locations to create', '50')
+    .option('--sectors-per-location <value>', 'Sectors per location', '2')
+    .option('--climbs-per-sector <value>', 'Climbs per sector', '3')
     .option('--num-workouts <value>', 'Number of workouts to create', '100')
-    .option('--num-climbs <value>', 'Number of climbs to create', '250')
     .option(
       '--climb-history-chance <value>',
       'Chance (0-1) each climb has history',
       '0.6'
     )
-    .option('--num-locations <value>', 'Number of locations to create', '50')
-    .action(
-      async (options: {
-        numWorkouts: string;
-        numClimbs: string;
-        climbHistoryChance: string;
-        numLocations: string;
-      }) => {
-        const numWorkouts = parseInt(options.numWorkouts);
-        const numClimbs = parseInt(options.numClimbs);
-        const climbHistoryChance = parseFloat(options.climbHistoryChance);
-        const numLocations = parseInt(options.numLocations);
+    .action(async (options: CliOptions) => {
+      const numLocations = parseInt(options.numLocations);
+      const sectorsPerLocation = parseInt(options.sectorsPerLocation);
+      const climbsPerSector = parseInt(options.climbsPerSector);
+      const numWorkouts = parseInt(options.numWorkouts);
+      const climbHistoryChance = parseFloat(options.climbHistoryChance);
 
-        try {
-          await connectToDatabase();
-          await FilesService.ensureDirectories();
-          const imageProcessor = new ImageProcessor();
+      try {
+        await connectToDatabase();
+        await FilesService.ensureDirectories();
+        const imageProcessor = new ImageProcessor();
 
-          // Pick a seed owner. Default to the realm's bootstrap user
-          // (`dev@example.com` from the Keycloak realm import) so that
-          // when they log in via the app, the auth middleware finds the
-          // existing Mongo user (matched by `keycloakId`) and the seeded
-          // data is theirs. Override with BOOTSTRAP_OWNER_EMAIL if needed.
-          const seedOwnerEmail =
-            process.env.BOOTSTRAP_OWNER_EMAIL ?? 'dev@example.com';
+        // Bootstrap the dev Mongo user from Keycloak so when they log in
+        // via the app, the auth middleware finds the existing record
+        // (matched by `keycloakId`) and the seeded data is theirs.
+        // Override with BOOTSTRAP_OWNER_EMAIL if needed.
+        const seedOwnerEmail =
+          process.env.BOOTSTRAP_OWNER_EMAIL ?? 'dev@example.com';
 
-          let seedOwner = await User.findOne({ email: seedOwnerEmail });
-          if (!seedOwner) {
-            const kcUser = await findKeycloakUserByEmail(seedOwnerEmail);
-            if (!kcUser) {
-              throw new Error(
-                `No Keycloak user found with email "${seedOwnerEmail}". ` +
-                  `Either create one in the realm or set BOOTSTRAP_OWNER_EMAIL.`
-              );
-            }
-
-            const fullName = [kcUser.firstName, kcUser.lastName]
-              .filter(Boolean)
-              .join(' ')
-              .trim();
-
-            seedOwner = await User.create({
-              keycloakId: kcUser.id,
-              email: kcUser.email,
-              name: fullName || kcUser.email,
-              roles: [],
-            });
-            console.log(
-              `✓ Created Mongo user for Keycloak account ${seedOwner.email} (keycloakId=${kcUser.id})`
+        let seedOwner = await User.findOne({ email: seedOwnerEmail });
+        if (!seedOwner) {
+          const kcUser = await findKeycloakUserByEmail(seedOwnerEmail);
+          if (!kcUser) {
+            throw new Error(
+              `No Keycloak user found with email "${seedOwnerEmail}". ` +
+                `Either create one in the realm or set BOOTSTRAP_OWNER_EMAIL.`
             );
-          } else {
-            console.log(`Using seed owner ${seedOwner.email}`);
           }
-          const ownerId = seedOwner._id;
-
-          const numImages = Math.min(30, numClimbs);
-          console.log(`Creating ${numImages} images...`);
-          const images = [];
-          for (let i = 0; i < numImages; i++) {
-            const imageData = await fakeImage(imageProcessor);
-            const image = await Image.create({ ...imageData, owner: ownerId });
-            images.push(image);
-          }
-          console.log(`✓ Created ${images.length} images`);
-
-          console.log(`Creating ${numLocations} locations...`);
-          const locationPromises = [];
-          for (let i = 0; i < numLocations; i++) {
-            const locationData = { ...fakeLocation(), owner: ownerId };
-            locationPromises.push(Location.create(locationData));
-          }
-          const locations = await Promise.all(locationPromises);
-          console.log(`✓ Created ${locations.length} locations`);
-
-          const sectorsPerLocation = 2;
+          const fullName = [kcUser.firstName, kcUser.lastName]
+            .filter(Boolean)
+            .join(' ')
+            .trim();
+          seedOwner = await User.create({
+            keycloakId: kcUser.id,
+            email: kcUser.email,
+            name: fullName || kcUser.email,
+            roles: [],
+          });
           console.log(
-            `Creating ${numLocations * sectorsPerLocation} sectors...`
+            `✓ Created Mongo user for Keycloak account ${seedOwner.email} (keycloakId=${kcUser.id})`
           );
-          const sectorPromises = [];
-          for (let i = 0; i < numLocations; i++) {
-            for (let j = 0; j < sectorsPerLocation; j++) {
-              const sectorData = { ...fakeSector(), owner: ownerId };
-              sectorPromises.push(Sector.create(sectorData));
-            }
-          }
-          const sectors = await Promise.all(sectorPromises);
-          console.log(`✓ Created ${sectors.length} sectors`);
+        } else {
+          console.log(`Using seed owner ${seedOwner.email}`);
+        }
+        const seedOwnerId = seedOwner._id as Types.ObjectId;
 
-          console.log('Linking sectors to locations...');
-          for (let i = 0; i < locations.length; i++) {
-            const location = locations[i];
-            if (!location) continue;
-            const locationSectors = sectors.slice(
-              i * sectorsPerLocation,
-              (i + 1) * sectorsPerLocation
-            );
-            location.sectors = locationSectors.map((s) => s._id);
-            await location.save();
-          }
-          console.log('✓ Linked sectors to locations');
-
-          console.log(`Creating ${numClimbs} climbs...`);
-          const climbPromises = [];
-          for (let i = 0; i < numClimbs; i++) {
-            const randomLocation = faker.helpers.arrayElement(locations);
-            const randomSector = faker.helpers.arrayElement(sectors);
-            const randomImage = faker.helpers.arrayElement(images);
-
-            const climbData = {
-              ...fakeClimb(),
-              location: randomLocation._id,
-              sector: randomSector._id,
-              image: randomImage._id,
-              owner: ownerId,
-            };
-            climbPromises.push(Climb.create(climbData));
-          }
-          const climbs = await Promise.all(climbPromises);
-          console.log(`✓ Created ${climbs.length} climbs`);
-
-          console.log('Linking climbs and images to sectors...');
-          for (const climb of climbs) {
-            await Sector.findByIdAndUpdate(climb.sector, {
-              $addToSet: { climbs: climb._id, images: climb.image },
-            });
-          }
-          console.log('✓ Linked climbs and images to sectors');
-
-          console.log(
-            `Creating climb histories (${(climbHistoryChance * 100).toFixed(0)}% chance per climb)...`
-          );
-          const climbHistoryPromises = [];
-          for (const climb of climbs) {
-            if (faker.datatype.boolean({ probability: climbHistoryChance })) {
-              const historyData = fakeClimbHistory();
-              const lastTry = historyData.tries[historyData.tries.length - 1];
-              if (!lastTry) continue;
-              const mostRecentTryDate = lastTry.date;
-
-              const climbHistoryData = {
-                ...historyData,
-                climb: climb._id,
-                location: climb.location,
-                sector: climb.sector,
-                owner: ownerId,
-                createdAt: mostRecentTryDate,
-                updatedAt: mostRecentTryDate,
-              };
-              climbHistoryPromises.push(ClimbHistory.create(climbHistoryData));
-            }
-          }
-          const climbHistories = await Promise.all(climbHistoryPromises);
-          console.log(`✓ Created ${climbHistories.length} climb histories`);
-
-          console.log(`Creating ${numWorkouts} workouts...`);
-          const workoutPromises = [];
-          for (let i = 0; i < numWorkouts; i++) {
-            const workoutData = fakeWorkout();
-            workoutPromises.push(Workout.create(workoutData));
-          }
-          const workouts = await Promise.all(workoutPromises);
-          console.log(`✓ Created ${workouts.length} workouts`);
-
-          console.log('✓ Database seeded successfully!');
-        } finally {
-          await disconnectFromDatabase();
+        // Synthetic non-Keycloak owners so seeded data has varied
+        // ownership — exercises the "I see other users' public records
+        // but can't edit them" path. They have unique synthetic
+        // keycloakIds so they'll never match a real JWT.
+        const NUM_EXTRA_OWNERS = 5;
+        const existingExtras = await User.find({
+          keycloakId: { $regex: '^synthetic-' },
+        });
+        const extraOwners = [...existingExtras];
+        for (let i = existingExtras.length; i < NUM_EXTRA_OWNERS; i++) {
+          const extra = await User.create({
+            keycloakId: `synthetic-${faker.string.uuid()}`,
+            email: `seed-user-${i + 1}@example.com`,
+            name: faker.person.fullName(),
+            roles: [],
+          });
+          extraOwners.push(extra);
         }
 
-        process.exit(0);
+        // Per-location owner pool: dev weighted ×3 (so dev still sees
+        // the majority of locations as theirs), each synthetic ×1.
+        const locationOwnerPool: Types.ObjectId[] = [
+          seedOwnerId,
+          seedOwnerId,
+          seedOwnerId,
+          ...extraOwners.map((u) => u._id as Types.ObjectId),
+        ];
+
+        // Uniform pool for ClimbHistory — anyone can attempt anyone's
+        // climb, regardless of who created it.
+        const allOwners: Types.ObjectId[] = [
+          seedOwnerId,
+          ...extraOwners.map((u) => u._id as Types.ObjectId),
+        ];
+
+        console.log(
+          `Owner pool: ${seedOwner.email} (×3) + ${extraOwners.length} synthetic users (×1 each)`
+        );
+
+        // Per-location subtree: location, its sectors, climbs and their
+        // images all share an owner — modelling "user A set up this
+        // gym/crag and its routes". ClimbHistory below is the cross-user
+        // mixer.
+        console.log(
+          `Seeding ${numLocations} locations × ${sectorsPerLocation} sectors × ${climbsPerSector} climbs...`
+        );
+        const allClimbs = [];
+        let totalSectors = 0;
+        for (let i = 0; i < numLocations; i++) {
+          const owner = faker.helpers.arrayElement(locationOwnerPool);
+          const { sectors, climbs } = await seedLocation({
+            owner,
+            sectorsCount: sectorsPerLocation,
+            climbsPerSector,
+            imageProcessor,
+          });
+          totalSectors += sectors.length;
+          allClimbs.push(...climbs);
+        }
+        console.log(
+          `✓ Seeded ${numLocations} locations, ${totalSectors} sectors, ${allClimbs.length} climbs (+ images)`
+        );
+
+        // ClimbHistory pass — at most one history per (climb, owner)
+        // pair (compound unique index). Owner picked uniformly so dev
+        // sees a realistic mix of "their" attempts.
+        console.log(
+          `Seeding climb histories (${(climbHistoryChance * 100).toFixed(0)}% chance per climb, owned by any user)...`
+        );
+        let historyCount = 0;
+        for (const climb of allClimbs) {
+          if (!faker.datatype.boolean({ probability: climbHistoryChance })) {
+            continue;
+          }
+          if (!climb.location || !climb.sector) continue;
+
+          await seedClimbHistory({
+            owner: faker.helpers.arrayElement(allOwners),
+            climb: climb._id as Types.ObjectId,
+            location: climb.location,
+            sector: climb.sector,
+          });
+          historyCount += 1;
+        }
+        console.log(`✓ Seeded ${historyCount} climb histories`);
+
+        console.log(`Seeding ${numWorkouts} workouts...`);
+        for (let i = 0; i < numWorkouts; i++) {
+          await seedWorkout();
+        }
+        console.log(`✓ Seeded ${numWorkouts} workouts`);
+
+        console.log('✓ Database seeded successfully!');
+      } finally {
+        await disconnectFromDatabase();
       }
-    );
+
+      process.exit(0);
+    });
 }
