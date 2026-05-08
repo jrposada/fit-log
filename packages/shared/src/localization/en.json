@@ -195,6 +195,7 @@
   "climbing.relative_months_ago": "{{count}}mo ago",
   "climbing.edit_mode_holds": "Holds",
   "climbing.edit_mode_spline": "Spline",
+  "climbing.edit_mode_knife": "Knife",
   "exercise.description": "Exercise Description",
   "exercise.intensity_unit": "Intensity Unit",
   "exercise.intensity": "Intensity",

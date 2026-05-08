@@ -205,6 +205,15 @@ const useClimbDetail = () => {
     [watchedSpline, setValue]
   );
 
+  const handleSplinePointInsert = useCallback(
+    (afterIndex: number, point: SplinePoint) => {
+      const next = [...watchedSpline];
+      next.splice(afterIndex + 1, 0, point);
+      setValue('spline', next, { shouldDirty: true });
+    },
+    [watchedSpline, setValue]
+  );
+
   const handleSplinePointRemove = useCallback(
     (index: number) => {
       setValue(
@@ -530,6 +539,7 @@ const useClimbDetail = () => {
     handleHoldResize,
     handleHoldMove,
     handleSplinePointAdd,
+    handleSplinePointInsert,
     handleSplinePointRemove,
     handleSplinePointMove,
     handleDelete,

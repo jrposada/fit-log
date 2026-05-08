@@ -81,7 +81,7 @@ const ClimbImageOverlay: FunctionComponent<ClimbImageOverlayProps> = ({
 
           {/* Spline control points (edit mode) */}
           {editable &&
-            editMode === 'spline' &&
+            (editMode === 'spline' || editMode === 'knife') &&
             splinePixels.map((p, i) => {
               const isSelected =
                 selectedType === 'spline' && selectedIndex === i;

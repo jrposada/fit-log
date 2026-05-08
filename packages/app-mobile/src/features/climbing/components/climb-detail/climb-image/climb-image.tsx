@@ -12,9 +12,10 @@ import Button from '../../../../../library/button';
 import IconButton from '../../../../../library/icon-button';
 import InteractiveImage from '../../../../../library/interactive-image';
 import Stack from '../../../../../library/stack';
+import { closestSegmentToPoint } from './catmull-rom';
 import ClimbImageOverlay from './climb-image-overlay';
 
-type EditMode = 'holds' | 'spline';
+type EditMode = 'holds' | 'spline' | 'knife';
 
 type Selection = {
   type: 'hold' | 'spline';
@@ -32,10 +33,12 @@ interface ClimbImageProps {
   onHoldAdd: (hold: Hold) => void;
   onHoldRemove: (index: number) => void;
   onSplinePointAdd: (point: SplinePoint) => void;
+  onSplinePointInsert: (afterIndex: number, point: SplinePoint) => void;
   onSplinePointRemove: (index: number) => void;
 }
 
 const SPLINE_POINT_HIT_RADIUS = 0.05;
+const SPLINE_CURVE_HIT_RADIUS = 0.04;
 
 const ClimbImageToolbar: FunctionComponent<{
   editSubMode: EditMode;
@@ -64,6 +67,12 @@ const ClimbImageToolbar: FunctionComponent<{
       size="sm"
       onPress={() => onChangeMode('spline')}
     />
+    <Button
+      variant={editSubMode === 'knife' ? 'primary' : 'outline'}
+      title={t('climbing.edit_mode_knife')}
+      size="sm"
+      onPress={() => onChangeMode('knife')}
+    />
     <IconButton
       variant="destructive"
       icon="🗑️"
@@ -85,6 +94,7 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
   onHoldAdd,
   onHoldRemove,
   onSplinePointAdd,
+  onSplinePointInsert,
   onSplinePointRemove,
 }) => {
   const { t } = useTranslation();
@@ -92,6 +102,15 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
 
   const handleTap = useCallback(
     (point: { x: number; y: number }) => {
+      if (editMode === 'knife') {
+        if (spline.length < 2) return;
+        const hit = closestSegmentToPoint(spline, point);
+        if (hit && hit.distance <= SPLINE_CURVE_HIT_RADIUS) {
+          onSplinePointInsert(hit.segmentIndex, point);
+        }
+        return;
+      }
+
       if (editMode === 'spline') {
         for (let i = 0; i < spline.length; i++) {
           const dx = point.x - spline[i]!.x;
@@ -145,6 +164,7 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
       onSelectionChange,
       onHoldAdd,
       onSplinePointAdd,
+      onSplinePointInsert,
     ]
   );
 
