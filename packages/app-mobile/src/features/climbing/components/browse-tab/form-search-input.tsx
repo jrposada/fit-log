@@ -10,8 +10,10 @@ import {
 import { Typography } from '../../../../library/typography';
 import { styles } from './form-search-input.styles';
 
-interface FormSearchInputProps
-  extends Omit<TextInputProps, 'value' | 'onChangeText' | 'onBlur'> {
+interface FormSearchInputProps extends Omit<
+  TextInputProps,
+  'value' | 'onChangeText' | 'onBlur'
+> {
   name: string;
 }
 

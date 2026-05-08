@@ -7,11 +7,10 @@ import FormField from './form-field';
 import { styles } from './form-text-area.styles';
 import { useFormReadonly } from './use-form-readonly';
 
-interface FormTextAreaProps
-  extends Omit<
-    TextInputProps,
-    'value' | 'onChangeText' | 'onBlur' | 'multiline'
-  > {
+interface FormTextAreaProps extends Omit<
+  TextInputProps,
+  'value' | 'onChangeText' | 'onBlur' | 'multiline'
+> {
   name: string;
   label?: string;
   required?: boolean;
