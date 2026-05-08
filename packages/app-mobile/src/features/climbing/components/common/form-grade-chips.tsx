@@ -3,10 +3,12 @@ import { GRADE_OPTIONS } from '@shared/models/climb/climb-constants';
 import { FunctionComponent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native';
 
+import Section from '../../../../library/section';
+import Stack from '../../../../library/stack';
 import { Typography } from '../../../../library/typography';
-import { styles } from './form-grade-chips.styles';
+import GradeBadge from './grade-badge';
 
 interface FormGradeChipsProps {
   name: string;
@@ -17,7 +19,7 @@ const FormGradeChips: FunctionComponent<FormGradeChipsProps> = ({ name }) => {
   const { control } = useFormContext();
 
   return (
-    <View style={styles.container}>
+    <Section noPadding gap="sm">
       <Typography>{t('climbing.browse_filters')}</Typography>
       <Controller
         control={control}
@@ -34,35 +36,24 @@ const FormGradeChips: FunctionComponent<FormGradeChipsProps> = ({ name }) => {
           };
 
           return (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.chipsContainer}
-            >
-              {GRADE_OPTIONS.map((grade) => (
-                <TouchableOpacity
-                  key={grade}
-                  style={[
-                    styles.chip,
-                    selectedGrades.includes(grade) && styles.chipSelected,
-                  ]}
-                  onPress={() => toggleGrade(grade)}
-                >
-                  <Typography
-                    size="callout"
-                    color={
-                      selectedGrades.includes(grade) ? 'inverse' : 'primary'
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <Stack direction="horizontal" gap="sm">
+                {GRADE_OPTIONS.map((grade) => (
+                  <GradeBadge
+                    key={grade}
+                    grade={grade}
+                    variant={
+                      selectedGrades.includes(grade) ? 'filled' : 'ghost'
                     }
-                  >
-                    {grade}
-                  </Typography>
-                </TouchableOpacity>
-              ))}
+                    onPress={() => toggleGrade(grade)}
+                  />
+                ))}
+              </Stack>
             </ScrollView>
           );
         }}
       />
-    </View>
+    </Section>
   );
 };
 
