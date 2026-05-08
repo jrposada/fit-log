@@ -5,11 +5,12 @@ import {
 import { assert } from '@shared/utils/assert';
 import { MergeType, Types } from 'mongoose';
 
+import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Climb } from '../../models/climb';
 import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
-import { upsertDocument } from '../../utils/upsert-document';
+import { upsertOwnedDocument } from '../../utils/upsert-owned-document';
 import { toApiResponse } from '../api-utils';
 import { toApiClimb } from './climbs-mapper';
 
@@ -23,19 +24,24 @@ const handler = toApiResponse<
 
   const climbPutData = request.body;
 
-  const climb = await upsertDocument(Climb, climbPutData.id, {
-    /* Data */
-    name: climbPutData.name,
-    grade: climbPutData.grade,
-    description: climbPutData.description,
-    holds: climbPutData.holds,
-    spline: climbPutData.spline,
+  const climb = await upsertOwnedDocument(
+    Climb,
+    climbPutData.id,
+    request.user,
+    {
+      /* Data */
+      name: climbPutData.name,
+      grade: climbPutData.grade,
+      description: climbPutData.description,
+      holds: climbPutData.holds,
+      spline: climbPutData.spline,
 
-    /* References */
-    image: new Types.ObjectId(climbPutData.image),
-    sector: new Types.ObjectId(climbPutData.sector),
-    location: new Types.ObjectId(climbPutData.location),
-  })
+      /* References */
+      image: new Types.ObjectId(climbPutData.image),
+      sector: new Types.ObjectId(climbPutData.sector),
+      location: new Types.ObjectId(climbPutData.location),
+    }
+  )
     .populate<{
       image: IImage;
       location: ILocation;
@@ -46,6 +52,12 @@ const handler = toApiResponse<
       path: 'sector',
       populate: ['images'],
     });
+
+  if (!climb) {
+    throw new ResourceNotFound(
+      `Climb ${climbPutData.id ?? ''} not found or not editable`
+    );
+  }
 
   return {
     statusCode: 200,

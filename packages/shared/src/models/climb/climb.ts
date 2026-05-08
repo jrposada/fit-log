@@ -1,6 +1,8 @@
+import { WithOwnership } from '../auth/with-ownership';
 import { Image } from '../image/image';
 import { Location } from '../location/location';
 import { Sector } from '../sector/sector';
+import { WithTimestamps } from '../utils/with-timestamps';
 
 export type ClimbGrade =
   | 'V0'
@@ -36,23 +38,21 @@ export type SplinePoint = {
   y: number;
 };
 
-export type Climb = {
-  /* Data */
-  id: string;
-  name: string;
-  grade: ClimbGrade;
-  description?: string;
-  holds: Hold[];
-  spline: SplinePoint[];
+export type Climb = WithOwnership<
+  WithTimestamps<{
+    /* Data */
+    id: string;
+    name: string;
+    grade: ClimbGrade;
+    description?: string;
+    holds: Hold[];
+    spline: SplinePoint[];
 
-  /* References */
-  image: Image;
-  location: Omit<Location, 'sectors'> & { sectors: string[] };
-  sector: Omit<Sector, 'climbs'> & {
-    climbs: string[];
-  };
-
-  /* Timestamps */
-  createdAt: string;
-  updatedAt: string;
-};
+    /* References */
+    image: Image;
+    location: Omit<Location, 'sectors'> & { sectors: string[] };
+    sector: Omit<Sector, 'climbs'> & {
+      climbs: string[];
+    };
+  }>
+>;

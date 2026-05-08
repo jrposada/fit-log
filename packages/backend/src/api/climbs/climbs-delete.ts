@@ -4,6 +4,8 @@ import {
 } from '@shared/models/climb/climb-delete';
 import { assert } from '@shared/utils/assert';
 
+import { deletableBy } from '../../auth/deletable-filter';
+import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Climb } from '../../models/climb';
 import { toApiResponse } from '../api-utils';
 
@@ -13,7 +15,14 @@ const handler = toApiResponse<ClimbsDeleteResponse, ClimbsDeleteParams>(
 
     const { id } = request.params;
 
-    await Climb.deleteOne({ _id: id });
+    const result = await Climb.deleteOne({
+      _id: id,
+      ...deletableBy(request.user),
+    });
+
+    if (result.deletedCount === 0) {
+      throw new ResourceNotFound(`Climb ${id} not found or not deletable`);
+    }
 
     return {
       statusCode: 200,

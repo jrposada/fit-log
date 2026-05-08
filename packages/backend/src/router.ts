@@ -1,3 +1,8 @@
+import { collaboratorDeleteParamsSchema } from '@shared/models/auth/collaborator-delete';
+import {
+  collaboratorPutParamsSchema,
+  collaboratorPutRequestSchema,
+} from '@shared/models/auth/collaborator-put';
 import { climbsDeleteParamsSchema } from '@shared/models/climb/climb-delete';
 import { climbsGetQuerySchema } from '@shared/models/climb/climb-get';
 import { climbsGetByIdParamsSchema } from '@shared/models/climb/climb-get-by-id';
@@ -11,6 +16,7 @@ import { climbHistoriesGetQuerySchema } from '@shared/models/climb-history/climb
 import { climbHistoriesGetByIdParamsSchema } from '@shared/models/climb-history/climb-history-get-by-id';
 import { climbHistoryProjectRequestSchema } from '@shared/models/climb-history/climb-history-project';
 import { climbHistoriesPutRequestSchema } from '@shared/models/climb-history/climb-history-put';
+import { imagesDeleteParamsSchema } from '@shared/models/image/image-delete';
 import { imagesPostRequestSchema } from '@shared/models/image/image-post';
 import { locationsDeleteParamsSchema } from '@shared/models/location/location-delete';
 import { locationsGetQuerySchema } from '@shared/models/location/location-get';
@@ -35,18 +41,27 @@ import { handler as climbHistoriesGet } from './api/climb-histories/climb-histor
 import { handler as climbHistoriesGetById } from './api/climb-histories/climb-histories-get-by-id';
 import { handler as climbHistoriesProject } from './api/climb-histories/climb-histories-project';
 import { handler as climbHistoriesPut } from './api/climb-histories/climb-histories-put';
+import { handler as climbsCollaboratorsDelete } from './api/climbs/climbs-collaborators-delete';
+import { handler as climbsCollaboratorsPut } from './api/climbs/climbs-collaborators-put';
 import { handler as climbsDelete } from './api/climbs/climbs-delete';
 import { handler as climbsGet } from './api/climbs/climbs-get';
 import { handler as climbsGetById } from './api/climbs/climbs-get-by-id';
 import { handler as climbsPut } from './api/climbs/climbs-put';
 import { handler as climbsSearch } from './api/climbs/climbs-search';
+import { handler as imagesCollaboratorsDelete } from './api/images/images-collaborators-delete';
+import { handler as imagesCollaboratorsPut } from './api/images/images-collaborators-put';
+import { handler as imagesDelete } from './api/images/images-delete';
 import { handler as imagesPost } from './api/images/images-post';
+import { handler as locationsCollaboratorsDelete } from './api/locations/locations-collaborators-delete';
+import { handler as locationsCollaboratorsPut } from './api/locations/locations-collaborators-put';
 import { handler as locationsDelete } from './api/locations/locations-delete';
 import { handler as locationsGet } from './api/locations/locations-get';
 import { handler as locationsGetById } from './api/locations/locations-get-by-id';
 import { handler as locationsPut } from './api/locations/locations-put';
 import { handler as sectorsBatchDelete } from './api/sectors/sectors-batch-delete';
 import { handler as sectorsBatchPut } from './api/sectors/sectors-batch-put';
+import { handler as sectorsCollaboratorsDelete } from './api/sectors/sectors-collaborators-delete';
+import { handler as sectorsCollaboratorsPut } from './api/sectors/sectors-collaborators-put';
 import { handler as sectorsDelete } from './api/sectors/sectors-delete';
 import { handler as sectorsPut } from './api/sectors/sectors-put';
 import { handler as sessionsDelete } from './api/sessions/sessions-delete';
@@ -145,6 +160,19 @@ router.delete(
   validateParams(locationsDeleteParamsSchema),
   locationsDelete
 );
+router.put(
+  '/locations/:id/collaborators/:userId',
+  authenticateKeycloak,
+  validateParams(collaboratorPutParamsSchema),
+  validateBody(collaboratorPutRequestSchema),
+  locationsCollaboratorsPut
+);
+router.delete(
+  '/locations/:id/collaborators/:userId',
+  authenticateKeycloak,
+  validateParams(collaboratorDeleteParamsSchema),
+  locationsCollaboratorsDelete
+);
 
 // Sectors
 router.put(
@@ -171,6 +199,19 @@ router.delete(
   validateBody(sectorsBatchDeleteRequestSchema),
   sectorsBatchDelete
 );
+router.put(
+  '/sectors/:id/collaborators/:userId',
+  authenticateKeycloak,
+  validateParams(collaboratorPutParamsSchema),
+  validateBody(collaboratorPutRequestSchema),
+  sectorsCollaboratorsPut
+);
+router.delete(
+  '/sectors/:id/collaborators/:userId',
+  authenticateKeycloak,
+  validateParams(collaboratorDeleteParamsSchema),
+  sectorsCollaboratorsDelete
+);
 
 // Images
 router.post(
@@ -178,6 +219,25 @@ router.post(
   authenticateKeycloak,
   validateBody(imagesPostRequestSchema),
   imagesPost
+);
+router.delete(
+  '/images/:id',
+  authenticateKeycloak,
+  validateParams(imagesDeleteParamsSchema),
+  imagesDelete
+);
+router.put(
+  '/images/:id/collaborators/:userId',
+  authenticateKeycloak,
+  validateParams(collaboratorPutParamsSchema),
+  validateBody(collaboratorPutRequestSchema),
+  imagesCollaboratorsPut
+);
+router.delete(
+  '/images/:id/collaborators/:userId',
+  authenticateKeycloak,
+  validateParams(collaboratorDeleteParamsSchema),
+  imagesCollaboratorsDelete
 );
 
 // Climbs
@@ -210,6 +270,19 @@ router.delete(
   authenticateKeycloak,
   validateParams(climbsDeleteParamsSchema),
   climbsDelete
+);
+router.put(
+  '/climbs/:id/collaborators/:userId',
+  authenticateKeycloak,
+  validateParams(collaboratorPutParamsSchema),
+  validateBody(collaboratorPutRequestSchema),
+  climbsCollaboratorsPut
+);
+router.delete(
+  '/climbs/:id/collaborators/:userId',
+  authenticateKeycloak,
+  validateParams(collaboratorDeleteParamsSchema),
+  climbsCollaboratorsDelete
 );
 
 // Climb Histories

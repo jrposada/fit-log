@@ -2,6 +2,7 @@ import { Image } from '@shared/models/image/image';
 import { assert } from '@shared/utils/assert';
 
 import { IImage } from '../../models/image';
+import { toApiCollaborators } from '../auth/collaborators-mapper';
 
 function resolveFileUrl(relativePath: string): string {
   if (
@@ -26,6 +27,10 @@ function toApiImage(model: IImage): Image {
     thumbnailUrl: resolveFileUrl(model.thumbnailUrl),
     imageWidth: model.imageWidth,
     imageHeight: model.imageHeight,
+
+    /* Ownership */
+    owner: model.owner.toString(),
+    collaborators: toApiCollaborators(model.collaborators),
 
     /* Timestamps */
     createdAt: model.createdAt.toISOString(),

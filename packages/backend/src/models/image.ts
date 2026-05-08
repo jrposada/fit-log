@@ -1,6 +1,8 @@
 import { Document, model, Schema, WithTimestamps } from 'mongoose';
 
-export interface IImage extends WithTimestamps<Document> {
+import { ownershipFields, WithOwnership } from './_collaborator';
+
+export interface IImage extends WithTimestamps<Document>, WithOwnership {
   /* Data */
   imageUrl: string;
   thumbnailUrl: string;
@@ -27,6 +29,9 @@ const imageSchema = new Schema<IImage>(
       type: Number,
       required: true,
     },
+
+    /* Ownership */
+    ...ownershipFields,
   },
   {
     timestamps: true,

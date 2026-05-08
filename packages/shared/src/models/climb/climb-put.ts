@@ -15,7 +15,14 @@ const splinePointSchema = z.object({
 
 export type ClimbsPutRequest = Omit<
   Climb,
-  'id' | 'createdAt' | 'updatedAt' | 'image' | 'location' | 'sector'
+  | 'id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'image'
+  | 'location'
+  | 'sector'
+  | 'owner'
+  | 'collaborators'
 > & {
   id?: string;
 

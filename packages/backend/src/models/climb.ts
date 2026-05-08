@@ -1,6 +1,6 @@
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
-import { collaboratorSchema, ICollaborator } from './_collaborator';
+import { ownershipFields, WithOwnership } from './_collaborator';
 
 export interface IHold {
   x: number;
@@ -13,17 +13,13 @@ export interface ISplinePoint {
   y: number;
 }
 
-export interface IClimb extends WithTimestamps<Document> {
+export interface IClimb extends WithTimestamps<Document>, WithOwnership {
   /* Data */
   name: string;
   grade: string;
   description?: string;
   holds: IHold[];
   spline: ISplinePoint[];
-
-  /* Ownership */
-  owner: Types.ObjectId;
-  collaborators: ICollaborator[];
 
   /* References – nullable after population if the referenced doc was deleted */
   image: Types.ObjectId | null;
@@ -90,16 +86,7 @@ const climbSchema = new Schema<IClimb>(
     },
 
     /* Ownership */
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-    collaborators: {
-      type: [collaboratorSchema],
-      required: true,
-      default: [],
-    },
+    ...ownershipFields,
 
     /* References */
     image: {
@@ -122,8 +109,5 @@ const climbSchema = new Schema<IClimb>(
     timestamps: true,
   }
 );
-
-climbSchema.index({ location: 1 });
-climbSchema.index({ owner: 1 });
 
 export const Climb = model<IClimb>('Climb', climbSchema);

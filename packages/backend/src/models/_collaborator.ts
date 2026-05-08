@@ -1,8 +1,11 @@
-import { Schema, Types } from 'mongoose';
+import { Schema, SchemaDefinition, Types } from 'mongoose';
 
-export type CollaboratorPermission = 'edit';
+export type CollaboratorPermission = 'edit' | 'delete';
 
-export const COLLABORATOR_PERMISSIONS: CollaboratorPermission[] = ['edit'];
+export const COLLABORATOR_PERMISSIONS: CollaboratorPermission[] = [
+  'edit',
+  'delete',
+];
 
 export interface ICollaborator {
   user: Types.ObjectId;
@@ -24,3 +27,31 @@ export const collaboratorSchema = new Schema<ICollaborator>(
   },
   { _id: false }
 );
+
+/**
+ * Marker interface for models that have ownership semantics.
+ * Combine with `WithTimestamps<Document>`:
+ *   interface IClimb extends WithTimestamps<Document>, WithOwnership { ... }
+ */
+export interface WithOwnership {
+  owner: Types.ObjectId;
+  collaborators: ICollaborator[];
+}
+
+/**
+ * Schema field definitions for `WithOwnership`. Spread into a model's
+ * schema definition object:
+ *   new Schema<IClimb>({ ...ownershipFields, name: { ... }, ... });
+ */
+export const ownershipFields: SchemaDefinition<WithOwnership> = {
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  collaborators: {
+    type: [collaboratorSchema],
+    required: true,
+    default: [],
+  },
+};

@@ -4,7 +4,13 @@ import { Sector } from './sector';
 
 export type SectorsPutRequest = Omit<
   Sector,
-  'id' | 'createdAt' | 'updatedAt' | 'images' | 'climbs'
+  | 'id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'images'
+  | 'climbs'
+  | 'owner'
+  | 'collaborators'
 > & {
   id?: string;
 

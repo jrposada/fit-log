@@ -80,7 +80,4 @@ const workoutSchema = new Schema<IWorkout>(
   }
 );
 
-// Index for querying workouts by user
-// workoutSchema.index({ userId: 1 });
-
 export const Workout = model<IWorkout>('Workout', workoutSchema);

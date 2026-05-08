@@ -1,0 +1,37 @@
+import { CollaboratorDeleteParams } from '@shared/models/auth/collaborator-delete';
+import { SectorsCollaboratorsResponse } from '@shared/models/sector/sector-collaborators';
+import { assert } from '@shared/utils/assert';
+
+import ResourceNotFound from '../../infrastructure/not-found-error';
+import { IClimb } from '../../models/climb';
+import { IImage } from '../../models/image';
+import { Sector } from '../../models/sector';
+import { removeCollaborator } from '../../utils/collaborator-mutators';
+import { toApiResponse } from '../api-utils';
+import { toApiSector } from './sectors-mapper';
+
+const handler = toApiResponse<SectorsCollaboratorsResponse, CollaboratorDeleteParams>(
+  async (request) => {
+    assert(request.user, { msg: 'Unauthorized' });
+
+    const { id, userId } = request.params;
+
+    const sector = await removeCollaborator(
+      Sector,
+      id,
+      userId,
+      request.user
+    ).populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
+
+    if (!sector) {
+      throw new ResourceNotFound(`Sector ${id} not found or not editable`);
+    }
+
+    return {
+      statusCode: 200,
+      body: { success: true, data: { sector: toApiSector(sector) } },
+    };
+  }
+);
+
+export { handler };

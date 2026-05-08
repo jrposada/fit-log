@@ -4,6 +4,7 @@ import { MergeType } from 'mongoose';
 import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
+import { toApiCollaborators } from '../auth/collaborators-mapper';
 import { toApiDepopulatedSector } from '../sectors/sectors-mapper';
 
 function toApiDepopulatedLocation(
@@ -17,6 +18,10 @@ function toApiDepopulatedLocation(
     latitude: model.latitude,
     longitude: model.longitude,
     googleMapsId: model.googleMapsId,
+
+    /* Ownership */
+    owner: model.owner.toString(),
+    collaborators: toApiCollaborators(model.collaborators),
 
     /* References */
     sectors: model.sectors.map((sector) => sector._id.toString()),
@@ -41,6 +46,10 @@ function toApiLocation(
     latitude: model.latitude,
     longitude: model.longitude,
     googleMapsId: model.googleMapsId,
+
+    /* Ownership */
+    owner: model.owner.toString(),
+    collaborators: toApiCollaborators(model.collaborators),
 
     /* References */
     sectors: model.sectors.map(toApiDepopulatedSector),

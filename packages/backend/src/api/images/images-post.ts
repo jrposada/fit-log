@@ -4,9 +4,10 @@ import {
 } from '@shared/models/image/image-post';
 import { assert } from '@shared/utils/assert';
 
+import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Image } from '../../models/image';
 import { ImageProcessor } from '../../services/image-processor';
-import { upsertDocument } from '../../utils/upsert-document';
+import { upsertOwnedDocument } from '../../utils/upsert-owned-document';
 import { toApiResponse } from '../api-utils';
 import { toApiImage } from './images-mapper';
 
@@ -26,13 +27,17 @@ const handler = toApiResponse<
     mimeType
   );
 
-  const image = await upsertDocument(Image, undefined, {
+  const image = await upsertOwnedDocument(Image, undefined, request.user, {
     /* Data */
     imageUrl: processedImage.imageUrl,
     thumbnailUrl: processedImage.thumbnailUrl,
     imageWidth: processedImage.imageWidth,
     imageHeight: processedImage.imageHeight,
   });
+
+  if (!image) {
+    throw new ResourceNotFound('Image creation failed');
+  }
 
   return {
     statusCode: 201,

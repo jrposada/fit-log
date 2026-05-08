@@ -1,12 +1,13 @@
-export type Image = {
-  /* Data */
-  id: string;
-  imageUrl: string;
-  thumbnailUrl: string;
-  imageWidth: number;
-  imageHeight: number;
+import { WithOwnership } from '../auth/with-ownership';
+import { WithTimestamps } from '../utils/with-timestamps';
 
-  /* Timestamps */
-  createdAt: string;
-  updatedAt: string;
-};
+export type Image = WithOwnership<
+  WithTimestamps<{
+    /* Data */
+    id: string;
+    imageUrl: string;
+    thumbnailUrl: string;
+    imageWidth: number;
+    imageHeight: number;
+  }>
+>;

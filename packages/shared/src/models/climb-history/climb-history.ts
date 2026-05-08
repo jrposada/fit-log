@@ -1,6 +1,7 @@
 import { Climb } from '../climb/climb';
 import { Location } from '../location/location';
 import { Sector } from '../sector/sector';
+import { WithTimestamps } from '../utils/with-timestamps';
 
 export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt';
 
@@ -12,7 +13,7 @@ export type ClimbHistoryTry = {
   date: string;
 };
 
-export type ClimbHistory = {
+export type ClimbHistory = WithTimestamps<{
   /* Data */
   id: string;
   status: ClimbHistoryStatus;
@@ -30,8 +31,4 @@ export type ClimbHistory = {
   };
   location: Omit<Location, 'sectors'> & { sectors: string[] };
   sector: Omit<Sector, 'climbs'> & { climbs: string[] };
-
-  /* Timestamps */
-  createdAt: string;
-  updatedAt: string;
-};
+}>;

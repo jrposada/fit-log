@@ -4,6 +4,7 @@ import {
 } from '@shared/models/sector/sector-batch-delete';
 import { assert } from '@shared/utils/assert';
 
+import { deletableBy } from '../../auth/deletable-filter';
 import { Sector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
 
@@ -17,7 +18,10 @@ const handler = toApiResponse<
 
   const { ids } = request.body;
 
-  const result = await Sector.deleteMany({ _id: { $in: ids } });
+  const result = await Sector.deleteMany({
+    _id: { $in: ids },
+    ...deletableBy(request.user),
+  });
 
   return {
     statusCode: 200,

@@ -1,8 +1,8 @@
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
-import { collaboratorSchema, ICollaborator } from './_collaborator';
+import { ownershipFields, WithOwnership } from './_collaborator';
 
-export interface ISector extends WithTimestamps<Document> {
+export interface ISector extends WithTimestamps<Document>, WithOwnership {
   /* Data */
   name: string;
   description?: string;
@@ -11,10 +11,6 @@ export interface ISector extends WithTimestamps<Document> {
   latitude: number;
   longitude: number;
   googleMapsId?: string;
-
-  /* Ownership */
-  owner: Types.ObjectId;
-  collaborators: ICollaborator[];
 
   /* References */
   images: Types.ObjectId[];
@@ -51,16 +47,7 @@ const sectorSchema = new Schema<ISector>(
     },
 
     /* Ownership */
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-    collaborators: {
-      type: [collaboratorSchema],
-      required: true,
-      default: [],
-    },
+    ...ownershipFields,
 
     /* References */
     images: {

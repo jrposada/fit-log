@@ -1,4 +1,4 @@
-import { Collaborator } from '@shared/models/auth/can-write';
+import { Collaborator } from '@shared/models/auth/with-ownership';
 
 import { ICollaborator } from '../../models/_collaborator';
 

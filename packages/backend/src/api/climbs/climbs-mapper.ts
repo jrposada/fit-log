@@ -6,6 +6,7 @@ import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
 import { WithRequiredRefs } from '../../utils/types';
+import { toApiCollaborators } from '../auth/collaborators-mapper';
 import { toApiImage } from '../images/images-mapper';
 import { toApiDepopulatedLocation } from '../locations/locations-mapper';
 import { toApiDepopulatedSector } from '../sectors/sectors-mapper';
@@ -28,6 +29,10 @@ function toApiClimb(
     description: model.description,
     holds: model.holds,
     spline: model.spline,
+
+    /* Ownership */
+    owner: model.owner.toString(),
+    collaborators: toApiCollaborators(model.collaborators),
 
     /* References */
     image: toApiImage(model.image),
@@ -60,6 +65,10 @@ function toApiDepopulatedClimb(model: WithRequiredRefs<IClimb>): Omit<
     description: model.description,
     holds: model.holds,
     spline: model.spline,
+
+    /* Ownership */
+    owner: model.owner.toString(),
+    collaborators: toApiCollaborators(model.collaborators),
 
     /* References */
     image: model.image._id.toString(),

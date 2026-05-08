@@ -15,8 +15,4 @@ const sessionSchema = new Schema<ISession>(
   }
 );
 
-// Compound index for querying sessions by user and workout
-// sessionSchema.index({ userId: 1, workoutId: 1 });
-// sessionSchema.index({ userId: 1, completedAt: -1 });
-
 export const Session = model<ISession>('Session', sessionSchema);

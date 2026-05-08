@@ -4,6 +4,7 @@ import { MergeType } from 'mongoose';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
 import { ISector } from '../../models/sector';
+import { toApiCollaborators } from '../auth/collaborators-mapper';
 import {
   hasRequiredRefs,
   toApiDepopulatedClimb,
@@ -22,6 +23,10 @@ function toApiDepopulatedSector(
     latitude: model.latitude,
     longitude: model.longitude,
     googleMapsId: model.googleMapsId,
+
+    /* Ownership */
+    owner: model.owner.toString(),
+    collaborators: toApiCollaborators(model.collaborators),
 
     /* References */
     climbs: model.climbs.map((climb) => climb._id.toString()),
@@ -45,6 +50,10 @@ function toApiSector(
     latitude: model.latitude,
     longitude: model.longitude,
     googleMapsId: model.googleMapsId,
+
+    /* Ownership */
+    owner: model.owner.toString(),
+    collaborators: toApiCollaborators(model.collaborators),
 
     /* References */
     climbs: model.climbs.flatMap((c) =>
