@@ -6,6 +6,10 @@ import {
 import { assert } from '@shared/utils/assert';
 import { MergeType } from 'mongoose';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import { Climb } from '../../models/climb';
 import { ClimbHistory } from '../../models/climb-history';
 import { IImage } from '../../models/image';
@@ -33,6 +37,7 @@ const handler = toApiResponse<ClimbsSearchResponse, unknown, ClimbsSearchQuery>(
           }
         : {}),
     })
+      .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
       .populate<{
         image: IImage;
         location: ILocation;

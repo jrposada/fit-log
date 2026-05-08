@@ -5,6 +5,10 @@ import {
 import { ImagesCollaboratorsResponse } from '@shared/models/image/image-collaborators';
 import { assert } from '@shared/utils/assert';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Image } from '../../models/image';
 import { addOrUpdateCollaborator } from '../../utils/collaborator-mutators';
@@ -28,7 +32,7 @@ const handler = toApiResponse<
     userId,
     permission,
     request.user
-  );
+  ).populate<PopulatedOwnership>([...OWNERSHIP_POPULATE]);
 
   if (!image) {
     throw new ResourceNotFound(`Image ${id} not found or not editable`);

@@ -1,8 +1,14 @@
+import { WithDepopulatedOwnership } from '@shared/models/auth/with-ownership';
 import { Image } from '@shared/models/image/image';
 import { assert } from '@shared/utils/assert';
 
+import { WithPopulatedOwnership } from '../../auth/ownership-populate';
 import { IImage } from '../../models/image';
-import { toApiCollaborators } from '../auth/collaborators-mapper';
+import {
+  toApiCollaborator,
+  toApiDepopulatedCollaborator,
+} from '../auth/collaborators-mapper';
+import { toApiUserSummary } from '../auth/user-summary-mapper';
 
 function resolveFileUrl(relativePath: string): string {
   if (
@@ -19,7 +25,7 @@ function resolveFileUrl(relativePath: string): string {
   return `${process.env.PUBLIC_FILES_BASE_URL}/${relativePath}`;
 }
 
-function toApiImage(model: IImage): Image {
+function toApiDepopulatedImage(model: IImage): WithDepopulatedOwnership<Image> {
   return {
     /* Data */
     id: model._id.toString(),
@@ -29,8 +35,8 @@ function toApiImage(model: IImage): Image {
     imageHeight: model.imageHeight,
 
     /* Ownership */
-    owner: model.owner.toString(),
-    collaborators: toApiCollaborators(model.collaborators),
+    owner: model.owner._id.toString(),
+    collaborators: model.collaborators.map(toApiDepopulatedCollaborator),
 
     /* Timestamps */
     createdAt: model.createdAt.toISOString(),
@@ -38,4 +44,23 @@ function toApiImage(model: IImage): Image {
   };
 }
 
-export { toApiImage };
+function toApiImage(model: WithPopulatedOwnership<IImage>): Image {
+  return {
+    /* Data */
+    id: model._id.toString(),
+    imageUrl: resolveFileUrl(model.imageUrl),
+    thumbnailUrl: resolveFileUrl(model.thumbnailUrl),
+    imageWidth: model.imageWidth,
+    imageHeight: model.imageHeight,
+
+    /* Ownership */
+    owner: toApiUserSummary(model.owner),
+    collaborators: model.collaborators.map(toApiCollaborator),
+
+    /* Timestamps */
+    createdAt: model.createdAt.toISOString(),
+    updatedAt: model.updatedAt.toISOString(),
+  };
+}
+
+export { toApiDepopulatedImage, toApiImage };

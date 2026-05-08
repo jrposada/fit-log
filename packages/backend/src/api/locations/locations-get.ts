@@ -5,6 +5,10 @@ import {
 import { assert } from '@shared/utils/assert';
 import { MergeType } from 'mongoose';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import { IImage } from '../../models/image';
 import { Location } from '../../models/location';
 import { ISector } from '../../models/sector';
@@ -17,12 +21,14 @@ const handler = toApiResponse<LocationsGetResponse, unknown, LocationsGetQuery>(
 
     const { limit } = request.query;
 
-    const query = Location.find().populate<{
-      sectors: MergeType<ISector, { images: IImage[] }>[];
-    }>({
-      path: 'sectors',
-      populate: ['images'],
-    });
+    const query = Location.find()
+      .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+      .populate<{
+        sectors: MergeType<ISector, { images: IImage[] }>[];
+      }>({
+        path: 'sectors',
+        populate: ['images'],
+      });
 
     if (limit) {
       query.limit(limit);

@@ -1,3 +1,4 @@
+import { WithDepopulatedOwnership } from '../auth/with-ownership';
 import { Climb } from '../climb/climb';
 import { Location } from '../location/location';
 import { Sector } from '../sector/sector';
@@ -24,11 +25,18 @@ export type ClimbHistory = WithTimestamps<{
   owner: string;
 
   /* References */
-  climb: Omit<Climb, 'image' | 'location' | 'sector'> & {
+  climb: Omit<
+    WithDepopulatedOwnership<Climb>,
+    'image' | 'location' | 'sector'
+  > & {
     image: string;
     location: string;
     sector: string;
   };
-  location: Omit<Location, 'sectors'> & { sectors: string[] };
-  sector: Omit<Sector, 'climbs'> & { climbs: string[] };
+  location: Omit<WithDepopulatedOwnership<Location>, 'sectors'> & {
+    sectors: string[];
+  };
+  sector: Omit<WithDepopulatedOwnership<Sector>, 'climbs'> & {
+    climbs: string[];
+  };
 }>;

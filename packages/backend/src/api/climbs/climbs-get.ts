@@ -5,6 +5,10 @@ import {
 import { assert } from '@shared/utils/assert';
 import { MergeType } from 'mongoose';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import { Climb } from '../../models/climb';
 import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
@@ -37,6 +41,7 @@ const handler = toApiResponse<ClimbsGetResponse, unknown, ClimbsGetQuery>(
     }
 
     const climbs = await query
+      .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
       .populate<{
         image: IImage;
         location: ILocation;

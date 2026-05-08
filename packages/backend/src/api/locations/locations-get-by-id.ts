@@ -5,6 +5,10 @@ import {
 import { assert } from '@shared/utils/assert';
 import { MergeType } from 'mongoose';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { IImage } from '../../models/image';
 import { Location } from '../../models/location';
@@ -18,12 +22,15 @@ const handler = toApiResponse<LocationsGetByIdResponse, LocationsGetByIdParams>(
 
     const { id } = request.params;
 
-    const location = await Location.findById(id).populate<{
-      sectors: MergeType<ISector, { images: IImage[] }>[];
-    }>({
-      path: 'sectors',
-      populate: ['images'],
-    });
+    const location = await Location.findById(id)
+
+      .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+      .populate<{
+        sectors: MergeType<ISector, { images: IImage[] }>[];
+      }>({
+        path: 'sectors',
+        populate: ['images'],
+      });
 
     if (!location) {
       throw new ResourceNotFound(`Location with id ${id} not found`);

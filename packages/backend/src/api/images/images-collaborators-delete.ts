@@ -2,6 +2,10 @@ import { CollaboratorDeleteParams } from '@shared/models/auth/collaborator-delet
 import { ImagesCollaboratorsResponse } from '@shared/models/image/image-collaborators';
 import { assert } from '@shared/utils/assert';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Image } from '../../models/image';
 import { removeCollaborator } from '../../utils/collaborator-mutators';
@@ -16,7 +20,12 @@ const handler = toApiResponse<
 
   const { id, userId } = request.params;
 
-  const image = await removeCollaborator(Image, id, userId, request.user);
+  const image = await removeCollaborator(
+    Image,
+    id,
+    userId,
+    request.user
+  ).populate<PopulatedOwnership>([...OWNERSHIP_POPULATE]);
 
   if (!image) {
     throw new ResourceNotFound(`Image ${id} not found or not editable`);

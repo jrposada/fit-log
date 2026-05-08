@@ -1,15 +1,21 @@
+import { WithDepopulatedOwnership } from '@shared/models/auth/with-ownership';
 import { Location } from '@shared/models/location/location';
 import { MergeType } from 'mongoose';
 
+import { WithPopulatedOwnership } from '../../auth/ownership-populate';
 import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
 import { ISector } from '../../models/sector';
-import { toApiCollaborators } from '../auth/collaborators-mapper';
+import {
+  toApiCollaborator,
+  toApiDepopulatedCollaborator,
+} from '../auth/collaborators-mapper';
+import { toApiUserSummary } from '../auth/user-summary-mapper';
 import { toApiDepopulatedSector } from '../sectors/sectors-mapper';
 
 function toApiDepopulatedLocation(
   model: ILocation
-): Omit<Location, 'sectors'> & { sectors: string[] } {
+): Omit<WithDepopulatedOwnership<Location>, 'sectors'> & { sectors: string[] } {
   return {
     /* Data */
     id: model._id.toString(),
@@ -20,8 +26,8 @@ function toApiDepopulatedLocation(
     googleMapsId: model.googleMapsId,
 
     /* Ownership */
-    owner: model.owner.toString(),
-    collaborators: toApiCollaborators(model.collaborators),
+    owner: model.owner._id.toString(),
+    collaborators: model.collaborators.map(toApiDepopulatedCollaborator),
 
     /* References */
     sectors: model.sectors.map((sector) => sector._id.toString()),
@@ -34,7 +40,7 @@ function toApiDepopulatedLocation(
 
 function toApiLocation(
   model: MergeType<
-    ILocation,
+    WithPopulatedOwnership<ILocation>,
     { sectors: MergeType<ISector, { images: IImage[] }>[] }
   >
 ): Location {
@@ -48,8 +54,8 @@ function toApiLocation(
     googleMapsId: model.googleMapsId,
 
     /* Ownership */
-    owner: model.owner.toString(),
-    collaborators: toApiCollaborators(model.collaborators),
+    owner: toApiUserSummary(model.owner),
+    collaborators: model.collaborators.map(toApiCollaborator),
 
     /* References */
     sectors: model.sectors.map(toApiDepopulatedSector),

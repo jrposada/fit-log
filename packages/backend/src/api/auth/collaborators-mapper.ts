@@ -1,16 +1,27 @@
-import { Collaborator } from '@shared/models/auth/with-ownership';
+import {
+  Collaborator,
+  DepopulatedCollaborator,
+} from '@shared/models/auth/with-ownership';
+import { MergeType } from 'mongoose';
 
 import { ICollaborator } from '../../models/_collaborator';
+import { IUser } from '../../models/user';
+import { toApiUserSummary } from './user-summary-mapper';
 
-export function toApiCollaborator(model: ICollaborator): Collaborator {
+export function toApiDepopulatedCollaborator(
+  model: ICollaborator
+): DepopulatedCollaborator {
   return {
-    user: model.user.toString(),
+    user: model.user._id.toString(),
     permission: model.permission,
   };
 }
 
-export function toApiCollaborators(
-  models: ICollaborator[] | undefined
-): Collaborator[] {
-  return (models ?? []).map(toApiCollaborator);
+export function toApiCollaborator(
+  model: MergeType<ICollaborator, { user: IUser }>
+): Collaborator {
+  return {
+    user: toApiUserSummary(model.user),
+    permission: model.permission,
+  };
 }

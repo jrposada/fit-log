@@ -4,6 +4,10 @@ import {
 } from '@shared/models/image/image-post';
 import { assert } from '@shared/utils/assert';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Image } from '../../models/image';
 import { ImageProcessor } from '../../services/image-processor';
@@ -33,7 +37,7 @@ const handler = toApiResponse<
     thumbnailUrl: processedImage.thumbnailUrl,
     imageWidth: processedImage.imageWidth,
     imageHeight: processedImage.imageHeight,
-  });
+  }).populate<PopulatedOwnership>([...OWNERSHIP_POPULATE]);
 
   if (!image) {
     throw new ResourceNotFound('Image creation failed');

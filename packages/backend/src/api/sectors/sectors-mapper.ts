@@ -1,19 +1,25 @@
+import { WithDepopulatedOwnership } from '@shared/models/auth/with-ownership';
 import { Sector } from '@shared/models/sector/sector';
 import { MergeType } from 'mongoose';
 
+import { WithPopulatedOwnership } from '../../auth/ownership-populate';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
 import { ISector } from '../../models/sector';
-import { toApiCollaborators } from '../auth/collaborators-mapper';
+import {
+  toApiCollaborator,
+  toApiDepopulatedCollaborator,
+} from '../auth/collaborators-mapper';
+import { toApiUserSummary } from '../auth/user-summary-mapper';
 import {
   hasRequiredRefs,
   toApiDepopulatedClimb,
 } from '../climbs/climbs-mapper';
-import { toApiImage } from '../images/images-mapper';
+import { toApiDepopulatedImage } from '../images/images-mapper';
 
 function toApiDepopulatedSector(
   model: MergeType<ISector, { images: IImage[] }>
-): Omit<Sector, 'climbs'> & { climbs: string[] } {
+): Omit<WithDepopulatedOwnership<Sector>, 'climbs'> & { climbs: string[] } {
   return {
     /* Data */
     id: model._id.toString(),
@@ -25,12 +31,12 @@ function toApiDepopulatedSector(
     googleMapsId: model.googleMapsId,
 
     /* Ownership */
-    owner: model.owner.toString(),
-    collaborators: toApiCollaborators(model.collaborators),
+    owner: model.owner._id.toString(),
+    collaborators: model.collaborators.map(toApiDepopulatedCollaborator),
 
     /* References */
     climbs: model.climbs.map((climb) => climb._id.toString()),
-    images: model.images.map(toApiImage),
+    images: model.images.map(toApiDepopulatedImage),
 
     /* Timestamps */
     createdAt: model.createdAt.toISOString(),
@@ -39,7 +45,10 @@ function toApiDepopulatedSector(
 }
 
 function toApiSector(
-  model: MergeType<ISector, { climbs: IClimb[]; images: IImage[] }>
+  model: MergeType<
+    WithPopulatedOwnership<ISector>,
+    { climbs: IClimb[]; images: IImage[] }
+  >
 ): Sector {
   return {
     /* Data */
@@ -52,14 +61,14 @@ function toApiSector(
     googleMapsId: model.googleMapsId,
 
     /* Ownership */
-    owner: model.owner.toString(),
-    collaborators: toApiCollaborators(model.collaborators),
+    owner: toApiUserSummary(model.owner),
+    collaborators: model.collaborators.map(toApiCollaborator),
 
     /* References */
     climbs: model.climbs.flatMap((c) =>
       hasRequiredRefs(c) ? [toApiDepopulatedClimb(c)] : []
     ),
-    images: model.images.map(toApiImage),
+    images: model.images.map(toApiDepopulatedImage),
 
     /* Timestamps */
     createdAt: model.createdAt.toISOString(),

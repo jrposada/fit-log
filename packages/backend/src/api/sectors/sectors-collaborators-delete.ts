@@ -2,6 +2,10 @@ import { CollaboratorDeleteParams } from '@shared/models/auth/collaborator-delet
 import { SectorsCollaboratorsResponse } from '@shared/models/sector/sector-collaborators';
 import { assert } from '@shared/utils/assert';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
@@ -18,12 +22,9 @@ const handler = toApiResponse<
 
   const { id, userId } = request.params;
 
-  const sector = await removeCollaborator(
-    Sector,
-    id,
-    userId,
-    request.user
-  ).populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
+  const sector = await removeCollaborator(Sector, id, userId, request.user)
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
 
   if (!sector) {
     throw new ResourceNotFound(`Sector ${id} not found or not editable`);

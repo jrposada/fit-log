@@ -1,4 +1,7 @@
-import { WithOwnership } from '../auth/with-ownership';
+import {
+  WithDepopulatedOwnership,
+  WithOwnership,
+} from '../auth/with-ownership';
 import { Sector } from '../sector/sector';
 import { WithTimestamps } from '../utils/with-timestamps';
 
@@ -14,6 +17,8 @@ export type Location = WithOwnership<
     googleMapsId?: string;
 
     /* References */
-    sectors: (Omit<Sector, 'climbs'> & { climbs: string[] })[];
+    sectors: (Omit<WithDepopulatedOwnership<Sector>, 'climbs'> & {
+      climbs: string[];
+    })[];
   }>
 >;

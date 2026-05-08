@@ -5,6 +5,10 @@ import {
 import { assert } from '@shared/utils/assert';
 import mongoose, { ClientSession, Types } from 'mongoose';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
@@ -36,6 +40,7 @@ async function upsertSectorsBatch(
   }
 
   const savedSectors = await Sector.find({ _id: { $in: ids } })
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs'])
     .session(session);
 

@@ -3,6 +3,10 @@ import { LocationsCollaboratorsResponse } from '@shared/models/location/location
 import { assert } from '@shared/utils/assert';
 import { MergeType } from 'mongoose';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { IImage } from '../../models/image';
 import { Location } from '../../models/location';
@@ -19,15 +23,14 @@ const handler = toApiResponse<
 
   const { id, userId } = request.params;
 
-  const location = await removeCollaborator(
-    Location,
-    id,
-    userId,
-    request.user
-  ).populate<{ sectors: MergeType<ISector, { images: IImage[] }>[] }>({
-    path: 'sectors',
-    populate: ['images'],
-  });
+  const location = await removeCollaborator(Location, id, userId, request.user)
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{
+      sectors: MergeType<ISector, { images: IImage[] }>[];
+    }>({
+      path: 'sectors',
+      populate: ['images'],
+    });
 
   if (!location) {
     throw new ResourceNotFound(`Location ${id} not found or not editable`);

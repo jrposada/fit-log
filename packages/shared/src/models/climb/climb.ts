@@ -1,4 +1,7 @@
-import { WithOwnership } from '../auth/with-ownership';
+import {
+  WithDepopulatedOwnership,
+  WithOwnership,
+} from '../auth/with-ownership';
 import { Image } from '../image/image';
 import { Location } from '../location/location';
 import { Sector } from '../sector/sector';
@@ -49,9 +52,11 @@ export type Climb = WithOwnership<
     spline: SplinePoint[];
 
     /* References */
-    image: Image;
-    location: Omit<Location, 'sectors'> & { sectors: string[] };
-    sector: Omit<Sector, 'climbs'> & {
+    image: WithDepopulatedOwnership<Image>;
+    location: Omit<WithDepopulatedOwnership<Location>, 'sectors'> & {
+      sectors: string[];
+    };
+    sector: Omit<WithDepopulatedOwnership<Sector>, 'climbs'> & {
       climbs: string[];
     };
   }>

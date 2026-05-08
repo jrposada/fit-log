@@ -5,6 +5,10 @@ import {
 import { SectorsCollaboratorsResponse } from '@shared/models/sector/sector-collaborators';
 import { assert } from '@shared/utils/assert';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
@@ -30,7 +34,9 @@ const handler = toApiResponse<
     userId,
     permission,
     request.user
-  ).populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
+  )
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
 
   if (!sector) {
     throw new ResourceNotFound(`Sector ${id} not found or not editable`);

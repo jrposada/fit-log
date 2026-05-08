@@ -3,6 +3,10 @@ import { ClimbsCollaboratorsResponse } from '@shared/models/climb/climb-collabor
 import { assert } from '@shared/utils/assert';
 import { MergeType } from 'mongoose';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Climb } from '../../models/climb';
 import { IImage } from '../../models/image';
@@ -21,6 +25,7 @@ const handler = toApiResponse<
   const { id, userId } = request.params;
 
   const climb = await removeCollaborator(Climb, id, userId, request.user)
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{ image: IImage; location: ILocation }>(['image', 'location'])
     .populate<{ sector: MergeType<ISector, { images: IImage[] }> }>({
       path: 'sector',

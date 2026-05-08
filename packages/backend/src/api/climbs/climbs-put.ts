@@ -5,6 +5,10 @@ import {
 import { assert } from '@shared/utils/assert';
 import { MergeType, Types } from 'mongoose';
 
+import {
+  OWNERSHIP_POPULATE,
+  PopulatedOwnership,
+} from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Climb } from '../../models/climb';
 import { IImage } from '../../models/image';
@@ -42,6 +46,7 @@ const handler = toApiResponse<
       location: new Types.ObjectId(climbPutData.location),
     }
   )
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
       image: IImage;
       location: ILocation;
