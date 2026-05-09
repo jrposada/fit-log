@@ -3,7 +3,7 @@ import {
   ClimbHistoriesGetQuery,
   ClimbHistoriesGetResponse,
 } from '@shared/models/climb-history/climb-history-get';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useMemo } from 'react';
 
@@ -37,6 +37,7 @@ function useClimbHistories({
       { limit, climbId, locationId, sectorId, status, startDate, endDate },
     ],
     initialPageParam: undefined,
+    placeholderData: keepPreviousData,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     queryFn: ({ pageParam }) =>
       query<ClimbHistoriesGetResponse>({

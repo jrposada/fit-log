@@ -3,7 +3,7 @@ import {
   ClimbsSearchQuery,
   ClimbsSearchResponse,
 } from '@shared/models/climb/climb-search';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 import { useAuth } from '../../contexts/auth/use-auth';
@@ -21,6 +21,7 @@ function useClimbsSearch({
 
   return useQuery({
     queryKey: ['climbs', 'search', { grade, limit, locationId, search }],
+    placeholderData: keepPreviousData,
     queryFn: query({
       defaultResponse: [],
       refreshToken,
