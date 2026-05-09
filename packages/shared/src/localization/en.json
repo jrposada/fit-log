@@ -91,7 +91,6 @@
   "climbing.climbs_count": "{{count}} climbs",
   "climbing.create_location_title": "Create Location",
   "climbing.update_location_title": "Update Location",
-  "climbing.current_location": "Current Location",
   "climbing.enter_location_name": "Enter location name",
   "climbing.favorite_climbs_description": "Your saved climbing climbs",
   "climbing.favorite_climbs": "Favorite climbs",
