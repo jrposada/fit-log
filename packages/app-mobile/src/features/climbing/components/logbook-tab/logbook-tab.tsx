@@ -16,23 +16,24 @@ import { useSwipeHint } from '../../hooks/use-swipe-hint';
 import ClimbCard from '../common/climb-card';
 import LocationSelector from '../common/location-selector';
 
-type StatusFilter = 'in-progress' | 'completed' | 'all';
+type StatusFilter = 'projects' | 'in-progress' | 'completed' | 'all';
 
 const STATUS_FILTERS: Record<
   StatusFilter,
   ClimbHistoriesGetQueryStatus[] | undefined
 > = {
+  projects: ['project'],
   'in-progress': ['attempt', 'project'],
   completed: ['send', 'flash'],
   all: undefined,
 };
 
-interface QuickLogTabProps {
+interface LogbookTabProps {
   locationId: string | undefined;
   onLocationChange: (locationId: string) => void;
 }
 
-const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
+const LogbookTab: FunctionComponent<LogbookTabProps> = ({
   locationId,
   onLocationChange,
 }) => {
@@ -57,9 +58,10 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
   const { shouldPeek, markShown } = useSwipeHint();
 
   const filterItems: TabBarItem<StatusFilter>[] = [
-    { id: 'in-progress', label: t('climbing.quick_log_filter_in_progress') },
-    { id: 'completed', label: t('climbing.quick_log_filter_completed') },
-    { id: 'all', label: t('climbing.quick_log_filter_all') },
+    { id: 'projects', label: t('climbing.logbook_filter_projects') },
+    { id: 'in-progress', label: t('climbing.logbook_filter_in_progress') },
+    { id: 'completed', label: t('climbing.logbook_filter_completed') },
+    { id: 'all', label: t('climbing.logbook_filter_all') },
   ];
 
   return (
@@ -78,7 +80,7 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
 
       <LoadingState isLoading={showInitialLoader}>
         {climbHistories.length === 0 ? (
-          <EmptyState message={t('climbing.quick_log_empty')} />
+          <EmptyState message={t('climbing.logbook_empty')} />
         ) : (
           <>
             {climbHistories.map((climbHistory, index) => (
@@ -112,4 +114,4 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
   );
 };
 
-export default QuickLogTab;
+export default LogbookTab;

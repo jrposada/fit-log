@@ -8,7 +8,7 @@ import EmptyState from '../../../library/empty-state';
 import Screen from '../../../library/screen';
 import Tabs, { TabBarItem, TabContentItem } from '../../../library/tabs';
 import BrowseTab from '../components/browse-tab/browse-tab';
-import QuickLogTab from '../components/quick-log-tab/quick-log-tab';
+import LogbookTab from '../components/logbook-tab/logbook-tab';
 import { ClimbingParamList } from '../types';
 
 type ClimbingNavigationProp = NativeStackNavigationProp<
@@ -16,31 +16,26 @@ type ClimbingNavigationProp = NativeStackNavigationProp<
   'ClimbingMain'
 >;
 
-type Tab = 'quick-log' | 'browse' | 'projects' | 'stats';
+type Tab = 'logbook' | 'browse' | 'stats';
 
 const ClimbingScreen: FunctionComponent = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<ClimbingNavigationProp>();
-  const [activeTab, setActiveTab] = useState<Tab>('quick-log');
+  const [activeTab, setActiveTab] = useState<Tab>('logbook');
   const [locationId, setLocationId] = useState<string>();
 
   const items: (TabBarItem<Tab> & TabContentItem<Tab>)[] = [
     {
-      id: 'quick-log',
-      label: t('climbing.quick_log'),
+      id: 'logbook',
+      label: t('climbing.logbook'),
       content: (
-        <QuickLogTab locationId={locationId} onLocationChange={setLocationId} />
+        <LogbookTab locationId={locationId} onLocationChange={setLocationId} />
       ),
     },
     {
       id: 'browse',
       label: t('climbing.browse'),
       content: <BrowseTab />,
-    },
-    {
-      id: 'projects',
-      label: t('climbing.projects'),
-      content: <EmptyState message={t('climbing.projects_content')} />,
     },
     {
       id: 'stats',
@@ -52,7 +47,7 @@ const ClimbingScreen: FunctionComponent = () => {
   return (
     <Screen
       footer={
-        activeTab === 'quick-log' &&
+        activeTab === 'logbook' &&
         locationId && (
           <Button
             title={`+ ${t('climbing.log_custom_climb')}`}
