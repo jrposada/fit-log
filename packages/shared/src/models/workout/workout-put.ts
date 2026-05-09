@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { Workout } from './workout';
+import { INTENSITY_UNITS, Workout } from './workout';
 
 const exerciseSchema = z.object({
   name: z.string().nonempty(),
@@ -11,11 +11,7 @@ const exerciseSchema = z.object({
   reps: z.number(),
   restBetweenReps: z.number(),
   intensity: z.number(),
-  intensityUnit: z.union([
-    z.literal('time'),
-    z.literal('weight'),
-    z.literal('body-weight'),
-  ]),
+  intensityUnit: z.enum(INTENSITY_UNITS),
 });
 
 export type WorkoutsPutRequest = Omit<Workout, 'id' | 'isFavorite'> & {

@@ -1,4 +1,4 @@
-import { HoldType } from '@shared/models/climb/climb';
+import { HOLD_TYPES, HoldType } from '@shared/models/climb/climb';
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
 import { ownershipFields, WithOwnership } from './_collaborator';
@@ -45,7 +45,7 @@ const holdSchema = new Schema<IHold>(
     },
     type: {
       type: String,
-      enum: ['normal', 'start', 'end', 'feet-only'],
+      enum: [...HOLD_TYPES],
       required: true,
     },
   },

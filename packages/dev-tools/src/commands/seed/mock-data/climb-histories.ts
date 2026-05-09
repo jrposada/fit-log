@@ -2,12 +2,12 @@ import { faker } from '@faker-js/faker';
 import {
   ClimbHistoryStatus,
   IClimbHistoryTry,
-  STATUS_LIST,
   STATUS_PRIORITY,
 } from '@backend/models/climb-history';
+import { CLIMB_HISTORY_STATUSES } from '@shared/models/climb-history/climb-history';
 
 function fakeTry(): IClimbHistoryTry {
-  const status = faker.helpers.arrayElement(STATUS_LIST);
+  const status = faker.helpers.arrayElement(CLIMB_HISTORY_STATUSES);
 
   const attempts =
     status === 'flash' ? undefined : faker.number.int({ min: 1, max: 10 });

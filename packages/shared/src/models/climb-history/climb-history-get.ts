@@ -1,6 +1,10 @@
 import z from 'zod';
 
-import { ClimbHistory, ClimbHistoryStatus } from './climb-history';
+import {
+  CLIMB_HISTORY_QUERY_STATUSES,
+  ClimbHistory,
+  ClimbHistoryStatus,
+} from './climb-history';
 
 export type ClimbHistoriesGetQueryStatus = ClimbHistoryStatus | 'project';
 
@@ -23,8 +27,8 @@ export const climbHistoriesGetQuerySchema = z.object({
   sectorId: z.string().optional(),
   status: z
     .union([
-      z.enum(['send', 'flash', 'attempt', 'project']),
-      z.array(z.enum(['send', 'flash', 'attempt', 'project'])),
+      z.enum(CLIMB_HISTORY_QUERY_STATUSES),
+      z.array(z.enum(CLIMB_HISTORY_QUERY_STATUSES)),
     ])
     .transform((val) => (Array.isArray(val) ? val : [val]))
     .optional(),

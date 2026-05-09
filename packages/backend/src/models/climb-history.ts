@@ -1,14 +1,16 @@
+import {
+  CLIMB_HISTORY_STATUSES,
+  ClimbHistoryStatus,
+} from '@shared/models/climb-history/climb-history';
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
-export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt';
+export type { ClimbHistoryStatus };
 
 export const STATUS_PRIORITY: Record<ClimbHistoryStatus, number> = {
   flash: 3,
   send: 2,
   attempt: 1,
 };
-
-export const STATUS_LIST = Object.keys(STATUS_PRIORITY) as ClimbHistoryStatus[];
 
 export interface IClimbHistoryTry {
   status: ClimbHistoryStatus;
@@ -48,7 +50,7 @@ const climbHistoryTrySchema = new Schema<IClimbHistoryTry>(
   {
     status: {
       type: String,
-      enum: STATUS_LIST,
+      enum: [...CLIMB_HISTORY_STATUSES],
       required: true,
     },
     attempts: {
@@ -74,7 +76,7 @@ const climbHistorySchema = new Schema<IClimbHistory>(
     /* Data */
     status: {
       type: String,
-      enum: STATUS_LIST,
+      enum: [...CLIMB_HISTORY_STATUSES],
       required: true,
     },
     isProject: {

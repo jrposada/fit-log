@@ -1,3 +1,5 @@
+export const INTENSITY_UNITS = ['time', 'weight', 'body-weight'] as const;
+
 export type Exercise = {
   name: string;
   description: string;
@@ -21,7 +23,7 @@ export type Exercise = {
    *
    * Use `time` for duration (in seconds), `weight` for load (in kilograms) or `body-weight` for load (in % of body weight).
    */
-  intensityUnit: 'time' | 'weight' | 'body-weight';
+  intensityUnit: typeof INTENSITY_UNITS[number];
 };
 
 export type Workout = {

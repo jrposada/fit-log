@@ -4,7 +4,13 @@ import { Location } from '../location/location';
 import { Sector } from '../sector/sector';
 import { WithTimestamps } from '../utils/with-timestamps';
 
-export type ClimbHistoryStatus = 'send' | 'flash' | 'attempt';
+export const CLIMB_HISTORY_STATUSES = ['send', 'flash', 'attempt'] as const;
+export type ClimbHistoryStatus = typeof CLIMB_HISTORY_STATUSES[number];
+
+export const CLIMB_HISTORY_QUERY_STATUSES = [
+  ...CLIMB_HISTORY_STATUSES,
+  'project',
+] as const;
 
 export type ClimbHistoryTry = {
   id: string;

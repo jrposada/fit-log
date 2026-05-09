@@ -1,28 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { IClimb } from '@backend/models/climb';
-
-const grades = [
-  'V0',
-  'V1',
-  'V2',
-  'V3',
-  'V4',
-  'V5',
-  'V6',
-  'V7',
-  'V8',
-  'V9',
-  'V10',
-  'V11',
-  'V12',
-  'V13',
-  'V14',
-  'V15',
-  'V16',
-  'V17',
-];
-
-const HOLD_TYPES = ['normal', 'start', 'end', 'feet-only'] as const;
+import { GRADE_OPTIONS, HOLD_TYPES } from '@shared/models/climb/climb';
 
 function fakeHold() {
   return {
@@ -57,7 +35,7 @@ export function fakeClimb(): Partial<
 
   return {
     name: faker.word.words({ count: { min: 1, max: 3 } }),
-    grade: faker.helpers.arrayElement(grades),
+    grade: faker.helpers.arrayElement(GRADE_OPTIONS),
     description: faker.lorem.paragraph(),
     holds,
     spline,

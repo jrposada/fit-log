@@ -1,9 +1,10 @@
+import { INTENSITY_UNITS } from '@shared/models/workout/workout';
 import { Document, model, Schema, WithTimestamps } from 'mongoose';
 
 export interface IExercise {
   description: string;
   intensity: number;
-  intensityUnit: 'time' | 'weight' | 'body-weight';
+  intensityUnit: typeof INTENSITY_UNITS[number];
   name: string;
   reps: number;
   restBetweenReps: number;
@@ -23,7 +24,7 @@ const exerciseSchema = new Schema<IExercise>(
     },
     intensityUnit: {
       type: String,
-      enum: ['time', 'weight', 'body-weight'],
+      enum: [...INTENSITY_UNITS],
       required: true,
     },
     name: {

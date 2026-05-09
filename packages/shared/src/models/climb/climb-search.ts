@@ -1,6 +1,9 @@
 import z from 'zod';
 
-import { ClimbHistoryStatus } from '../climb-history/climb-history';
+import {
+  CLIMB_HISTORY_QUERY_STATUSES,
+  ClimbHistoryStatus,
+} from '../climb-history/climb-history';
 import { Climb, ClimbGrade } from './climb';
 
 export type ClimbsSearchQuery = {
@@ -21,7 +24,7 @@ export const climbsSearchQuerySchema = z.object({
   limit: z.coerce.number().int().positive().optional(),
   locationId: z.string().optional(),
   search: z.string().optional(),
-  status: z.enum(['send', 'flash', 'attempt', 'project']).optional(),
+  status: z.enum(CLIMB_HISTORY_QUERY_STATUSES).optional(),
 });
 
 export type ClimbSearchResult = Climb & {

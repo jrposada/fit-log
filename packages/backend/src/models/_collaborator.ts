@@ -1,11 +1,11 @@
+import {
+  COLLABORATOR_PERMISSIONS,
+  CollaboratorPermission,
+} from '@shared/models/auth/with-ownership';
 import { Schema, SchemaDefinition, Types } from 'mongoose';
 
-export type CollaboratorPermission = 'edit' | 'delete';
-
-export const COLLABORATOR_PERMISSIONS: CollaboratorPermission[] = [
-  'edit',
-  'delete',
-];
+export type { CollaboratorPermission };
+export { COLLABORATOR_PERMISSIONS };
 
 export interface ICollaborator {
   user: Types.ObjectId;
@@ -21,7 +21,7 @@ export const collaboratorSchema = new Schema<ICollaborator>(
     },
     permission: {
       type: String,
-      enum: COLLABORATOR_PERMISSIONS,
+      enum: [...COLLABORATOR_PERMISSIONS],
       required: true,
     },
   },

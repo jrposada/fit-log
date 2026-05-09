@@ -1,6 +1,7 @@
 import {
   DEFAULT_HOLD_RADIUS,
   Hold,
+  HOLD_TYPES,
   HoldType,
   SplinePoint,
 } from '@shared/models/climb/climb';
@@ -42,7 +43,6 @@ interface ClimbImageProps {
 const SPLINE_POINT_HIT_RADIUS = 0.05;
 const SPLINE_CURVE_HIT_RADIUS = 0.04;
 
-const HOLD_TYPES: HoldType[] = ['normal', 'start', 'end', 'feet-only'];
 
 const HoldTypePicker: FunctionComponent<{
   currentType: HoldType;

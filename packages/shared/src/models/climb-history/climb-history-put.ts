@@ -1,9 +1,11 @@
 import z from 'zod';
 
+import { CLIMB_HISTORY_STATUSES, ClimbHistoryStatus } from './climb-history';
+
 export type ClimbHistoriesPutRequest = {
   tryId?: string;
 
-  status: 'send' | 'flash' | 'attempt';
+  status: ClimbHistoryStatus;
   attempts?: number;
   notes?: string;
   date?: string;
@@ -15,7 +17,7 @@ export type ClimbHistoriesPutRequest = {
 
 export const climbHistoriesPutRequestSchema = z.object({
   tryId: z.string().optional(),
-  status: z.enum(['send', 'flash', 'attempt']),
+  status: z.enum(CLIMB_HISTORY_STATUSES),
   attempts: z.number().int().positive().optional(),
   notes: z.string().optional(),
   date: z.string().datetime().optional(),

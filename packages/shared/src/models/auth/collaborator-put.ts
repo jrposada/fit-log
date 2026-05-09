@@ -1,5 +1,7 @@
 import z from 'zod';
 
+import { COLLABORATOR_PERMISSIONS } from './with-ownership';
+
 export type CollaboratorPutParams = {
   id: string;
   userId: string;
@@ -10,8 +12,8 @@ export const collaboratorPutParamsSchema = z.object({
 });
 
 export type CollaboratorPutRequest = {
-  permission: 'edit' | 'delete';
+  permission: typeof COLLABORATOR_PERMISSIONS[number];
 };
 export const collaboratorPutRequestSchema = z.object({
-  permission: z.enum(['edit', 'delete']),
+  permission: z.enum(COLLABORATOR_PERMISSIONS),
 });
