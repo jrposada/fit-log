@@ -21,6 +21,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
+import { surfaces } from '../theme';
 import {
   ACTION_WIDTH,
   highlightWidths,
@@ -153,6 +154,7 @@ const Card: FunctionComponent<PropsWithChildren<CardProps>> = ({
     styles.base,
     sizeStyles[size],
     !hasSwipe && styles[variant],
+    hasSwipe && { backgroundColor: 'transparent' },
     direction === 'horizontal' && styles.horizontal,
     highlight !== undefined && {
       borderLeftColor: highlight,
@@ -222,9 +224,20 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
     [swipeDrag]
   );
 
-  const swipeContentStyle = useAnimatedStyle(() => ({
-    opacity: swipeDrag.value !== 0 ? 0.7 : 1,
-  }));
+  const leftBaseColor = leftAction ? leftAction.baseColor : surfaces.base;
+  const rightBaseColor = rightAction ? rightAction.baseColor : surfaces.base;
+
+  const swipeContentStyle = useAnimatedStyle(() => {
+    const drag = swipeDrag.value;
+    const actionColor = drag >= 0 ? leftBaseColor : rightBaseColor;
+    return {
+      backgroundColor: interpolateColor(
+        Math.abs(drag),
+        [0, LONG_SWIPE_THRESHOLD],
+        [surfaces.base, actionColor]
+      ),
+    };
+  });
 
   useEffect(() => {
     if (shouldPeek) {
