@@ -7,6 +7,7 @@ import { ActivityIndicator, View } from 'react-native';
 import Button from '../../../../library/button';
 import EmptyState from '../../../../library/empty-state';
 import LoadingState from '../../../../library/loading-state';
+import RefetchBar from '../../../../library/refetch-bar';
 import Section from '../../../../library/section';
 import Separator from '../../../../library/separator';
 import Tabs, { TabBarItem } from '../../../../library/tabs';
@@ -41,6 +42,7 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
   const {
     items: climbHistories,
     isLoading,
+    isFetching,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
@@ -48,6 +50,9 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
     locationId: locationId || undefined,
     status: STATUS_FILTERS[statusFilter],
   });
+
+  const showInitialLoader = isLoading && climbHistories.length === 0;
+  const showRefetchIndicator = isFetching && !isLoading && !isFetchingNextPage;
 
   const { shouldPeek, markShown } = useSwipeHint();
 
@@ -58,21 +63,20 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
   ];
 
   return (
-    <LoadingState isLoading={isLoading}>
-      <Section gap="md">
-        <LocationSelector
-          value={locationId || ''}
-          onChange={onLocationChange}
-        />
+    <Section gap="md">
+      <LocationSelector value={locationId || ''} onChange={onLocationChange} />
 
-        <Separator />
+      <Separator />
 
-        <Tabs.Bar<StatusFilter>
-          items={filterItems}
-          activeId={statusFilter}
-          onChange={setStatusFilter}
-        />
+      <Tabs.Bar<StatusFilter>
+        items={filterItems}
+        activeId={statusFilter}
+        onChange={setStatusFilter}
+      />
 
+      <RefetchBar active={showRefetchIndicator} />
+
+      <LoadingState isLoading={showInitialLoader}>
         {climbHistories.length === 0 ? (
           <EmptyState message={t('climbing.quick_log_empty')} />
         ) : (
@@ -103,8 +107,8 @@ const QuickLogTab: FunctionComponent<QuickLogTabProps> = ({
             )}
           </>
         )}
-      </Section>
-    </LoadingState>
+      </LoadingState>
+    </Section>
   );
 };
 

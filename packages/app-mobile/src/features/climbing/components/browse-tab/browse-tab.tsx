@@ -15,6 +15,7 @@ import CollapsibleSection from '../../../../library/collapsible-section';
 import EmptyState from '../../../../library/empty-state';
 import FormTextInput from '../../../../library/form/form-text-input';
 import LoadingState from '../../../../library/loading-state';
+import RefetchBar from '../../../../library/refetch-bar';
 import Section from '../../../../library/section';
 import Separator from '../../../../library/separator';
 import ClimbCard from '../common/climb-card';
@@ -45,11 +46,18 @@ const BrowseTab: FunctionComponent = () => {
 
   const debouncedSearch = useDebounce(search || '', 300);
 
-  const { data: climbs = [], isLoading } = useClimbsSearch({
+  const {
+    data: climbs = [],
+    isLoading,
+    isFetching,
+  } = useClimbsSearch({
     locationId: locationId || undefined,
     grade: grade && grade.length > 0 ? (grade as ClimbGrade[]) : undefined,
     search: debouncedSearch.trim() || undefined,
   });
+
+  const showInitialLoader = isLoading && climbs.length === 0;
+  const showRefetchIndicator = isFetching && !isLoading;
 
   const climbsBySector = useMemo(() => {
     const grouped = new Map<
@@ -83,31 +91,30 @@ const BrowseTab: FunctionComponent = () => {
   };
 
   return (
-    <LoadingState isLoading={isLoading}>
-      <FormProvider {...methods}>
-        <Section gap="md">
-          <FormTextInput
-            name="search"
-            placeholder={t('climbing.browse_search_placeholder')}
-          />
+    <FormProvider {...methods}>
+      <Section gap="md">
+        <FormTextInput
+          name="search"
+          placeholder={t('climbing.browse_search_placeholder')}
+        />
 
-          <Separator />
+        <Separator />
 
-          <Controller
-            control={methods.control}
-            name="locationId"
-            render={({ field }) => (
-              <LocationSelector
-                onChange={field.onChange}
-                value={field.value!}
-              />
-            )}
-          />
+        <Controller
+          control={methods.control}
+          name="locationId"
+          render={({ field }) => (
+            <LocationSelector onChange={field.onChange} value={field.value!} />
+          )}
+        />
 
-          <FormGradeChips name="grade" />
+        <FormGradeChips name="grade" />
 
-          <Separator />
+        <Separator />
 
+        <RefetchBar active={showRefetchIndicator} />
+
+        <LoadingState isLoading={showInitialLoader}>
           {climbsBySector.size === 0 ? (
             <EmptyState message={t('climbing.browse_no_climbs')} />
           ) : (
@@ -150,9 +157,9 @@ const BrowseTab: FunctionComponent = () => {
               }
             )
           )}
-        </Section>
-      </FormProvider>
-    </LoadingState>
+        </LoadingState>
+      </Section>
+    </FormProvider>
   );
 };
 
