@@ -156,11 +156,11 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
       >
         <Stack direction="horizontal" align="center" gap="sm">
           <Typography size="callout" color="secondary">
-            {sector.name}
+            {location.name}
           </Typography>
           <Separator direction="dot" />
           <Typography size="callout" color="secondary">
-            {location.name}
+            {sector.name}
           </Typography>
         </Stack>
         {loading && <ActivityIndicator size="small" />}
