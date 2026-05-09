@@ -1,6 +1,7 @@
 import {
   DEFAULT_HOLD_RADIUS,
   Hold,
+  HoldType,
   SplinePoint,
 } from '@shared/models/climb/climb';
 import { FunctionComponent, useCallback, useState } from 'react';
@@ -32,6 +33,7 @@ interface ClimbImageProps {
   editable: boolean;
   onHoldAdd: (hold: Hold) => void;
   onHoldRemove: (index: number) => void;
+  onHoldTypeChange: (index: number, type: HoldType) => void;
   onSplinePointAdd: (point: SplinePoint) => void;
   onSplinePointInsert: (afterIndex: number, point: SplinePoint) => void;
   onSplinePointRemove: (index: number) => void;
@@ -39,6 +41,33 @@ interface ClimbImageProps {
 
 const SPLINE_POINT_HIT_RADIUS = 0.05;
 const SPLINE_CURVE_HIT_RADIUS = 0.04;
+
+const HOLD_TYPES: HoldType[] = ['normal', 'start', 'end', 'feet-only'];
+
+const HoldTypePicker: FunctionComponent<{
+  currentType: HoldType;
+  onSelect: (type: HoldType) => void;
+  t: (key: string) => string;
+}> = ({ currentType, onSelect, t }) => (
+  <Stack
+    direction="horizontal"
+    gap="sm"
+    align="center"
+    justify="center"
+    paddingHorizontal="xl"
+    paddingVertical="sm"
+  >
+    {HOLD_TYPES.map((type) => (
+      <Button
+        key={type}
+        variant={currentType === type ? 'primary' : 'outline'}
+        title={t(`climbing.hold_type_${type.replace('-', '_')}`)}
+        size="sm"
+        onPress={() => onSelect(type)}
+      />
+    ))}
+  </Stack>
+);
 
 const ClimbImageToolbar: FunctionComponent<{
   editSubMode: EditMode;
@@ -93,6 +122,7 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
   editable = false,
   onHoldAdd,
   onHoldRemove,
+  onHoldTypeChange,
   onSplinePointAdd,
   onSplinePointInsert,
   onSplinePointRemove,
@@ -153,7 +183,7 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
       if (selection) {
         onSelectionChange(null);
       } else {
-        onHoldAdd?.({ ...point, radius: DEFAULT_HOLD_RADIUS });
+        onHoldAdd?.({ ...point, radius: DEFAULT_HOLD_RADIUS, type: 'normal' });
       }
     },
     [
@@ -189,6 +219,13 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
             onDelete={handleDeleteSelected}
             t={t}
           />
+          {selection?.type === 'hold' && (
+            <HoldTypePicker
+              currentType={holds[selection.index]?.type ?? 'normal'}
+              onSelect={(type) => onHoldTypeChange(selection.index, type)}
+              t={t}
+            />
+          )}
         </Animated.View>
       )}
       <InteractiveImage

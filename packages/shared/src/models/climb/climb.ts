@@ -30,10 +30,13 @@ export type ClimbGrade =
 
 export const DEFAULT_HOLD_RADIUS = 0.03;
 
+export type HoldType = 'normal' | 'start' | 'end' | 'feet-only';
+
 export type Hold = {
   x: number;
   y: number;
   radius: number; // normalized 0-1 (fraction of image width)
+  type: HoldType;
 };
 
 export type SplinePoint = {

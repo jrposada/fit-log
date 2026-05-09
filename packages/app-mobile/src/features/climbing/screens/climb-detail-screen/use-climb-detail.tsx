@@ -3,7 +3,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { canDelete, canEdit } from '@shared/models/auth/with-ownership';
-import { Hold, SplinePoint } from '@shared/models/climb/climb';
+import { Hold, HoldType, SplinePoint } from '@shared/models/climb/climb';
 import { climbsPutRequestSchema } from '@shared/models/climb/climb-put';
 import { useClimbHistories } from '@shared-react/api/climb-histories/use-climb-histories';
 import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
@@ -223,6 +223,17 @@ const useClimbDetail = () => {
       );
     },
     [watchedSpline, setValue]
+  );
+
+  const handleHoldTypeChange = useCallback(
+    (index: number, type: HoldType) => {
+      setValue(
+        'holds',
+        watchedHolds.map((h, i) => (i === index ? { ...h, type } : h)),
+        { shouldDirty: true }
+      );
+    },
+    [watchedHolds, setValue]
   );
 
   const handleHoldResize = useCallback(
@@ -536,6 +547,7 @@ const useClimbDetail = () => {
     onSubmit,
     handleHoldAdd,
     handleHoldRemove,
+    handleHoldTypeChange,
     handleHoldResize,
     handleHoldMove,
     handleSplinePointAdd,

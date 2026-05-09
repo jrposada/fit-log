@@ -1,3 +1,4 @@
+import { HoldType } from '@shared/models/climb/climb';
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
 import { ownershipFields, WithOwnership } from './_collaborator';
@@ -6,6 +7,7 @@ export interface IHold {
   x: number;
   y: number;
   radius: number;
+  type: HoldType;
 }
 
 export interface ISplinePoint {
@@ -39,6 +41,11 @@ const holdSchema = new Schema<IHold>(
     },
     radius: {
       type: Number,
+      required: true,
+    },
+    type: {
+      type: String,
+      enum: ['normal', 'start', 'end', 'feet-only'],
       required: true,
     },
   },

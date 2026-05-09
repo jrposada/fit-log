@@ -22,11 +22,14 @@ const grades = [
   'V17',
 ];
 
+const HOLD_TYPES = ['normal', 'start', 'end', 'feet-only'] as const;
+
 function fakeHold() {
   return {
     x: faker.number.float({ min: 0, max: 1, fractionDigits: 3 }),
     y: faker.number.float({ min: 0, max: 1, fractionDigits: 3 }),
     radius: faker.number.float({ min: 0.01, max: 0.06, fractionDigits: 3 }),
+    type: faker.helpers.arrayElement(HOLD_TYPES),
   };
 }
 

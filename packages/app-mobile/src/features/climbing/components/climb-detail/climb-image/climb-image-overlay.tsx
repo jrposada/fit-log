@@ -1,15 +1,29 @@
-import { Hold, SplinePoint } from '@shared/models/climb/climb';
+import { Hold, HoldType, SplinePoint } from '@shared/models/climb/climb';
 import { FunctionComponent, useCallback, useState } from 'react';
 import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { accent, surfaces } from '../../../../../library/theme';
+import { accent, palette, semantic, surfaces } from '../../../../../library/theme';
 import { catmullRomToSvgPath } from './catmull-rom';
 import { EditMode } from './climb-image';
 
 const HOLD_BORDER = 2;
-const HOLD_FILL = 'rgba(255, 0, 0, 0.5)';
-const HOLD_FILL_EDITABLE = 'rgba(255, 0, 0, 0.7)';
+
+const HOLD_COLORS: Record<HoldType, string> = {
+  normal: palette.blue,
+  start: accent.primary,
+  end: semantic.destructive,
+  'feet-only': semantic.warning,
+};
+
+function getHoldFill(type: HoldType, editable: boolean): string {
+  const base = HOLD_COLORS[type];
+  const opacity = editable ? 0.7 : 0.5;
+  const r = parseInt(base.slice(1, 3), 16);
+  const g = parseInt(base.slice(3, 5), 16);
+  const b = parseInt(base.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
 
 const SELECTED_STROKE_WIDTH = 3;
 const SELECTED_RADIUS_BOOST = 2; // extra px for selected hold
@@ -113,7 +127,7 @@ const ClimbImageOverlay: FunctionComponent<ClimbImageOverlayProps> = ({
                 cx={p.x}
                 cy={p.y}
                 r={isSelected ? holdRadius + SELECTED_RADIUS_BOOST : holdRadius}
-                fill={editable ? HOLD_FILL_EDITABLE : HOLD_FILL}
+                fill={getHoldFill(hold.type, editable)}
                 stroke={isSelected ? accent.primary : surfaces.base}
                 strokeWidth={isSelected ? SELECTED_STROKE_WIDTH : HOLD_BORDER}
               />

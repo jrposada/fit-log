@@ -85,6 +85,7 @@ const ClimbDetailScreen: FunctionComponent = () => {
                 editable={detail.isEditMode}
                 onHoldAdd={detail.handleHoldAdd}
                 onHoldRemove={detail.handleHoldRemove}
+                onHoldTypeChange={detail.handleHoldTypeChange}
                 onSplinePointAdd={detail.handleSplinePointAdd}
                 onSplinePointInsert={detail.handleSplinePointInsert}
                 onSplinePointRemove={detail.handleSplinePointRemove}

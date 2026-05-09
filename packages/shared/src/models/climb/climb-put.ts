@@ -6,6 +6,7 @@ const holdSchema = z.object({
   x: z.number().min(0).max(1),
   y: z.number().min(0).max(1),
   radius: z.number().min(0.01).max(0.15),
+  type: z.enum(['normal', 'start', 'end', 'feet-only']),
 });
 
 const splinePointSchema = z.object({
