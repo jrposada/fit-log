@@ -50,6 +50,10 @@ export const styles = StyleSheet.create({
   },
   // Swipe styles
   swipeContainer: {
+    backgroundColor: surfaces.base,
+    borderRadius: radii.card,
+  },
+  swipeInner: {
     borderRadius: radii.card,
     overflow: 'hidden',
   },

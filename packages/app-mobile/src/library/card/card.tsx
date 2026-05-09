@@ -152,7 +152,7 @@ const Card: FunctionComponent<PropsWithChildren<CardProps>> = ({
   const cardStyle = [
     styles.base,
     sizeStyles[size],
-    styles[variant],
+    !hasSwipe && styles[variant],
     direction === 'horizontal' && styles.horizontal,
     highlight !== undefined && {
       borderLeftColor: highlight,
@@ -183,6 +183,7 @@ const Card: FunctionComponent<PropsWithChildren<CardProps>> = ({
 
   return (
     <SwipeWrapper
+      variant={variant}
       leftAction={leftAction}
       rightAction={rightAction}
       shouldPeek={shouldPeek}
@@ -194,6 +195,7 @@ const Card: FunctionComponent<PropsWithChildren<CardProps>> = ({
 };
 
 interface SwipeWrapperProps {
+  variant?: CardProps['variant'];
   leftAction?: SwipeAction | false;
   rightAction?: SwipeAction | false;
   shouldPeek?: boolean;
@@ -201,6 +203,7 @@ interface SwipeWrapperProps {
 }
 
 const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
+  variant = 'elevated',
   leftAction,
   rightAction,
   shouldPeek,
@@ -303,22 +306,24 @@ const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
     : undefined;
 
   return (
-    <View style={styles.swipeContainer}>
-      <ReanimatedSwipeable
-        ref={swipeableRef}
-        friction={1}
-        rightThreshold={40}
-        leftThreshold={40}
-        overshootRight={true}
-        overshootLeft={true}
-        onSwipeableWillOpen={handleSwipeableWillOpen}
-        onSwipeableOpen={handleSwipeableOpen}
-        renderRightActions={renderRightActions}
-        renderLeftActions={renderLeftActions}
-        containerStyle={styles.swipeableRow}
-      >
-        <Animated.View style={swipeContentStyle}>{children}</Animated.View>
-      </ReanimatedSwipeable>
+    <View style={[styles.swipeContainer, styles[variant]]}>
+      <View style={styles.swipeInner}>
+        <ReanimatedSwipeable
+          ref={swipeableRef}
+          friction={1}
+          rightThreshold={40}
+          leftThreshold={40}
+          overshootRight={true}
+          overshootLeft={true}
+          onSwipeableWillOpen={handleSwipeableWillOpen}
+          onSwipeableOpen={handleSwipeableOpen}
+          renderRightActions={renderRightActions}
+          renderLeftActions={renderLeftActions}
+          containerStyle={styles.swipeableRow}
+        >
+          <Animated.View style={swipeContentStyle}>{children}</Animated.View>
+        </ReanimatedSwipeable>
+      </View>
     </View>
   );
 };
