@@ -52,13 +52,13 @@ pnpm --filter <app-name> dev
 5. Initialize local database
 
 ```
-pnpm cli nuke
+pnpm cli setup data
 ```
 
 To clear all data from the database:
 
 ```
-pnpm cli nuke
+pnpm cli setup nuke --nuke
 ```
 
 ## Contributing
