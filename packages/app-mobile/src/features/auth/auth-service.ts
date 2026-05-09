@@ -138,12 +138,15 @@ export const authService = {
 
   async logout(idToken: string): Promise<void> {
     const discovery = getDiscoveryDocument();
-    const redirectUri = getRedirectUri();
 
-    await WebBrowser.openAuthSessionAsync(
-      `${discovery.endSessionEndpoint}?id_token_hint=${idToken}&post_logout_redirect_uri=${encodeURIComponent(redirectUri)}`,
-      redirectUri
-    );
+    await fetch(discovery.endSessionEndpoint!, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: KEYCLOAK_CLIENT_ID!,
+        id_token_hint: idToken,
+      }).toString(),
+    });
 
     await this.clearTokens();
   },
