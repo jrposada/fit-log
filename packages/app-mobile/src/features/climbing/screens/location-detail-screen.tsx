@@ -241,7 +241,10 @@ const LocationDetailScreen: FunctionComponent = () => {
         latitude: existingLocation.latitude,
         longitude: existingLocation.longitude,
         googleMapsId: existingLocation.googleMapsId,
-        sectors: existingLocation.sectors,
+        sectors: existingLocation.sectors.map((s) => ({
+          ...s,
+          models3d: s.models3d.map((m) => m.id),
+        })),
       });
       initializedRef.current = true;
     }
@@ -256,7 +259,10 @@ const LocationDetailScreen: FunctionComponent = () => {
         latitude: existingLocation.latitude,
         longitude: existingLocation.longitude,
         googleMapsId: existingLocation.googleMapsId,
-        sectors: existingLocation.sectors,
+        sectors: existingLocation.sectors.map((s) => ({
+          ...s,
+          models3d: s.models3d.map((m) => m.id),
+        })),
       });
     }
     setIsEditMode(true);
