@@ -26,12 +26,12 @@
     "lint": "run-p lint:*"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.0.0",
-    "@inquirer/prompts": "^8.3.2",
-    "commander": "^14.0.0",
+    "@faker-js/faker": "10.4.0",
+    "@inquirer/prompts": "8.4.2",
+    "commander": "14.0.3",
     "dotenv": "catalog:",
     "mongoose": "9.0.0",
-    "sharp": "^0.34.5",
+    "sharp": "0.34.5",
     "uuid": "catalog:"
   },
   "devDependencies": {
