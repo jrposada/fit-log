@@ -5,6 +5,7 @@ import { MergeType } from 'mongoose';
 import { WithPopulatedOwnership } from '../../auth/ownership-populate';
 import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
+import { IModel3D } from '../../models/model3d';
 import { ISector } from '../../models/sector';
 import {
   toApiCollaborator,
@@ -41,7 +42,9 @@ function toApiDepopulatedLocation(
 function toApiLocation(
   model: MergeType<
     WithPopulatedOwnership<ILocation>,
-    { sectors: MergeType<ISector, { images: IImage[] }>[] }
+    {
+      sectors: MergeType<ISector, { images: IImage[]; models3d: IModel3D[] }>[];
+    }
   >
 ): Location {
   return {

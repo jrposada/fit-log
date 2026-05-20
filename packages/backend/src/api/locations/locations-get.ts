@@ -11,6 +11,7 @@ import {
 } from '../../auth/ownership-populate';
 import { IImage } from '../../models/image';
 import { Location } from '../../models/location';
+import { IModel3D } from '../../models/model3d';
 import { ISector } from '../../models/sector';
 import { toApiResponse } from '../api-utils';
 import { toApiLocation } from './locations-mapper';
@@ -24,10 +25,13 @@ const handler = toApiResponse<LocationsGetResponse, unknown, LocationsGetQuery>(
     const query = Location.find()
       .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
       .populate<{
-        sectors: MergeType<ISector, { images: IImage[] }>[];
+        sectors: MergeType<
+          ISector,
+          { images: IImage[]; models3d: IModel3D[] }
+        >[];
       }>({
         path: 'sectors',
-        populate: ['images'],
+        populate: ['images', 'models3d'],
       });
 
     if (limit) {

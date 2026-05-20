@@ -12,6 +12,7 @@ import {
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
+import { IModel3D } from '../../models/model3d';
 import { Sector } from '../../models/sector';
 import { IUser } from '../../models/user';
 import {
@@ -41,7 +42,11 @@ async function upsertSectorsBatch(
 
   const savedSectors = await Sector.find({ _id: { $in: ids } })
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs'])
+    .populate<{ climbs: IClimb[]; images: IImage[]; models3d: IModel3D[] }>([
+      'images',
+      'models3d',
+      'climbs',
+    ])
     .session(session);
 
   // Preserve input order so the response aligns with the request batch.
@@ -78,6 +83,9 @@ const handler = toApiResponse<
         /* References */
         images: sectorPutData.images.map(
           (imageId: string) => new Types.ObjectId(imageId)
+        ),
+        models3d: sectorPutData.models3d.map(
+          (modelId: string) => new Types.ObjectId(modelId)
         ),
         climbs: sectorPutData.climbs.map(
           (climbId: string) => new Types.ObjectId(climbId)

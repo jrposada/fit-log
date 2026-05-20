@@ -5,6 +5,7 @@ import { MergeType } from 'mongoose';
 import { WithPopulatedOwnership } from '../../auth/ownership-populate';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
+import { IModel3D } from '../../models/model3d';
 import { ISector } from '../../models/sector';
 import {
   toApiCollaborator,
@@ -16,9 +17,10 @@ import {
   toApiDepopulatedClimb,
 } from '../climbs/climbs-mapper';
 import { toApiDepopulatedImage } from '../images/images-mapper';
+import { toApiDepopulatedModel3D } from '../models3d/models3d-mapper';
 
 function toApiDepopulatedSector(
-  model: MergeType<ISector, { images: IImage[] }>
+  model: MergeType<ISector, { images: IImage[]; models3d: IModel3D[] }>
 ): Omit<WithDepopulatedOwnership<Sector>, 'climbs'> & { climbs: string[] } {
   return {
     /* Data */
@@ -37,6 +39,7 @@ function toApiDepopulatedSector(
     /* References */
     climbs: model.climbs.map((climb) => climb._id.toString()),
     images: model.images.map(toApiDepopulatedImage),
+    models3d: model.models3d.map(toApiDepopulatedModel3D),
 
     /* Timestamps */
     createdAt: model.createdAt.toISOString(),
@@ -47,7 +50,7 @@ function toApiDepopulatedSector(
 function toApiSector(
   model: MergeType<
     WithPopulatedOwnership<ISector>,
-    { climbs: IClimb[]; images: IImage[] }
+    { climbs: IClimb[]; images: IImage[]; models3d: IModel3D[] }
   >
 ): Sector {
   return {
@@ -69,6 +72,7 @@ function toApiSector(
       hasRequiredRefs(c) ? [toApiDepopulatedClimb(c)] : []
     ),
     images: model.images.map(toApiDepopulatedImage),
+    models3d: model.models3d.map(toApiDepopulatedModel3D),
 
     /* Timestamps */
     createdAt: model.createdAt.toISOString(),

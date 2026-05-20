@@ -14,6 +14,7 @@ export interface ISector extends WithTimestamps<Document>, WithOwnership {
 
   /* References */
   images: Types.ObjectId[];
+  models3d: Types.ObjectId[];
   climbs: Types.ObjectId[];
 }
 const sectorSchema = new Schema<ISector>(
@@ -53,6 +54,12 @@ const sectorSchema = new Schema<ISector>(
     images: {
       type: [Schema.Types.ObjectId],
       ref: 'Image',
+      required: true,
+      default: [],
+    },
+    models3d: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Model3D',
       required: true,
       default: [],
     },
