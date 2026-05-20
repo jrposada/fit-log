@@ -12,6 +12,7 @@ import {
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
+import { IModel3D } from '../../models/model3d';
 import { Sector } from '../../models/sector';
 import { upsertOwnedDocument } from '../../utils/upsert-owned-document';
 import { toApiResponse } from '../api-utils';
@@ -44,13 +45,20 @@ const handler = toApiResponse<
       images: sectorPutData.images.map(
         (imageId) => new Types.ObjectId(imageId)
       ),
+      models3d: sectorPutData.models3d.map(
+        (modelId) => new Types.ObjectId(modelId)
+      ),
       climbs: sectorPutData.climbs.map(
         (climbId) => new Types.ObjectId(climbId)
       ),
     }
   )
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
+    .populate<{ climbs: IClimb[]; images: IImage[]; models3d: IModel3D[] }>([
+      'images',
+      'models3d',
+      'climbs',
+    ]);
 
   if (!sector) {
     throw new ResourceNotFound(

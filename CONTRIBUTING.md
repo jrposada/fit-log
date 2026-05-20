@@ -78,6 +78,57 @@ pnpm cli setup nuke --nuke
 
 5. Wait for your changes to be approved.
 
+## Adding a 3D model to a climb
+
+3D models are preprocessed from a Sketchfab download (OBJ + UDIM textures) into a single GLB file and served as static assets.
+
+### 1. Download the model from Sketchfab
+
+On the model page, click **Download** and choose the **Original** format. You will receive a ZIP containing `lowpoly.obj` and UDIM texture tiles named `texture_XXXX.jpg`.
+
+### 2. Run the preprocessing command
+
+```bash
+pnpm cli process-model \
+  --input <path-to-zip> \
+  --output packages/backend/.data/public/models/<model-name>.glb \
+  --tile-size 1024
+```
+
+This command:
+- Extracts the OBJ geometry from the ZIP.
+- Stitches the UDIM texture tiles into a single atlas using `sharp`.
+- Remaps UV coordinates so they map into the stitched atlas.
+- Converts OBJ + MTL → GLB via `obj2gltf`.
+
+`--tile-size` controls the per-tile resolution in the stitched atlas (default `1024`). Lower values produce smaller files; `512` is sufficient for most cases.
+
+### 3. Link the model to the climb
+
+Set `model3dUrl` to the relative path on the climb document in MongoDB:
+
+```
+models/<model-name>.glb
+```
+
+The backend resolves it to a full URL at query time using `PUBLIC_FILES_BASE_URL`.
+
+### 4. Verify
+
+Open the climb detail screen in the mobile app. A 3D viewer should appear below the climb image, with pinch-to-zoom and rotation via OrbitControls.
+
+### TODO: 3D hold and spline editing
+
+Interactive editing of holds and splines on the 3D model is not yet implemented. It requires:
+
+- **Schema migration** — `Hold` stores normalized 2D `{x, y}`. 3D holds need `{x, y, z}` in model space. All existing hold data and every read/write path must be migrated.
+- **Raycasting** — Tapping the model must cast a ray against the mesh to get the surface intersection point (Three.js `Raycaster`).
+- **Gesture conflict resolution** — OrbitControls and tap-to-place share the same touch surface. A mode toggle (orbit vs. edit) is needed, controlled from the React Native side via `postMessage` into the WebView.
+- **Bidirectional WebView ↔ React Native state** — Hold/spline placements happen inside the WebView; results must flow back out via `postMessage` into React Hook Form.
+- **3D spline editing** — Control-point handles for `THREE.CatmullRomCurve3` need to be draggable without conflicting with orbit.
+
+---
+
 ## Troubleshooting
 
 ## Components

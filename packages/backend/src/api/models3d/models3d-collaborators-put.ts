@@ -2,7 +2,7 @@ import {
   CollaboratorPutParams,
   CollaboratorPutRequest,
 } from '@shared/models/auth/collaborator-put';
-import { SectorsCollaboratorsResponse } from '@shared/models/sector/sector-collaborators';
+import { Models3dCollaboratorsResponse } from '@shared/models/model3d/model3d-collaborators';
 import { assert } from '@shared/utils/assert';
 
 import {
@@ -10,16 +10,13 @@ import {
   PopulatedOwnership,
 } from '../../auth/ownership-populate';
 import ResourceNotFound from '../../infrastructure/not-found-error';
-import { IClimb } from '../../models/climb';
-import { IImage } from '../../models/image';
-import { IModel3D } from '../../models/model3d';
-import { Sector } from '../../models/sector';
+import { Model3D } from '../../models/model3d';
 import { addOrUpdateCollaborator } from '../../utils/collaborator-mutators';
 import { toApiResponse } from '../api-utils';
-import { toApiSector } from './sectors-mapper';
+import { toApiModel3D } from './models3d-mapper';
 
 const handler = toApiResponse<
-  SectorsCollaboratorsResponse,
+  Models3dCollaboratorsResponse,
   CollaboratorPutParams,
   unknown,
   CollaboratorPutRequest
@@ -29,27 +26,21 @@ const handler = toApiResponse<
   const { id, userId } = request.params;
   const { permission } = request.body;
 
-  const sector = await addOrUpdateCollaborator(
-    Sector,
+  const model3d = await addOrUpdateCollaborator(
+    Model3D,
     id,
     userId,
     permission,
     request.user
-  )
-    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ climbs: IClimb[]; images: IImage[]; models3d: IModel3D[] }>([
-      'images',
-      'models3d',
-      'climbs',
-    ]);
+  ).populate<PopulatedOwnership>([...OWNERSHIP_POPULATE]);
 
-  if (!sector) {
-    throw new ResourceNotFound(`Sector ${id} not found or not editable`);
+  if (!model3d) {
+    throw new ResourceNotFound(`Model3D ${id} not found or not editable`);
   }
 
   return {
     statusCode: 200,
-    body: { success: true, data: { sector: toApiSector(sector) } },
+    body: { success: true, data: { model3d: toApiModel3D(model3d) } },
   };
 });
 

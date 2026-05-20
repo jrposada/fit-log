@@ -11,6 +11,7 @@ import { FormReadonlyProvider } from '../../../../library/form/form-readonly-con
 import FormTextArea from '../../../../library/form/form-text-area';
 import FormTextInput from '../../../../library/form/form-text-input';
 import LoadingState from '../../../../library/loading-state';
+import { ModelViewer3D } from '../../../../library/model-viewer-3d/model-viewer-3d';
 import Screen from '../../../../library/screen';
 import Section from '../../../../library/section';
 import Select from '../../../../library/select';
@@ -104,6 +105,13 @@ const ClimbDetailScreen: FunctionComponent = () => {
                 disabled={detail.isImageUploading}
               />
             </Section>
+          )}
+
+          {detail.climb?.model3d?.modelUrl && (
+            <ModelViewer3D
+              modelUrl={detail.climb.model3d.modelUrl}
+              style={{ height: 300 }}
+            />
           )}
 
           <Stack padding="lg" gap="lg">

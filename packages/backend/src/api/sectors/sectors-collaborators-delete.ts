@@ -9,6 +9,7 @@ import {
 import ResourceNotFound from '../../infrastructure/not-found-error';
 import { IClimb } from '../../models/climb';
 import { IImage } from '../../models/image';
+import { IModel3D } from '../../models/model3d';
 import { Sector } from '../../models/sector';
 import { removeCollaborator } from '../../utils/collaborator-mutators';
 import { toApiResponse } from '../api-utils';
@@ -24,7 +25,11 @@ const handler = toApiResponse<
 
   const sector = await removeCollaborator(Sector, id, userId, request.user)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
+    .populate<{ climbs: IClimb[]; images: IImage[]; models3d: IModel3D[] }>([
+      'images',
+      'models3d',
+      'climbs',
+    ]);
 
   if (!sector) {
     throw new ResourceNotFound(`Sector ${id} not found or not editable`);

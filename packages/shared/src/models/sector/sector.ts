@@ -4,6 +4,7 @@ import {
 } from '../auth/with-ownership';
 import { Climb } from '../climb/climb';
 import { Image } from '../image/image';
+import { Model3D } from '../model3d/model3d';
 import { WithTimestamps } from '../utils/with-timestamps';
 
 export type Sector = WithOwnership<
@@ -20,12 +21,14 @@ export type Sector = WithOwnership<
 
     /* References */
     images: WithDepopulatedOwnership<Image>[];
+    models3d: WithDepopulatedOwnership<Model3D>[];
     climbs: (Omit<
       WithDepopulatedOwnership<Climb>,
-      'image' | 'location' | 'sector'
+      'image' | 'location' | 'model3d' | 'sector'
     > & {
       image: string;
       location: string;
+      model3d?: string;
       sector: string;
     })[];
   }>

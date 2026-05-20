@@ -22,6 +22,7 @@ import { locationsDeleteParamsSchema } from '@shared/models/location/location-de
 import { locationsGetQuerySchema } from '@shared/models/location/location-get';
 import { locationsGetByIdParamsSchema } from '@shared/models/location/location-get-by-id';
 import { locationsPutRequestSchema } from '@shared/models/location/location-put';
+import { models3dDeleteParamsSchema } from '@shared/models/model3d/model3d-delete';
 import { sectorsBatchDeleteRequestSchema } from '@shared/models/sector/sector-batch-delete';
 import { sectorsBatchPutRequestSchema } from '@shared/models/sector/sector-batch-put';
 import { sectorsDeleteParamsSchema } from '@shared/models/sector/sector-delete';
@@ -59,6 +60,9 @@ import { handler as locationsGet } from './api/locations/locations-get';
 import { handler as locationsGetById } from './api/locations/locations-get-by-id';
 import { handler as locationsPut } from './api/locations/locations-put';
 import { handler as meGet } from './api/me/me-get';
+import { handler as models3dCollaboratorsDelete } from './api/models3d/models3d-collaborators-delete';
+import { handler as models3dCollaboratorsPut } from './api/models3d/models3d-collaborators-put';
+import { handler as models3dDelete } from './api/models3d/models3d-delete';
 import { handler as sectorsBatchDelete } from './api/sectors/sectors-batch-delete';
 import { handler as sectorsBatchPut } from './api/sectors/sectors-batch-put';
 import { handler as sectorsCollaboratorsDelete } from './api/sectors/sectors-collaborators-delete';
@@ -215,6 +219,27 @@ router.delete(
   authenticateKeycloak,
   validateParams(collaboratorDeleteParamsSchema),
   sectorsCollaboratorsDelete
+);
+
+// Models3D
+router.delete(
+  '/models3d/:id',
+  authenticateKeycloak,
+  validateParams(models3dDeleteParamsSchema),
+  models3dDelete
+);
+router.put(
+  '/models3d/:id/collaborators/:userId',
+  authenticateKeycloak,
+  validateParams(collaboratorPutParamsSchema),
+  validateBody(collaboratorPutRequestSchema),
+  models3dCollaboratorsPut
+);
+router.delete(
+  '/models3d/:id/collaborators/:userId',
+  authenticateKeycloak,
+  validateParams(collaboratorDeleteParamsSchema),
+  models3dCollaboratorsDelete
 );
 
 // Images

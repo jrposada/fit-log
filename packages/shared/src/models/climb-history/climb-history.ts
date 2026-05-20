@@ -33,10 +33,11 @@ export type ClimbHistory = WithTimestamps<{
   /* References */
   climb: Omit<
     WithDepopulatedOwnership<Climb>,
-    'image' | 'location' | 'sector'
+    'image' | 'location' | 'model3d' | 'sector'
   > & {
     image: string;
     location: string;
+    model3d?: string;
     sector: string;
   };
   location: Omit<WithDepopulatedOwnership<Location>, 'sectors'> & {

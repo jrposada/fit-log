@@ -24,6 +24,7 @@ export interface IClimb extends WithTimestamps<Document>, WithOwnership {
   spline: ISplinePoint[];
 
   /* References – nullable after population if the referenced doc was deleted */
+  model3d?: Types.ObjectId | null;
   image: Types.ObjectId | null;
   location: Types.ObjectId | null;
   sector: Types.ObjectId | null;
@@ -96,6 +97,11 @@ const climbSchema = new Schema<IClimb>(
     ...ownershipFields,
 
     /* References */
+    model3d: {
+      type: Schema.Types.ObjectId,
+      ref: 'Model3D',
+      required: false,
+    },
     image: {
       type: Schema.Types.ObjectId,
       ref: 'Image',
