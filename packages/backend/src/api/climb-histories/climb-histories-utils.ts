@@ -4,6 +4,7 @@ import { IClimb } from '../../models/climb';
 import { IClimbHistory } from '../../models/climb-history';
 import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
+import { IModel3D } from '../../models/model3d';
 import { ISector } from '../../models/sector';
 import { WithRequiredRefs } from '../../utils/types';
 
@@ -13,7 +14,7 @@ type ValidClimbHistory = MergeType<
   {
     climb: WithRequiredRefs<IClimb>;
     location: ILocation;
-    sector: MergeType<ISector, { images: IImage[] }>;
+    sector: MergeType<ISector, { images: IImage[]; models3d: IModel3D[] }>;
   }
 >;
 

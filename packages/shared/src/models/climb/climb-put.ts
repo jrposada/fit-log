@@ -19,6 +19,7 @@ export type ClimbsPutRequest = Omit<
   | 'id'
   | 'createdAt'
   | 'updatedAt'
+  | 'model3d'
   | 'image'
   | 'location'
   | 'sector'
@@ -27,6 +28,7 @@ export type ClimbsPutRequest = Omit<
 > & {
   id?: string;
 
+  model3d?: string;
   image: string;
   location: string;
   sector: string;
@@ -39,6 +41,7 @@ export const climbsPutRequestSchema = z.object({
   holds: z.array(holdSchema),
   spline: z.array(splinePointSchema),
 
+  model3d: z.string().optional(),
   image: z.string().nonempty(),
   location: z.string().nonempty(),
   sector: z.string().nonempty(),

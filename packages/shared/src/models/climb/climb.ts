@@ -4,6 +4,7 @@ import {
 } from '../auth/with-ownership';
 import { Image } from '../image/image';
 import { Location } from '../location/location';
+import { Model3D } from '../model3d/model3d';
 import { Sector } from '../sector/sector';
 import { WithTimestamps } from '../utils/with-timestamps';
 
@@ -57,6 +58,7 @@ export type Climb = WithOwnership<
     spline: SplinePoint[];
 
     /* References */
+    model3d?: WithDepopulatedOwnership<Model3D>;
     image: WithDepopulatedOwnership<Image>;
     location: Omit<WithDepopulatedOwnership<Location>, 'sectors'> & {
       sectors: string[];

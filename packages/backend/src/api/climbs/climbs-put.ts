@@ -13,6 +13,7 @@ import ResourceNotFound from '../../infrastructure/not-found-error';
 import { Climb } from '../../models/climb';
 import { IImage } from '../../models/image';
 import { ILocation } from '../../models/location';
+import { IModel3D } from '../../models/model3d';
 import { ISector } from '../../models/sector';
 import { upsertOwnedDocument } from '../../utils/upsert-owned-document';
 import { toApiResponse } from '../api-utils';
@@ -41,21 +42,25 @@ const handler = toApiResponse<
       spline: climbPutData.spline,
 
       /* References */
+      model3d: climbPutData.model3d
+        ? new Types.ObjectId(climbPutData.model3d)
+        : null,
       image: new Types.ObjectId(climbPutData.image),
       sector: new Types.ObjectId(climbPutData.sector),
       location: new Types.ObjectId(climbPutData.location),
     }
   )
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{ model3d?: IModel3D; image: IImage; location: ILocation }>([
+      'model3d',
+      'image',
+      'location',
+    ])
     .populate<{
-      image: IImage;
-      location: ILocation;
-    }>(['image', 'location'])
-    .populate<{
-      sector: MergeType<ISector, { images: IImage[] }>;
+      sector: MergeType<ISector, { images: IImage[]; models3d: IModel3D[] }>;
     }>({
       path: 'sector',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     });
 
   if (!climb) {
