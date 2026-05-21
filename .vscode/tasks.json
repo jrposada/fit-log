@@ -4,7 +4,7 @@
     {
       "label": "Shared: Build (Watch)",
       "type": "shell",
-      "command": "npm",
+      "command": "pnpm",
       "args": ["run", "dev"],
       "options": {
         "cwd": "${workspaceFolder}/packages/shared",
@@ -42,7 +42,7 @@
     {
       "label": "Shared-React: Build (Watch)",
       "type": "shell",
-      "command": "npm",
+      "command": "pnpm",
       "args": ["run", "dev"],
       "options": {
         "cwd": "${workspaceFolder}/packages/shared-react",
@@ -80,7 +80,7 @@
     {
       "label": "Backend: Dev",
       "type": "shell",
-      "command": "npm",
+      "command": "pnpm",
       "args": ["run", "dev"],
       "options": {
         "cwd": "${workspaceFolder}/packages/backend"
@@ -114,7 +114,7 @@
     {
       "label": "Mobile: Dev",
       "type": "shell",
-      "command": "npm",
+      "command": "pnpm",
       "args": ["run", "dev"],
       "options": {
         "cwd": "${workspaceFolder}/packages/app-mobile"
