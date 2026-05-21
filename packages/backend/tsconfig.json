@@ -20,6 +20,8 @@
     "esModuleInterop": true,
     "noImplicitReturns": true,
 
+    "types": ["node"],
+
     "paths": {
       "@shared/*": ["../shared/src/*"]
     }
