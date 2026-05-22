@@ -16,7 +16,7 @@
     "pnpm": "^10"
   },
   "exports": {
-    "./client": {
+    ".": {
       "types": "./dist/src/index.d.ts",
       "default": "./dist/src/index.js"
     }
