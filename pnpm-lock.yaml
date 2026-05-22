@@ -461,8 +461,11 @@ importers:
       '@inquirer/prompts':
         specifier: 8.4.2
         version: 8.4.2(@types/node@22.19.18)
+      '@jrposada/fit-log-shared':
+        specifier: workspace:*
+        version: link:../shared
       '@jrposada/moonboard-sdk':
-        specifier: 'workspace:'
+        specifier: workspace:*
         version: link:../moonboard-sdk
       commander:
         specifier: 14.0.3

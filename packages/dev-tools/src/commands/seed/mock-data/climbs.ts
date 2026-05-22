@@ -1,6 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { IClimb } from '@backend/models/climb';
-import { GRADE_OPTIONS, HOLD_TYPES } from '@shared/models/climb/climb';
+import {
+  GRADE_OPTIONS,
+  HOLD_TYPES,
+} from '@jrposada/fit-log-shared/models/climb/climb';
 
 function fakeHold() {
   return {
