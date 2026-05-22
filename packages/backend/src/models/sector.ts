@@ -7,6 +7,7 @@ export interface ISector extends WithTimestamps<Document>, WithOwnership {
   name: string;
   description?: string;
   isPrimary: boolean;
+  source: string;
 
   latitude: number;
   longitude: number;
@@ -31,6 +32,11 @@ const sectorSchema = new Schema<ISector>(
       type: Boolean,
       required: false,
       default: false,
+    },
+    source: {
+      type: String,
+      required: true,
+      default: 'user',
     },
 
     latitude: {

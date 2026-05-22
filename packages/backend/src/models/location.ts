@@ -6,6 +6,7 @@ export interface ILocation extends WithTimestamps<Document>, WithOwnership {
   /* Data */
   name: string;
   description?: string;
+  source: string;
 
   latitude: number;
   longitude: number;
@@ -24,6 +25,11 @@ const locationSchema = new Schema<ILocation>(
     description: {
       type: String,
       required: false,
+    },
+    source: {
+      type: String,
+      required: true,
+      default: 'user',
     },
 
     latitude: {

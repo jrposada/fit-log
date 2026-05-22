@@ -22,6 +22,8 @@ export interface IClimb extends WithTimestamps<Document>, WithOwnership {
   description?: string;
   holds: IHold[];
   spline: ISplinePoint[];
+  source: string;
+  sourceId?: string;
 
   /* References – nullable after population if the referenced doc was deleted */
   image: Types.ObjectId | null;
@@ -90,6 +92,15 @@ const climbSchema = new Schema<IClimb>(
       type: [splinePointSchema],
       required: true,
       default: [],
+    },
+    source: {
+      type: String,
+      required: true,
+      default: 'user',
+    },
+    sourceId: {
+      type: String,
+      required: false,
     },
 
     /* Ownership */
