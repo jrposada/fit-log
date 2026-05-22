@@ -15,7 +15,7 @@
     "dev-tools": "./bin/dev-tools.ts"
   },
   "engines": {
-    "node": ">22",
+    "node": ">=22",
     "pnpm": "^10"
   },
   "scripts": {
