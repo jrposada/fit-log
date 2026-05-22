@@ -19,10 +19,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "esModuleInterop": true,
-    "noImplicitReturns": true,
-
-    /* Path aliases */
-    "paths": {}
+    "noImplicitReturns": true
   },
   "include": ["src/**/*.ts", "src/**/*.json"]
 }
