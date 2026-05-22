@@ -8,6 +8,7 @@ import { Types } from 'mongoose';
 
 import { seedClimbHistory } from '../seed/climb-histories';
 import { seedLocation } from '../seed/locations';
+import { seedMoonboardProblems } from '../seed/moonboard-problems';
 import { seedWorkout } from '../seed/workouts';
 import { findKeycloakUserByEmail } from '../../utils/keycloak-admin';
 
@@ -198,6 +199,8 @@ export function registerSetupCommand(setupCmd: Command): void {
           }
         }
         console.log(`✓ Seeded ${numWorkouts} workouts`);
+
+        await seedMoonboardProblems();
 
         console.log('✓ Database seeded successfully!');
       } finally {

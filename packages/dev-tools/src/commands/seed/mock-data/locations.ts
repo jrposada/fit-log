@@ -14,6 +14,7 @@ export function fakeLocation(): Partial<
     googleMapsId: faker.helpers.maybe(() => faker.string.alphanumeric(27), {
       probability: 0.7,
     }),
+    source: 'user',
     sectors: [],
   };
 }

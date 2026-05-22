@@ -19,6 +19,7 @@ export function fakeSector(): Partial<
     googleMapsId: faker.helpers.maybe(() => faker.string.alphanumeric(27), {
       probability: 0.7,
     }),
+    source: 'user',
     images: [],
     climbs: [],
   };

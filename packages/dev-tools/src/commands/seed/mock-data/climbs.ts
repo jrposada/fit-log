@@ -37,6 +37,7 @@ export function fakeClimb(): Partial<
     name: faker.word.words({ count: { min: 1, max: 3 } }),
     grade: faker.helpers.arrayElement(GRADE_OPTIONS),
     description: faker.lorem.paragraph(),
+    source: 'user',
     holds,
     spline,
   };

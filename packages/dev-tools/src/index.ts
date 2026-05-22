@@ -6,6 +6,7 @@ Object.assign(process.env, env);
 import { Command } from 'commander';
 
 import registerAuthCommand from './commands/auth';
+import registerMoonboardCommand from './commands/moonboard';
 import registerSeedCommand from './commands/seed';
 import registerSetupCommand from './commands/setup';
 
@@ -14,6 +15,7 @@ const program = new Command();
 program.name('dev-tools').description('Developer CLI tool');
 
 registerAuthCommand(program);
+registerMoonboardCommand(program);
 registerSeedCommand(program);
 registerSetupCommand(program);
 
