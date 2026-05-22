@@ -1,5 +1,5 @@
-import { ApiResponse } from '@shared/models/api-response';
-import { ClimbHistoriesGetByIdResponse } from '@shared/models/climb-history/climb-history-get-by-id';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
+import { ClimbHistoriesGetByIdResponse } from '@jrposada/fit-log-shared/models/climb-history/climb-history-get-by-id';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

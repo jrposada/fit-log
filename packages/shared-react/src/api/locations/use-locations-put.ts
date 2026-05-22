@@ -1,8 +1,8 @@
-import { ApiResponse } from '@shared/models/api-response';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   LocationsPutRequest,
   LocationsPutResponse,
-} from '@shared/models/location/location-put';
+} from '@jrposada/fit-log-shared/models/location/location-put';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

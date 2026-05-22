@@ -1,8 +1,8 @@
-import { ApiResponse } from '@shared/models/api-response';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   ClimbHistoriesGetQuery,
   ClimbHistoriesGetResponse,
-} from '@shared/models/climb-history/climb-history-get';
+} from '@jrposada/fit-log-shared/models/climb-history/climb-history-get';
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useMemo } from 'react';

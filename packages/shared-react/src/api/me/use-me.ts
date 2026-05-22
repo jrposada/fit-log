@@ -1,5 +1,5 @@
-import { ApiResponse } from '@shared/models/api-response';
-import { MeResponse } from '@shared/models/auth/me';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
+import { MeResponse } from '@jrposada/fit-log-shared/models/auth/me';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

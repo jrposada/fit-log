@@ -1,8 +1,8 @@
-import { ApiResponse } from '@shared/models/api-response';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   LocationsGetQuery,
   LocationsGetResponse,
-} from '@shared/models/location/location-get';
+} from '@jrposada/fit-log-shared/models/location/location-get';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

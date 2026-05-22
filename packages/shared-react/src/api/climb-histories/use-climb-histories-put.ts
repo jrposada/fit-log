@@ -1,8 +1,8 @@
-import { ApiResponse } from '@shared/models/api-response';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   ClimbHistoriesPutRequest,
   ClimbHistoriesPutResponse,
-} from '@shared/models/climb-history/climb-history-put';
+} from '@jrposada/fit-log-shared/models/climb-history/climb-history-put';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

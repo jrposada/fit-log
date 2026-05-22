@@ -1,8 +1,8 @@
-import { ApiResponse } from '@shared/models/api-response';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   ClimbsGetQuery,
   ClimbsGetResponse,
-} from '@shared/models/climb/climb-get';
+} from '@jrposada/fit-log-shared/models/climb/climb-get';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

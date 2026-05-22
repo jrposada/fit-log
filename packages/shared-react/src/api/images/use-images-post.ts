@@ -1,8 +1,8 @@
-import { ApiResponse } from '@shared/models/api-response';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   ImagesPostRequest,
   ImagesPostResponse,
-} from '@shared/models/image/image-post';
+} from '@jrposada/fit-log-shared/models/image/image-post';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

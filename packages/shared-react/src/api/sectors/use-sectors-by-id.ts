@@ -1,5 +1,5 @@
-import { ApiResponse } from '@shared/models/api-response';
-import { SectorsGetByIdResponse } from '@shared/models/sector/sector-get-by-id';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
+import { SectorsGetByIdResponse } from '@jrposada/fit-log-shared/models/sector/sector-get-by-id';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

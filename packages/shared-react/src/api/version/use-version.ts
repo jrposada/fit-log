@@ -1,4 +1,4 @@
-import { ApiResponse } from '@shared/models/api-response';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

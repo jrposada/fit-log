@@ -1,8 +1,8 @@
-import { ApiResponse } from '@shared/models/api-response';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   SectorsDeleteParams,
   SectorsDeleteResponse,
-} from '@shared/models/sector/sector-delete';
+} from '@jrposada/fit-log-shared/models/sector/sector-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

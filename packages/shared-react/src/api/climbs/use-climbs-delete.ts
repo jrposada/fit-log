@@ -1,8 +1,8 @@
-import { ApiResponse } from '@shared/models/api-response';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   ClimbsDeleteParams,
   ClimbsDeleteResponse,
-} from '@shared/models/climb/climb-delete';
+} from '@jrposada/fit-log-shared/models/climb/climb-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
