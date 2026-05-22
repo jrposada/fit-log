@@ -1,7 +1,7 @@
+import { useAuth } from '@jrposada/fit-log-shared-react/contexts/auth/use-auth';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useAuth } from '@shared-react/contexts/auth/use-auth';
 import { StatusBar } from 'expo-status-bar';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';

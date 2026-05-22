@@ -4,7 +4,6 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "paths": {
-      "@shared-react/*": ["../shared-react/src/*"],
       "@shared/*": ["../shared/src/*"]
     }
   },

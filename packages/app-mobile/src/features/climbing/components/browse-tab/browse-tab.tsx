@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useClimbsSearch } from '@jrposada/fit-log-shared-react/api/climbs/use-climbs-search';
+import { useDebounce } from '@jrposada/fit-log-shared-react/hooks/use-debounce';
 import { ClimbGrade } from '@shared/models/climb/climb';
 import {
   ClimbSearchResult,
   climbsSearchQuerySchema,
 } from '@shared/models/climb/climb-search';
-import { useClimbsSearch } from '@shared-react/api/climbs/use-climbs-search';
-import { useDebounce } from '@shared-react/hooks/use-debounce';
 import { FunctionComponent, useMemo, useState } from 'react';
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';

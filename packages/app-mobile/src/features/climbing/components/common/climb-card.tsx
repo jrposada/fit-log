@@ -1,12 +1,12 @@
+import { useClimbHistoriesPut } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-histories-put';
+import { useClimbHistoryProject } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-history-project';
+import { formatRelativeDate } from '@jrposada/fit-log-shared-react/beautifiers/date';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Climb } from '@shared/models/climb/climb';
 import { ClimbHistory } from '@shared/models/climb-history/climb-history';
 import { Location } from '@shared/models/location/location';
 import { Sector } from '@shared/models/sector/sector';
-import { useClimbHistoriesPut } from '@shared-react/api/climb-histories/use-climb-histories-put';
-import { useClimbHistoryProject } from '@shared-react/api/climb-histories/use-climb-history-project';
-import { formatRelativeDate } from '@shared-react/beautifiers/date';
 import { FunctionComponent, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator } from 'react-native';

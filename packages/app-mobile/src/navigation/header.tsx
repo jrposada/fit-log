@@ -1,6 +1,6 @@
+import { useAuth } from '@jrposada/fit-log-shared-react/contexts/auth/use-auth';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useAuth } from '@shared-react/contexts/auth/use-auth';
 import { FunctionComponent } from 'react';
 
 import AvatarButton from '../library/avatar-button/avatar-button';

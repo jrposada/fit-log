@@ -1,4 +1,4 @@
-import { useDebounce } from '@shared-react/hooks/use-debounce';
+import { useDebounce } from '@jrposada/fit-log-shared-react/hooks/use-debounce';
 import Fuse from 'fuse.js';
 import type React from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';

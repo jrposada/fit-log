@@ -1,4 +1,4 @@
-import { useAuth } from '@shared-react/contexts/auth/use-auth';
+import { useAuth } from '@jrposada/fit-log-shared-react/contexts/auth/use-auth';
 import { FunctionComponent, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert } from 'react-native';

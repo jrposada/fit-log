@@ -1,6 +1,6 @@
-import { useMe } from '@shared-react/api/me/use-me';
-import { useVersion } from '@shared-react/api/version/use-version';
-import { useAuth } from '@shared-react/contexts/auth/use-auth';
+import { useMe } from '@jrposada/fit-log-shared-react/api/me/use-me';
+import { useVersion } from '@jrposada/fit-log-shared-react/api/version/use-version';
+import { useAuth } from '@jrposada/fit-log-shared-react/contexts/auth/use-auth';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -35,11 +35,7 @@ const ProfileScreen: FunctionComponent = () => {
         {t('version', { version })}
       </Typography>
 
-      <Button
-        title={t('auth.logout')}
-        onPress={logout}
-        variant="outline"
-      />
+      <Button title={t('auth.logout')} onPress={logout} variant="outline" />
     </Screen>
   );
 };

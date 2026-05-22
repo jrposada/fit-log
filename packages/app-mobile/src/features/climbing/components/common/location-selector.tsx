@@ -1,6 +1,6 @@
+import { useLocations } from '@jrposada/fit-log-shared-react/api/locations/use-locations';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useLocations } from '@shared-react/api/locations/use-locations';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 

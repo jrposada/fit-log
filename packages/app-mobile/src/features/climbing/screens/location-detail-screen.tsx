@@ -1,14 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useImagesPost } from '@jrposada/fit-log-shared-react/api/images/use-images-post';
+import { useLocationsById } from '@jrposada/fit-log-shared-react/api/locations/use-locations-by-id';
+import { useLocationsDelete } from '@jrposada/fit-log-shared-react/api/locations/use-locations-delete';
+import { useLocationsPut } from '@jrposada/fit-log-shared-react/api/locations/use-locations-put';
+import { useMe } from '@jrposada/fit-log-shared-react/api/me/use-me';
+import { useSectorsBatchDelete } from '@jrposada/fit-log-shared-react/api/sectors/use-sectors-batch-delete';
+import { useSectorsBatchPut } from '@jrposada/fit-log-shared-react/api/sectors/use-sectors-batch-put';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { canDelete, canEdit } from '@shared/models/auth/with-ownership';
-import { useImagesPost } from '@shared-react/api/images/use-images-post';
-import { useLocationsById } from '@shared-react/api/locations/use-locations-by-id';
-import { useLocationsDelete } from '@shared-react/api/locations/use-locations-delete';
-import { useLocationsPut } from '@shared-react/api/locations/use-locations-put';
-import { useMe } from '@shared-react/api/me/use-me';
-import { useSectorsBatchDelete } from '@shared-react/api/sectors/use-sectors-batch-delete';
-import { useSectorsBatchPut } from '@shared-react/api/sectors/use-sectors-batch-put';
 import {
   FunctionComponent,
   useCallback,

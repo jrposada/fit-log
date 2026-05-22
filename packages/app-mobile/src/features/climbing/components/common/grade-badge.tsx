@@ -1,5 +1,5 @@
+import { beautifyGradeColor } from '@jrposada/fit-log-shared-react/beautifiers/grade-colors';
 import { Climb } from '@shared/models/climb/climb';
-import { beautifyGradeColor } from '@shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
 
 import { Badge } from '../../../../library/badge';
