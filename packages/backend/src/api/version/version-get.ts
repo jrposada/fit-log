@@ -1,4 +1,4 @@
-import pkg from '../../../package.json';
+import pkg from '../../../package.json' with { type: 'json' };
 import { toApiResponse } from '../api-utils.ts';
 
 const handler = toApiResponse(async () => {

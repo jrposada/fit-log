@@ -1,11 +1,5 @@
-import type {
-  AnyBulkWriteOperation,
-  ClientSession,
-  Document,
-  Model} from 'mongoose';
-import {
-  Types,
-} from 'mongoose';
+import type { ClientSession, Document, Model } from 'mongoose';
+import { Types } from 'mongoose';
 
 import { editableBy } from '../auth/editable-filter.ts';
 import type { IUser } from '../models/user.ts';
@@ -39,7 +33,7 @@ export async function batchUpsertOwnedDocument<T extends Document>(
     return { ids, matchedCount: 0 };
   }
 
-  const ops = items.map<AnyBulkWriteOperation<T>>((item) => {
+  const ops = items.map((item) => {
     if (item.id) {
       const _id = new Types.ObjectId(item.id);
       ids.push(_id);
@@ -67,7 +61,13 @@ export async function batchUpsertOwnedDocument<T extends Document>(
     };
   });
 
-  const result = await model.bulkWrite(ops, { ordered: false, session });
+  // mongoose's bulkWrite expects `AnyBulkWriteOperation<T extends Document ? T : any>`,
+  // a conditional TS cannot simplify when `T` is itself a constrained generic.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const result = await model.bulkWrite(ops as any[], {
+    ordered: false,
+    session,
+  });
 
   const matchedCount = (result.matchedCount ?? 0) + (result.upsertedCount ?? 0);
 
