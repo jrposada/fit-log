@@ -12,7 +12,6 @@
 
 ## Climb Image Editor
 
-- [ ] **Start/end/feet-only hold types** — Add hold type classification. Users mark holds as start, end, or feet-only with distinct visual indicators (color/shape). Requires updating the Hold model to include a type field.
 - [ ] **Change image during climb create** — Allow users to replace the selected image while creating a climb, rather than being locked into the first choice.
 
 ## Training
