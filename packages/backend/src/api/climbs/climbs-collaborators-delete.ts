@@ -3,11 +3,8 @@ import type { ClimbsCollaboratorsResponse } from '@jrposada/fit-log-shared/model
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { MergeType } from 'mongoose';
 
-import type {
-  PopulatedOwnership} from '../../auth/ownership-populate.ts';
-import {
-  OWNERSHIP_POPULATE
-} from '../../auth/ownership-populate.ts';
+import type { PopulatedOwnership } from '../../auth/ownership-populate.ts';
+import { OWNERSHIP_POPULATE } from '../../auth/ownership-populate.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import { Climb } from '../../models/climb.ts';
 import type { IImage } from '../../models/image.ts';

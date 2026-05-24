@@ -1,4 +1,4 @@
-import type { Document, Model} from 'mongoose';
+import type { Document, Model } from 'mongoose';
 import { Types } from 'mongoose';
 
 export function upsertDocument<T extends Document>(

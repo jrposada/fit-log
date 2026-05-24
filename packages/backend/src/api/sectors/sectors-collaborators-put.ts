@@ -5,11 +5,8 @@ import type {
 import type { SectorsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/sector/sector-collaborators';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import type {
-  PopulatedOwnership} from '../../auth/ownership-populate.ts';
-import {
-  OWNERSHIP_POPULATE
-} from '../../auth/ownership-populate.ts';
+import type { PopulatedOwnership } from '../../auth/ownership-populate.ts';
+import { OWNERSHIP_POPULATE } from '../../auth/ownership-populate.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import type { IClimb } from '../../models/climb.ts';
 import type { IImage } from '../../models/image.ts';

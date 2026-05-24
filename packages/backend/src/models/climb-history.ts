@@ -1,8 +1,5 @@
-import type {
-  ClimbHistoryStatus} from '@jrposada/fit-log-shared/models/climb-history/climb-history';
-import {
-  CLIMB_HISTORY_STATUSES
-} from '@jrposada/fit-log-shared/models/climb-history/climb-history';
+import type { ClimbHistoryStatus } from '@jrposada/fit-log-shared/models/climb-history/climb-history';
+import { CLIMB_HISTORY_STATUSES } from '@jrposada/fit-log-shared/models/climb-history/climb-history';
 import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 

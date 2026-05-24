@@ -3,7 +3,7 @@ import type {
   ClimbHistoryProjectResponse,
 } from '@jrposada/fit-log-shared/models/climb-history/climb-history-project';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import type { MergeType} from 'mongoose';
+import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
 import type { IClimb } from '../../models/climb.ts';

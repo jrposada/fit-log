@@ -3,16 +3,12 @@ import type {
   ClimbHistoriesPutResponse,
 } from '@jrposada/fit-log-shared/models/climb-history/climb-history-put';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import type { MergeType} from 'mongoose';
+import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
 import type { IClimb } from '../../models/climb.ts';
-import type {
-  IClimbHistoryTry} from '../../models/climb-history.ts';
-import {
-  ClimbHistory,
-  computeTopStatus
-} from '../../models/climb-history.ts';
+import type { IClimbHistoryTry } from '../../models/climb-history.ts';
+import { ClimbHistory, computeTopStatus } from '../../models/climb-history.ts';
 import type { IImage } from '../../models/image.ts';
 import type { ILocation } from '../../models/location.ts';
 import type { ISector } from '../../models/sector.ts';

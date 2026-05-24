@@ -5,11 +5,8 @@ import type {
 import type { ImagesCollaboratorsResponse } from '@jrposada/fit-log-shared/models/image/image-collaborators';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import type {
-  PopulatedOwnership} from '../../auth/ownership-populate.ts';
-import {
-  OWNERSHIP_POPULATE
-} from '../../auth/ownership-populate.ts';
+import type { PopulatedOwnership } from '../../auth/ownership-populate.ts';
+import { OWNERSHIP_POPULATE } from '../../auth/ownership-populate.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import { Image } from '../../models/image.ts';
 import { addOrUpdateCollaborator } from '../../utils/collaborator-mutators.ts';

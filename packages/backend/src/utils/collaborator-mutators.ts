@@ -1,5 +1,5 @@
 import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import type { Document, Model} from 'mongoose';
+import type { Document, Model } from 'mongoose';
 import { Types } from 'mongoose';
 
 import { ownerOrAdminFilter } from '../auth/owner-or-admin-filter.ts';

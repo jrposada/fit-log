@@ -5,11 +5,8 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { MergeType } from 'mongoose';
 
-import type {
-  PopulatedOwnership} from '../../auth/ownership-populate.ts';
-import {
-  OWNERSHIP_POPULATE
-} from '../../auth/ownership-populate.ts';
+import type { PopulatedOwnership } from '../../auth/ownership-populate.ts';
+import { OWNERSHIP_POPULATE } from '../../auth/ownership-populate.ts';
 import { Climb } from '../../models/climb.ts';
 import type { IImage } from '../../models/image.ts';
 import type { ILocation } from '../../models/location.ts';
