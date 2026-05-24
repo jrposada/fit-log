@@ -1,6 +1,6 @@
-import { CollaboratorDeleteParams } from '@shared/models/auth/collaborator-delete';
-import { ImagesCollaboratorsResponse } from '@shared/models/image/image-collaborators';
-import { assert } from '@shared/utils/assert';
+import { CollaboratorDeleteParams } from '@jrposada/fit-log-shared/models/auth/collaborator-delete';
+import { ImagesCollaboratorsResponse } from '@jrposada/fit-log-shared/models/image/image-collaborators';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import {
   OWNERSHIP_POPULATE,

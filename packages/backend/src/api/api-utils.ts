@@ -1,4 +1,4 @@
-import { ApiResponse } from '@shared/models/api-response';
+import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import { Request, Response } from 'express';
 
 import ForbiddenError from '../infrastructure/forbidden-error.ts';

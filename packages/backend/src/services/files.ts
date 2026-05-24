@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import { assert } from '@shared/utils/assert';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 export class FilesService {
   private static baseDir(): string {

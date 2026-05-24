@@ -1,6 +1,6 @@
-import { CollaboratorDeleteParams } from '@shared/models/auth/collaborator-delete';
-import { ClimbsCollaboratorsResponse } from '@shared/models/climb/climb-collaborators';
-import { assert } from '@shared/utils/assert';
+import { CollaboratorDeleteParams } from '@jrposada/fit-log-shared/models/auth/collaborator-delete';
+import { ClimbsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/climb/climb-collaborators';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { MergeType } from 'mongoose';
 
 import {

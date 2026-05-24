@@ -1,8 +1,8 @@
 import {
   WorkoutsGetQuery,
   WorkoutsGetResponse,
-} from '@shared/models/workout/workout-get';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/workout/workout-get';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { Workout } from '../../models/workout.ts';
 import { toApiResponse } from '../api-utils.ts';

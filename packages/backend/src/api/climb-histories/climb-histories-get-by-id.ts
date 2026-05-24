@@ -1,8 +1,8 @@
 import {
   ClimbHistoriesGetByIdParams,
   ClimbHistoriesGetByIdResponse,
-} from '@shared/models/climb-history/climb-history-get-by-id';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/climb-history/climb-history-get-by-id';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { MergeType } from 'mongoose';
 
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';

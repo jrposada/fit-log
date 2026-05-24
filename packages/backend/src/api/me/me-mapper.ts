@@ -1,4 +1,4 @@
-import { MeResponse } from '@shared/models/auth/me';
+import { MeResponse } from '@jrposada/fit-log-shared/models/auth/me';
 
 import { IUser } from '../../models/user.ts';
 

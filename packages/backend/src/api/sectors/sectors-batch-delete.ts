@@ -1,8 +1,8 @@
 import {
   SectorsBatchDeleteRequest,
   SectorsBatchDeleteResponse,
-} from '@shared/models/sector/sector-batch-delete';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/sector/sector-batch-delete';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { deletableBy } from '../../auth/deletable-filter.ts';
 import { Sector } from '../../models/sector.ts';

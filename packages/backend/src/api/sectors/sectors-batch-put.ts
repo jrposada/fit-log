@@ -1,8 +1,8 @@
 import {
   SectorsBatchPutRequest,
   SectorsBatchPutResponse,
-} from '@shared/models/sector/sector-batch-put';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/sector/sector-batch-put';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import mongoose, { ClientSession, Types } from 'mongoose';
 
 import {

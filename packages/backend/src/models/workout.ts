@@ -1,10 +1,10 @@
-import { INTENSITY_UNITS } from '@shared/models/workout/workout';
+import { INTENSITY_UNITS } from '@jrposada/fit-log-shared/models/workout/workout';
 import { Document, model, Schema, WithTimestamps } from 'mongoose';
 
 export interface IExercise {
   description: string;
   intensity: number;
-  intensityUnit: typeof INTENSITY_UNITS[number];
+  intensityUnit: (typeof INTENSITY_UNITS)[number];
   name: string;
   reps: number;
   restBetweenReps: number;

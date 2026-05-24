@@ -1,5 +1,5 @@
-import { WithDepopulatedOwnership } from '@shared/models/auth/with-ownership';
-import { Sector } from '@shared/models/sector/sector';
+import { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
+import { Sector } from '@jrposada/fit-log-shared/models/sector/sector';
 import { MergeType } from 'mongoose';
 
 import { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';

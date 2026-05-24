@@ -1,8 +1,8 @@
 import {
   SectorsDeleteParams,
   SectorsDeleteResponse,
-} from '@shared/models/sector/sector-delete';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/sector/sector-delete';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { deletableBy } from '../../auth/deletable-filter.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';

@@ -1,4 +1,7 @@
-import { HOLD_TYPES, HoldType } from '@shared/models/climb/climb';
+import {
+  HOLD_TYPES,
+  HoldType,
+} from '@jrposada/fit-log-shared/models/climb/climb';
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
 import { ownershipFields, WithOwnership } from './_collaborator.ts';

@@ -1,5 +1,5 @@
-import { MeResponse } from '@shared/models/auth/me';
-import { assert } from '@shared/utils/assert';
+import { MeResponse } from '@jrposada/fit-log-shared/models/auth/me';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { toApiResponse } from '../api-utils.ts';
 import { toApiMe } from './me-mapper.ts';

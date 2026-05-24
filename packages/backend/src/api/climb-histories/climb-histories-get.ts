@@ -1,8 +1,8 @@
 import {
   ClimbHistoriesGetQuery,
   ClimbHistoriesGetResponse,
-} from '@shared/models/climb-history/climb-history-get';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/climb-history/climb-history-get';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { MergeType, Types } from 'mongoose';
 
 import { IClimb } from '../../models/climb.ts';

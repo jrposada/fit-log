@@ -1,9 +1,9 @@
 import {
   CollaboratorPutParams,
   CollaboratorPutRequest,
-} from '@shared/models/auth/collaborator-put';
-import { SectorsCollaboratorsResponse } from '@shared/models/sector/sector-collaborators';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/auth/collaborator-put';
+import { SectorsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/sector/sector-collaborators';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import {
   OWNERSHIP_POPULATE,

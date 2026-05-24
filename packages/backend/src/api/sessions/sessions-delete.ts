@@ -1,8 +1,8 @@
 import {
   SessionsDeleteParams,
   SessionsDeleteResponse,
-} from '@shared/models/session/session-delete';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/session/session-delete';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { Session } from '../../models/session.ts';
 import { toApiResponse } from '../api-utils.ts';

@@ -1,8 +1,8 @@
 import {
   ImagesPostRequest,
   ImagesPostResponse,
-} from '@shared/models/image/image-post';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/image/image-post';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import {
   OWNERSHIP_POPULATE,

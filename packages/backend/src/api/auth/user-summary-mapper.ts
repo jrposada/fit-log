@@ -1,4 +1,4 @@
-import { UserSummary } from '@shared/models/auth/user-summary';
+import { UserSummary } from '@jrposada/fit-log-shared/models/auth/user-summary';
 
 import { IUser } from '../../models/user.ts';
 

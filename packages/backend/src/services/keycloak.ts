@@ -1,4 +1,4 @@
-import { assert } from '@shared/utils/assert';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import jwt from 'jsonwebtoken';
 import { JwtHeader, JwtPayload } from 'jsonwebtoken';
 import jwksClient, { JwksClient } from 'jwks-rsa';

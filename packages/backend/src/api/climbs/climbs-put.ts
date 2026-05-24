@@ -1,8 +1,8 @@
 import {
   ClimbsPutRequest,
   ClimbsPutResponse,
-} from '@shared/models/climb/climb-put';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/climb/climb-put';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { MergeType, Types } from 'mongoose';
 
 import {

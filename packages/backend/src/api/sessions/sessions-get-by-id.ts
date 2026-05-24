@@ -1,8 +1,8 @@
 import {
   SessionsGetByIdParams,
   SessionsGetByIdResponse,
-} from '@shared/models/session/session-get-by-id';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/session/session-get-by-id';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import { Session } from '../../models/session.ts';

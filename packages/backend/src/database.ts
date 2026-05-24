@@ -1,4 +1,4 @@
-import { assert } from '@shared/utils/assert';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import mongoose from 'mongoose';
 
 export async function connectToDatabase() {

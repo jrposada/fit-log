@@ -1,6 +1,6 @@
-import { WithDepopulatedOwnership } from '@shared/models/auth/with-ownership';
-import { Image } from '@shared/models/image/image';
-import { assert } from '@shared/utils/assert';
+import { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
+import { Image } from '@jrposada/fit-log-shared/models/image/image';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
 import { IImage } from '../../models/image.ts';

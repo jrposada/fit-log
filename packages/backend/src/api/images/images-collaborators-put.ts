@@ -1,9 +1,9 @@
 import {
   CollaboratorPutParams,
   CollaboratorPutRequest,
-} from '@shared/models/auth/collaborator-put';
-import { ImagesCollaboratorsResponse } from '@shared/models/image/image-collaborators';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/auth/collaborator-put';
+import { ImagesCollaboratorsResponse } from '@jrposada/fit-log-shared/models/image/image-collaborators';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import {
   OWNERSHIP_POPULATE,

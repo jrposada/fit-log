@@ -1,7 +1,7 @@
 import {
   Collaborator,
   DepopulatedCollaborator,
-} from '@shared/models/auth/with-ownership';
+} from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import { MergeType } from 'mongoose';
 
 import { ICollaborator } from '../../models/_collaborator.ts';

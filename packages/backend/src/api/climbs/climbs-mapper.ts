@@ -1,5 +1,5 @@
-import { WithDepopulatedOwnership } from '@shared/models/auth/with-ownership';
-import { Climb } from '@shared/models/climb/climb';
+import { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
+import { Climb } from '@jrposada/fit-log-shared/models/climb/climb';
 import { MergeType } from 'mongoose';
 
 import { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';

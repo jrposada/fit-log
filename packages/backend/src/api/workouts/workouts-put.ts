@@ -1,8 +1,8 @@
 import {
   WorkoutsPutRequest,
   WorkoutsPutResponse,
-} from '@shared/models/workout/workout-put';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/workout/workout-put';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { Workout } from '../../models/workout.ts';
 import { upsertDocument } from '../../utils/upsert-document.ts';

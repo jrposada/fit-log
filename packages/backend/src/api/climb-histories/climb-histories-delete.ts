@@ -2,8 +2,8 @@ import {
   ClimbHistoriesDeleteParams,
   ClimbHistoriesDeleteQuery,
   ClimbHistoriesDeleteResponse,
-} from '@shared/models/climb-history/climb-history-delete';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/climb-history/climb-history-delete';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { ClimbHistory, computeTopStatus } from '../../models/climb-history.ts';
 import { toApiResponse } from '../api-utils.ts';

@@ -1,8 +1,8 @@
 import {
   LocationsPutRequest,
   LocationsPutResponse,
-} from '@shared/models/location/location-put';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/location/location-put';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { MergeType, Types } from 'mongoose';
 
 import {

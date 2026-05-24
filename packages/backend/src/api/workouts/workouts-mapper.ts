@@ -1,4 +1,4 @@
-import { Workout } from '@shared/models/workout/workout';
+import { Workout } from '@jrposada/fit-log-shared/models/workout/workout';
 
 import { IWorkout } from '../../models/workout.ts';
 

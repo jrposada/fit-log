@@ -1,8 +1,8 @@
 import {
   ClimbsGetQuery,
   ClimbsGetResponse,
-} from '@shared/models/climb/climb-get';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/climb/climb-get';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { MergeType } from 'mongoose';
 
 import {

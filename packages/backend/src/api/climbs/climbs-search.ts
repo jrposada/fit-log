@@ -2,8 +2,8 @@ import {
   ClimbSearchResult,
   ClimbsSearchQuery,
   ClimbsSearchResponse,
-} from '@shared/models/climb/climb-search';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/climb/climb-search';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { MergeType } from 'mongoose';
 
 import {

@@ -1,9 +1,9 @@
 import {
   CollaboratorPutParams,
   CollaboratorPutRequest,
-} from '@shared/models/auth/collaborator-put';
-import { ClimbsCollaboratorsResponse } from '@shared/models/climb/climb-collaborators';
-import { assert } from '@shared/utils/assert';
+} from '@jrposada/fit-log-shared/models/auth/collaborator-put';
+import { ClimbsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/climb/climb-collaborators';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { MergeType } from 'mongoose';
 
 import {

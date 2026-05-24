@@ -1,4 +1,4 @@
-import { ADMIN_ROLE } from '@shared/models/auth/with-ownership';
+import { ADMIN_ROLE } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import { Types } from 'mongoose';
 
 type DeletableFilter = {

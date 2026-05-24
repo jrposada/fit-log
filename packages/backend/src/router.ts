@@ -1,39 +1,39 @@
-import { collaboratorDeleteParamsSchema } from '@shared/models/auth/collaborator-delete';
+import { collaboratorDeleteParamsSchema } from '@jrposada/fit-log-shared/models/auth/collaborator-delete';
 import {
   collaboratorPutParamsSchema,
   collaboratorPutRequestSchema,
-} from '@shared/models/auth/collaborator-put';
-import { climbsDeleteParamsSchema } from '@shared/models/climb/climb-delete';
-import { climbsGetQuerySchema } from '@shared/models/climb/climb-get';
-import { climbsGetByIdParamsSchema } from '@shared/models/climb/climb-get-by-id';
-import { climbsPutRequestSchema } from '@shared/models/climb/climb-put';
-import { climbsSearchQuerySchema } from '@shared/models/climb/climb-search';
+} from '@jrposada/fit-log-shared/models/auth/collaborator-put';
+import { climbsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/climb/climb-delete';
+import { climbsGetQuerySchema } from '@jrposada/fit-log-shared/models/climb/climb-get';
+import { climbsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/climb/climb-get-by-id';
+import { climbsPutRequestSchema } from '@jrposada/fit-log-shared/models/climb/climb-put';
+import { climbsSearchQuerySchema } from '@jrposada/fit-log-shared/models/climb/climb-search';
 import {
   climbHistoriesDeleteParamsSchema,
   climbHistoriesDeleteQuerySchema,
-} from '@shared/models/climb-history/climb-history-delete';
-import { climbHistoriesGetQuerySchema } from '@shared/models/climb-history/climb-history-get';
-import { climbHistoriesGetByIdParamsSchema } from '@shared/models/climb-history/climb-history-get-by-id';
-import { climbHistoryProjectRequestSchema } from '@shared/models/climb-history/climb-history-project';
-import { climbHistoriesPutRequestSchema } from '@shared/models/climb-history/climb-history-put';
-import { imagesDeleteParamsSchema } from '@shared/models/image/image-delete';
-import { imagesPostRequestSchema } from '@shared/models/image/image-post';
-import { locationsDeleteParamsSchema } from '@shared/models/location/location-delete';
-import { locationsGetQuerySchema } from '@shared/models/location/location-get';
-import { locationsGetByIdParamsSchema } from '@shared/models/location/location-get-by-id';
-import { locationsPutRequestSchema } from '@shared/models/location/location-put';
-import { sectorsBatchDeleteRequestSchema } from '@shared/models/sector/sector-batch-delete';
-import { sectorsBatchPutRequestSchema } from '@shared/models/sector/sector-batch-put';
-import { sectorsDeleteParamsSchema } from '@shared/models/sector/sector-delete';
-import { sectorsPutRequestSchema } from '@shared/models/sector/sector-put';
-import { sessionsDeleteParamsSchema } from '@shared/models/session/session-delete';
-import { sessionsGetQuerySchema } from '@shared/models/session/session-get';
-import { sessionsGetByIdParamsSchema } from '@shared/models/session/session-get-by-id';
-import { sessionsPutRequestSchema } from '@shared/models/session/session-put';
-import { workoutsDeleteParamsSchema } from '@shared/models/workout/workout-delete';
-import { workoutsGetQuerySchema } from '@shared/models/workout/workout-get';
-import { workoutsGetByIdParamsSchema } from '@shared/models/workout/workout-get-by-id';
-import { workoutsPutRequestSchema } from '@shared/models/workout/workout-put';
+} from '@jrposada/fit-log-shared/models/climb-history/climb-history-delete';
+import { climbHistoriesGetQuerySchema } from '@jrposada/fit-log-shared/models/climb-history/climb-history-get';
+import { climbHistoriesGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/climb-history/climb-history-get-by-id';
+import { climbHistoryProjectRequestSchema } from '@jrposada/fit-log-shared/models/climb-history/climb-history-project';
+import { climbHistoriesPutRequestSchema } from '@jrposada/fit-log-shared/models/climb-history/climb-history-put';
+import { imagesDeleteParamsSchema } from '@jrposada/fit-log-shared/models/image/image-delete';
+import { imagesPostRequestSchema } from '@jrposada/fit-log-shared/models/image/image-post';
+import { locationsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/location/location-delete';
+import { locationsGetQuerySchema } from '@jrposada/fit-log-shared/models/location/location-get';
+import { locationsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/location/location-get-by-id';
+import { locationsPutRequestSchema } from '@jrposada/fit-log-shared/models/location/location-put';
+import { sectorsBatchDeleteRequestSchema } from '@jrposada/fit-log-shared/models/sector/sector-batch-delete';
+import { sectorsBatchPutRequestSchema } from '@jrposada/fit-log-shared/models/sector/sector-batch-put';
+import { sectorsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/sector/sector-delete';
+import { sectorsPutRequestSchema } from '@jrposada/fit-log-shared/models/sector/sector-put';
+import { sessionsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/session/session-delete';
+import { sessionsGetQuerySchema } from '@jrposada/fit-log-shared/models/session/session-get';
+import { sessionsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/session/session-get-by-id';
+import { sessionsPutRequestSchema } from '@jrposada/fit-log-shared/models/session/session-put';
+import { workoutsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/workout/workout-delete';
+import { workoutsGetQuerySchema } from '@jrposada/fit-log-shared/models/workout/workout-get';
+import { workoutsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/workout/workout-get-by-id';
+import { workoutsPutRequestSchema } from '@jrposada/fit-log-shared/models/workout/workout-put';
 import { Router } from 'express';
 
 import { handler as climbHistoriesDelete } from './api/climb-histories/climb-histories-delete.ts';
