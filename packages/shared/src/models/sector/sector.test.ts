@@ -1,17 +1,17 @@
 import z from 'zod';
 
-import { Expect } from '../../types/expect';
-import { IsEqual } from '../../types/is-equal';
-import { IsTrue } from '../../types/is-true';
+import { Expect } from '../../types/expect.ts';
+import { IsEqual } from '../../types/is-equal.ts';
+import { IsTrue } from '../../types/is-true.ts';
 import {
   SectorsDeleteParams,
   sectorsDeleteParamsSchema,
-} from './sector-delete';
+} from './sector-delete.ts';
 import {
   SectorsGetByIdParams,
   sectorsGetByIdParamsSchema,
-} from './sector-get-by-id';
-import { SectorsPutRequest, sectorsPutRequestSchema } from './sector-put';
+} from './sector-get-by-id.ts';
+import { SectorsPutRequest, sectorsPutRequestSchema } from './sector-put.ts';
 
 export type SectorsPutRequestTest = Expect<
   IsTrue<IsEqual<SectorsPutRequest, z.infer<typeof sectorsPutRequestSchema>>>

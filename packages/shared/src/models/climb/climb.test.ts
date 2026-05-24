@@ -1,16 +1,19 @@
 import z from 'zod';
 
-import { Expect } from '../../types/expect';
-import { IsEqual } from '../../types/is-equal';
-import { IsTrue } from '../../types/is-true';
-import { ClimbsDeleteParams, climbsDeleteParamsSchema } from './climb-delete';
-import { ClimbsGetQuery, climbsGetQuerySchema } from './climb-get';
+import { Expect } from '../../types/expect.ts';
+import { IsEqual } from '../../types/is-equal.ts';
+import { IsTrue } from '../../types/is-true.ts';
+import {
+  ClimbsDeleteParams,
+  climbsDeleteParamsSchema,
+} from './climb-delete.ts';
+import { ClimbsGetQuery, climbsGetQuerySchema } from './climb-get.ts';
 import {
   ClimbsGetByIdParams,
   climbsGetByIdParamsSchema,
-} from './climb-get-by-id';
-import { ClimbsPutRequest, climbsPutRequestSchema } from './climb-put';
-import { ClimbsSearchQuery, climbsSearchQuerySchema } from './climb-search';
+} from './climb-get-by-id.ts';
+import { ClimbsPutRequest, climbsPutRequestSchema } from './climb-put.ts';
+import { ClimbsSearchQuery, climbsSearchQuerySchema } from './climb-search.ts';
 
 export type ClimbsGetQueryTest = Expect<
   IsTrue<

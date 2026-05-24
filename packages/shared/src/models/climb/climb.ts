@@ -1,11 +1,11 @@
 import {
   WithDepopulatedOwnership,
   WithOwnership,
-} from '../auth/with-ownership';
-import { Image } from '../image/image';
-import { Location } from '../location/location';
-import { Sector } from '../sector/sector';
-import { WithTimestamps } from '../utils/with-timestamps';
+} from '../auth/with-ownership.ts';
+import { Image } from '../image/image.ts';
+import { Location } from '../location/location.ts';
+import { Sector } from '../sector/sector.ts';
+import { WithTimestamps } from '../utils/with-timestamps.ts';
 
 export const GRADE_OPTIONS = [
   'V0',

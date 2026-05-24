@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { Climb, ClimbGrade } from './climb';
+import { Climb, ClimbGrade } from './climb.ts';
 
 export type ClimbsGetQuery = {
   grade?: ClimbGrade[];

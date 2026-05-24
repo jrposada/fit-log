@@ -1,10 +1,10 @@
 import {
   WithDepopulatedOwnership,
   WithOwnership,
-} from '../auth/with-ownership';
-import { Climb } from '../climb/climb';
-import { Image } from '../image/image';
-import { WithTimestamps } from '../utils/with-timestamps';
+} from '../auth/with-ownership.ts';
+import { Climb } from '../climb/climb.ts';
+import { Image } from '../image/image.ts';
+import { WithTimestamps } from '../utils/with-timestamps.ts';
 
 export type Sector = WithOwnership<
   WithTimestamps<{

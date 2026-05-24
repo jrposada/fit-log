@@ -1,1 +1,1 @@
-export { GRADE_OPTIONS } from './climb';
+export { GRADE_OPTIONS } from './climb.ts';

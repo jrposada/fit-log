@@ -1,18 +1,21 @@
 import z from 'zod';
 
-import { Expect } from '../../types/expect';
-import { IsEqual } from '../../types/is-equal';
-import { IsTrue } from '../../types/is-true';
+import { Expect } from '../../types/expect.ts';
+import { IsEqual } from '../../types/is-equal.ts';
+import { IsTrue } from '../../types/is-true.ts';
 import {
   LocationsDeleteParams,
   locationsDeleteParamsSchema,
-} from './location-delete';
-import { LocationsGetQuery, locationsGetQuerySchema } from './location-get';
+} from './location-delete.ts';
+import { LocationsGetQuery, locationsGetQuerySchema } from './location-get.ts';
 import {
   LocationsGetByIdParams,
   locationsGetByIdParamsSchema,
-} from './location-get-by-id';
-import { LocationsPutRequest, locationsPutRequestSchema } from './location-put';
+} from './location-get-by-id.ts';
+import {
+  LocationsPutRequest,
+  locationsPutRequestSchema,
+} from './location-put.ts';
 
 export type LocationsGetQueryTest = Expect<
   IsTrue<IsEqual<LocationsGetQuery, z.infer<typeof locationsGetQuerySchema>>>

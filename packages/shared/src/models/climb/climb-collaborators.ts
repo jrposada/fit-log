@@ -1,4 +1,4 @@
-import { Climb } from './climb';
+import { Climb } from './climb.ts';
 
 export type ClimbsCollaboratorsResponse = {
   climb: Climb;

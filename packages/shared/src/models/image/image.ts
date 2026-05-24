@@ -1,5 +1,5 @@
-import { WithOwnership } from '../auth/with-ownership';
-import { WithTimestamps } from '../utils/with-timestamps';
+import { WithOwnership } from '../auth/with-ownership.ts';
+import { WithTimestamps } from '../utils/with-timestamps.ts';
 
 export type Image = WithOwnership<
   WithTimestamps<{

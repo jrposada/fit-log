@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { Location } from './location';
+import { Location } from './location.ts';
 
 export type LocationsGetByIdParams = {
   id: string;

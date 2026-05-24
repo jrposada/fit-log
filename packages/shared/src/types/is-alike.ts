@@ -1,5 +1,5 @@
-import { IsEqual } from './is-equal';
-import { MergeIntersections } from './merge-intersections';
+import { IsEqual } from './is-equal.ts';
+import { MergeIntersections } from './merge-intersections.ts';
 
 export type IsAlike<X, Y> = IsEqual<
   MergeIntersections<X>,

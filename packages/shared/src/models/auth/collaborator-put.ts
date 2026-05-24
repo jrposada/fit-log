@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { COLLABORATOR_PERMISSIONS } from './with-ownership';
+import { COLLABORATOR_PERMISSIONS } from './with-ownership.ts';
 
 export type CollaboratorPutParams = {
   id: string;

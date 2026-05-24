@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { Workout } from './workout';
+import { Workout } from './workout.ts';
 
 export type WorkoutsGetQuery = {
   limit?: number;

@@ -4,7 +4,7 @@ import {
   CLIMB_HISTORY_QUERY_STATUSES,
   ClimbHistory,
   ClimbHistoryStatus,
-} from './climb-history';
+} from './climb-history.ts';
 
 export type ClimbHistoriesGetQueryStatus = ClimbHistoryStatus | 'project';
 

@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { Sector } from './sector';
+import { Sector } from './sector.ts';
 
 export type SectorsGetByIdParams = {
   id: string;

@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { Climb } from './climb';
+import { Climb } from './climb.ts';
 
 export type ClimbsGetByIdParams = {
   id: string;

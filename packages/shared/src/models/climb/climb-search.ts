@@ -3,8 +3,8 @@ import z from 'zod';
 import {
   CLIMB_HISTORY_QUERY_STATUSES,
   ClimbHistoryStatus,
-} from '../climb-history/climb-history';
-import { Climb, ClimbGrade } from './climb';
+} from '../climb-history/climb-history.ts';
+import { Climb, ClimbGrade } from './climb.ts';
 
 export type ClimbsSearchQuery = {
   attempts?: number;

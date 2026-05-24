@@ -1,4 +1,4 @@
-import { Sector } from './sector';
+import { Sector } from './sector.ts';
 
 export type SectorsCollaboratorsResponse = {
   sector: Sector;

@@ -1,7 +1,7 @@
-import { Expect } from './expect';
-import { IsEqual } from './is-equal';
-import { IsFalse } from './is-false';
-import { IsTrue } from './is-true';
+import { Expect } from './expect.ts';
+import { IsEqual } from './is-equal.ts';
+import { IsFalse } from './is-false.ts';
+import { IsTrue } from './is-true.ts';
 
 export type IsEqualTestA = Expect<IsTrue<IsEqual<true, true>>>;
 export type IsEqualTestB = Expect<IsTrue<IsEqual<false, false>>>;

@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { Image } from './image';
+import { Image } from './image.ts';
 
 export type ImagesPostRequest = {
   base64: string;

@@ -1,9 +1,9 @@
 import {
   WithDepopulatedOwnership,
   WithOwnership,
-} from '../auth/with-ownership';
-import { Sector } from '../sector/sector';
-import { WithTimestamps } from '../utils/with-timestamps';
+} from '../auth/with-ownership.ts';
+import { Sector } from '../sector/sector.ts';
+import { WithTimestamps } from '../utils/with-timestamps.ts';
 
 export type Location = WithOwnership<
   WithTimestamps<{

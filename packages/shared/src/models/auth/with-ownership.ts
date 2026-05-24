@@ -1,4 +1,4 @@
-import { UserSummary } from './user-summary';
+import { UserSummary } from './user-summary.ts';
 
 export const ADMIN_ROLE = 'admin';
 

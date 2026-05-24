@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { Session } from './session';
+import { Session } from './session.ts';
 
 export type SessionsPutRequest = Omit<
   Session,

@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { ClimbHistory } from './climb-history';
+import { ClimbHistory } from './climb-history.ts';
 
 export type ClimbHistoriesGetByIdParams = {
   id: string;

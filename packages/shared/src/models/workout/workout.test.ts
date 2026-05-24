@@ -1,18 +1,18 @@
 import z from 'zod';
 
-import { Expect } from '../../types/expect';
-import { IsEqual } from '../../types/is-equal';
-import { IsTrue } from '../../types/is-true';
+import { Expect } from '../../types/expect.ts';
+import { IsEqual } from '../../types/is-equal.ts';
+import { IsTrue } from '../../types/is-true.ts';
 import {
   WorkoutsDeleteParams,
   workoutsDeleteParamsSchema,
-} from './workout-delete';
-import { WorkoutsGetQuery, workoutsGetQuerySchema } from './workout-get';
+} from './workout-delete.ts';
+import { WorkoutsGetQuery, workoutsGetQuerySchema } from './workout-get.ts';
 import {
   WorkoutsGetByIdParams,
   workoutsGetByIdParamsSchema,
-} from './workout-get-by-id';
-import { WorkoutsPutRequest, workoutsPutRequestSchema } from './workout-put';
+} from './workout-get-by-id.ts';
+import { WorkoutsPutRequest, workoutsPutRequestSchema } from './workout-put.ts';
 
 export type WorkoutsGetQueryTest = Expect<
   IsTrue<IsEqual<WorkoutsGetQuery, z.infer<typeof workoutsGetQuerySchema>>>
