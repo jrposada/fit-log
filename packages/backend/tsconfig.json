@@ -1,16 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES2023",
-    "useDefineForClassFields": true,
-    "module": "CommonJS",
-    "lib": ["ES2020"],
+    "target": "ESNext",
+    "module": "NodeNext",
+    "lib": ["ESNext"],
     "skipLibCheck": true,
     "outDir": "./dist",
+    "rootDir": "./src",
 
     /* Module resolution */
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true,
 
     /* Linting */
     "strict": true,
@@ -20,11 +23,7 @@
     "esModuleInterop": true,
     "noImplicitReturns": true,
 
-    "types": ["node"],
-
-    "paths": {
-      "@shared/*": ["../shared/src/*"]
-    }
+    "types": ["node"]
   },
   "include": ["src"],
   "references": [{ "path": "../shared" }]
