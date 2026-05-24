@@ -1,4 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  canDelete,
+  canEdit,
+} from '@jrposada/fit-log-shared/models/auth/with-ownership';
+import {
+  Hold,
+  HoldType,
+  SplinePoint,
+} from '@jrposada/fit-log-shared/models/climb/climb';
+import { climbsPutRequestSchema } from '@jrposada/fit-log-shared/models/climb/climb-put';
 import { useClimbHistories } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-histories';
 import { useClimbHistoriesPut } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-histories-put';
 import { useClimbHistoryProject } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-history-project';
@@ -11,9 +21,6 @@ import { useMe } from '@jrposada/fit-log-shared-react/api/me/use-me';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { canDelete, canEdit } from '@shared/models/auth/with-ownership';
-import { Hold, HoldType, SplinePoint } from '@shared/models/climb/climb';
-import { climbsPutRequestSchema } from '@shared/models/climb/climb-put';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';

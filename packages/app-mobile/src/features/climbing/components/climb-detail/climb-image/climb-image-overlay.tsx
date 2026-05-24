@@ -1,9 +1,18 @@
-import { Hold, HoldType, SplinePoint } from '@shared/models/climb/climb';
+import {
+  Hold,
+  HoldType,
+  SplinePoint,
+} from '@jrposada/fit-log-shared/models/climb/climb';
 import { FunctionComponent, useCallback, useState } from 'react';
 import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-import { accent, palette, semantic, surfaces } from '../../../../../library/theme';
+import {
+  accent,
+  palette,
+  semantic,
+  surfaces,
+} from '../../../../../library/theme';
 import { catmullRomToSvgPath } from './catmull-rom';
 import { EditMode } from './climb-image';
 

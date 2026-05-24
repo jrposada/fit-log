@@ -1,7 +1,7 @@
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import AuthContext, {
   AuthContextValue,
 } from '@jrposada/fit-log-shared-react/contexts/auth/auth-context';
-import { assert } from '@shared/utils/assert';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import {

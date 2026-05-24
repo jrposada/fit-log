@@ -1,4 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  canDelete,
+  canEdit,
+} from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import { useImagesPost } from '@jrposada/fit-log-shared-react/api/images/use-images-post';
 import { useLocationsById } from '@jrposada/fit-log-shared-react/api/locations/use-locations-by-id';
 import { useLocationsDelete } from '@jrposada/fit-log-shared-react/api/locations/use-locations-delete';
@@ -8,7 +12,6 @@ import { useSectorsBatchDelete } from '@jrposada/fit-log-shared-react/api/sector
 import { useSectorsBatchPut } from '@jrposada/fit-log-shared-react/api/sectors/use-sectors-batch-put';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { canDelete, canEdit } from '@shared/models/auth/with-ownership';
 import {
   FunctionComponent,
   useCallback,

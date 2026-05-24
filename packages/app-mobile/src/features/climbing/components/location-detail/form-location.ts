@@ -1,5 +1,5 @@
-import { locationsPutRequestSchema } from '@shared/models/location/location-put';
-import { sectorsPutRequestSchema } from '@shared/models/sector/sector-put';
+import { locationsPutRequestSchema } from '@jrposada/fit-log-shared/models/location/location-put';
+import { sectorsPutRequestSchema } from '@jrposada/fit-log-shared/models/sector/sector-put';
 import z from 'zod';
 
 const sectorsFormDataSchema = sectorsPutRequestSchema

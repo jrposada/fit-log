@@ -1,4 +1,4 @@
-import { GRADE_OPTIONS } from '@shared/models/climb/climb-constants';
+import { GRADE_OPTIONS } from '@jrposada/fit-log-shared/models/climb/climb-constants';
 import { FunctionComponent } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
