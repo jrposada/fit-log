@@ -1,8 +1,8 @@
 import { CollaboratorPermission } from '@shared/models/auth/with-ownership';
 import { Document, Model, Types } from 'mongoose';
 
-import { ownerOrAdminFilter } from '../auth/owner-or-admin-filter';
-import { IUser } from '../models/user';
+import { ownerOrAdminFilter } from '../auth/owner-or-admin-filter.ts';
+import { IUser } from '../models/user.ts';
 
 /**
  * Add or update a single collaborator on an ownership-aware document.

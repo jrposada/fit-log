@@ -1,7 +1,7 @@
 import { ADMIN_ROLE } from '@shared/models/auth/with-ownership';
 import { Types } from 'mongoose';
 
-import { IUser } from '../models/user';
+import { IUser } from '../models/user.ts';
 
 type EditableFilter = {
   $or: Array<

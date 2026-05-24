@@ -5,15 +5,15 @@ import {
 import { assert } from '@shared/utils/assert';
 import { MergeType } from 'mongoose';
 
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { IClimb } from '../../models/climb';
-import { ClimbHistory } from '../../models/climb-history';
-import { IImage } from '../../models/image';
-import { ILocation } from '../../models/location';
-import { ISector } from '../../models/sector';
-import { toApiResponse } from '../api-utils';
-import { toApiClimbHistory } from './climb-histories-mapper';
-import { hasValidRefs } from './climb-histories-utils';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { IClimb } from '../../models/climb.ts';
+import { ClimbHistory } from '../../models/climb-history.ts';
+import { IImage } from '../../models/image.ts';
+import { ILocation } from '../../models/location.ts';
+import { ISector } from '../../models/sector.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiClimbHistory } from './climb-histories-mapper.ts';
+import { hasValidRefs } from './climb-histories-utils.ts';
 
 const handler = toApiResponse<
   ClimbHistoriesGetByIdResponse,

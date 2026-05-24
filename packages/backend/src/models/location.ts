@@ -1,6 +1,6 @@
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
-import { ownershipFields, WithOwnership } from './_collaborator';
+import { ownershipFields, WithOwnership } from './_collaborator.ts';
 
 export interface ILocation extends WithTimestamps<Document>, WithOwnership {
   /* Data */

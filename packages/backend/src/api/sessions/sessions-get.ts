@@ -4,9 +4,9 @@ import {
 } from '@shared/models/session/session-get';
 import { assert } from '@shared/utils/assert';
 
-import { Session } from '../../models/session';
-import { toApiResponse } from '../api-utils';
-import { toApiSession } from './sessions-mapper';
+import { Session } from '../../models/session.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiSession } from './sessions-mapper.ts';
 
 const handler = toApiResponse<SessionsGetResponse, unknown, SessionsGetQuery>(
   async (request) => {

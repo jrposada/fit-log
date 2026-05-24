@@ -2,20 +2,20 @@ import { WithDepopulatedOwnership } from '@shared/models/auth/with-ownership';
 import { Sector } from '@shared/models/sector/sector';
 import { MergeType } from 'mongoose';
 
-import { WithPopulatedOwnership } from '../../auth/ownership-populate';
-import { IClimb } from '../../models/climb';
-import { IImage } from '../../models/image';
-import { ISector } from '../../models/sector';
+import { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import { IClimb } from '../../models/climb.ts';
+import { IImage } from '../../models/image.ts';
+import { ISector } from '../../models/sector.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
-} from '../auth/collaborators-mapper';
-import { toApiUserSummary } from '../auth/user-summary-mapper';
+} from '../auth/collaborators-mapper.ts';
+import { toApiUserSummary } from '../auth/user-summary-mapper.ts';
 import {
   hasRequiredRefs,
   toApiDepopulatedClimb,
-} from '../climbs/climbs-mapper';
-import { toApiDepopulatedImage } from '../images/images-mapper';
+} from '../climbs/climbs-mapper.ts';
+import { toApiDepopulatedImage } from '../images/images-mapper.ts';
 
 function toApiDepopulatedSector(
   model: MergeType<ISector, { images: IImage[] }>

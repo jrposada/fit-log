@@ -5,14 +5,14 @@ import { assert } from '@shared/utils/assert';
 import {
   OWNERSHIP_POPULATE,
   PopulatedOwnership,
-} from '../../auth/ownership-populate';
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { IClimb } from '../../models/climb';
-import { IImage } from '../../models/image';
-import { Sector } from '../../models/sector';
-import { removeCollaborator } from '../../utils/collaborator-mutators';
-import { toApiResponse } from '../api-utils';
-import { toApiSector } from './sectors-mapper';
+} from '../../auth/ownership-populate.ts';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { IClimb } from '../../models/climb.ts';
+import { IImage } from '../../models/image.ts';
+import { Sector } from '../../models/sector.ts';
+import { removeCollaborator } from '../../utils/collaborator-mutators.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiSector } from './sectors-mapper.ts';
 
 const handler = toApiResponse<
   SectorsCollaboratorsResponse,

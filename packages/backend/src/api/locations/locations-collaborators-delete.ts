@@ -6,14 +6,14 @@ import { MergeType } from 'mongoose';
 import {
   OWNERSHIP_POPULATE,
   PopulatedOwnership,
-} from '../../auth/ownership-populate';
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { IImage } from '../../models/image';
-import { Location } from '../../models/location';
-import { ISector } from '../../models/sector';
-import { removeCollaborator } from '../../utils/collaborator-mutators';
-import { toApiResponse } from '../api-utils';
-import { toApiLocation } from './locations-mapper';
+} from '../../auth/ownership-populate.ts';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { IImage } from '../../models/image.ts';
+import { Location } from '../../models/location.ts';
+import { ISector } from '../../models/sector.ts';
+import { removeCollaborator } from '../../utils/collaborator-mutators.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiLocation } from './locations-mapper.ts';
 
 const handler = toApiResponse<
   LocationsCollaboratorsResponse,

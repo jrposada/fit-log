@@ -1,5 +1,5 @@
 import pkg from '../../../package.json';
-import { toApiResponse } from '../api-utils';
+import { toApiResponse } from '../api-utils.ts';
 
 const handler = toApiResponse(async () => {
   const version = pkg.version;

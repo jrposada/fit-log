@@ -4,10 +4,10 @@ import {
 } from '@shared/models/workout/workout-get-by-id';
 import { assert } from '@shared/utils/assert';
 
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { Workout } from '../../models/workout';
-import { toApiResponse } from '../api-utils';
-import { toApiWorkout } from './workouts-mapper';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { Workout } from '../../models/workout.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiWorkout } from './workouts-mapper.ts';
 
 const handler = toApiResponse<WorkoutsGetByIdResponse, WorkoutsGetByIdParams>(
   async (request) => {

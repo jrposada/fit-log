@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { User } from '../models/user';
-import Keycloak from '../services/keycloak';
+import { User } from '../models/user.ts';
+import Keycloak from '../services/keycloak.ts';
 
 export async function authenticateKeycloak(
   req: Request,

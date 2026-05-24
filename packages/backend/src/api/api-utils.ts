@@ -1,8 +1,8 @@
 import { ApiResponse } from '@shared/models/api-response';
 import { Request, Response } from 'express';
 
-import ForbiddenError from '../infrastructure/forbidden-error';
-import ResourceNotFound from '../infrastructure/not-found-error';
+import ForbiddenError from '../infrastructure/forbidden-error.ts';
+import ResourceNotFound from '../infrastructure/not-found-error.ts';
 
 function handleApiError<TError = unknown>(error: TError, res: Response) {
   console.error('API Error:', error);

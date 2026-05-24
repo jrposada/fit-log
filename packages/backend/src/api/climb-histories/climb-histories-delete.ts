@@ -5,8 +5,8 @@ import {
 } from '@shared/models/climb-history/climb-history-delete';
 import { assert } from '@shared/utils/assert';
 
-import { ClimbHistory, computeTopStatus } from '../../models/climb-history';
-import { toApiResponse } from '../api-utils';
+import { ClimbHistory, computeTopStatus } from '../../models/climb-history.ts';
+import { toApiResponse } from '../api-utils.ts';
 
 const handler = toApiResponse<
   ClimbHistoriesDeleteResponse,

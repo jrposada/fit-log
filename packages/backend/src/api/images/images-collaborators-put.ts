@@ -8,12 +8,12 @@ import { assert } from '@shared/utils/assert';
 import {
   OWNERSHIP_POPULATE,
   PopulatedOwnership,
-} from '../../auth/ownership-populate';
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { Image } from '../../models/image';
-import { addOrUpdateCollaborator } from '../../utils/collaborator-mutators';
-import { toApiResponse } from '../api-utils';
-import { toApiImage } from './images-mapper';
+} from '../../auth/ownership-populate.ts';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { Image } from '../../models/image.ts';
+import { addOrUpdateCollaborator } from '../../utils/collaborator-mutators.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiImage } from './images-mapper.ts';
 
 const handler = toApiResponse<
   ImagesCollaboratorsResponse,

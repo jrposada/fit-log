@@ -4,10 +4,10 @@ import {
 } from '@shared/models/session/session-put';
 import { assert } from '@shared/utils/assert';
 
-import { Session } from '../../models/session';
-import { upsertDocument } from '../../utils/upsert-document';
-import { toApiResponse } from '../api-utils';
-import { toApiSession } from './sessions-mapper';
+import { Session } from '../../models/session.ts';
+import { upsertDocument } from '../../utils/upsert-document.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiSession } from './sessions-mapper.ts';
 
 const handler = toApiResponse<
   SessionsPutResponse,

@@ -6,8 +6,8 @@ import {
   Types,
 } from 'mongoose';
 
-import { editableBy } from '../auth/editable-filter';
-import { IUser } from '../models/user';
+import { editableBy } from '../auth/editable-filter.ts';
+import { IUser } from '../models/user.ts';
 
 export interface BatchUpsertOwnedItem<T> {
   id?: string;

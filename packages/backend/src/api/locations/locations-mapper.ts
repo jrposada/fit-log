@@ -2,16 +2,16 @@ import { WithDepopulatedOwnership } from '@shared/models/auth/with-ownership';
 import { Location } from '@shared/models/location/location';
 import { MergeType } from 'mongoose';
 
-import { WithPopulatedOwnership } from '../../auth/ownership-populate';
-import { IImage } from '../../models/image';
-import { ILocation } from '../../models/location';
-import { ISector } from '../../models/sector';
+import { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import { IImage } from '../../models/image.ts';
+import { ILocation } from '../../models/location.ts';
+import { ISector } from '../../models/sector.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
-} from '../auth/collaborators-mapper';
-import { toApiUserSummary } from '../auth/user-summary-mapper';
-import { toApiDepopulatedSector } from '../sectors/sectors-mapper';
+} from '../auth/collaborators-mapper.ts';
+import { toApiUserSummary } from '../auth/user-summary-mapper.ts';
+import { toApiDepopulatedSector } from '../sectors/sectors-mapper.ts';
 
 function toApiDepopulatedLocation(
   model: ILocation

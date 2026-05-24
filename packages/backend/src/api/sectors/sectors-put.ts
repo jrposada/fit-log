@@ -8,14 +8,14 @@ import { Types } from 'mongoose';
 import {
   OWNERSHIP_POPULATE,
   PopulatedOwnership,
-} from '../../auth/ownership-populate';
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { IClimb } from '../../models/climb';
-import { IImage } from '../../models/image';
-import { Sector } from '../../models/sector';
-import { upsertOwnedDocument } from '../../utils/upsert-owned-document';
-import { toApiResponse } from '../api-utils';
-import { toApiSector } from './sectors-mapper';
+} from '../../auth/ownership-populate.ts';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { IClimb } from '../../models/climb.ts';
+import { IImage } from '../../models/image.ts';
+import { Sector } from '../../models/sector.ts';
+import { upsertOwnedDocument } from '../../utils/upsert-owned-document.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiSector } from './sectors-mapper.ts';
 
 const handler = toApiResponse<
   SectorsPutResponse,

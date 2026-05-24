@@ -4,8 +4,8 @@ import {
 } from '@shared/models/session/session-delete';
 import { assert } from '@shared/utils/assert';
 
-import { Session } from '../../models/session';
-import { toApiResponse } from '../api-utils';
+import { Session } from '../../models/session.ts';
+import { toApiResponse } from '../api-utils.ts';
 
 const handler = toApiResponse<SessionsDeleteResponse, SessionsDeleteParams>(
   async (request) => {

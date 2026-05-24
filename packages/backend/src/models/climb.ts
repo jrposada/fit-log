@@ -1,7 +1,7 @@
 import { HOLD_TYPES, HoldType } from '@shared/models/climb/climb';
 import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
 
-import { ownershipFields, WithOwnership } from './_collaborator';
+import { ownershipFields, WithOwnership } from './_collaborator.ts';
 
 export interface IHold {
   x: number;

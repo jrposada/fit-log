@@ -4,9 +4,9 @@ import {
 } from '@shared/models/workout/workout-get';
 import { assert } from '@shared/utils/assert';
 
-import { Workout } from '../../models/workout';
-import { toApiResponse } from '../api-utils';
-import { toApiWorkout } from './workouts-mapper';
+import { Workout } from '../../models/workout.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiWorkout } from './workouts-mapper.ts';
 
 const handler = toApiResponse<WorkoutsGetResponse, unknown, WorkoutsGetQuery>(
   async (request) => {

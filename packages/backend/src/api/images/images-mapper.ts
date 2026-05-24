@@ -2,13 +2,13 @@ import { WithDepopulatedOwnership } from '@shared/models/auth/with-ownership';
 import { Image } from '@shared/models/image/image';
 import { assert } from '@shared/utils/assert';
 
-import { WithPopulatedOwnership } from '../../auth/ownership-populate';
-import { IImage } from '../../models/image';
+import { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import { IImage } from '../../models/image.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
-} from '../auth/collaborators-mapper';
-import { toApiUserSummary } from '../auth/user-summary-mapper';
+} from '../auth/collaborators-mapper.ts';
+import { toApiUserSummary } from '../auth/user-summary-mapper.ts';
 
 function resolveFileUrl(relativePath: string): string {
   if (

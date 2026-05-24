@@ -2,9 +2,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 
-import { connectToDatabase, disconnectFromDatabase } from './database';
-import { router } from './router';
-import { FilesService } from './services/files';
+import { connectToDatabase, disconnectFromDatabase } from './database.ts';
+import { router } from './router.ts';
+import { FilesService } from './services/files.ts';
 
 dotenv.config();
 

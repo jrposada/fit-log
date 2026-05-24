@@ -4,10 +4,10 @@ import {
 } from '@shared/models/sector/sector-delete';
 import { assert } from '@shared/utils/assert';
 
-import { deletableBy } from '../../auth/deletable-filter';
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { Sector } from '../../models/sector';
-import { toApiResponse } from '../api-utils';
+import { deletableBy } from '../../auth/deletable-filter.ts';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { Sector } from '../../models/sector.ts';
+import { toApiResponse } from '../api-utils.ts';
 
 const handler = toApiResponse<SectorsDeleteResponse, SectorsDeleteParams>(
   async (request) => {

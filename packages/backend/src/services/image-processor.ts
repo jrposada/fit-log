@@ -3,7 +3,7 @@ import path from 'path';
 import sharp from 'sharp';
 import { v4 as uuid } from 'uuid';
 
-import { FilesService } from './files';
+import { FilesService } from './files.ts';
 
 export interface ProcessedImage {
   imageUrl: string;

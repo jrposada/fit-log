@@ -9,15 +9,15 @@ import { MergeType } from 'mongoose';
 import {
   OWNERSHIP_POPULATE,
   PopulatedOwnership,
-} from '../../auth/ownership-populate';
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { Climb } from '../../models/climb';
-import { IImage } from '../../models/image';
-import { ILocation } from '../../models/location';
-import { ISector } from '../../models/sector';
-import { addOrUpdateCollaborator } from '../../utils/collaborator-mutators';
-import { toApiResponse } from '../api-utils';
-import { toApiClimb } from './climbs-mapper';
+} from '../../auth/ownership-populate.ts';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { Climb } from '../../models/climb.ts';
+import { IImage } from '../../models/image.ts';
+import { ILocation } from '../../models/location.ts';
+import { ISector } from '../../models/sector.ts';
+import { addOrUpdateCollaborator } from '../../utils/collaborator-mutators.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiClimb } from './climbs-mapper.ts';
 
 const handler = toApiResponse<
   ClimbsCollaboratorsResponse,

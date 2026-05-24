@@ -4,9 +4,9 @@ import {
 } from '@shared/models/sector/sector-batch-delete';
 import { assert } from '@shared/utils/assert';
 
-import { deletableBy } from '../../auth/deletable-filter';
-import { Sector } from '../../models/sector';
-import { toApiResponse } from '../api-utils';
+import { deletableBy } from '../../auth/deletable-filter.ts';
+import { Sector } from '../../models/sector.ts';
+import { toApiResponse } from '../api-utils.ts';
 
 const handler = toApiResponse<
   SectorsBatchDeleteResponse,

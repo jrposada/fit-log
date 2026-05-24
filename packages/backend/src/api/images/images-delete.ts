@@ -4,10 +4,10 @@ import {
 } from '@shared/models/image/image-delete';
 import { assert } from '@shared/utils/assert';
 
-import { deletableBy } from '../../auth/deletable-filter';
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { Image } from '../../models/image';
-import { toApiResponse } from '../api-utils';
+import { deletableBy } from '../../auth/deletable-filter.ts';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { Image } from '../../models/image.ts';
+import { toApiResponse } from '../api-utils.ts';
 
 const handler = toApiResponse<ImagesDeleteResponse, ImagesDeleteParams>(
   async (request) => {

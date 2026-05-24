@@ -1,6 +1,6 @@
 import { Workout } from '@shared/models/workout/workout';
 
-import { IWorkout } from '../../models/workout';
+import { IWorkout } from '../../models/workout.ts';
 
 function toApiWorkout(model: IWorkout): Workout {
   return {

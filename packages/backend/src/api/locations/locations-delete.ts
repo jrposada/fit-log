@@ -4,10 +4,10 @@ import {
 } from '@shared/models/location/location-delete';
 import { assert } from '@shared/utils/assert';
 
-import { deletableBy } from '../../auth/deletable-filter';
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { Location } from '../../models/location';
-import { toApiResponse } from '../api-utils';
+import { deletableBy } from '../../auth/deletable-filter.ts';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { Location } from '../../models/location.ts';
+import { toApiResponse } from '../api-utils.ts';
 
 const handler = toApiResponse<LocationsDeleteResponse, LocationsDeleteParams>(
   async (request) => {

@@ -1,11 +1,11 @@
 import { MergeType } from 'mongoose';
 
-import { IClimb } from '../../models/climb';
-import { IClimbHistory } from '../../models/climb-history';
-import { IImage } from '../../models/image';
-import { ILocation } from '../../models/location';
-import { ISector } from '../../models/sector';
-import { WithRequiredRefs } from '../../utils/types';
+import { IClimb } from '../../models/climb.ts';
+import { IClimbHistory } from '../../models/climb-history.ts';
+import { IImage } from '../../models/image.ts';
+import { ILocation } from '../../models/location.ts';
+import { ISector } from '../../models/sector.ts';
+import { WithRequiredRefs } from '../../utils/types.ts';
 
 /** Populated climb-history with all nested refs guaranteed non-null. */
 type ValidClimbHistory = MergeType<

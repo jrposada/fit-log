@@ -1,9 +1,9 @@
 import { ClimbHistory } from '@shared/models/climb-history/climb-history';
 
-import { toApiDepopulatedClimb } from '../climbs/climbs-mapper';
-import { toApiDepopulatedLocation } from '../locations/locations-mapper';
-import { toApiDepopulatedSector } from '../sectors/sectors-mapper';
-import { ValidClimbHistory } from './climb-histories-utils';
+import { toApiDepopulatedClimb } from '../climbs/climbs-mapper.ts';
+import { toApiDepopulatedLocation } from '../locations/locations-mapper.ts';
+import { toApiDepopulatedSector } from '../sectors/sectors-mapper.ts';
+import { ValidClimbHistory } from './climb-histories-utils.ts';
 
 function toApiClimbHistory(model: ValidClimbHistory): ClimbHistory {
   return {

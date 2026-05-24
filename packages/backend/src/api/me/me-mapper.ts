@@ -1,6 +1,6 @@
 import { MeResponse } from '@shared/models/auth/me';
 
-import { IUser } from '../../models/user';
+import { IUser } from '../../models/user.ts';
 
 export function toApiMe(model: IUser): MeResponse {
   return {

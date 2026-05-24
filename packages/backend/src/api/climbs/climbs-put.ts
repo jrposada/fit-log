@@ -8,15 +8,15 @@ import { MergeType, Types } from 'mongoose';
 import {
   OWNERSHIP_POPULATE,
   PopulatedOwnership,
-} from '../../auth/ownership-populate';
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { Climb } from '../../models/climb';
-import { IImage } from '../../models/image';
-import { ILocation } from '../../models/location';
-import { ISector } from '../../models/sector';
-import { upsertOwnedDocument } from '../../utils/upsert-owned-document';
-import { toApiResponse } from '../api-utils';
-import { toApiClimb } from './climbs-mapper';
+} from '../../auth/ownership-populate.ts';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { Climb } from '../../models/climb.ts';
+import { IImage } from '../../models/image.ts';
+import { ILocation } from '../../models/location.ts';
+import { ISector } from '../../models/sector.ts';
+import { upsertOwnedDocument } from '../../utils/upsert-owned-document.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiClimb } from './climbs-mapper.ts';
 
 const handler = toApiResponse<
   ClimbsPutResponse,

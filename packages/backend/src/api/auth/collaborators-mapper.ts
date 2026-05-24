@@ -4,9 +4,9 @@ import {
 } from '@shared/models/auth/with-ownership';
 import { MergeType } from 'mongoose';
 
-import { ICollaborator } from '../../models/_collaborator';
-import { IUser } from '../../models/user';
-import { toApiUserSummary } from './user-summary-mapper';
+import { ICollaborator } from '../../models/_collaborator.ts';
+import { IUser } from '../../models/user.ts';
+import { toApiUserSummary } from './user-summary-mapper.ts';
 
 export function toApiDepopulatedCollaborator(
   model: ICollaborator

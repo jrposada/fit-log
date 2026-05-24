@@ -9,14 +9,14 @@ import { MergeType } from 'mongoose';
 import {
   OWNERSHIP_POPULATE,
   PopulatedOwnership,
-} from '../../auth/ownership-populate';
-import { Climb } from '../../models/climb';
-import { ClimbHistory } from '../../models/climb-history';
-import { IImage } from '../../models/image';
-import { ILocation } from '../../models/location';
-import { ISector } from '../../models/sector';
-import { toApiResponse } from '../api-utils';
-import { toApiClimb } from './climbs-mapper';
+} from '../../auth/ownership-populate.ts';
+import { Climb } from '../../models/climb.ts';
+import { ClimbHistory } from '../../models/climb-history.ts';
+import { IImage } from '../../models/image.ts';
+import { ILocation } from '../../models/location.ts';
+import { ISector } from '../../models/sector.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiClimb } from './climbs-mapper.ts';
 
 const handler = toApiResponse<ClimbsSearchResponse, unknown, ClimbsSearchQuery>(
   async (request) => {

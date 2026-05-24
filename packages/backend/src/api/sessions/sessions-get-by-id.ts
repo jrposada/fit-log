@@ -4,10 +4,10 @@ import {
 } from '@shared/models/session/session-get-by-id';
 import { assert } from '@shared/utils/assert';
 
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { Session } from '../../models/session';
-import { toApiResponse } from '../api-utils';
-import { toApiSession } from './sessions-mapper';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { Session } from '../../models/session.ts';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiSession } from './sessions-mapper.ts';
 
 const handler = toApiResponse<SessionsGetByIdResponse, SessionsGetByIdParams>(
   async (request) => {

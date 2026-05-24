@@ -4,10 +4,10 @@ import {
 } from '@shared/models/climb/climb-delete';
 import { assert } from '@shared/utils/assert';
 
-import { deletableBy } from '../../auth/deletable-filter';
-import ResourceNotFound from '../../infrastructure/not-found-error';
-import { Climb } from '../../models/climb';
-import { toApiResponse } from '../api-utils';
+import { deletableBy } from '../../auth/deletable-filter.ts';
+import ResourceNotFound from '../../infrastructure/not-found-error.ts';
+import { Climb } from '../../models/climb.ts';
+import { toApiResponse } from '../api-utils.ts';
 
 const handler = toApiResponse<ClimbsDeleteResponse, ClimbsDeleteParams>(
   async (request) => {

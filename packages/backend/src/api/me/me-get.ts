@@ -1,8 +1,8 @@
 import { MeResponse } from '@shared/models/auth/me';
 import { assert } from '@shared/utils/assert';
 
-import { toApiResponse } from '../api-utils';
-import { toApiMe } from './me-mapper';
+import { toApiResponse } from '../api-utils.ts';
+import { toApiMe } from './me-mapper.ts';
 
 const handler = toApiResponse<MeResponse>(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
