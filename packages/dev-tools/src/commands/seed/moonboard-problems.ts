@@ -42,7 +42,6 @@ export async function seedMoonboardProblems(): Promise<void> {
 
   // const ownerId = await getOrCreateSystemUser();
   // const { upserted } = await upsertMoonboardProblems(data, ownerId);
-  console.log(
-    `✓ Seeded ${data.benchmarks.length + data.problems.length} Moonboard problems`
-  );
+  const total = data.setups.reduce((sum, s) => sum + s.problems.length, 0);
+  console.log(`✓ Seeded ${total} Moonboard problems`);
 }

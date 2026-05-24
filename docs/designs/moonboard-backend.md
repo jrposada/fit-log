@@ -1,10 +1,15 @@
 # Design: Moonboard Backend Sync
 
+> **Status: blocked on upstream API discovery.** The SDK and CLI are written
+> and shaped correctly, but every Moonboard endpoint we know of is unreachable
+> (see [Current Blocker](#current-blocker)). Work resumes once we capture
+> request shapes from the current official MoonBoard mobile app.
+
 ## Context
 
-Fit-log wants to sync Moonboard problems into its own DB so they appear in the Climbing tab as regular Climbs. Moonboard credentials are server configuration (env vars), not per-user settings. A background cron job handles the sync automatically.
+Fit-log wants to sync Moonboard problems into its own DB so they appear in the Climbing tab as regular Climbs. Moonboard credentials are server configuration (env vars), not per-user settings. Because no Moonboard endpoint is publicly callable today, sync is **CLI-driven and run manually** — there is no automatic cron job.
 
-Depends on: none  
+Depends on: capturing the live MoonBoard mobile API (see Current Blocker)  
 Required by: `moonboard-profile-screen`
 
 ---
@@ -30,12 +35,76 @@ Stored as environment variables on the server — no DB storage, no UI:
 
 The sync job is a no-op if either variable is unset.
 
-### Moonboard Service — `backend/src/services/moonboard.ts`
+### Moonboard SDK — `packages/moonboard-sdk`
 
-1. **Login** — POST `https://www.moonboard.com/Account/Login` with form-encoded credentials. Extracts `_MoonBoard` and `__RequestVerificationToken` session cookies.
-2. **Session cache** — In-memory singleton `{ cookies, expiresAt }`, TTL 2h. Re-authenticates on expiry or 401/403.
-3. **Fetch problems** — GET `/Problem/GetProblems` with session cookies.
-4. **Fetch benchmarks** — GET `/Problem/GetBenchmarkProblems` with session cookies.
+The SDK targets the legacy MoonBoard **mobile** API at
+`restapimoonboard.ems-x.com` (no Cloudflare, OAuth2 password grant), based on
+reverse-engineering done by [`spookykat/MoonBoard`](https://github.com/spookykat/MoonBoard).
+Current shape:
+
+1. **Login** — `POST /token` with form body
+   `grant_type=password&username=…&password=…&client_id=com.moonclimbing.mb`,
+   UA `MoonBoard/1.0`. Returns `{access_token, refresh_token}`.
+2. **Fetch problems** — `GET /v1/_moonapi/problems/v3/{layout}/{angle}/{cursor}?v=8.3.4`
+   with `Authorization: BEARER <token>`. Cursor is the last `apiId` seen;
+   page size is 5000.
+3. **Iterate setups** — repeat per (holdset, angle): MoonBoard 2016, Masters
+   2017 @ 40°/25°, Masters 2019 @ 40°/25°, Mini MoonBoard 2020 @ 40°.
+4. **Benchmarks** — not a separate endpoint; each problem carries an
+   `isBenchmark` flag.
+5. **Refresh** — on 401/403, `POST /token` with
+   `grant_type=refresh_token&refresh_token=…&client_id=com.moonclimbing.mb`,
+   retry once.
+
+The web flow (`www.moonboard.com`, `_MoonBoard` cookie) is **not used**: that
+host now sits behind Cloudflare's bot-management JS challenge and the
+underlying website no longer exposes the problems list as JSON (only dashboard
+stats endpoints remain). An earlier Playwright/Patchright headless-browser
+prototype confirmed both points.
+
+### Current Blocker
+
+`restapimoonboard.ems-x.com` was retired by Moonboard alongside the release of
+their new official mobile app:
+
+- Every path (`/`, `/token`, `/v1/_moonapi/...`) now returns `HTTP 200` with
+  `content-length: 0` from a Caddy front. No app behind it.
+- Historical note: per
+  [spookykat/MoonBoard#6](https://github.com/spookykat/MoonBoard/issues/6),
+  the host briefly returned `{"error":"Obsolete", "error_description":"This
+  version of the MoonBoard app is now obsolete, please download the new
+  MoonBoard app from the store."}` before being silenced entirely.
+- No public repo has rev-eng'd the new app's API; all 2024-2025 forks still
+  point at the dead host.
+
+The SDK code is shaped correctly for an OAuth2 + paginated-list flow and is
+expected to need only **URL + field renames** once we have the new endpoints —
+not a structural rewrite.
+
+### Unblock Workflow (when we're ready to resume)
+
+To discover the new MoonBoard mobile API:
+
+1. Install **Proxyman** (macOS) or **mitmproxy** on the dev laptop.
+2. Install + trust the proxy's root CA on a real phone running the **new**
+   official MoonBoard app. (Stock devices work *only* if the app doesn't pin
+   its TLS cert — otherwise a rooted Android with Frida + objection or a
+   jailbroken iOS with SSL Kill Switch is required.)
+3. Route the phone through the proxy and exercise: login, open problems list,
+   filter by holdset/angle, open a problem detail, view benchmarks.
+4. For each request capture: full URL, method, headers (esp. `Authorization`,
+   `User-Agent`, any `x-…` custom headers), request body, and a sample
+   response payload.
+5. Drop those captures into a ticket — the SDK update is then a mechanical
+   change: swap `API_HOST`, `CLIENT_ID`, `API_VERSION`, the `/token` body
+   shape, and the `/v1/_moonapi/problems/...` URL template in
+   `packages/moonboard-sdk/src/index.ts`. Pagination strategy may need to
+   change too (e.g. opaque cursor vs `apiId`).
+
+If TLS pinning blocks step 2 and no rooted/jailbroken device is available, the
+fallback is to seed from a static historical snapshot (see e.g. the
+`problems_2023_01_30.zip` attached to spookykat#6) and ship the
+profile-screen feature against stale data.
 
 ### Data Mapping (Moonboard → fit-log)
 
@@ -48,13 +117,6 @@ Moonboard concepts map to existing fit-log models:
 | Problem | `Climb` under the relevant Sector, keyed on `sourceId` |
 
 `Location`, `Sector`, and `Climb` models gain a mandatory `source: string` field (default `'user'` for existing records — no migration script needed). `Climb` gains `sourceId?: string` as the upsert deduplication key.
-
-### Sync Job — `backend/src/jobs/moonboard-sync.ts`
-
-- Runs once on server startup and on a daily cron (e.g. `0 3 * * *`).
-- Fetches problems + benchmarks, maps to fit-log models, bulk-upserts on `sourceId`.
-- Logs success/failure; does not crash the server on error.
-- Use `node-cron` if available, otherwise a scheduled `setTimeout`.
 
 ### CLI Fetch Command — `dev-tools moonboard fetch`
 
@@ -109,7 +171,16 @@ No changes to `User` model or `MeResponse`.
 
 ## Verification
 
-1. Server starts with `MOONBOARD_USERNAME` / `MOONBOARD_PASSWORD` set → sync runs, no crash.
-2. After sync: Climbs with `sourceId` visible under "Moonboard" Location in Climbing tab.
-3. Re-running sync does not duplicate Climbs.
-4. Server starts without env vars → sync is skipped silently.
+Once the API discovery step is done and the SDK is pointed at the new
+endpoints:
+
+1. `pnpm dev-tools moonboard fetch > .../moonboard-problems.json` exits 0 and
+   produces a non-empty JSON file with the new shape
+   (`{ setups: [{ setup, problems }, …] }`).
+2. `dev-tools setup data` re-seeds the local DB without error; Climbs with
+   `source: 'system'` and `sourceId` show up under the "Moonboard" Location
+   in the Climbing tab.
+3. Running `setup data` twice in a row does not duplicate Climbs (upsert on
+   `sourceId` works).
+4. The CLI fails cleanly (non-zero exit, useful error) when
+   `MOONBOARD_USERNAME` / `MOONBOARD_PASSWORD` are unset.
