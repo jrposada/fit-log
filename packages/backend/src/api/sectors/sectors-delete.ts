@@ -1,4 +1,4 @@
-import {
+import type {
   SectorsDeleteParams,
   SectorsDeleteResponse,
 } from '@jrposada/fit-log-shared/models/sector/sector-delete';

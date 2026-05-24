@@ -1,4 +1,5 @@
-import { Document, model, Schema, WithTimestamps } from 'mongoose';
+import type { Document, WithTimestamps } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
 export interface ISession extends WithTimestamps<Document> {
   completedAt: Date;

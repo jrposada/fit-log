@@ -1,20 +1,21 @@
-import {
+import type {
   ClimbSearchResult,
   ClimbsSearchQuery,
   ClimbsSearchResponse,
 } from '@jrposada/fit-log-shared/models/climb/climb-search';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import { MergeType } from 'mongoose';
+import type { MergeType } from 'mongoose';
 
+import type {
+  PopulatedOwnership} from '../../auth/ownership-populate.ts';
 import {
-  OWNERSHIP_POPULATE,
-  PopulatedOwnership,
+  OWNERSHIP_POPULATE
 } from '../../auth/ownership-populate.ts';
 import { Climb } from '../../models/climb.ts';
 import { ClimbHistory } from '../../models/climb-history.ts';
-import { IImage } from '../../models/image.ts';
-import { ILocation } from '../../models/location.ts';
-import { ISector } from '../../models/sector.ts';
+import type { IImage } from '../../models/image.ts';
+import type { ILocation } from '../../models/location.ts';
+import type { ISector } from '../../models/sector.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { toApiClimb } from './climbs-mapper.ts';
 

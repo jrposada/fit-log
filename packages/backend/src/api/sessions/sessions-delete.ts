@@ -1,4 +1,4 @@
-import {
+import type {
   SessionsDeleteParams,
   SessionsDeleteResponse,
 } from '@jrposada/fit-log-shared/models/session/session-delete';

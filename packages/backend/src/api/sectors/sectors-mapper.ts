@@ -1,11 +1,11 @@
-import { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import { Sector } from '@jrposada/fit-log-shared/models/sector/sector';
-import { MergeType } from 'mongoose';
+import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
+import type { Sector } from '@jrposada/fit-log-shared/models/sector/sector';
+import type { MergeType } from 'mongoose';
 
-import { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
-import { IClimb } from '../../models/climb.ts';
-import { IImage } from '../../models/image.ts';
-import { ISector } from '../../models/sector.ts';
+import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import type { IClimb } from '../../models/climb.ts';
+import type { IImage } from '../../models/image.ts';
+import type { ISector } from '../../models/sector.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,

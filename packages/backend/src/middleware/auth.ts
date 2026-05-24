@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 import { User } from '../models/user.ts';
 import Keycloak from '../services/keycloak.ts';

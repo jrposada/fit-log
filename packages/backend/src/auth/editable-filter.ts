@@ -1,7 +1,7 @@
 import { ADMIN_ROLE } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import { Types } from 'mongoose';
+import type { Types } from 'mongoose';
 
-import { IUser } from '../models/user.ts';
+import type { IUser } from '../models/user.ts';
 
 type EditableFilter = {
   $or: Array<

@@ -1,4 +1,4 @@
-import {
+import type {
   ClimbsDeleteParams,
   ClimbsDeleteResponse,
 } from '@jrposada/fit-log-shared/models/climb/climb-delete';

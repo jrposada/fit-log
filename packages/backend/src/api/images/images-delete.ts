@@ -1,4 +1,4 @@
-import {
+import type {
   ImagesDeleteParams,
   ImagesDeleteResponse,
 } from '@jrposada/fit-log-shared/models/image/image-delete';

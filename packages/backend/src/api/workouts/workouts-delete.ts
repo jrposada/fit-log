@@ -1,4 +1,4 @@
-import {
+import type {
   WorkoutsDeleteParams,
   WorkoutsDeleteResponse,
 } from '@jrposada/fit-log-shared/models/workout/workout-delete';

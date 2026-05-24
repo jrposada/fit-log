@@ -1,4 +1,4 @@
-import {
+import type {
   SessionsGetByIdParams,
   SessionsGetByIdResponse,
 } from '@jrposada/fit-log-shared/models/session/session-get-by-id';

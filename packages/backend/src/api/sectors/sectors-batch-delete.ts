@@ -1,4 +1,4 @@
-import {
+import type {
   SectorsBatchDeleteRequest,
   SectorsBatchDeleteResponse,
 } from '@jrposada/fit-log-shared/models/sector/sector-batch-delete';

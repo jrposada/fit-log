@@ -1,17 +1,18 @@
-import {
+import type {
   LocationsGetQuery,
   LocationsGetResponse,
 } from '@jrposada/fit-log-shared/models/location/location-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import { MergeType } from 'mongoose';
+import type { MergeType } from 'mongoose';
 
+import type {
+  PopulatedOwnership} from '../../auth/ownership-populate.ts';
 import {
-  OWNERSHIP_POPULATE,
-  PopulatedOwnership,
+  OWNERSHIP_POPULATE
 } from '../../auth/ownership-populate.ts';
-import { IImage } from '../../models/image.ts';
+import type { IImage } from '../../models/image.ts';
 import { Location } from '../../models/location.ts';
-import { ISector } from '../../models/sector.ts';
+import type { ISector } from '../../models/sector.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { toApiLocation } from './locations-mapper.ts';
 

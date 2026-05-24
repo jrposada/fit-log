@@ -1,10 +1,13 @@
+import type {
+  HoldType} from '@jrposada/fit-log-shared/models/climb/climb';
 import {
-  HOLD_TYPES,
-  HoldType,
+  HOLD_TYPES
 } from '@jrposada/fit-log-shared/models/climb/climb';
-import { Document, model, Schema, Types, WithTimestamps } from 'mongoose';
+import type { Document, Types, WithTimestamps } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
-import { ownershipFields, WithOwnership } from './_collaborator.ts';
+import type { WithOwnership } from './_collaborator.ts';
+import { ownershipFields } from './_collaborator.ts';
 
 export interface IHold {
   x: number;

@@ -1,11 +1,11 @@
-import {
+import type {
   Collaborator,
   DepopulatedCollaborator,
 } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import { MergeType } from 'mongoose';
+import type { MergeType } from 'mongoose';
 
-import { ICollaborator } from '../../models/_collaborator.ts';
-import { IUser } from '../../models/user.ts';
+import type { ICollaborator } from '../../models/_collaborator.ts';
+import type { IUser } from '../../models/user.ts';
 import { toApiUserSummary } from './user-summary-mapper.ts';
 
 export function toApiDepopulatedCollaborator(

@@ -1,4 +1,4 @@
-import { MeResponse } from '@jrposada/fit-log-shared/models/auth/me';
+import type { MeResponse } from '@jrposada/fit-log-shared/models/auth/me';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { toApiResponse } from '../api-utils.ts';

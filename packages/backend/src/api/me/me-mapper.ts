@@ -1,6 +1,6 @@
-import { MeResponse } from '@jrposada/fit-log-shared/models/auth/me';
+import type { MeResponse } from '@jrposada/fit-log-shared/models/auth/me';
 
-import { IUser } from '../../models/user.ts';
+import type { IUser } from '../../models/user.ts';
 
 export function toApiMe(model: IUser): MeResponse {
   return {

@@ -1,19 +1,21 @@
-import {
+import type {
   ClimbHistoriesPutRequest,
   ClimbHistoriesPutResponse,
 } from '@jrposada/fit-log-shared/models/climb-history/climb-history-put';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import { MergeType, Types } from 'mongoose';
+import type { MergeType} from 'mongoose';
+import { Types } from 'mongoose';
 
-import { IClimb } from '../../models/climb.ts';
+import type { IClimb } from '../../models/climb.ts';
+import type {
+  IClimbHistoryTry} from '../../models/climb-history.ts';
 import {
   ClimbHistory,
-  computeTopStatus,
-  IClimbHistoryTry,
+  computeTopStatus
 } from '../../models/climb-history.ts';
-import { IImage } from '../../models/image.ts';
-import { ILocation } from '../../models/location.ts';
-import { ISector } from '../../models/sector.ts';
+import type { IImage } from '../../models/image.ts';
+import type { ILocation } from '../../models/location.ts';
+import type { ISector } from '../../models/sector.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { toApiClimbHistory } from './climb-histories-mapper.ts';
 import { hasValidRefs } from './climb-histories-utils.ts';

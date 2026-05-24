@@ -1,4 +1,4 @@
-import {
+import type {
   SessionsPutRequest,
   SessionsPutResponse,
 } from '@jrposada/fit-log-shared/models/session/session-put';

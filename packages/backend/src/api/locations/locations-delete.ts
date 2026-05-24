@@ -1,4 +1,4 @@
-import {
+import type {
   LocationsDeleteParams,
   LocationsDeleteResponse,
 } from '@jrposada/fit-log-shared/models/location/location-delete';

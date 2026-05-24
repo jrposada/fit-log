@@ -1,8 +1,9 @@
-import { CollaboratorPermission } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import { Document, Model, Types } from 'mongoose';
+import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/auth/with-ownership';
+import type { Document, Model} from 'mongoose';
+import { Types } from 'mongoose';
 
 import { ownerOrAdminFilter } from '../auth/owner-or-admin-filter.ts';
-import { IUser } from '../models/user.ts';
+import type { IUser } from '../models/user.ts';
 
 /**
  * Add or update a single collaborator on an ownership-aware document.

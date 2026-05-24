@@ -1,6 +1,8 @@
-import { Document, model, Schema, WithTimestamps } from 'mongoose';
+import type { Document, WithTimestamps } from 'mongoose';
+import { model, Schema } from 'mongoose';
 
-import { ownershipFields, WithOwnership } from './_collaborator.ts';
+import type { WithOwnership } from './_collaborator.ts';
+import { ownershipFields } from './_collaborator.ts';
 
 export interface IImage extends WithTimestamps<Document>, WithOwnership {
   /* Data */

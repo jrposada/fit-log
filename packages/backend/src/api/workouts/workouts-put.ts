@@ -1,4 +1,4 @@
-import {
+import type {
   WorkoutsPutRequest,
   WorkoutsPutResponse,
 } from '@jrposada/fit-log-shared/models/workout/workout-put';

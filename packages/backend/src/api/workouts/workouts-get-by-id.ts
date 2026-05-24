@@ -1,4 +1,4 @@
-import {
+import type {
   WorkoutsGetByIdParams,
   WorkoutsGetByIdResponse,
 } from '@jrposada/fit-log-shared/models/workout/workout-get-by-id';

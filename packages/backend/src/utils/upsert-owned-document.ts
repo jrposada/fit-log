@@ -1,7 +1,8 @@
-import { Document, Model, Types } from 'mongoose';
+import type { Document, Model} from 'mongoose';
+import { Types } from 'mongoose';
 
 import { editableBy } from '../auth/editable-filter.ts';
-import { IUser } from '../models/user.ts';
+import type { IUser } from '../models/user.ts';
 
 /**
  * Upsert an ownership-aware document in a single DB roundtrip.

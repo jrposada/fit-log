@@ -1,17 +1,18 @@
-import { CollaboratorDeleteParams } from '@jrposada/fit-log-shared/models/auth/collaborator-delete';
-import { ClimbsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/climb/climb-collaborators';
+import type { CollaboratorDeleteParams } from '@jrposada/fit-log-shared/models/auth/collaborator-delete';
+import type { ClimbsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/climb/climb-collaborators';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import { MergeType } from 'mongoose';
+import type { MergeType } from 'mongoose';
 
+import type {
+  PopulatedOwnership} from '../../auth/ownership-populate.ts';
 import {
-  OWNERSHIP_POPULATE,
-  PopulatedOwnership,
+  OWNERSHIP_POPULATE
 } from '../../auth/ownership-populate.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import { Climb } from '../../models/climb.ts';
-import { IImage } from '../../models/image.ts';
-import { ILocation } from '../../models/location.ts';
-import { ISector } from '../../models/sector.ts';
+import type { IImage } from '../../models/image.ts';
+import type { ILocation } from '../../models/location.ts';
+import type { ISector } from '../../models/sector.ts';
 import { removeCollaborator } from '../../utils/collaborator-mutators.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { toApiClimb } from './climbs-mapper.ts';

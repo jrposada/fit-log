@@ -1,16 +1,16 @@
-import {
+import type {
   ClimbHistoriesGetByIdParams,
   ClimbHistoriesGetByIdResponse,
 } from '@jrposada/fit-log-shared/models/climb-history/climb-history-get-by-id';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import { MergeType } from 'mongoose';
+import type { MergeType } from 'mongoose';
 
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
-import { IClimb } from '../../models/climb.ts';
+import type { IClimb } from '../../models/climb.ts';
 import { ClimbHistory } from '../../models/climb-history.ts';
-import { IImage } from '../../models/image.ts';
-import { ILocation } from '../../models/location.ts';
-import { ISector } from '../../models/sector.ts';
+import type { IImage } from '../../models/image.ts';
+import type { ILocation } from '../../models/location.ts';
+import type { ISector } from '../../models/sector.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { toApiClimbHistory } from './climb-histories-mapper.ts';
 import { hasValidRefs } from './climb-histories-utils.ts';

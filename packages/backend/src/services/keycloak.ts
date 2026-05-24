@@ -1,7 +1,8 @@
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
+import type { JwtHeader, JwtPayload } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken';
-import { JwtHeader, JwtPayload } from 'jsonwebtoken';
-import jwksClient, { JwksClient } from 'jwks-rsa';
+import type { JwksClient } from 'jwks-rsa';
+import jwksClient from 'jwks-rsa';
 
 interface KeycloakTokenPayload extends JwtPayload {
   authId: string;

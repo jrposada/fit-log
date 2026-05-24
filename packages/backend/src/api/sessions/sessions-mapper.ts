@@ -1,6 +1,6 @@
-import { Session } from '@jrposada/fit-log-shared/models/session/session';
+import type { Session } from '@jrposada/fit-log-shared/models/session/session';
 
-import { ISession } from '../../models/session.ts';
+import type { ISession } from '../../models/session.ts';
 
 function toApiSession(model: ISession): Session {
   return {

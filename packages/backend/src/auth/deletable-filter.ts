@@ -1,5 +1,5 @@
 import { ADMIN_ROLE } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import { Types } from 'mongoose';
+import type { Types } from 'mongoose';
 
 type DeletableFilter = {
   $or: Array<
@@ -13,7 +13,7 @@ type DeletableFilter = {
   >;
 };
 
-import { IUser } from '../models/user.ts';
+import type { IUser } from '../models/user.ts';
 
 /**
  * Mongo filter clause for documents the user can DELETE:

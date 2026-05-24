@@ -1,22 +1,25 @@
-import {
+import type {
   SectorsBatchPutRequest,
   SectorsBatchPutResponse,
 } from '@jrposada/fit-log-shared/models/sector/sector-batch-put';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import mongoose, { ClientSession, Types } from 'mongoose';
+import type { ClientSession} from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
+import type {
+  PopulatedOwnership} from '../../auth/ownership-populate.ts';
 import {
-  OWNERSHIP_POPULATE,
-  PopulatedOwnership,
+  OWNERSHIP_POPULATE
 } from '../../auth/ownership-populate.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
-import { IClimb } from '../../models/climb.ts';
-import { IImage } from '../../models/image.ts';
+import type { IClimb } from '../../models/climb.ts';
+import type { IImage } from '../../models/image.ts';
 import { Sector } from '../../models/sector.ts';
-import { IUser } from '../../models/user.ts';
+import type { IUser } from '../../models/user.ts';
+import type {
+  BatchUpsertOwnedItem} from '../../utils/batch-upsert-owned-document.ts';
 import {
-  batchUpsertOwnedDocument,
-  BatchUpsertOwnedItem,
+  batchUpsertOwnedDocument
 } from '../../utils/batch-upsert-owned-document.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { toApiSector } from './sectors-mapper.ts';

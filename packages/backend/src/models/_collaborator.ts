@@ -1,8 +1,10 @@
+import type {
+  CollaboratorPermission} from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import {
-  COLLABORATOR_PERMISSIONS,
-  CollaboratorPermission,
+  COLLABORATOR_PERMISSIONS
 } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import { Schema, SchemaDefinition, Types } from 'mongoose';
+import type { SchemaDefinition, Types } from 'mongoose';
+import { Schema } from 'mongoose';
 
 export type { CollaboratorPermission };
 export { COLLABORATOR_PERMISSIONS };

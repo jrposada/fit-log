@@ -1,13 +1,13 @@
-import { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import { Climb } from '@jrposada/fit-log-shared/models/climb/climb';
-import { MergeType } from 'mongoose';
+import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
+import type { Climb } from '@jrposada/fit-log-shared/models/climb/climb';
+import type { MergeType } from 'mongoose';
 
-import { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
-import { IClimb } from '../../models/climb.ts';
-import { IImage } from '../../models/image.ts';
-import { ILocation } from '../../models/location.ts';
-import { ISector } from '../../models/sector.ts';
-import { WithRequiredRefs } from '../../utils/types.ts';
+import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import type { IClimb } from '../../models/climb.ts';
+import type { IImage } from '../../models/image.ts';
+import type { ILocation } from '../../models/location.ts';
+import type { ISector } from '../../models/sector.ts';
+import type { WithRequiredRefs } from '../../utils/types.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,

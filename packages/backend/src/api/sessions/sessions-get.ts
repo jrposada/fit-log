@@ -1,4 +1,4 @@
-import {
+import type {
   SessionsGetQuery,
   SessionsGetResponse,
 } from '@jrposada/fit-log-shared/models/session/session-get';

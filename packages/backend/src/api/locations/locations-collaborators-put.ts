@@ -1,19 +1,20 @@
-import {
+import type {
   CollaboratorPutParams,
   CollaboratorPutRequest,
 } from '@jrposada/fit-log-shared/models/auth/collaborator-put';
-import { LocationsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/location/location-collaborators';
+import type { LocationsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/location/location-collaborators';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import { MergeType } from 'mongoose';
+import type { MergeType } from 'mongoose';
 
+import type {
+  PopulatedOwnership} from '../../auth/ownership-populate.ts';
 import {
-  OWNERSHIP_POPULATE,
-  PopulatedOwnership,
+  OWNERSHIP_POPULATE
 } from '../../auth/ownership-populate.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
-import { IImage } from '../../models/image.ts';
+import type { IImage } from '../../models/image.ts';
 import { Location } from '../../models/location.ts';
-import { ISector } from '../../models/sector.ts';
+import type { ISector } from '../../models/sector.ts';
 import { addOrUpdateCollaborator } from '../../utils/collaborator-mutators.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { toApiLocation } from './locations-mapper.ts';

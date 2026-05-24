@@ -1,9 +1,9 @@
-import { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import { Image } from '@jrposada/fit-log-shared/models/image/image';
+import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
+import type { Image } from '@jrposada/fit-log-shared/models/image/image';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
-import { IImage } from '../../models/image.ts';
+import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import type { IImage } from '../../models/image.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,

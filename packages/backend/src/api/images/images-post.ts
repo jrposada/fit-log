@@ -1,12 +1,13 @@
-import {
+import type {
   ImagesPostRequest,
   ImagesPostResponse,
 } from '@jrposada/fit-log-shared/models/image/image-post';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
+import type {
+  PopulatedOwnership} from '../../auth/ownership-populate.ts';
 import {
-  OWNERSHIP_POPULATE,
-  PopulatedOwnership,
+  OWNERSHIP_POPULATE
 } from '../../auth/ownership-populate.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import { Image } from '../../models/image.ts';

@@ -1,17 +1,18 @@
-import {
+import type {
   SectorsPutRequest,
   SectorsPutResponse,
 } from '@jrposada/fit-log-shared/models/sector/sector-put';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { Types } from 'mongoose';
 
+import type {
+  PopulatedOwnership} from '../../auth/ownership-populate.ts';
 import {
-  OWNERSHIP_POPULATE,
-  PopulatedOwnership,
+  OWNERSHIP_POPULATE
 } from '../../auth/ownership-populate.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
-import { IClimb } from '../../models/climb.ts';
-import { IImage } from '../../models/image.ts';
+import type { IClimb } from '../../models/climb.ts';
+import type { IImage } from '../../models/image.ts';
 import { Sector } from '../../models/sector.ts';
 import { upsertOwnedDocument } from '../../utils/upsert-owned-document.ts';
 import { toApiResponse } from '../api-utils.ts';

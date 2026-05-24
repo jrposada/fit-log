@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import type { Types } from 'mongoose';
 
 /**
  * Strips `null` from every property whose type includes `Types.ObjectId | null`.

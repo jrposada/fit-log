@@ -1,5 +1,5 @@
-import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
-import { Request, Response } from 'express';
+import type { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
+import type { Request, Response } from 'express';
 
 import ForbiddenError from '../infrastructure/forbidden-error.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
