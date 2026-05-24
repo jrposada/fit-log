@@ -23,7 +23,7 @@ export type Exercise = {
    *
    * Use `time` for duration (in seconds), `weight` for load (in kilograms) or `body-weight` for load (in % of body weight).
    */
-  intensityUnit: typeof INTENSITY_UNITS[number];
+  intensityUnit: (typeof INTENSITY_UNITS)[number];
 };
 
 export type Workout = {

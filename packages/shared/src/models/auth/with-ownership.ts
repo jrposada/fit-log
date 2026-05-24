@@ -3,7 +3,7 @@ import { UserSummary } from './user-summary';
 export const ADMIN_ROLE = 'admin';
 
 export const COLLABORATOR_PERMISSIONS = ['edit', 'delete'] as const;
-export type CollaboratorPermission = typeof COLLABORATOR_PERMISSIONS[number];
+export type CollaboratorPermission = (typeof COLLABORATOR_PERMISSIONS)[number];
 
 export type Collaborator = {
   user: UserSummary;

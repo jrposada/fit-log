@@ -12,7 +12,7 @@ export const collaboratorPutParamsSchema = z.object({
 });
 
 export type CollaboratorPutRequest = {
-  permission: typeof COLLABORATOR_PERMISSIONS[number];
+  permission: (typeof COLLABORATOR_PERMISSIONS)[number];
 };
 export const collaboratorPutRequestSchema = z.object({
   permission: z.enum(COLLABORATOR_PERMISSIONS),

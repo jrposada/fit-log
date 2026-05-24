@@ -32,6 +32,7 @@ class MoonboardClient {
   // form. A headless-browser approach (e.g. Playwright) is needed to pass the
   // challenge. This method is intentionally left as a stub until that work is
   // done on a dedicated branch.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async connect(_username: string, _password: string): Promise<void> {
     throw new Error(
       'Moonboard login is blocked by Cloudflare bot protection.\n' +
