@@ -1,4 +1,4 @@
-import * as en from './en.json';
+import * as en from './localization/en.json';
 
 export const resources = {
   en: { translation: en },
