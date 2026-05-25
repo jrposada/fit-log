@@ -1,19 +1,18 @@
 import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
-import type { WithOwnership } from './_collaborator.ts';
-import { ownershipFields } from './_collaborator.ts';
-
 export const SESSION_STALE_MS = 4 * 60 * 60 * 1000;
 
-export interface ITrainingSession
-  extends WithTimestamps<Document>, WithOwnership {
+export interface ITrainingSession extends WithTimestamps<Document> {
   /** Data */
   title: string;
   notes?: string;
   startedAt: Date;
   endedAt?: Date;
   lastActivityAt: Date;
+
+  /* Ownership */
+  owner: Types.ObjectId;
 
   /* References – nullable after population if the referenced doc was deleted */
   location: Types.ObjectId | null;
@@ -45,7 +44,11 @@ const trainingSessionSchema = new Schema<ITrainingSession>(
     },
 
     /* Ownership */
-    ...ownershipFields,
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
 
     /* References */
     location: {
@@ -64,6 +67,8 @@ const trainingSessionSchema = new Schema<ITrainingSession>(
     timestamps: true,
   }
 );
+
+trainingSessionSchema.index({ owner: 1 });
 
 export const TrainingSession = model<ITrainingSession>(
   'TrainingSession',

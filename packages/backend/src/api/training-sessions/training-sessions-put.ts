@@ -5,9 +5,6 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { Types } from 'mongoose';
 
-import { editableBy } from '../../auth/editable-filter.ts';
-import type { PopulatedOwnership } from '../../auth/ownership-populate.ts';
-import { OWNERSHIP_POPULATE } from '../../auth/ownership-populate.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import type { IClimbHistory } from '../../models/climb-history.ts';
 import type { ILocation } from '../../models/location.ts';
@@ -40,7 +37,7 @@ const handler = toApiResponse<
     }
 
     const updated = await TrainingSession.findOneAndUpdate(
-      { _id: body.id, ...editableBy(request.user) },
+      { _id: body.id, owner: userId },
       { $set: update },
       { new: true, runValidators: true }
     );
@@ -55,7 +52,6 @@ const handler = toApiResponse<
     const now = new Date();
     const created = await TrainingSession.create({
       owner: userId,
-      collaborators: [],
       title: body.title,
       notes: body.notes,
       location: body.location ? new Types.ObjectId(body.location) : undefined,
@@ -66,12 +62,10 @@ const handler = toApiResponse<
     sessionId = created._id;
   }
 
-  const session = await TrainingSession.findById(sessionId)
-    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ location: ILocation | null; climbHistories: IClimbHistory[] }>([
-      'location',
-      'climbHistories',
-    ]);
+  const session = await TrainingSession.findById(sessionId).populate<{
+    location: ILocation | null;
+    climbHistories: IClimbHistory[];
+  }>(['location', 'climbHistories']);
 
   if (!session) {
     throw new ResourceNotFound(

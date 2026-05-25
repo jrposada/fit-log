@@ -12,6 +12,9 @@ export type TrainingSession = WithTimestamps<{
   endedAt?: string;
   lastActivityAt?: string;
 
+  /* Ownership */
+  owner: string;
+
   /* References */
   location?: Omit<WithDepopulatedOwnership<Location>, 'sectors'> & {
     sectors: string[];

@@ -4,7 +4,6 @@ import type {
 } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { ownerOrAdminFilter } from '../../auth/owner-or-admin-filter.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import { TrainingSession } from '../../models/training-session.ts';
 import { toApiResponse } from '../api-utils.ts';
@@ -19,7 +18,7 @@ const handler = toApiResponse<
 
   const result = await TrainingSession.deleteOne({
     _id: id,
-    ...ownerOrAdminFilter(request.user),
+    owner: request.user._id,
   });
 
   if (result.deletedCount === 0) {

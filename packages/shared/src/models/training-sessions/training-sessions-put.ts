@@ -4,7 +4,7 @@ import { TrainingSession } from './training-session.ts';
 
 export type TrainingSessionsPutRequest = Omit<
   TrainingSession,
-  'id' | 'createdAt' | 'updatedAt' | 'location' | 'climbHistories'
+  'id' | 'createdAt' | 'updatedAt' | 'owner' | 'location' | 'climbHistories'
 > & {
   id?: string;
 

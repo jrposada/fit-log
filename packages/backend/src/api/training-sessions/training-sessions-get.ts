@@ -4,8 +4,6 @@ import type {
 } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import type { PopulatedOwnership } from '../../auth/ownership-populate.ts';
-import { OWNERSHIP_POPULATE } from '../../auth/ownership-populate.ts';
 import type { IClimbHistory } from '../../models/climb-history.ts';
 import type { ILocation } from '../../models/location.ts';
 import { TrainingSession } from '../../models/training-session.ts';
@@ -30,12 +28,10 @@ const handler = toApiResponse<
     query.limit(limit);
   }
 
-  const sessions = await query
-    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{
-      location: ILocation | null;
-      climbHistories: IClimbHistory[];
-    }>(['location', 'climbHistories']);
+  const sessions = await query.populate<{
+    location: ILocation | null;
+    climbHistories: IClimbHistory[];
+  }>(['location', 'climbHistories']);
 
   const sessionsWithValidClimbHistories = sessions.map((session) =>
     Object.assign(session, {
