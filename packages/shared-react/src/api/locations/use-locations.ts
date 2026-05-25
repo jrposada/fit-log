@@ -2,7 +2,7 @@ import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   LocationsGetQuery,
   LocationsGetResponse,
-} from '@jrposada/fit-log-shared/models/location/location-get';
+} from '@jrposada/fit-log-shared/models/locations/locations-get';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

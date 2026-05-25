@@ -3,7 +3,7 @@ import {
   ClimbHistoriesDeleteParams,
   ClimbHistoriesDeleteQuery,
   ClimbHistoriesDeleteResponse,
-} from '@jrposada/fit-log-shared/models/climb-history/climb-history-delete';
+} from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

@@ -2,7 +2,7 @@ import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   SectorsDeleteParams,
   SectorsDeleteResponse,
-} from '@jrposada/fit-log-shared/models/sector/sector-delete';
+} from '@jrposada/fit-log-shared/models/sectors/sectors-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

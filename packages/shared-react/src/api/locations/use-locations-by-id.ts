@@ -1,5 +1,5 @@
 import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
-import { LocationsGetByIdResponse } from '@jrposada/fit-log-shared/models/location/location-get-by-id';
+import { LocationsGetByIdResponse } from '@jrposada/fit-log-shared/models/locations/locations-get-by-id';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

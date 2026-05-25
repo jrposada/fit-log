@@ -2,7 +2,7 @@ import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   SectorsPutRequest,
   SectorsPutResponse,
-} from '@jrposada/fit-log-shared/models/sector/sector-put';
+} from '@jrposada/fit-log-shared/models/sectors/sectors-put';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 

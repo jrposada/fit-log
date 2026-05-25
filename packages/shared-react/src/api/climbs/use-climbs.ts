@@ -2,7 +2,7 @@ import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   ClimbsGetQuery,
   ClimbsGetResponse,
-} from '@jrposada/fit-log-shared/models/climb/climb-get';
+} from '@jrposada/fit-log-shared/models/climbs/climbs-get';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 

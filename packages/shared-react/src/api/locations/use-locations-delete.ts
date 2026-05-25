@@ -2,7 +2,7 @@ import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
   LocationsDeleteParams,
   LocationsDeleteResponse,
-} from '@jrposada/fit-log-shared/models/location/location-delete';
+} from '@jrposada/fit-log-shared/models/locations/locations-delete';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
