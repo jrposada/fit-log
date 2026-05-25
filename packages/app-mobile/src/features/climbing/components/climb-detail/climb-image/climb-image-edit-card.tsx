@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedStyle,
+  useFrameCallback,
   useSharedValue,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
@@ -30,36 +31,38 @@ const ClimbImageEditCard: FunctionComponent<ClimbImageEditCardProps> = ({
   const stickX = useSharedValue(0);
   const stickY = useSharedValue(0);
   const prevScale = useSharedValue(1);
+  const isDragging = useSharedValue(false);
+  const lastTickAt = useSharedValue(0);
 
-  const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const onMoveRef = useRef(onMove);
-  onMoveRef.current = onMove;
+  const latestOnMove = useRef(onMove);
+  useEffect(() => {
+    latestOnMove.current = onMove;
+  }, [onMove]);
 
-  const startTick = useCallback(() => {
-    if (tickRef.current) return;
-    tickRef.current = setInterval(() => {
-      const sx = stickX.value;
-      const sy = stickY.value;
-      if (Math.abs(sx) < 0.01 && Math.abs(sy) < 0.01) return;
-      onMoveRef.current(sx * MAX_SPEED, sy * MAX_SPEED);
-    }, TICK_MS);
-  }, [stickX, stickY]);
-
-  const stopTick = useCallback(() => {
-    if (tickRef.current) {
-      clearInterval(tickRef.current);
-      tickRef.current = null;
-    }
+  const invokeOnMove = useCallback((dx: number, dy: number) => {
+    latestOnMove.current(dx, dy);
   }, []);
 
-  useEffect(() => {
-    return stopTick;
-  }, [stopTick]);
+  useFrameCallback((frameInfo) => {
+    if (!isDragging.value) return;
+    const now = frameInfo.timestamp;
+    if (now - lastTickAt.value < TICK_MS) return;
+    lastTickAt.value = now;
+    const sx = stickX.value;
+    const sy = stickY.value;
+    if (Math.abs(sx) < 0.01 && Math.abs(sy) < 0.01) return;
+    scheduleOnRN(invokeOnMove, sx * MAX_SPEED, sy * MAX_SPEED);
+  });
 
+  // SharedValues captured by useFrameCallback are flagged as immutable by the
+  // React Compiler, but Reanimated requires .value mutation inside worklets.
+  // Known compiler/Reanimated interaction — suppress on the worklet bodies.
+  /* eslint-disable react-hooks/immutability */
   const panGesture = Gesture.Pan()
     .onBegin(() => {
       'worklet';
-      scheduleOnRN(startTick);
+      isDragging.value = true;
+      lastTickAt.value = 0;
     })
     .onUpdate((e) => {
       'worklet';
@@ -95,8 +98,9 @@ const ClimbImageEditCard: FunctionComponent<ClimbImageEditCardProps> = ({
       knobY.value = 0;
       stickX.value = 0;
       stickY.value = 0;
-      scheduleOnRN(stopTick);
+      isDragging.value = false;
     });
+  /* eslint-enable react-hooks/immutability */
 
   const pinchGesture = Gesture.Pinch()
     .onBegin(() => {
