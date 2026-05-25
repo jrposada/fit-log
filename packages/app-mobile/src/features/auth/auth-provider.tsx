@@ -172,7 +172,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
     } catch (error) {
       console.error('Registration failed:', error);
     }
-  }, [authRequest?.codeVerifier, redirectUri, setToken]);
+  }, [authRequest, redirectUri, setToken]);
 
   const refreshToken = useCallback(async () => {
     const storedRefreshToken = await authService.getRefreshToken();
