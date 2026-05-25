@@ -86,7 +86,7 @@ async function nukeDatabase() {
   ];
 
   for (const { name, model } of models) {
-    const result = await model.deleteMany({});
+    const result = await model.deleteMany();
     console.log(`✓ Deleted ${result.deletedCount} ${name} documents`);
   }
 
