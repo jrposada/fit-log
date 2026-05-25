@@ -1,7 +1,7 @@
 import type {
   SectorsDeleteParams,
   SectorsDeleteResponse,
-} from '@jrposada/fit-log-shared/models/sector/sector-delete';
+} from '@jrposada/fit-log-shared/models/sectors/sectors-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { deletableBy } from '../../auth/deletable-filter.ts';

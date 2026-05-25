@@ -1,7 +1,7 @@
 import type {
   ClimbsPutRequest,
   ClimbsPutResponse,
-} from '@jrposada/fit-log-shared/models/climb/climb-put';
+} from '@jrposada/fit-log-shared/models/climbs/climbs-put';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';

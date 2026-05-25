@@ -1,5 +1,5 @@
 import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import type { Image } from '@jrposada/fit-log-shared/models/image/image';
+import type { Image } from '@jrposada/fit-log-shared/models/images/image';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';

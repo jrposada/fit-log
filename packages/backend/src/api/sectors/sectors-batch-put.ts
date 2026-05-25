@@ -1,7 +1,7 @@
 import type {
   SectorsBatchPutRequest,
   SectorsBatchPutResponse,
-} from '@jrposada/fit-log-shared/models/sector/sector-batch-put';
+} from '@jrposada/fit-log-shared/models/sectors/sectors-batch-put';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { ClientSession } from 'mongoose';
 import mongoose, { Types } from 'mongoose';

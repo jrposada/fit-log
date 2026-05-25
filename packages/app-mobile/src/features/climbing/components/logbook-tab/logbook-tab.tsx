@@ -1,4 +1,4 @@
-import { ClimbHistoriesGetQueryStatus } from '@jrposada/fit-log-shared/models/climb-history/climb-history-get';
+import { ClimbHistoriesGetQueryStatus } from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-get';
 import { useClimbHistories } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-histories';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';

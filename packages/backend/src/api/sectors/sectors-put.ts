@@ -1,7 +1,7 @@
 import type {
   SectorsPutRequest,
   SectorsPutResponse,
-} from '@jrposada/fit-log-shared/models/sector/sector-put';
+} from '@jrposada/fit-log-shared/models/sectors/sectors-put';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { Types } from 'mongoose';
 

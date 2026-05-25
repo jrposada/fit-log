@@ -2,7 +2,7 @@ import {
   Hold,
   HoldType,
   SplinePoint,
-} from '@jrposada/fit-log-shared/models/climb/climb';
+} from '@jrposada/fit-log-shared/models/climbs/climb';
 import { FunctionComponent, useCallback, useState } from 'react';
 import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';

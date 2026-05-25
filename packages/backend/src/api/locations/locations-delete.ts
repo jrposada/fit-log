@@ -1,7 +1,7 @@
 import type {
   LocationsDeleteParams,
   LocationsDeleteResponse,
-} from '@jrposada/fit-log-shared/models/location/location-delete';
+} from '@jrposada/fit-log-shared/models/locations/locations-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { deletableBy } from '../../auth/deletable-filter.ts';

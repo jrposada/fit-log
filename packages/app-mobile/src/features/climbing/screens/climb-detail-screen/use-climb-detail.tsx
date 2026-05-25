@@ -7,8 +7,8 @@ import {
   Hold,
   HoldType,
   SplinePoint,
-} from '@jrposada/fit-log-shared/models/climb/climb';
-import { climbsPutRequestSchema } from '@jrposada/fit-log-shared/models/climb/climb-put';
+} from '@jrposada/fit-log-shared/models/climbs/climb';
+import { climbsPutRequestSchema } from '@jrposada/fit-log-shared/models/climbs/climbs-put';
 import { useClimbHistories } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-histories';
 import { useClimbHistoriesPut } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-histories-put';
 import { useClimbHistoryProject } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-history-project';

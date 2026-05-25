@@ -3,7 +3,7 @@ import { IClimb } from '@backend/models/climb';
 import {
   GRADE_OPTIONS,
   HOLD_TYPES,
-} from '@jrposada/fit-log-shared/models/climb/climb';
+} from '@jrposada/fit-log-shared/models/climbs/climb';
 
 function fakeHold() {
   return {

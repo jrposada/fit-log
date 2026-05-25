@@ -1,4 +1,4 @@
-import type { Session } from '@jrposada/fit-log-shared/models/session/session';
+import type { Session } from '@jrposada/fit-log-shared/models/sessions/session';
 
 import type { ISession } from '../../models/session.ts';
 

@@ -1,4 +1,4 @@
-import type { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-history/climb-history';
+import type { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
 
 import { toApiDepopulatedClimb } from '../climbs/climbs-mapper.ts';
 import { toApiDepopulatedLocation } from '../locations/locations-mapper.ts';

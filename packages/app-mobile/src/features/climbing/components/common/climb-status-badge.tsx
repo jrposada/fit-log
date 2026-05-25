@@ -1,4 +1,4 @@
-import { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-history/climb-history';
+import { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 

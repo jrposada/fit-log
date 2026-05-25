@@ -2,7 +2,7 @@ import type {
   CollaboratorPutParams,
   CollaboratorPutRequest,
 } from '@jrposada/fit-log-shared/models/auth/collaborator-put';
-import type { ClimbsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/climb/climb-collaborators';
+import type { ClimbsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/climbs/climbs-collaborators';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { MergeType } from 'mongoose';
 

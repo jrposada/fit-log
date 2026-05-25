@@ -1,7 +1,7 @@
 import type {
   ClimbHistoriesGetByIdParams,
   ClimbHistoriesGetByIdResponse,
-} from '@jrposada/fit-log-shared/models/climb-history/climb-history-get-by-id';
+} from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-get-by-id';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { MergeType } from 'mongoose';
 

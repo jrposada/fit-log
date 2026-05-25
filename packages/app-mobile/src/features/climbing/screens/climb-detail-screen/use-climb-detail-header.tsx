@@ -1,4 +1,4 @@
-import { Climb } from '@jrposada/fit-log-shared/models/climb/climb';
+import { Climb } from '@jrposada/fit-log-shared/models/climbs/climb';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 

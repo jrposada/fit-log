@@ -1,4 +1,4 @@
-import { Climb } from '@jrposada/fit-log-shared/models/climb/climb';
+import { Climb } from '@jrposada/fit-log-shared/models/climbs/climb';
 import { beautifyGradeColor } from '@jrposada/fit-log-shared-react/beautifiers/grade-colors';
 import { FunctionComponent } from 'react';
 

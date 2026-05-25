@@ -1,7 +1,7 @@
 import type {
   SessionsGetQuery,
   SessionsGetResponse,
-} from '@jrposada/fit-log-shared/models/session/session-get';
+} from '@jrposada/fit-log-shared/models/sessions/sessions-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { Session } from '../../models/session.ts';

@@ -1,7 +1,7 @@
 import type {
   ImagesPostRequest,
   ImagesPostResponse,
-} from '@jrposada/fit-log-shared/models/image/image-post';
+} from '@jrposada/fit-log-shared/models/images/images-post';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import type { PopulatedOwnership } from '../../auth/ownership-populate.ts';

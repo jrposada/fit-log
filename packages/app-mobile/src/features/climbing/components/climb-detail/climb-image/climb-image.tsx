@@ -4,7 +4,7 @@ import {
   HOLD_TYPES,
   HoldType,
   SplinePoint,
-} from '@jrposada/fit-log-shared/models/climb/climb';
+} from '@jrposada/fit-log-shared/models/climbs/climb';
 import { FunctionComponent, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';

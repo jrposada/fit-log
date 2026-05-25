@@ -1,7 +1,7 @@
 import type {
   SessionsGetByIdParams,
   SessionsGetByIdResponse,
-} from '@jrposada/fit-log-shared/models/session/session-get-by-id';
+} from '@jrposada/fit-log-shared/models/sessions/sessions-get-by-id';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';

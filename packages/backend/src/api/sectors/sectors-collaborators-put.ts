@@ -2,7 +2,7 @@ import type {
   CollaboratorPutParams,
   CollaboratorPutRequest,
 } from '@jrposada/fit-log-shared/models/auth/collaborator-put';
-import type { SectorsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/sector/sector-collaborators';
+import type { SectorsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/sectors/sectors-collaborators';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import type { PopulatedOwnership } from '../../auth/ownership-populate.ts';

@@ -1,7 +1,7 @@
 import type {
   ClimbsDeleteParams,
   ClimbsDeleteResponse,
-} from '@jrposada/fit-log-shared/models/climb/climb-delete';
+} from '@jrposada/fit-log-shared/models/climbs/climbs-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { deletableBy } from '../../auth/deletable-filter.ts';

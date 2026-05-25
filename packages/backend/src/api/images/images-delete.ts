@@ -1,7 +1,7 @@
 import type {
   ImagesDeleteParams,
   ImagesDeleteResponse,
-} from '@jrposada/fit-log-shared/models/image/image-delete';
+} from '@jrposada/fit-log-shared/models/images/images-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { deletableBy } from '../../auth/deletable-filter.ts';

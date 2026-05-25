@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ClimbGrade } from '@jrposada/fit-log-shared/models/climb/climb';
+import { ClimbGrade } from '@jrposada/fit-log-shared/models/climbs/climb';
 import {
   ClimbSearchResult,
   climbsSearchQuerySchema,
-} from '@jrposada/fit-log-shared/models/climb/climb-search';
+} from '@jrposada/fit-log-shared/models/climbs/climbs-search';
 import { useClimbsSearch } from '@jrposada/fit-log-shared-react/api/climbs/use-climbs-search';
 import { useDebounce } from '@jrposada/fit-log-shared-react/hooks/use-debounce';
 import { FunctionComponent, useMemo, useState } from 'react';
