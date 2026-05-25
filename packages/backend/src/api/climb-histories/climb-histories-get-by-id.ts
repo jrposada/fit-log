@@ -11,6 +11,7 @@ import { ClimbHistory } from '../../models/climb-history.ts';
 import type { IImage } from '../../models/image.ts';
 import type { ILocation } from '../../models/location.ts';
 import type { ISector } from '../../models/sector.ts';
+import type { ITrainingSession } from '../../models/training-session.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { toApiClimbHistory } from './climb-histories-mapper.ts';
 import { hasValidRefs } from './climb-histories-utils.ts';
@@ -36,7 +37,8 @@ const handler = toApiResponse<
     }>({
       path: 'sector',
       populate: ['images'],
-    });
+    })
+    .populate<{ trainingSession: ITrainingSession | null }>('trainingSession');
 
   if (!climbHistory || !hasValidRefs(climbHistory)) {
     throw new ResourceNotFound(`ClimbHistory with id ${id} not found`);

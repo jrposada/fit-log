@@ -6,12 +6,11 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import type { PopulatedOwnership } from '../../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../../auth/ownership-populate.ts';
-import type { IClimb } from '../../models/climb.ts';
+import type { IClimbHistory } from '../../models/climb-history.ts';
 import type { ILocation } from '../../models/location.ts';
 import { TrainingSession } from '../../models/training-session.ts';
-import { hasRequiredRefs } from '../../services/climb.ts';
-import type { WithRequiredRefs } from '../../utils/types.ts';
 import { toApiResponse } from '../api-utils.ts';
+import { hasRequiredClimbHistoryRefs } from '../climb-histories/climb-histories-utils.ts';
 import { toApiTrainingSession } from './training-sessions-mapper.ts';
 
 const handler = toApiResponse<
@@ -35,16 +34,15 @@ const handler = toApiResponse<
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
       location: ILocation | null;
-      climbs: IClimb[];
-    }>(['location', 'climbs']);
+      climbHistories: IClimbHistory[];
+    }>(['location', 'climbHistories']);
 
-  const sessionsWithValidClimbs = sessions.map(
-    (session) =>
-      Object.assign(session, {
-        climbs: session.climbs.filter(hasRequiredRefs),
-      }) as Omit<typeof session, 'climbs'> & {
-        climbs: WithRequiredRefs<IClimb>[];
-      }
+  const sessionsWithValidClimbHistories = sessions.map((session) =>
+    Object.assign(session, {
+      climbHistories: session.climbHistories.filter(
+        hasRequiredClimbHistoryRefs
+      ),
+    })
   );
 
   return {
@@ -52,7 +50,8 @@ const handler = toApiResponse<
     body: {
       success: true,
       data: {
-        trainingSessions: sessionsWithValidClimbs.map(toApiTrainingSession),
+        trainingSessions:
+          sessionsWithValidClimbHistories.map(toApiTrainingSession),
       },
     },
   };

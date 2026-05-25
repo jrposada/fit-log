@@ -1,5 +1,5 @@
 import { WithDepopulatedOwnership } from '../auth/with-ownership.ts';
-import { Climb } from '../climbs/climb.ts';
+import { ClimbHistory } from '../climb-histories/climb-history.ts';
 import { Location } from '../locations/location.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
 
@@ -16,11 +16,11 @@ export type TrainingSession = WithTimestamps<{
   location?: Omit<WithDepopulatedOwnership<Location>, 'sectors'> & {
     sectors: string[];
   };
-  climbs: (Omit<
-    WithDepopulatedOwnership<Climb>,
-    'image' | 'location' | 'sector'
+  climbHistories: (Omit<
+    ClimbHistory,
+    'climb' | 'location' | 'sector' | 'trainingSession'
   > & {
-    image: string;
+    climb: string;
     location: string;
     sector: string;
   })[];

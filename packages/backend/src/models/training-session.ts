@@ -17,7 +17,7 @@ export interface ITrainingSession
 
   /* References – nullable after population if the referenced doc was deleted */
   location: Types.ObjectId | null;
-  climbs: Types.ObjectId[];
+  climbHistories: Types.ObjectId[];
 }
 
 const trainingSessionSchema = new Schema<ITrainingSession>(
@@ -53,9 +53,9 @@ const trainingSessionSchema = new Schema<ITrainingSession>(
       ref: 'Location',
       required: true,
     },
-    climbs: {
+    climbHistories: {
       type: [Schema.Types.ObjectId],
-      ref: 'Climb',
+      ref: 'ClimbHistory',
       required: true,
       default: [],
     },
