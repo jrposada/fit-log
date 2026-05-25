@@ -16,9 +16,9 @@ export const trainingSessionsPutRequestSchema = z.object({
   id: z.string().optional(),
   title: z.string().nonempty(),
   notes: z.string().optional(),
-  startedAt: z.date(),
-  endedAt: z.date().optional(),
-  lastActivityAt: z.date().optional(),
+  startedAt: z.string().nonempty(),
+  endedAt: z.string().nonempty().optional(),
+  lastActivityAt: z.string().nonempty().optional(),
   location: z.string().nonempty().nullable(),
   climbs: z.array(z.string().nonempty()),
 });

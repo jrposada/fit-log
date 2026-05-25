@@ -8,9 +8,9 @@ export type TrainingSession = WithTimestamps<{
   id: string;
   title: string;
   notes?: string;
-  startedAt: Date;
-  endedAt?: Date;
-  lastActivityAt?: Date;
+  startedAt: string;
+  endedAt?: string;
+  lastActivityAt?: string;
 
   /* References */
   location?: Omit<WithDepopulatedOwnership<Location>, 'sectors'> & {
