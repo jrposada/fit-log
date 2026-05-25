@@ -1,5 +1,7 @@
-import { ClimbGrade } from '@jrposada/fit-log-shared/models/climbs/climb';
-import { GRADE_OPTIONS } from '@jrposada/fit-log-shared/models/climbs/climbs-constants';
+import {
+  ClimbGrade,
+  GRADE_OPTIONS,
+} from '@jrposada/fit-log-shared/common/climbs/grades';
 import { FunctionComponent } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';

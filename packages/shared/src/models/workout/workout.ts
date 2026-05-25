@@ -1,4 +1,4 @@
-export const INTENSITY_UNITS = ['time', 'weight', 'body-weight'] as const;
+import { IntensityUnit } from '../../common/workout/intensity-units.ts';
 
 export type Exercise = {
   name: string;
@@ -23,7 +23,7 @@ export type Exercise = {
    *
    * Use `time` for duration (in seconds), `weight` for load (in kilograms) or `body-weight` for load (in % of body weight).
    */
-  intensityUnit: (typeof INTENSITY_UNITS)[number];
+  intensityUnit: IntensityUnit;
 };
 
 export type Workout = {

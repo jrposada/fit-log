@@ -1,4 +1,4 @@
-import { ClimbGrade } from '@jrposada/fit-log-shared/models/climbs/climb';
+import { ClimbGrade } from '@jrposada/fit-log-shared/common/climbs/grades';
 
 const GRADE_PALETTE: Record<ClimbGrade, string> = {
   V0: '#B9F6CA',

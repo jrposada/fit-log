@@ -1,3 +1,5 @@
+import { ClimbGrade } from '../../common/climbs/grades.ts';
+import { HoldType } from '../../common/climbs/holds.ts';
 import {
   WithDepopulatedOwnership,
   WithOwnership,
@@ -6,33 +8,6 @@ import { Image } from '../images/image.ts';
 import { Location } from '../locations/location.ts';
 import { Sector } from '../sectors/sector.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
-
-export const GRADE_OPTIONS = [
-  'V0',
-  'V1',
-  'V2',
-  'V3',
-  'V4',
-  'V5',
-  'V6',
-  'V7',
-  'V8',
-  'V9',
-  'V10',
-  'V11',
-  'V12',
-  'V13',
-  'V14',
-  'V15',
-  'V16',
-  'V17',
-] as const;
-export type ClimbGrade = (typeof GRADE_OPTIONS)[number] | (string & {});
-
-export const DEFAULT_HOLD_RADIUS = 0.03;
-
-export const HOLD_TYPES = ['normal', 'start', 'end', 'feet-only'] as const;
-export type HoldType = (typeof HOLD_TYPES)[number];
 
 export type Hold = {
   x: number;

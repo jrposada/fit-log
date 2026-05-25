@@ -1,6 +1,7 @@
 import z from 'zod';
 
-import { INTENSITY_UNITS, Workout } from './workout.ts';
+import { INTENSITY_UNITS } from '../../common/workout/intensity-units.ts';
+import { Workout } from './workout.ts';
 
 const exerciseSchema = z.object({
   name: z.string().nonempty(),

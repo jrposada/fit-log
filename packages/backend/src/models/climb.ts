@@ -1,5 +1,5 @@
-import type { HoldType } from '@jrposada/fit-log-shared/models/climbs/climb';
-import { HOLD_TYPES } from '@jrposada/fit-log-shared/models/climbs/climb';
+import type { HoldType } from '@jrposada/fit-log-shared/common/climbs/holds';
+import { HOLD_TYPES } from '@jrposada/fit-log-shared/common/climbs/holds';
 import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 

@@ -1,16 +1,9 @@
+import { ClimbHistoryStatus } from '../../common/climb-histories/climb-history-statuses.ts';
 import { WithDepopulatedOwnership } from '../auth/with-ownership.ts';
 import { Climb } from '../climbs/climb.ts';
 import { Location } from '../locations/location.ts';
 import { Sector } from '../sectors/sector.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
-
-export const CLIMB_HISTORY_STATUSES = ['send', 'flash', 'attempt'] as const;
-export type ClimbHistoryStatus = (typeof CLIMB_HISTORY_STATUSES)[number];
-
-export const CLIMB_HISTORY_QUERY_STATUSES = [
-  ...CLIMB_HISTORY_STATUSES,
-  'project',
-] as const;
 
 export type ClimbHistoryTry = {
   id: string;

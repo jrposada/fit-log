@@ -1,8 +1,10 @@
 import {
   DEFAULT_HOLD_RADIUS,
-  Hold,
   HOLD_TYPES,
   HoldType,
+} from '@jrposada/fit-log-shared/common/climbs/holds';
+import {
+  Hold,
   SplinePoint,
 } from '@jrposada/fit-log-shared/models/climbs/climb';
 import { FunctionComponent, useCallback, useState } from 'react';

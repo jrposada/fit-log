@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ClimbGrade } from '@jrposada/fit-log-shared/models/climbs/climb';
+import { ClimbGrade } from '@jrposada/fit-log-shared/common/climbs/grades';
 import {
   ClimbSearchResult,
   climbsSearchQuerySchema,

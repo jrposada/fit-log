@@ -1,6 +1,9 @@
 import z from 'zod';
 
-import { CLIMB_HISTORY_STATUSES, ClimbHistoryStatus } from './climb-history.ts';
+import {
+  CLIMB_HISTORY_STATUSES,
+  ClimbHistoryStatus,
+} from '../../common/climb-histories/climb-history-statuses.ts';
 
 export type ClimbHistoriesPutRequest = {
   tryId?: string;

@@ -1,4 +1,4 @@
-import { INTENSITY_UNITS } from '@jrposada/fit-log-shared/models/workout/workout';
+import { INTENSITY_UNITS } from '@jrposada/fit-log-shared/common/workout/intensity-units';
 import type { Document, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 

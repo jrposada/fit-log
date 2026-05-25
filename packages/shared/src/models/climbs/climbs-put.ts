@@ -1,6 +1,7 @@
 import z from 'zod';
 
-import { Climb, HOLD_TYPES } from './climb.ts';
+import { HOLD_TYPES } from '../../common/climbs/holds.ts';
+import { Climb } from './climb.ts';
 
 const holdSchema = z.object({
   x: z.number().min(0).max(1),

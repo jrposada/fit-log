@@ -1,6 +1,6 @@
+import { HoldType } from '@jrposada/fit-log-shared/common/climbs/holds';
 import {
   Hold,
-  HoldType,
   SplinePoint,
 } from '@jrposada/fit-log-shared/models/climbs/climb';
 import { FunctionComponent, useCallback, useState } from 'react';

@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { HoldType } from '@jrposada/fit-log-shared/common/climbs/holds';
 import {
   canDelete,
   canEdit,
 } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import {
   Hold,
-  HoldType,
   SplinePoint,
 } from '@jrposada/fit-log-shared/models/climbs/climb';
 import { climbsPutRequestSchema } from '@jrposada/fit-log-shared/models/climbs/climbs-put';

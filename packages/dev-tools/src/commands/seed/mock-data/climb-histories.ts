@@ -4,7 +4,7 @@ import {
   IClimbHistoryTry,
   STATUS_PRIORITY,
 } from '@backend/models/climb-history';
-import { CLIMB_HISTORY_STATUSES } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
+import { CLIMB_HISTORY_STATUSES } from '@jrposada/fit-log-shared/common/climb-histories/climb-history-statuses';
 
 function fakeTry(): IClimbHistoryTry {
   const status = faker.helpers.arrayElement(CLIMB_HISTORY_STATUSES);

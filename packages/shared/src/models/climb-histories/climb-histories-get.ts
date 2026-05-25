@@ -2,9 +2,9 @@ import z from 'zod';
 
 import {
   CLIMB_HISTORY_QUERY_STATUSES,
-  ClimbHistory,
   ClimbHistoryStatus,
-} from './climb-history.ts';
+} from '../../common/climb-histories/climb-history-statuses.ts';
+import { ClimbHistory } from './climb-history.ts';
 
 export type ClimbHistoriesGetQueryStatus = ClimbHistoryStatus | 'project';
 
