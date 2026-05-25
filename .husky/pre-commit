@@ -4,4 +4,4 @@
 echo '-----------'
 echo '- Linting -'
 echo '-----------'
-pnpm lint
+pnpm exec lint-staged
