@@ -17,7 +17,6 @@
   },
   "scripts": {
     "dev": "expo start",
-    "expo": "expo",
     "install:check": "expo install --check && expo-doctor",
     "lint:eslint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "lint:format": "prettier . --check",
@@ -55,7 +54,7 @@
     "react-native-image-picker": "8.2.1",
     "react-native-maps": "1.20.1",
     "react-native-reanimated": "~4.1.1",
-    "react-native-safe-area-context": "5.7.0",
+    "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
     "react-native-svg": "15.12.1",
     "react-native-worklets": "0.5.1",
