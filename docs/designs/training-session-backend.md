@@ -27,92 +27,96 @@ Required by: [`training-session-shared-and-hooks`](training-session-shared-and-h
 
 ### Cross-cutting: coded error convention
 
-Error response body is extended to:
+Failure responses keep the existing `{ data, success: false }` shape. For coded errors, the structured payload rides in `data` instead of adding a new top-level field.
 
-```
-{ success: false, error?: { code: string, message?: string, meta?: object } }
-```
+- `packages/shared/src/models/api-error-code.ts` — `ApiErrorCode` enum. First entry: `RelatedEntityRequired = 'related_entity_required'`.
+- `packages/shared/src/models/errors/related-entity-required.ts` — body shape:
+  ```ts
+  type RelatedEntityRequired = {
+    code: ApiErrorCode.RelatedEntityRequired;
+    entity: string;     // e.g. 'trainingSession'
+    forcible: boolean;  // can the client retry with forced=true?
+  };
+  ```
+- `packages/backend/src/infrastructure/related-entity-required-error.ts` — throwable carrying `entity` + `forcible`.
+- `packages/backend/src/api/api-utils.ts` — `handleApiError` maps the error to **HTTP 428 Precondition Required** with `data` populated from the payload above.
 
-- `code` is a stable string slug (e.g. `NO_ACTIVE_SESSION`, `STALE_SESSION`).
-- `error` is optional — existing handlers stay unchanged.
-- A new error class (e.g. `CodedError`) carries the code; `handleApiError` in `backend/src/api/api-utils.ts` is extended to serialize it.
+**Why this shape:** keeps the existing `ApiResponse<T>` contract untouched (no discriminated union, no new optional field); coded failures are additive. **Why 428:** the request *would* be valid once the named related entity exists — semantically a precondition, not a conflict or validation error.
 
-**Why:** stable, parseable, additive — no breaking change to existing clients.
+**Why generic ("related entity required") rather than session-specific codes:** the same precondition pattern reappears any time a child resource needs a parent (e.g. climbs needing a sector). One code + an `entity` discriminator covers them all.
 
 ### Model — `TrainingSession`
 
-Location: `backend/src/models/training-session.ts`. Follows the climb/location pattern (`WithTimestamps`, `WithOwnership`, `timestamps: true`).
+Location: `packages/backend/src/models/training-session.ts`. Follows the existing model pattern (`WithTimestamps`, `timestamps: true`).
 
 Fields:
-- `owner`, `collaborators[]` — via the existing `ownershipFields` mixin.
-- `title: string` — defaults to the session's start date (e.g. `"2026-05-24"`), user-editable.
+- `owner: ObjectId<User>` — single-owner only; no collaborators.
+- `title: string` — required.
 - `notes?: string`.
-- `location?: ObjectId<Location>`.
+- `location: ObjectId<Location>` — **required**.
 - `startedAt: Date` — set at creation.
-- `endedAt?: Date` — set on manual end or auto-stale close.
-- `lastActivityAt: Date` — bumped on every climb attach. Drives staleness.
-- `climbs: ObjectId<Climb>[]` — ordered by attach time.
+- `endedAt?: Date` — set on manual end (no endpoint yet; see "Not yet implemented" below).
+- `lastActivityAt: Date` — bumped on activity. Drives staleness.
+- `climbHistories: ObjectId<ClimbHistory>[]` — ordered by attach time. Sessions group **climb histories** (per-climb logs), not raw climbs.
 
 A session is **active** iff `endedAt` is unset.
 
 ### Staleness
 
-- Constant `SESSION_STALE_MS = 4 * 60 * 60 * 1000` (4h).
-- Computed lazily at read time: `isStale = !endedAt && (now - lastActivityAt) > SESSION_STALE_MS`.
-- No background job in v1. Staleness resolves when the user logs a climb or hits any session endpoint. When the user confirms "new session," the prior session is closed (`endedAt = lastActivityAt`).
+- Constant `SESSION_STALE_MS = 4 * 60 * 60 * 1000` (4h) lives on the model.
+- Not enforced server-side at the climb-history write path in this iteration. Staleness will be surfaced by the read endpoints / client when needed.
 
-**Why no cron:** lazy resolution is sufficient for correctness. A sweeper can land later if stats/exports need consistent state.
+### Endpoints (`packages/backend/src/api/training-sessions/`)
 
-### Endpoints (`backend/src/api/training-sessions/`)
+Follows the existing CRUD layout (`-get`, `-get-by-id`, `-put`, `-delete`, `-mapper`):
 
-Follows the existing climbs API layout (`-get`, `-get-by-id`, `-put`, `-delete`, `-mapper`).
-
-- `GET /training-sessions` — list owned sessions, sorted by `startedAt` desc.
-- `GET /training-sessions/:id` — one session, climbs populated.
-- `GET /training-sessions/active` — the user's active session if one exists. Includes `isStale` flag so the client can prompt without a second call.
-- `PUT /training-sessions` — create-or-update (matches the climb PUT-as-upsert convention).
-- `POST /training-sessions/:id/end` — manual end.
+- `GET /training-sessions` — list owned sessions, sorted by `startedAt` desc. Accepts `?limit`.
+- `GET /training-sessions/:id` — one session, location + climbHistories populated.
+- `PUT /training-sessions` — create-or-update upsert (matches the climbs/climb-histories convention).
 - `DELETE /training-sessions/:id` — owner only.
 
-### Climb-attach behavior
+### Climb-history-attach behavior
 
-The existing climb PUT handler (`backend/src/api/climbs/climbs-put.ts`) gains session-aware logic on **create** (not on edit). Before saving:
+The handler is `packages/backend/src/api/climb-histories/climb-histories-put.ts` (training sessions group climb histories, not climbs directly). On **create** — i.e. when the request omits `tryId` — the handler enforces the precondition:
 
-1. Find the caller's most recent active session.
-2. **None found** → throw `CodedError("NO_ACTIVE_SESSION")`. Climb is not saved.
-3. **Found and fresh** → save climb, push id into `session.climbs`, bump `lastActivityAt`. Response includes the session id.
-4. **Found and stale** → throw `CodedError("STALE_SESSION", _, { sessionId, lastActivityAt })`.
+1. If `trainingSession` is provided in the body, persist it into the new climb history via `$setOnInsert`.
+2. If `trainingSession` is missing **and** `forced !== true`, throw `RelatedEntityRequiredError('trainingSession', true)`. The handler returns **428** with `data: { code, entity: 'trainingSession', forcible: true }`. Nothing is written.
+3. If `forced === true`, the climb history is created without a session reference.
 
-The client retries with an explicit hint via query param:
-- `?sessionAction=start` → create a new session, save the climb into it.
-- `?sessionAction=resume` → refresh `lastActivityAt` on the stale session, save the climb.
-- `?sessionAction=new` → close the stale session, create a new one, save the climb.
+Appending a try to an existing climb history (request includes `tryId`) skips the check — the parent record already has its session (or was explicitly forced earlier).
 
-**Why query-param hints over a separate "start session" call:** keeps logging atomic from the user's perspective. No orphaned sessions if a second call fails.
+**Why a body field + `forced` flag instead of a query param:** the precondition pattern is generic, so the signaling lives next to the resource it gates. `forced` makes the bypass explicit and auditable. **Why no automatic stale handling here:** keeps the write path simple. The client decides whether to start, reuse, or end a session before retrying.
 
 ---
 
 ## Files Touched
 
-- New: `backend/src/models/training-session.ts`.
-- New: `backend/src/api/training-sessions/*` (CRUD + active + end).
-- New: `backend/src/infrastructure/coded-error.ts`.
-- Modified: `backend/src/api/api-utils.ts` — `handleApiError` serializes `CodedError`.
-- Modified: `backend/src/api/climbs/climbs-put.ts` — attach logic + `sessionAction` query param.
+- New: `packages/backend/src/models/training-session.ts`.
+- New: `packages/backend/src/api/training-sessions/*` (get, get-by-id, put, delete, mapper).
+- New: `packages/backend/src/infrastructure/related-entity-required-error.ts`.
+- New: `packages/shared/src/models/api-error-code.ts`, `packages/shared/src/models/errors/related-entity-required.ts`.
+- Modified: `packages/backend/src/api/api-utils.ts` — `handleApiError` maps `RelatedEntityRequiredError` to 428 with the payload in `data`.
+- Modified: `packages/backend/src/api/climb-histories/climb-histories-put.ts` — precondition check + `trainingSession`/`forced` request fields.
+- Modified: `packages/shared/src/models/climb-histories/climb-histories-put.ts` — adds optional `trainingSession` and `forced` (with zod schema).
 
 ---
 
 ## Verification
 
-1. **Unit tests for the climb PUT handler** covering the three branches (`NO_ACTIVE_SESSION`, fresh attach, `STALE_SESSION`) and each `sessionAction` variant.
-2. **Endpoint tests** for the six new routes.
-3. **Manual curl checks**:
-   - `GET /training-sessions/active` with no session → `data: null`.
-   - `PUT /climbs` with no session → 4xx + `error.code === "NO_ACTIVE_SESSION"`.
-   - `PUT /climbs?sessionAction=start` → climb saved, session created, `/active` returns it.
-   - Wait > 4h (or stub the constant) → second `PUT /climbs` returns `STALE_SESSION` with the session id.
+Manual checks against the implemented endpoints:
+
+- `PUT /climb-histories` with no `trainingSession` and `forced !== true` → 428, body `data.code === "related_entity_required"`, `data.entity === "trainingSession"`, `data.forcible === true`. Nothing persisted.
+- `PUT /climb-histories` with `trainingSession: <id>` → 200, climb history created with `trainingSession` populated.
+- `PUT /climb-histories` with `forced: true` → 200, climb history created with `trainingSession: null`.
+- `PUT /climb-histories` with `tryId` set → precondition skipped regardless of `trainingSession`.
+
+## Not Yet Implemented
+
+- `GET /training-sessions/active` and `POST /training-sessions/:id/end` — referenced by downstream UX work but not built in this iteration.
+- Server-side staleness handling on the climb-history write path. The 4h constant exists on the model for future use.
+- Auto-bumping `lastActivityAt` on the session when a climb history attaches.
 
 ## Open Questions / Lowest Confidence
 
-- **Stale detection without a cron** — acceptable for v1; revisit if stats need consistent ended-at values.
-- **`sessionAction` as query param vs. body field** — chose query param to keep the climb payload contract unchanged. Open to flipping.
+- **Where staleness should be enforced** — at the climb-history write (auto-end + re-prompt) or only surfaced via reads. Current iteration takes the latter, simpler route.
+- **`forced` semantics** — currently a hard bypass. If we ever want richer reasons (e.g. "user dismissed prompt" vs "background sync"), it may need to grow into an enum.

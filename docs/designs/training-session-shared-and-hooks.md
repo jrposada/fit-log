@@ -12,62 +12,61 @@ Required by: [`training-session-overlay-ui`](training-session-overlay-ui.md).
 ## Problem
 
 - No shared types describe a training session or the new session-related endpoints.
-- The existing `ApiResponse` shape has no slot for an app-level error code, so the climb hook can't differentiate session-related failures from anything else.
+- The climb-history hook can't yet differentiate the 428 precondition response from any other failure — it currently throws a generic `Api error`.
 - There is no hook driving an "active session" UI.
 
 ## Goal
 
 - Mirror the backend model and endpoints with Zod-validated shared types.
-- Extend `ApiResponse` to carry the optional `error.code` payload.
-- Provide React Query hooks for active session, list, detail, mutations.
-- Teach the climb hook to recognise and rethrow `NO_ACTIVE_SESSION` / `STALE_SESSION` as typed errors, and to accept an optional `sessionAction` hint.
+- Reuse the shared `ApiErrorCode` enum + `RelatedEntityRequired` body shape introduced by the backend package — no further changes to `ApiResponse`.
+- Provide React Query hooks for training sessions (list, detail, mutations).
+- Teach the climb-history hook to recognise 428 + `related_entity_required` and rethrow it as a **typed** error so the UI can branch without inspecting raw Axios shapes, and to accept optional `trainingSession` / `forced` mutate args.
 
 ---
 
 ## Architecture
 
-### Shared types — `shared/src/models/training-session/`
+### Shared types — `packages/shared/src/models/training-sessions/`
 
-Follows the climb pattern (per-operation files, Zod schemas, type tests).
+Follows the existing climb-histories pattern (per-operation files, Zod schemas, type tests).
 
 - `training-session.ts` — base type:
+  ```ts
+  WithTimestamps<{
+    id, owner, title, notes?, location, startedAt, endedAt?, lastActivityAt, climbHistories
+  }>
   ```
-  WithOwnership<WithTimestamps<{
-    id, title, notes?, location?, startedAt, endedAt?, lastActivityAt, climbs
-  }>>
-  ```
-  Plus a derived `isStale: boolean` field on read responses.
-- `training-session-get.ts`, `training-session-get-by-id.ts`, `training-session-get-active.ts`, `training-session-put.ts`, `training-session-end.ts`, `training-session-delete.ts`.
-- Test files (`*.test.ts`) validating shapes, matching the climb test layout.
+- `training-sessions-get.ts`, `training-sessions-get-by-id.ts`, `training-sessions-put.ts`, `training-sessions-delete.ts`.
+- Test files (`*.test.ts`) validating shapes, matching the climb-histories test layout.
 
-### Updated `ApiResponse`
+These types must already exist for the backend handlers; this package focuses on the consumer-side hooks and on the climb-history hook update.
 
-Convert the response type to a discriminated union:
+### Coded error payload (already shared)
 
-```
-ApiResponse<T> =
-  | { success: true,  data: T }
-  | { success: false, error?: { code: string, message?: string, meta?: object } }
-```
+The backend package already publishes:
 
-Existing call sites stay valid: previous error responses just have an absent `error`.
+- `packages/shared/src/models/api-error-code.ts` — `ApiErrorCode` enum.
+- `packages/shared/src/models/errors/related-entity-required.ts` — `RelatedEntityRequired` body shape (`code`, `entity`, `forcible`).
 
-### React hooks — `shared-react/src/api/training-sessions/`
+`ApiResponse<T>` is **unchanged**. Coded failures arrive as `{ success: false, data: RelatedEntityRequired }` with HTTP 428.
 
-Uses `@tanstack/react-query` and the existing `query()` / `mutation()` wrappers found in `shared-react/src/api/climbs/`.
+### React hooks — `packages/shared-react/src/api/training-sessions/`
 
-- `useActiveSession()` — `useQuery`, refetch on focus. Drives the overlay.
+Uses `@tanstack/react-query` and the existing `query()` / `mutation()` wrappers under `shared-react/src/api/`.
+
 - `useTrainingSessions()` — list.
 - `useTrainingSession(id)` — detail.
-- `usePutTrainingSession()`, `useEndSession(id)`, `useDeleteSession(id)` — mutations. Each invalidates `activeSession` (and the list, where relevant) on success.
+- `useTrainingSessionPut()`, `useTrainingSessionDelete(id)` — mutations. Invalidate the `training-sessions` query and (where the response affects them) `climb-histories`.
 
-### Climb hook update
+`useActiveSession()` is **deferred** — the backend doesn't yet expose `GET /training-sessions/active`. The overlay will derive the active session from the list query in the meantime, or this hook lands together with that endpoint.
 
-The existing climb create/update hook under `shared-react/src/api/climbs/` is extended:
+### Climb-history hook update
 
-- On error, inspect `error.response.data.error?.code`. If it matches `NO_ACTIVE_SESSION` or `STALE_SESSION`, rethrow a **typed** error (e.g. `SessionPromptError`) carrying `code` and `meta` so the UI can branch in a single `try/catch` (or `onError`) without inspecting raw Axios shapes.
-- Accept an optional `sessionAction: "start" | "resume" | "new"` mutate arg; pass it through as a query param.
-- On success, invalidate the `activeSession` query.
+The existing `useClimbHistoriesPut` hook under `packages/shared-react/src/api/climb-histories/use-climb-histories-put.ts` is extended:
+
+- Accept optional `trainingSession?: string` and `forced?: boolean` mutate args; pass them through in the request body (the shared request type already carries them).
+- On Axios error with status **428** and `data.code === ApiErrorCode.RelatedEntityRequired`, rethrow a **typed** error (e.g. `RelatedEntityRequiredClientError`) carrying `entity` and `forcible` so the UI can branch in a single `onError` callback.
+- On success, invalidate `climb-histories`, `climbs.search`, and `training-sessions`.
 
 **Why surface as typed errors rather than auto-prompting in the hook:** the prompt UI is owned by the overlay (next package). Hooks stay UI-agnostic.
 
@@ -75,21 +74,27 @@ The existing climb create/update hook under `shared-react/src/api/climbs/` is ex
 
 ## Files Touched
 
-- New: `shared/src/models/training-session/*` (+ tests).
-- New: `shared-react/src/api/training-sessions/*` (one hook per file, climb-style).
-- Modified: `shared/src/models/api-response.ts` (or the equivalent shared response type).
-- Modified: existing climb hook(s) under `shared-react/src/api/climbs/`.
+- New: `packages/shared/src/models/training-sessions/*` (+ tests).
+- New: `packages/shared-react/src/api/training-sessions/*` (one hook per file, matching the climb-histories style).
+- Modified: `packages/shared-react/src/api/climb-histories/use-climb-histories-put.ts` — accept `trainingSession`/`forced`, recognise the 428 precondition response, rethrow as a typed error.
+
+Not modified: `packages/shared/src/models/api-response.ts` — the existing shape already accommodates the coded error payload.
 
 ---
 
 ## Verification
 
-1. **Type tests pass** under `shared/src/models/training-session/*.test.ts`.
-2. **Hook smoke test** in a throwaway page: `useActiveSession()` renders state changes after `usePutTrainingSession()` runs.
-3. **Climb hook branching** — fire the climb create with no active session and confirm the caller receives a `SessionPromptError` with `code === "NO_ACTIVE_SESSION"`, not a generic Axios error.
-4. **Retry path** — call the climb create with `sessionAction: "start"` and confirm it succeeds + invalidates `activeSession`.
+1. **Type tests pass** under `packages/shared/src/models/training-sessions/*.test.ts`.
+2. **Hook smoke test** — `useTrainingSessions()` updates after `useTrainingSessionPut()` runs.
+3. **Climb-history hook branching** — fire `useClimbHistoriesPut` without `trainingSession` and without `forced`; confirm the caller's `onError` receives the typed `RelatedEntityRequiredClientError` (not a generic message).
+4. **Retry paths** — call again with `trainingSession: <id>` and (separately) with `forced: true`; both succeed and invalidate the expected queries.
+
+## Not Yet Implemented
+
+- `useActiveSession()` (and the matching backend endpoint).
+- Session-end hook (no backend endpoint yet).
 
 ## Open Questions / Lowest Confidence
 
-- **Naming of the typed error class** (`SessionPromptError` vs `CodedError` on the client). Either works; pick what aligns with existing client error types if any.
-- **Polling vs. focus-only refetch for `useActiveSession`** — defaulting to refetch-on-focus; revisit if the overlay feels stale during long sessions.
+- **Naming of the typed client error** — `RelatedEntityRequiredClientError` is verbose; could shorten to `PreconditionError` if more cases land.
+- **How the overlay finds the "active" session pre-`useActiveSession`** — likely the most-recently-started session with no `endedAt`. Pin down before the overlay lands.

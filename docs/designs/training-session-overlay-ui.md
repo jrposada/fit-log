@@ -11,13 +11,13 @@ Depends on: [`training-session-shared-and-hooks`](training-session-shared-and-ho
 ## Problem
 
 - There is no global UI signalling whether a session is active.
-- Climb logging currently has no way to ask the user "start a new session?" or "resume the stale session?" — there's no overlay/dialog wiring for it.
+- Climb-history logging currently has no way to ask the user "start a new session?" or "resume an existing one?" — the backend's `related_entity_required` (HTTP 428) precondition is surfaced but unhandled in the UI.
 - No screens exist to browse past sessions.
 
 ## Goal
 
 - A persistent overlay mounted in the root layout that reflects active-session state and lets the user start/end sessions.
-- Modal flows for `NO_ACTIVE_SESSION` and `STALE_SESSION` triggered during climb creation.
+- A modal flow triggered when a climb-history create returns the 428 `related_entity_required` precondition for `entity: "trainingSession"`, offering "Start session" or "Save without session" (forced).
 - List and detail routes for past sessions.
 
 ---
@@ -56,16 +56,18 @@ The detail route (`/training-sessions/$id`) shows the same metrics in a fuller l
 
 ### Dialog controller
 
-The overlay owns a small context/controller that any screen can call to open the session prompts. The climb-logging screen catches `SessionPromptError` from the climb hook and delegates to this controller:
+The overlay owns a small context/controller that any screen can call to open the session prompts. The climb-history logging screen catches the typed `RelatedEntityRequiredClientError` (raised by `useClimbHistoriesPut` on a 428 with `entity === "trainingSession"`) and delegates to this controller:
 
-1. **`NO_ACTIVE_SESSION`** — modal:
+1. **`related_entity_required` for `trainingSession`** — modal:
    - Title: "Start a new training session?"
-   - Buttons: **Start & save climb** (retries climb create with `sessionAction: "start"`), **Cancel** (climb is discarded — call this out explicitly).
-2. **`STALE_SESSION`** — modal showing the stale session's last-activity timestamp and climb count:
-   - Buttons: **Resume session** (`sessionAction: "resume"`), **Start new session** (`sessionAction: "new"`), **Cancel**.
-3. **Manual end** from the overlay popover — confirmation modal, then `POST /training-sessions/:id/end` via `useEndSession`.
+   - Buttons:
+     - **Start & save climb** — opens a quick session-create flow, then retries the climb-history create with `trainingSession: <newId>`.
+     - **Save without session** — only shown when the response's `forcible === true`. Retries with `forced: true`.
+     - **Cancel** — climb-history discarded (call this out explicitly).
+2. **Stale-session UX** — deferred. The backend doesn't yet enforce staleness on the write path; when it does (or surfaces it via `GET /training-sessions/active`), add a resume/new variant here.
+3. **Manual end** from the overlay popover — confirmation modal, then `POST /training-sessions/:id/end` via `useEndSession`. **Endpoint not yet implemented** — block end-from-overlay until it lands, or fall back to a `PUT` that sets `endedAt`.
 
-**Why a shared controller** instead of inline dialogs in the climb screen: the same prompts will be reusable as we add more session-aware actions later (workouts, etc.).
+**Why a shared controller** instead of inline dialogs in the climb-history screen: the same precondition prompt will be reusable for any future `related_entity_required` case (other entities, other endpoints).
 
 ### New screens
 
@@ -82,7 +84,7 @@ Both routes live under `app-web/src/routes/training-sessions/` and follow the ex
 - New: `app-web/src/features/training-sessions/session-dialog-controller.tsx` (context + prompt modals).
 - New: `app-web/src/routes/training-sessions/index.tsx`, `app-web/src/routes/training-sessions/$id.tsx`.
 - Modified: `app-web/src/routes/__root.tsx` — mount overlay + dialog controller provider.
-- Modified: the existing climb-create screen — catch `SessionPromptError`, delegate to the controller, retry with the chosen `sessionAction`.
+- Modified: the existing climb-history create screen — catch `RelatedEntityRequiredClientError`, delegate to the controller, retry with either `trainingSession: <id>` or `forced: true`.
 
 ---
 
@@ -90,13 +92,14 @@ Both routes live under `app-web/src/routes/training-sessions/` and follow the ex
 
 End-to-end manual flow (run after all three packages land):
 
-1. **Cold path** — log a climb with no active session → "Start a new training session?" modal → confirming saves the climb and creates the session → overlay flips to the active state.
-2. **Hot path** — log a second climb → no prompt, climb auto-attaches, overlay count increments.
-3. **Stale path** — stub `SESSION_STALE_MS` or wait > 4h → log a climb → resume/new modal appears → both branches produce the expected sessions in `/training-sessions`.
-4. **Manual end** — overlay popover → End session → overlay returns to "Start session" state; detail page shows `endedAt`.
+1. **Cold path** — log a climb-history with no active session → "Start a new training session?" modal → confirming creates a session and retries the climb-history create with `trainingSession: <newId>` → overlay flips to the active state.
+2. **Hot path** — log a second climb-history while the session is active → no prompt, request includes `trainingSession`, overlay count increments.
+3. **Forced path** — log a climb-history and choose "Save without session" → request retries with `forced: true`, climb-history is created with `trainingSession: null`.
+4. **Manual end** — overlay popover → End session → overlay returns to "Start session" state; detail page shows `endedAt`. *(Blocked on the end endpoint — see backend doc.)*
 5. **Cross-screen overlay** — confirm the overlay is visible on every route, including the new session detail screen.
 
 ## Open Questions / Lowest Confidence
 
 - **Overlay vs. integrating into AppBar** — sibling chosen for clean separation; visual tightness may push us to embed it inside AppBar later.
-- **Discarded-climb messaging on "Cancel"** in the `NO_ACTIVE_SESSION` modal — make sure the copy makes it clear nothing was saved. Could also offer "Save anyway without a session" later, but explicitly out of scope for v1.
+- **Discarded-climb messaging on "Cancel"** — make sure the copy makes clear nothing was saved. "Save without session" is now first-class via `forced: true`, so the modal should pair it with the start-session option rather than save-on-cancel.
+- **Active-session source** — until `GET /training-sessions/active` exists, the overlay derives it from the sessions list. Revisit once the endpoint lands.
