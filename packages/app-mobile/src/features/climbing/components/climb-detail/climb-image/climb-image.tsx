@@ -43,7 +43,6 @@ interface ClimbImageProps {
 const SPLINE_POINT_HIT_RADIUS = 0.05;
 const SPLINE_CURVE_HIT_RADIUS = 0.04;
 
-
 const HoldTypePicker: FunctionComponent<{
   currentType: HoldType;
   onSelect: (type: HoldType) => void;

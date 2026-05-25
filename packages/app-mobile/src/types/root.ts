@@ -14,4 +14,7 @@ export type RootStackParamList = {
   Profile: undefined;
 };
 
-export type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, 'Profile'>;
+export type ProfileScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Profile'
+>;
