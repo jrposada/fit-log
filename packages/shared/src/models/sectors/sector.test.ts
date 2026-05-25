@@ -6,12 +6,12 @@ import { IsTrue } from '../../types/is-true.ts';
 import {
   SectorsDeleteParams,
   sectorsDeleteParamsSchema,
-} from './sector-delete.ts';
+} from './sectors-delete.ts';
 import {
   SectorsGetByIdParams,
   sectorsGetByIdParamsSchema,
-} from './sector-get-by-id.ts';
-import { SectorsPutRequest, sectorsPutRequestSchema } from './sector-put.ts';
+} from './sectors-get-by-id.ts';
+import { SectorsPutRequest, sectorsPutRequestSchema } from './sectors-put.ts';
 
 export type SectorsPutRequestTest = Expect<
   IsTrue<IsEqual<SectorsPutRequest, z.infer<typeof sectorsPutRequestSchema>>>

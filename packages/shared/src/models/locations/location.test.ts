@@ -6,16 +6,16 @@ import { IsTrue } from '../../types/is-true.ts';
 import {
   LocationsDeleteParams,
   locationsDeleteParamsSchema,
-} from './location-delete.ts';
-import { LocationsGetQuery, locationsGetQuerySchema } from './location-get.ts';
+} from './locations-delete.ts';
+import { LocationsGetQuery, locationsGetQuerySchema } from './locations-get.ts';
 import {
   LocationsGetByIdParams,
   locationsGetByIdParamsSchema,
-} from './location-get-by-id.ts';
+} from './locations-get-by-id.ts';
 import {
   LocationsPutRequest,
   locationsPutRequestSchema,
-} from './location-put.ts';
+} from './locations-put.ts';
 
 export type LocationsGetQueryTest = Expect<
   IsTrue<IsEqual<LocationsGetQuery, z.infer<typeof locationsGetQuerySchema>>>

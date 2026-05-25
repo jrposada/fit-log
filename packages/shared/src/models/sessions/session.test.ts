@@ -6,13 +6,16 @@ import { IsTrue } from '../../types/is-true.ts';
 import {
   SessionsDeleteParams,
   sessionsDeleteParamsSchema,
-} from './session-delete.ts';
-import { SessionsGetQuery, sessionsGetQuerySchema } from './session-get.ts';
+} from './sessions-delete.ts';
+import { SessionsGetQuery, sessionsGetQuerySchema } from './sessions-get.ts';
 import {
   SessionsGetByIdParams,
   sessionsGetByIdParamsSchema,
-} from './session-get-by-id.ts';
-import { SessionsPutRequest, sessionsPutRequestSchema } from './session-put.ts';
+} from './sessions-get-by-id.ts';
+import {
+  SessionsPutRequest,
+  sessionsPutRequestSchema,
+} from './sessions-put.ts';
 
 export type SessionsGetQueryTest = Expect<
   IsTrue<IsEqual<SessionsGetQuery, z.infer<typeof sessionsGetQuerySchema>>>

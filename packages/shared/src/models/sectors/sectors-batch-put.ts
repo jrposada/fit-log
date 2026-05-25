@@ -1,7 +1,7 @@
 import z from 'zod';
 
 import { Sector } from './sector.ts';
-import { SectorsPutRequest, sectorsPutRequestSchema } from './sector-put.ts';
+import { SectorsPutRequest, sectorsPutRequestSchema } from './sectors-put.ts';
 
 export type SectorsBatchPutRequest = {
   sectors: SectorsPutRequest[];

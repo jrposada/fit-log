@@ -6,14 +6,14 @@ import { IsTrue } from '../../types/is-true.ts';
 import {
   ClimbsDeleteParams,
   climbsDeleteParamsSchema,
-} from './climb-delete.ts';
-import { ClimbsGetQuery, climbsGetQuerySchema } from './climb-get.ts';
+} from './climbs-delete.ts';
+import { ClimbsGetQuery, climbsGetQuerySchema } from './climbs-get.ts';
 import {
   ClimbsGetByIdParams,
   climbsGetByIdParamsSchema,
-} from './climb-get-by-id.ts';
-import { ClimbsPutRequest, climbsPutRequestSchema } from './climb-put.ts';
-import { ClimbsSearchQuery, climbsSearchQuerySchema } from './climb-search.ts';
+} from './climbs-get-by-id.ts';
+import { ClimbsPutRequest, climbsPutRequestSchema } from './climbs-put.ts';
+import { ClimbsSearchQuery, climbsSearchQuerySchema } from './climbs-search.ts';
 
 export type ClimbsGetQueryTest = Expect<
   IsTrue<

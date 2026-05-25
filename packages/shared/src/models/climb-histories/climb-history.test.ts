@@ -8,19 +8,19 @@ import {
   climbHistoriesDeleteParamsSchema,
   ClimbHistoriesDeleteQuery,
   climbHistoriesDeleteQuerySchema,
-} from './climb-history-delete.ts';
+} from './climb-histories-delete.ts';
 import {
   ClimbHistoriesGetQuery,
   climbHistoriesGetQuerySchema,
-} from './climb-history-get.ts';
+} from './climb-histories-get.ts';
 import {
   ClimbHistoriesGetByIdParams,
   climbHistoriesGetByIdParamsSchema,
-} from './climb-history-get-by-id.ts';
+} from './climb-histories-get-by-id.ts';
 import {
   ClimbHistoriesPutRequest,
   climbHistoriesPutRequestSchema,
-} from './climb-history-put.ts';
+} from './climb-histories-put.ts';
 
 export type ClimbHistoriesGetQueryTest = Expect<
   IsTrue<

@@ -6,19 +6,19 @@ import { IsTrue } from '../../types/is-true.ts';
 import {
   TrainingSessionsDeleteParams,
   trainingSessionsDeleteParamsSchema,
-} from './training-session-delete.ts';
+} from './training-sessions-delete.ts';
 import {
   TrainingSessionsGetQuery,
   trainingSessionsGetQuerySchema,
-} from './training-session-get.ts';
+} from './training-sessions-get.ts';
 import {
   TrainingSessionsGetByIdParams,
   trainingSessionsGetByIdParamsSchema,
-} from './training-session-get-by-id.ts';
+} from './training-sessions-get-by-id.ts';
 import {
   TrainingSessionsPutRequest,
   trainingSessionsPutRequestSchema,
-} from './training-session-put.ts';
+} from './training-sessions-put.ts';
 
 export type TrainingSessionsGetQueryTest = Expect<
   IsTrue<
