@@ -1,6 +1,6 @@
 import { WithDepopulatedOwnership } from '../auth/with-ownership.ts';
-import { Climb } from '../climb/climb.ts';
-import { Location } from '../location/location.ts';
+import { Climb } from '../climbs/climb.ts';
+import { Location } from '../locations/location.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
 
 export type TrainingSession = WithTimestamps<{

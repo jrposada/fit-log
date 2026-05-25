@@ -28,5 +28,5 @@ export const climbHistoriesPutRequestSchema = z.object({
 });
 
 export type ClimbHistoriesPutResponse = {
-  climbHistory: import('./climb-history').ClimbHistory;
+  climbHistory: import('./climb-history.ts').ClimbHistory;
 };

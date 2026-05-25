@@ -2,9 +2,9 @@ import {
   WithDepopulatedOwnership,
   WithOwnership,
 } from '../auth/with-ownership.ts';
-import { Image } from '../image/image.ts';
-import { Location } from '../location/location.ts';
-import { Sector } from '../sector/sector.ts';
+import { Image } from '../images/image.ts';
+import { Location } from '../locations/location.ts';
+import { Sector } from '../sectors/sector.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
 
 export const GRADE_OPTIONS = [

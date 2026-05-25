@@ -1,7 +1,7 @@
 import { WithDepopulatedOwnership } from '../auth/with-ownership.ts';
-import { Climb } from '../climb/climb.ts';
-import { Location } from '../location/location.ts';
-import { Sector } from '../sector/sector.ts';
+import { Climb } from '../climbs/climb.ts';
+import { Location } from '../locations/location.ts';
+import { Sector } from '../sectors/sector.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
 
 export const CLIMB_HISTORY_STATUSES = ['send', 'flash', 'attempt'] as const;
