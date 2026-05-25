@@ -3,7 +3,6 @@ import {
   ReactNode,
   useCallback,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import {
@@ -96,12 +95,8 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
   const savedTranslateY = useSharedValue(0);
   const wasMultiTouch = useSharedValue(false);
 
-  // Container size — ref for tap handler (no re-render), state for imageBounds memo
-  const containerSizeRef = useRef({ width: 0, height: 0 });
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
-  // Image natural dimensions — ref for tap handler, state for imageBounds memo
-  const naturalSizeRef = useRef<{ width: number; height: number } | null>(null);
   const [naturalSize, setNaturalSize] = useState<{
     width: number;
     height: number;
@@ -120,14 +115,12 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
 
   const handleLayout = useCallback((event: LayoutChangeEvent) => {
     const { width, height } = event.nativeEvent.layout;
-    containerSizeRef.current = { width, height };
     setContainerSize({ width, height });
   }, []);
 
   const handleImageLoad = useCallback(
     (event: NativeSyntheticEvent<ImageLoadEventData>) => {
       const { width, height } = event.nativeEvent.source;
-      naturalSizeRef.current = { width, height };
       setNaturalSize({ width, height });
     },
     []
@@ -192,8 +185,8 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
       currentTranslateY: number
     ) => {
       if (!onTap) return;
-      const { width, height } = containerSizeRef.current;
-      const ns = naturalSizeRef.current;
+      const { width, height } = containerSize;
+      const ns = naturalSize;
       if (width === 0 || height === 0 || !ns) return;
 
       // The animated view has transform: [translateX, translateY, scale].
@@ -217,7 +210,7 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
 
       onTap({ x: nx, y: ny });
     },
-    [onTap]
+    [onTap, containerSize, naturalSize]
   );
 
   const singleTapGesture = Gesture.Tap()
