@@ -6,6 +6,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
+import RelatedEntityRequiredError from '../../infrastructure/related-entity-required-error.ts';
 import type { IClimb } from '../../models/climb.ts';
 import type { IClimbHistoryTry } from '../../models/climb-history.ts';
 import { ClimbHistory, computeTopStatus } from '../../models/climb-history.ts';
@@ -25,8 +26,22 @@ const handler = toApiResponse<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const { tryId, status, attempts, notes, date, climb, location, sector } =
-    request.body;
+  const {
+    tryId,
+    status,
+    attempts,
+    notes,
+    date,
+    climb,
+    location,
+    sector,
+    trainingSession,
+    forced,
+  } = request.body;
+
+  if (!tryId && !trainingSession && !forced) {
+    throw new RelatedEntityRequiredError('trainingSession', true);
+  }
 
   const newTry: Partial<IClimbHistoryTry> = {
     status,
@@ -69,6 +84,9 @@ const handler = toApiResponse<
           location: new Types.ObjectId(location),
           sector: new Types.ObjectId(sector),
           owner: request.user._id,
+          trainingSession: trainingSession
+            ? new Types.ObjectId(trainingSession)
+            : null,
         },
       },
       { new: true, upsert: true }
