@@ -1,24 +1,7 @@
-import { User } from '@backend/models/user';
-import { Types } from 'mongoose';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { MoonboardFetchResult } from '@jrposada/moonboard-sdk';
-
-const MOONBOARD_SYSTEM_KEYCLOAK_ID = 'moonboard-system';
-
-async function getOrCreateSystemUser(): Promise<Types.ObjectId> {
-  let user = await User.findOne({ keycloakId: MOONBOARD_SYSTEM_KEYCLOAK_ID });
-  if (!user) {
-    user = await User.create({
-      keycloakId: MOONBOARD_SYSTEM_KEYCLOAK_ID,
-      email: 'moonboard@system.local',
-      name: 'Moonboard',
-      roles: [],
-    });
-  }
-  return user._id as Types.ObjectId;
-}
 
 export async function seedMoonboardProblems(): Promise<void> {
   const dataPath = path.resolve(
