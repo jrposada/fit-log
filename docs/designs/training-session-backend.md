@@ -68,12 +68,14 @@ A session is **active** iff `endedAt` is unset.
 
 ### Endpoints (`packages/backend/src/api/training-sessions/`)
 
-Follows the existing CRUD layout (`-get`, `-get-by-id`, `-put`, `-delete`, `-mapper`):
+Plain CRUD — no special `/active` or `/end` routes. "Active" and "end" are expressed through the standard verbs:
 
-- `GET /training-sessions` — list owned sessions, sorted by `startedAt` desc. Accepts `?limit`.
+- `GET /training-sessions` — list owned sessions, sorted by `startedAt` desc. Accepts `?limit` and `?active=true` (filters to sessions where `endedAt` is unset). To fetch the current active session: `GET /training-sessions?active=true&limit=1`.
 - `GET /training-sessions/:id` — one session, location + climbHistories populated.
-- `PUT /training-sessions` — create-or-update upsert (matches the climbs/climb-histories convention).
+- `PUT /training-sessions` — create-or-update upsert. Ending a session is just a `PUT` with `endedAt` set (no dedicated `/end` action).
 - `DELETE /training-sessions/:id` — owner only.
+
+**Why CRUD-only:** every special-cased verb we considered (`/active`, `/end`) collapses cleanly into the existing list filter + `PUT`. Fewer endpoints, fewer hooks, one consistent shape.
 
 ### Climb-history-attach behavior
 
@@ -112,7 +114,7 @@ Manual checks against the implemented endpoints:
 
 ## Not Yet Implemented
 
-- `GET /training-sessions/active` and `POST /training-sessions/:id/end` — referenced by downstream UX work but not built in this iteration.
+- `?active=true` filter on `GET /training-sessions` — needs to be added to the existing list handler (one-line predicate on `endedAt`).
 - Server-side staleness handling on the climb-history write path. The 4h constant exists on the model for future use.
 - Auto-bumping `lastActivityAt` on the session when a climb history attaches.
 

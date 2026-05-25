@@ -54,11 +54,9 @@ The backend package already publishes:
 
 Uses `@tanstack/react-query` and the existing `query()` / `mutation()` wrappers under `shared-react/src/api/`.
 
-- `useTrainingSessions()` — list.
+- `useTrainingSessions({ active?, limit? })` — list. Passes `active=true` / `limit` through as query params. The "active session" is just `useTrainingSessions({ active: true, limit: 1 })` — no dedicated hook needed.
 - `useTrainingSession(id)` — detail.
-- `useTrainingSessionPut()`, `useTrainingSessionDelete(id)` — mutations. Invalidate the `training-sessions` query and (where the response affects them) `climb-histories`.
-
-`useActiveSession()` is **deferred** — the backend doesn't yet expose `GET /training-sessions/active`. The overlay will derive the active session from the list query in the meantime, or this hook lands together with that endpoint.
+- `useTrainingSessionPut()`, `useTrainingSessionDelete(id)` — mutations. Invalidate the `training-sessions` query and (where the response affects them) `climb-histories`. Ending a session is a `useTrainingSessionPut` call with `endedAt` set — no dedicated `useEndSession`.
 
 ### Climb-history hook update
 
@@ -89,12 +87,6 @@ Not modified: `packages/shared/src/models/api-response.ts` — the existing shap
 3. **Climb-history hook branching** — fire `useClimbHistoriesPut` without `trainingSession` and without `forced`; confirm the caller's `onError` receives the typed `RelatedEntityRequiredClientError` (not a generic message).
 4. **Retry paths** — call again with `trainingSession: <id>` and (separately) with `forced: true`; both succeed and invalidate the expected queries.
 
-## Not Yet Implemented
-
-- `useActiveSession()` (and the matching backend endpoint).
-- Session-end hook (no backend endpoint yet).
-
 ## Open Questions / Lowest Confidence
 
 - **Naming of the typed client error** — `RelatedEntityRequiredClientError` is verbose; could shorten to `PreconditionError` if more cases land.
-- **How the overlay finds the "active" session pre-`useActiveSession`** — likely the most-recently-started session with no `endedAt`. Pin down before the overlay lands.
