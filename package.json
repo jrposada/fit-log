@@ -17,6 +17,7 @@
   "packageManager": "pnpm@10.18.2",
   "scripts": {
     "cli": "pnpm --filter @jrposada/fit-log-dev-tools start",
+    "clean": "find . -type d -name dist -not -path '*/node_modules/*' -prune -exec rm -rf {} +",
     "lint": "pnpm -r --if-present lint"
   },
   "devDependencies": {
