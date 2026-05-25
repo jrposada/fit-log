@@ -6,15 +6,13 @@ import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
 import type { IClimb } from '../../models/climb.ts';
 import type { IImage } from '../../models/image.ts';
 import type { ISector } from '../../models/sector.ts';
+import { hasRequiredRefs } from '../../services/climb.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
 } from '../auth/collaborators-mapper.ts';
 import { toApiUserSummary } from '../auth/user-summary-mapper.ts';
-import {
-  hasRequiredRefs,
-  toApiDepopulatedClimb,
-} from '../climbs/climbs-mapper.ts';
+import { toApiDepopulatedClimb } from '../climbs/climbs-mapper.ts';
 import { toApiDepopulatedImage } from '../images/images-mapper.ts';
 
 function toApiDepopulatedSector(

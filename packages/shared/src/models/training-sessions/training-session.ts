@@ -16,13 +16,12 @@ export type TrainingSession = WithTimestamps<{
   location?: Omit<WithDepopulatedOwnership<Location>, 'sectors'> & {
     sectors: string[];
   };
-  climbs: Omit<
+  climbs: (Omit<
     WithDepopulatedOwnership<Climb>,
     'image' | 'location' | 'sector'
-  > &
-    {
-      image: string;
-      location: string;
-      sector: string;
-    }[];
+  > & {
+    image: string;
+    location: string;
+    sector: string;
+  })[];
 }>;

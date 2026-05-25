@@ -83,8 +83,4 @@ function toApiClimb(
   };
 }
 
-function hasRequiredRefs(model: IClimb): model is WithRequiredRefs<IClimb> {
-  return model.image != null && model.location != null && model.sector != null;
-}
-
-export { hasRequiredRefs, toApiClimb, toApiDepopulatedClimb };
+export { toApiClimb, toApiDepopulatedClimb };
