@@ -30,6 +30,10 @@ import { sessionsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/sess
 import { sessionsGetQuerySchema } from '@jrposada/fit-log-shared/models/sessions/sessions-get';
 import { sessionsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/sessions/sessions-get-by-id';
 import { sessionsPutRequestSchema } from '@jrposada/fit-log-shared/models/sessions/sessions-put';
+import { trainingSessionsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-delete';
+import { trainingSessionsGetQuerySchema } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-get';
+import { trainingSessionsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-get-by-id';
+import { trainingSessionsPutRequestSchema } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-put';
 import { workoutsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/workout/workout-delete';
 import { workoutsGetQuerySchema } from '@jrposada/fit-log-shared/models/workout/workout-get';
 import { workoutsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/workout/workout-get-by-id';
@@ -69,6 +73,10 @@ import { handler as sessionsDelete } from './api/sessions/sessions-delete.ts';
 import { handler as sessionsGet } from './api/sessions/sessions-get.ts';
 import { handler as sessionsGetById } from './api/sessions/sessions-get-by-id.ts';
 import { handler as sessionsPut } from './api/sessions/sessions-put.ts';
+import { handler as trainingSessionsDelete } from './api/training-sessions/training-sessions-delete.ts';
+import { handler as trainingSessionsGet } from './api/training-sessions/training-sessions-get.ts';
+import { handler as trainingSessionsGetById } from './api/training-sessions/training-sessions-get-by-id.ts';
+import { handler as trainingSessionsPut } from './api/training-sessions/training-sessions-put.ts';
 import { handler as versionGet } from './api/version/version-get.ts';
 import { handler as workoutsDelete } from './api/workouts/workouts-delete.ts';
 import { handler as workoutsGet } from './api/workouts/workouts-get.ts';
@@ -137,6 +145,32 @@ router.delete(
   authenticateKeycloak,
   validateParams(sessionsDeleteParamsSchema),
   sessionsDelete
+);
+
+// Training Sessions
+router.get(
+  '/training-sessions',
+  authenticateKeycloak,
+  validateQuery(trainingSessionsGetQuerySchema),
+  trainingSessionsGet
+);
+router.get(
+  '/training-sessions/:id',
+  authenticateKeycloak,
+  validateParams(trainingSessionsGetByIdParamsSchema),
+  trainingSessionsGetById
+);
+router.put(
+  '/training-sessions',
+  authenticateKeycloak,
+  validateBody(trainingSessionsPutRequestSchema),
+  trainingSessionsPut
+);
+router.delete(
+  '/training-sessions/:id',
+  authenticateKeycloak,
+  validateParams(trainingSessionsDeleteParamsSchema),
+  trainingSessionsDelete
 );
 
 // Locations
