@@ -18,9 +18,14 @@ const handler = toApiResponse<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const { limit } = request.query;
+  const { limit, active } = request.query;
 
-  const query = TrainingSession.find({ owner: request.user._id }).sort({
+  const filter: Record<string, unknown> = { owner: request.user._id };
+  if (active) {
+    filter.endedAt = { $exists: false };
+  }
+
+  const query = TrainingSession.find(filter).sort({
     startedAt: -1,
   });
 
