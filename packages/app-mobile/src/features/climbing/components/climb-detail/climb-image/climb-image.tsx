@@ -40,6 +40,8 @@ interface ClimbImageProps {
   onSplinePointAdd: (point: SplinePoint) => void;
   onSplinePointInsert: (afterIndex: number, point: SplinePoint) => void;
   onSplinePointRemove: (index: number) => void;
+  onChangeImage?: () => void;
+  isImageUploading?: boolean;
 }
 
 const SPLINE_POINT_HIT_RADIUS = 0.05;
@@ -71,12 +73,24 @@ const HoldTypePicker: FunctionComponent<{
 );
 
 const ClimbImageToolbar: FunctionComponent<{
+  editable: boolean;
   editSubMode: EditMode;
   onChangeMode: (mode: EditMode) => void;
   hasSelection: boolean;
   onDelete: () => void;
+  onChangeImage?: () => void;
+  isImageUploading?: boolean;
   t: (key: string) => string;
-}> = ({ editSubMode, onChangeMode, hasSelection, onDelete, t }) => (
+}> = ({
+  editable,
+  editSubMode,
+  onChangeMode,
+  hasSelection,
+  onDelete,
+  onChangeImage,
+  isImageUploading,
+  t,
+}) => (
   <Stack
     direction="horizontal"
     gap="sm"
@@ -85,31 +99,44 @@ const ClimbImageToolbar: FunctionComponent<{
     paddingHorizontal="xl"
     paddingVertical="sm"
   >
-    <Button
-      variant={editSubMode === 'holds' ? 'primary' : 'outline'}
-      title={t('climbing.edit_mode_holds')}
-      size="sm"
-      onPress={() => onChangeMode('holds')}
-    />
-    <Button
-      variant={editSubMode === 'spline' ? 'primary' : 'outline'}
-      title={t('climbing.edit_mode_spline')}
-      size="sm"
-      onPress={() => onChangeMode('spline')}
-    />
-    <Button
-      variant={editSubMode === 'knife' ? 'primary' : 'outline'}
-      title={t('climbing.edit_mode_knife')}
-      size="sm"
-      onPress={() => onChangeMode('knife')}
-    />
-    <IconButton
-      variant="destructive"
-      icon="🗑️"
-      size="sm"
-      onPress={onDelete}
-      disabled={!hasSelection}
-    />
+    {editable && (
+      <>
+        <Button
+          variant={editSubMode === 'holds' ? 'primary' : 'outline'}
+          title={t('climbing.edit_mode_holds')}
+          size="sm"
+          onPress={() => onChangeMode('holds')}
+        />
+        <Button
+          variant={editSubMode === 'spline' ? 'primary' : 'outline'}
+          title={t('climbing.edit_mode_spline')}
+          size="sm"
+          onPress={() => onChangeMode('spline')}
+        />
+        <Button
+          variant={editSubMode === 'knife' ? 'primary' : 'outline'}
+          title={t('climbing.edit_mode_knife')}
+          size="sm"
+          onPress={() => onChangeMode('knife')}
+        />
+        <IconButton
+          variant="destructive"
+          icon="🗑️"
+          size="sm"
+          onPress={onDelete}
+          disabled={!hasSelection}
+        />
+      </>
+    )}
+    {onChangeImage && (
+      <IconButton
+        variant="default"
+        icon="📷"
+        size="sm"
+        onPress={onChangeImage}
+        disabled={isImageUploading}
+      />
+    )}
   </Stack>
 );
 
@@ -127,6 +154,8 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
   onSplinePointAdd,
   onSplinePointInsert,
   onSplinePointRemove,
+  onChangeImage,
+  isImageUploading,
 }) => {
   const { t } = useTranslation();
   const [editMode, setEditMode] = useState<EditMode>('holds');
@@ -211,16 +240,19 @@ const ClimbImage: FunctionComponent<ClimbImageProps> = ({
 
   return (
     <>
-      {editable && (
+      {(editable || onChangeImage) && (
         <Animated.View entering={FadeIn.duration(200)}>
           <ClimbImageToolbar
+            editable={editable}
             editSubMode={editMode}
             onChangeMode={setEditMode}
             hasSelection={!!selection}
             onDelete={handleDeleteSelected}
+            onChangeImage={onChangeImage}
+            isImageUploading={isImageUploading}
             t={t}
           />
-          {selection?.type === 'hold' && (
+          {editable && selection?.type === 'hold' && (
             <HoldTypePicker
               currentType={holds[selection.index]?.type ?? 'normal'}
               onSelect={(type) => onHoldTypeChange(selection.index, type)}

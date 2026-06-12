@@ -89,6 +89,10 @@ const ClimbDetailScreen: FunctionComponent = () => {
                 onSplinePointAdd={detail.handleSplinePointAdd}
                 onSplinePointInsert={detail.handleSplinePointInsert}
                 onSplinePointRemove={detail.handleSplinePointRemove}
+                onChangeImage={
+                  detail.isCreateMode ? detail.handleChangeImage : undefined
+                }
+                isImageUploading={detail.isImageUploading}
               />
             </Animated.View>
           ) : (
