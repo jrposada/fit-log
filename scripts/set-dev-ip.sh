@@ -71,6 +71,10 @@ echo "Using IP: $IP"
 echo "$MOBILE_ENV:"
 set_kv "$MOBILE_ENV" EXPO_PUBLIC_API_BASE_URL "http://${IP}:${API_PORT}/api"
 set_kv "$MOBILE_ENV" EXPO_PUBLIC_KEYCLOAK_URL "http://${IP}:${KEYCLOAK_PORT}"
+# Image URLs are baked with PUBLIC_FILES_BASE_URL by the backend's image mapper,
+# served from /files on the API port. Without this, a physical device gets
+# "localhost" image URLs (i.e. the phone itself) and images never load.
+set_kv "$BACKEND_ENV" PUBLIC_FILES_BASE_URL "http://${IP}:${API_PORT}/files"
 # Note the previous Keycloak host so we only recreate the container when it
 # actually changes (the recreate is the slow part).
 prev_kc="$(grep '^KEYCLOAK_ENDPOINT=' "$BACKEND_ENV" 2>/dev/null | cut -d= -f2- || true)"
