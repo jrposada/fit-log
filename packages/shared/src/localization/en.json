@@ -70,6 +70,8 @@
   "climbing.no_sectors_found": "No sectors found",
   "climbing.grade": "Grade",
   "climbing.select_image": "Select Image",
+  "climbing.change_image_title": "Replace Image?",
+  "climbing.change_image_message": "Changing the image will remove the holds and route you've placed. Continue?",
   "climbing.climb_created_title": "Climb Created",
   "climbing.climb_created_message": "Climb was created successfully",
   "climbing.climb_updated_title": "Climb Updated",

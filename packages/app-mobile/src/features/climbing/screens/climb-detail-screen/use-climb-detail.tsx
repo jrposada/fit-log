@@ -421,6 +421,9 @@ const useClimbDetail = () => {
         });
         setUploadedImageUri(savedImage.imageUrl);
         setValue('image', savedImage.id, { shouldDirty: true });
+        setValue('holds', [], { shouldDirty: true });
+        setValue('spline', [], { shouldDirty: true });
+        setSelection(null);
       } catch {
         // Error handled by imagesPost onError
       }
@@ -445,6 +448,26 @@ const useClimbDetail = () => {
   const handleSelectImage = () => {
     navigation.navigate('ImagePicker' as never);
   };
+
+  const handleChangeImage = useCallback(() => {
+    const hasAnnotations = watchedHolds.length > 0 || watchedSpline.length > 0;
+    if (!hasAnnotations) {
+      navigation.navigate('ImagePicker' as never);
+      return;
+    }
+    Alert.alert(
+      t('climbing.change_image_title'),
+      t('climbing.change_image_message'),
+      [
+        { text: t('climbing.cancel'), style: 'cancel' },
+        {
+          text: t('climbing.discard'),
+          style: 'destructive',
+          onPress: () => navigation.navigate('ImagePicker' as never),
+        },
+      ]
+    );
+  }, [watchedHolds, watchedSpline, navigation, t]);
 
   const handleLogSend = () => {
     climbHistoriesPut.mutate({
@@ -567,6 +590,7 @@ const useClimbDetail = () => {
     handleSectorChange,
     handleGradeSelect,
     handleSelectImage,
+    handleChangeImage,
     handleLogSend,
     handleToggleProject,
   };
