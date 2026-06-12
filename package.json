@@ -18,7 +18,8 @@
   "scripts": {
     "cli": "pnpm --filter @jrposada/fit-log-dev-tools start",
     "clean": "find . -type d -name dist -not -path '*/node_modules/*' -prune -exec rm -rf {} +",
-    "lint": "pnpm -r --if-present lint"
+    "lint": "pnpm -r --if-present lint",
+    "set-dev-ip": "bash scripts/set-dev-ip.sh"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "20.5.3",

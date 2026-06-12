@@ -80,6 +80,46 @@ pnpm cli setup nuke --nuke
 
 ## Troubleshooting
 
+### Running the mobile app on a physical device
+
+When the app runs on a real device (e.g. via Expo Go), `localhost` resolves to
+the **phone itself**, not your dev machine. The login page may load, but
+submitting credentials or calling the API fails with a "cannot connect to
+server" error. This happens because the env files point at `localhost`.
+
+Fix it by pointing the relevant URLs at your machine's LAN IP — the address on
+the network the device shares with you (an iPhone USB/tethering connection uses
+the `172.20.10.x` range; plain WiFi uses your router's subnet):
+
+```bash
+pnpm set-dev-ip          # auto-detect the default-route IP
+pnpm set-dev-ip <ip>     # or force a specific IP, e.g. 172.20.10.2
+```
+
+This rewrites three lines:
+
+- `packages/app-mobile/.env` → `EXPO_PUBLIC_API_BASE_URL`, `EXPO_PUBLIC_KEYCLOAK_URL`
+- `packages/backend/.env` → `KEYCLOAK_ENDPOINT`
+
+`KEYCLOAK_ENDPOINT` is also passed to Keycloak as `KC_HOSTNAME_URL`, which
+controls both the login page's links and the JWT issuer claim. When the IP
+changes, the script **recreates the Keycloak container itself** so the new host
+takes effect — you don't need to do that step manually.
+
+It can't restart the dev servers you run in your own terminals, so after the
+script finishes, restart both so they re-read the new host:
+
+```bash
+# Backend — re-reads KEYCLOAK_ENDPOINT for the issuer + JWKS
+pnpm --filter @jrposada/fit-log-backend dev
+
+# Expo — clean cache, since EXPO_PUBLIC_* vars are bundled at build time
+pnpm --filter @jrposada/fit-log-app-mobile exec expo start -c
+```
+
+The IP is assigned per session (especially over tethering), so re-run
+`pnpm set-dev-ip` whenever it changes.
+
 ## Components
 
 - [HX711](https://electronperdido.com/shop/sensores/fuerza/modulo-de-pesaje-electronico-hx711/) [Datasheet](https://electronperdido.com/wp-content/uploads/2015/10/HX711-datasheet.pdf)
