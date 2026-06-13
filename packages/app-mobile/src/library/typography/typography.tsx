@@ -14,6 +14,7 @@ export interface TypographyProps extends Omit<RNTextProps, 'style'> {
   size?: TypographySize;
   color?: TypographyColor;
   weight?: TypographyWeight;
+  align?: 'left' | 'center' | 'right';
   style?: RNTextProps['style'];
   children: ReactNode;
 }
@@ -22,6 +23,7 @@ const Typography: FunctionComponent<TypographyProps> = ({
   size = 'body',
   color = 'primary',
   weight,
+  align,
   style,
   children,
   ...textProps
@@ -32,6 +34,7 @@ const Typography: FunctionComponent<TypographyProps> = ({
         sizeStyles[size],
         { color: colorMap[color] },
         weight != null && { fontWeight: weightMap[weight] },
+        align != null && { textAlign: align },
         style,
       ]}
       {...textProps}

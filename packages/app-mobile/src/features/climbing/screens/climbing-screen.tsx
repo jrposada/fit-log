@@ -4,11 +4,11 @@ import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '../../../library/button';
-import EmptyState from '../../../library/empty-state';
 import Screen from '../../../library/screen';
 import Tabs, { TabBarItem, TabContentItem } from '../../../library/tabs';
 import BrowseTab from '../components/browse-tab/browse-tab';
 import LogbookTab from '../components/logbook-tab/logbook-tab';
+import StatsTab from '../components/stats-tab/stats-tab';
 import { ClimbingParamList } from '../types';
 
 type ClimbingNavigationProp = NativeStackNavigationProp<
@@ -40,7 +40,7 @@ const ClimbingScreen: FunctionComponent = () => {
     {
       id: 'stats',
       label: t('climbing.stats'),
-      content: <EmptyState message={t('climbing.stats_content')} />,
+      content: <StatsTab />,
     },
   ];
 

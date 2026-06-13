@@ -46,6 +46,12 @@ export type ClimbHistoriesStatsActivityEntry = {
 export type ClimbHistoriesStatsProgressionEntry = {
   period: string;
   hardestGrade: ClimbGrade | null;
+  /**
+   * Mean `GRADE_OPTIONS` index of the grades *sent* in this period (fractional,
+   * e.g. 8.5). Non-cumulative, so it rises and falls per period. `null` when no
+   * gradeable send happened in the period.
+   */
+  avgGradeIndex: number | null;
 };
 
 export type ClimbHistoriesStatsSessions = {
