@@ -42,6 +42,7 @@ type ActivityRow = {
 type ProgressionRow = {
   _id: string;
   hardestGradeIndex: number;
+  avgGradeIndex: number;
 };
 
 type SessionsRow = {
@@ -156,12 +157,15 @@ const handler = toApiResponse<
           },
           { $sort: { _id: 1 } },
         ],
+        // Per-period hardest AND mean sent grade. Restrict to real grades
+        // (gradeIndex >= 0) so a deleted-climb send can't skew either metric.
         progression: [
-          { $match: { isSend: true } },
+          { $match: { isSend: true, gradeIndex: { $gte: 0 } } },
           {
             $group: {
               _id: '$period',
               hardestGradeIndex: { $max: '$gradeIndex' },
+              avgGradeIndex: { $avg: '$gradeIndex' },
             },
           },
           { $sort: { _id: 1 } },
@@ -202,6 +206,7 @@ const handler = toApiResponse<
   const progression = (facet?.progression ?? []).map((row) => ({
     period: row._id,
     hardestGrade: gradeFromIndex(row.hardestGradeIndex),
+    avgGradeIndex: row.avgGradeIndex ?? null,
   }));
 
   const sessionMatch: Record<string, unknown> = {
