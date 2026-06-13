@@ -21,6 +21,10 @@ import {
   ClimbHistoriesPutRequest,
   climbHistoriesPutRequestSchema,
 } from './climb-histories-put.ts';
+import {
+  ClimbHistoriesStatsQuery,
+  climbHistoriesStatsQuerySchema,
+} from './climb-histories-stats.ts';
 
 export type ClimbHistoriesGetQueryTest = Expect<
   IsTrue<
@@ -63,6 +67,15 @@ export type ClimbHistoriesGetByIdParamsTest = Expect<
     IsEqual<
       ClimbHistoriesGetByIdParams,
       z.infer<typeof climbHistoriesGetByIdParamsSchema>
+    >
+  >
+>;
+
+export type ClimbHistoriesStatsQueryTest = Expect<
+  IsTrue<
+    IsEqual<
+      ClimbHistoriesStatsQuery,
+      z.infer<typeof climbHistoriesStatsQuerySchema>
     >
   >
 >;
