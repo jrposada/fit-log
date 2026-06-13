@@ -11,6 +11,7 @@ import { climbHistoriesGetQuerySchema } from '@jrposada/fit-log-shared/models/cl
 import { climbHistoriesGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-get-by-id';
 import { climbHistoryProjectRequestSchema } from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-project';
 import { climbHistoriesPutRequestSchema } from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-put';
+import { climbHistoriesStatsQuerySchema } from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-stats';
 import { climbsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/climbs/climbs-delete';
 import { climbsGetQuerySchema } from '@jrposada/fit-log-shared/models/climbs/climbs-get';
 import { climbsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/climbs/climbs-get-by-id';
@@ -45,6 +46,7 @@ import { handler as climbHistoriesGet } from './api/climb-histories/climb-histor
 import { handler as climbHistoriesGetById } from './api/climb-histories/climb-histories-get-by-id.ts';
 import { handler as climbHistoriesProject } from './api/climb-histories/climb-histories-project.ts';
 import { handler as climbHistoriesPut } from './api/climb-histories/climb-histories-put.ts';
+import { handler as climbHistoriesStats } from './api/climb-histories/climb-histories-stats.ts';
 import { handler as climbsCollaboratorsDelete } from './api/climbs/climbs-collaborators-delete.ts';
 import { handler as climbsCollaboratorsPut } from './api/climbs/climbs-collaborators-put.ts';
 import { handler as climbsDelete } from './api/climbs/climbs-delete.ts';
@@ -329,6 +331,13 @@ router.get(
   authenticateKeycloak,
   validateQuery(climbHistoriesGetQuerySchema),
   climbHistoriesGet
+);
+// Must be registered before '/climb-histories/:id' so 'stats' is not matched as an id.
+router.get(
+  '/climb-histories/stats',
+  authenticateKeycloak,
+  validateQuery(climbHistoriesStatsQuerySchema),
+  climbHistoriesStats
 );
 router.get(
   '/climb-histories/:id',
