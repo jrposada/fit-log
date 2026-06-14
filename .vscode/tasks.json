@@ -7,7 +7,7 @@
       "command": "pnpm",
       "args": ["run", "dev"],
       "options": {
-        "cwd": "${workspaceFolder}/packages/shared",
+        "cwd": "${workspaceFolder}/packages/moonboard-sdk",
       },
       "isBackground": true,
       "problemMatcher": {
