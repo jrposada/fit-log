@@ -2,10 +2,10 @@ import type { MergeType, Types } from 'mongoose';
 
 import type { IClimb } from '../../models/climb.ts';
 import type { IClimbHistory } from '../../models/climb-history.ts';
+import type { IClimbingSession } from '../../models/climbing-session.ts';
 import type { IImage } from '../../models/image.ts';
 import type { ILocation } from '../../models/location.ts';
 import type { ISector } from '../../models/sector.ts';
-import type { ITrainingSession } from '../../models/training-session.ts';
 import type { WithRequiredRefs } from '../../utils/types.ts';
 
 /** Direct refs on a climb-history that must be non-null to map. */
@@ -22,7 +22,7 @@ type ValidClimbHistory = MergeType<
     climb: WithRequiredRefs<IClimb>;
     location: ILocation;
     sector: MergeType<ISector, { images: IImage[] }>;
-    trainingSession: ITrainingSession | null;
+    climbingSession: IClimbingSession | null;
   }
 >;
 

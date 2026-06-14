@@ -1,9 +1,9 @@
 import z from 'zod';
 
-import { TrainingSession } from './training-session.ts';
+import { ClimbingSession } from './climbing-session.ts';
 
-export type TrainingSessionsPutRequest = Omit<
-  TrainingSession,
+export type ClimbingSessionsPutRequest = Omit<
+  ClimbingSession,
   'id' | 'createdAt' | 'updatedAt' | 'owner' | 'location' | 'climbHistories'
 > & {
   id?: string;
@@ -12,7 +12,7 @@ export type TrainingSessionsPutRequest = Omit<
   climbHistories: string[];
 };
 
-export const trainingSessionsPutRequestSchema = z.object({
+export const climbingSessionsPutRequestSchema = z.object({
   id: z.string().optional(),
   title: z.string().nonempty(),
   notes: z.string().optional(),
@@ -23,6 +23,6 @@ export const trainingSessionsPutRequestSchema = z.object({
   climbHistories: z.array(z.string().nonempty()),
 });
 
-export type TrainingSessionsPutResponse = {
-  trainingSession: TrainingSession;
+export type ClimbingSessionsPutResponse = {
+  climbingSession: ClimbingSession;
 };

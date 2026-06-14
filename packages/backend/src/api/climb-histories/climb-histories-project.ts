@@ -8,10 +8,10 @@ import { Types } from 'mongoose';
 
 import type { IClimb } from '../../models/climb.ts';
 import { ClimbHistory } from '../../models/climb-history.ts';
+import type { IClimbingSession } from '../../models/climbing-session.ts';
 import type { IImage } from '../../models/image.ts';
 import type { ILocation } from '../../models/location.ts';
 import type { ISector } from '../../models/sector.ts';
-import type { ITrainingSession } from '../../models/training-session.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { toApiClimbHistory } from './climb-histories-mapper.ts';
 import { hasValidRefs } from './climb-histories-utils.ts';
@@ -69,7 +69,7 @@ const handler = toApiResponse<
       path: 'sector',
       populate: ['images'],
     })
-    .populate<{ trainingSession: ITrainingSession | null }>('trainingSession');
+    .populate<{ climbingSession: IClimbingSession | null }>('climbingSession');
 
   assert(populated, { msg: 'ClimbHistory not found after save' });
   if (!hasValidRefs(populated)) {

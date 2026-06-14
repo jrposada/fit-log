@@ -6,7 +6,7 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { ClimbHistory } from '../../models/climb-history.ts';
-import { TrainingSession } from '../../models/training-session.ts';
+import { ClimbingSession } from '../../models/climbing-session.ts';
 import { toApiResponse } from '../api-utils.ts';
 
 const GRADES = [...GRADE_OPTIONS];
@@ -215,7 +215,7 @@ const handler = toApiResponse<
     ...(dateRange ? { startedAt: dateRange } : {}),
   };
 
-  const [sessionsRow] = await TrainingSession.aggregate<SessionsRow>([
+  const [sessionsRow] = await ClimbingSession.aggregate<SessionsRow>([
     { $match: sessionMatch },
     {
       $group: {

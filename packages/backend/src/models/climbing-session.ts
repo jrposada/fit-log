@@ -3,7 +3,7 @@ import { model, Schema } from 'mongoose';
 
 export const SESSION_STALE_MS = 4 * 60 * 60 * 1000;
 
-export interface ITrainingSession extends WithTimestamps<Document> {
+export interface IClimbingSession extends WithTimestamps<Document> {
   /** Data */
   title: string;
   notes?: string;
@@ -19,7 +19,7 @@ export interface ITrainingSession extends WithTimestamps<Document> {
   climbHistories: Types.ObjectId[];
 }
 
-const trainingSessionSchema = new Schema<ITrainingSession>(
+const climbingSessionSchema = new Schema<IClimbingSession>(
   {
     /* Data */
     title: {
@@ -68,9 +68,9 @@ const trainingSessionSchema = new Schema<ITrainingSession>(
   }
 );
 
-trainingSessionSchema.index({ owner: 1 });
+climbingSessionSchema.index({ owner: 1 });
 
-export const TrainingSession = model<ITrainingSession>(
-  'TrainingSession',
-  trainingSessionSchema
+export const ClimbingSession = model<IClimbingSession>(
+  'climbingSession',
+  climbingSessionSchema
 );

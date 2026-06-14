@@ -12,6 +12,10 @@ import { climbHistoriesGetByIdParamsSchema } from '@jrposada/fit-log-shared/mode
 import { climbHistoryProjectRequestSchema } from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-project';
 import { climbHistoriesPutRequestSchema } from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-put';
 import { climbHistoriesStatsQuerySchema } from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-stats';
+import { climbingSessionsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-delete';
+import { climbingSessionsGetQuerySchema } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-get';
+import { climbingSessionsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-get-by-id';
+import { climbingSessionsPutRequestSchema } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-put';
 import { climbsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/climbs/climbs-delete';
 import { climbsGetQuerySchema } from '@jrposada/fit-log-shared/models/climbs/climbs-get';
 import { climbsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/climbs/climbs-get-by-id';
@@ -31,10 +35,6 @@ import { sessionsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/sess
 import { sessionsGetQuerySchema } from '@jrposada/fit-log-shared/models/sessions/sessions-get';
 import { sessionsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/sessions/sessions-get-by-id';
 import { sessionsPutRequestSchema } from '@jrposada/fit-log-shared/models/sessions/sessions-put';
-import { trainingSessionsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-delete';
-import { trainingSessionsGetQuerySchema } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-get';
-import { trainingSessionsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-get-by-id';
-import { trainingSessionsPutRequestSchema } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-put';
 import { workoutsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/workout/workout-delete';
 import { workoutsGetQuerySchema } from '@jrposada/fit-log-shared/models/workout/workout-get';
 import { workoutsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/workout/workout-get-by-id';
@@ -47,6 +47,10 @@ import { handler as climbHistoriesGetById } from './api/climb-histories/climb-hi
 import { handler as climbHistoriesProject } from './api/climb-histories/climb-histories-project.ts';
 import { handler as climbHistoriesPut } from './api/climb-histories/climb-histories-put.ts';
 import { handler as climbHistoriesStats } from './api/climb-histories/climb-histories-stats.ts';
+import { handler as climbingSessionsDelete } from './api/climbing-sessions/climbing-sessions-delete.ts';
+import { handler as climbingSessionsGet } from './api/climbing-sessions/climbing-sessions-get.ts';
+import { handler as climbingSessionsGetById } from './api/climbing-sessions/climbing-sessions-get-by-id.ts';
+import { handler as climbingSessionsPut } from './api/climbing-sessions/climbing-sessions-put.ts';
 import { handler as climbsCollaboratorsDelete } from './api/climbs/climbs-collaborators-delete.ts';
 import { handler as climbsCollaboratorsPut } from './api/climbs/climbs-collaborators-put.ts';
 import { handler as climbsDelete } from './api/climbs/climbs-delete.ts';
@@ -75,10 +79,6 @@ import { handler as sessionsDelete } from './api/sessions/sessions-delete.ts';
 import { handler as sessionsGet } from './api/sessions/sessions-get.ts';
 import { handler as sessionsGetById } from './api/sessions/sessions-get-by-id.ts';
 import { handler as sessionsPut } from './api/sessions/sessions-put.ts';
-import { handler as trainingSessionsDelete } from './api/training-sessions/training-sessions-delete.ts';
-import { handler as trainingSessionsGet } from './api/training-sessions/training-sessions-get.ts';
-import { handler as trainingSessionsGetById } from './api/training-sessions/training-sessions-get-by-id.ts';
-import { handler as trainingSessionsPut } from './api/training-sessions/training-sessions-put.ts';
 import { handler as versionGet } from './api/version/version-get.ts';
 import { handler as workoutsDelete } from './api/workouts/workouts-delete.ts';
 import { handler as workoutsGet } from './api/workouts/workouts-get.ts';
@@ -149,30 +149,30 @@ router.delete(
   sessionsDelete
 );
 
-// Training Sessions
+// Climbing Sessions
 router.get(
-  '/training-sessions',
+  '/climbing-sessions',
   authenticateKeycloak,
-  validateQuery(trainingSessionsGetQuerySchema),
-  trainingSessionsGet
+  validateQuery(climbingSessionsGetQuerySchema),
+  climbingSessionsGet
 );
 router.get(
-  '/training-sessions/:id',
+  '/climbing-sessions/:id',
   authenticateKeycloak,
-  validateParams(trainingSessionsGetByIdParamsSchema),
-  trainingSessionsGetById
+  validateParams(climbingSessionsGetByIdParamsSchema),
+  climbingSessionsGetById
 );
 router.put(
-  '/training-sessions',
+  '/climbing-sessions',
   authenticateKeycloak,
-  validateBody(trainingSessionsPutRequestSchema),
-  trainingSessionsPut
+  validateBody(climbingSessionsPutRequestSchema),
+  climbingSessionsPut
 );
 router.delete(
-  '/training-sessions/:id',
+  '/climbing-sessions/:id',
   authenticateKeycloak,
-  validateParams(trainingSessionsDeleteParamsSchema),
-  trainingSessionsDelete
+  validateParams(climbingSessionsDeleteParamsSchema),
+  climbingSessionsDelete
 );
 
 // Locations

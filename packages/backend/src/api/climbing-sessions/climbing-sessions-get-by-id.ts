@@ -1,26 +1,26 @@
 import type {
-  TrainingSessionsGetByIdParams,
-  TrainingSessionsGetByIdResponse,
-} from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-get-by-id';
+  ClimbingSessionsGetByIdParams,
+  ClimbingSessionsGetByIdResponse,
+} from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-get-by-id';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import type { IClimbHistory } from '../../models/climb-history.ts';
+import { ClimbingSession } from '../../models/climbing-session.ts';
 import type { ILocation } from '../../models/location.ts';
-import { TrainingSession } from '../../models/training-session.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { hasRequiredClimbHistoryRefs } from '../climb-histories/climb-histories-utils.ts';
-import { toApiTrainingSession } from './training-sessions-mapper.ts';
+import { toApiClimbingSession } from './climbing-sessions-mapper.ts';
 
 const handler = toApiResponse<
-  TrainingSessionsGetByIdResponse,
-  TrainingSessionsGetByIdParams
+  ClimbingSessionsGetByIdResponse,
+  ClimbingSessionsGetByIdParams
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
   const { id } = request.params;
 
-  const session = await TrainingSession.findOne({
+  const session = await ClimbingSession.findOne({
     _id: id,
     owner: request.user._id,
   }).populate<{ location: ILocation | null; climbHistories: IClimbHistory[] }>([
@@ -40,7 +40,7 @@ const handler = toApiResponse<
     body: {
       success: true,
       data: {
-        trainingSession: toApiTrainingSession(sessionWithValidClimbHistories),
+        climbingSession: toApiClimbingSession(sessionWithValidClimbHistories),
       },
     },
   };

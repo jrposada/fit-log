@@ -1,12 +1,12 @@
 import z from 'zod';
 
-import { TrainingSession } from './training-session.ts';
+import { ClimbingSession } from './climbing-session.ts';
 
-export type TrainingSessionsGetQuery = {
+export type ClimbingSessionsGetQuery = {
   limit?: number;
   active?: boolean;
 };
-export const trainingSessionsGetQuerySchema = z.object({
+export const climbingSessionsGetQuerySchema = z.object({
   limit: z.coerce.number().int().positive().optional(),
   active: z
     .union([z.boolean(), z.enum(['true', 'false'])])
@@ -14,6 +14,6 @@ export const trainingSessionsGetQuerySchema = z.object({
     .optional(),
 });
 
-export type TrainingSessionsGetResponse = {
-  trainingSessions: TrainingSession[];
+export type ClimbingSessionsGetResponse = {
+  climbingSessions: ClimbingSession[];
 };

@@ -2,10 +2,10 @@ import type { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histori
 import type { MergeType } from 'mongoose';
 
 import type { IClimbHistory } from '../../models/climb-history.ts';
+import { toApiDepopulatedClimbingSession } from '../climbing-sessions/climbing-sessions-mapper.ts';
 import { toApiDepopulatedClimb } from '../climbs/climbs-mapper.ts';
 import { toApiDepopulatedLocation } from '../locations/locations-mapper.ts';
 import { toApiDepopulatedSector } from '../sectors/sectors-mapper.ts';
-import { toApiDepopulatedTrainingSession } from '../training-sessions/training-sessions-mapper.ts';
 import type {
   ValidClimbHistory,
   ValidClimbHistoryRefs,
@@ -13,7 +13,7 @@ import type {
 
 function toApiDepopulatedClimbHistory(
   model: MergeType<IClimbHistory, ValidClimbHistoryRefs>
-): Omit<ClimbHistory, 'climb' | 'location' | 'sector' | 'trainingSession'> & {
+): Omit<ClimbHistory, 'climb' | 'location' | 'sector' | 'climbingSession'> & {
   climb: string;
   location: string;
   sector: string;
@@ -66,8 +66,8 @@ function toApiClimbHistory(model: ValidClimbHistory): ClimbHistory {
     climb: toApiDepopulatedClimb(model.climb),
     location: toApiDepopulatedLocation(model.location),
     sector: toApiDepopulatedSector(model.sector),
-    trainingSession: model.trainingSession
-      ? toApiDepopulatedTrainingSession(model.trainingSession)
+    climbingSession: model.climbingSession
+      ? toApiDepopulatedClimbingSession(model.climbingSession)
       : null,
 
     /* Timestamps */

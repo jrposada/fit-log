@@ -31,7 +31,7 @@ export interface IClimbHistory extends WithTimestamps<Document> {
   climb: Types.ObjectId | null;
   location: Types.ObjectId | null;
   sector: Types.ObjectId | null;
-  trainingSession: Types.ObjectId | null;
+  climbingSession: Types.ObjectId | null;
 }
 
 export function computeTopStatus(
@@ -113,9 +113,9 @@ const climbHistorySchema = new Schema<IClimbHistory>(
       ref: 'Sector',
       required: true,
     },
-    trainingSession: {
+    climbingSession: {
       type: Schema.Types.ObjectId,
-      ref: 'TrainingSession',
+      ref: 'climbingSession',
       required: false,
       default: null,
     },

@@ -16,7 +16,7 @@ export type ClimbHistoriesPutRequest = {
   climb: string;
   location: string;
   sector: string;
-  trainingSession?: string;
+  climbingSession?: string;
 
   forced?: boolean;
 };
@@ -31,7 +31,7 @@ export const climbHistoriesPutRequestSchema = z.object({
   climb: z.string().nonempty(),
   location: z.string().nonempty(),
   sector: z.string().nonempty(),
-  trainingSession: z.string().nonempty().optional(),
+  climbingSession: z.string().nonempty().optional(),
 
   forced: z.boolean().optional(),
 });

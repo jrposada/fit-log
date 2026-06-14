@@ -1,20 +1,20 @@
 import type {
-  TrainingSessionsGetQuery,
-  TrainingSessionsGetResponse,
-} from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-get';
+  ClimbingSessionsGetQuery,
+  ClimbingSessionsGetResponse,
+} from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import type { IClimbHistory } from '../../models/climb-history.ts';
+import { ClimbingSession } from '../../models/climbing-session.ts';
 import type { ILocation } from '../../models/location.ts';
-import { TrainingSession } from '../../models/training-session.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { hasRequiredClimbHistoryRefs } from '../climb-histories/climb-histories-utils.ts';
-import { toApiTrainingSession } from './training-sessions-mapper.ts';
+import { toApiClimbingSession } from './climbing-sessions-mapper.ts';
 
 const handler = toApiResponse<
-  TrainingSessionsGetResponse,
+  ClimbingSessionsGetResponse,
   unknown,
-  TrainingSessionsGetQuery
+  ClimbingSessionsGetQuery
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
@@ -25,7 +25,7 @@ const handler = toApiResponse<
     filter.endedAt = { $exists: false };
   }
 
-  const query = TrainingSession.find(filter).sort({
+  const query = ClimbingSession.find(filter).sort({
     startedAt: -1,
   });
 
@@ -51,8 +51,8 @@ const handler = toApiResponse<
     body: {
       success: true,
       data: {
-        trainingSessions:
-          sessionsWithValidClimbHistories.map(toApiTrainingSession),
+        climbingSessions:
+          sessionsWithValidClimbHistories.map(toApiClimbingSession),
       },
     },
   };

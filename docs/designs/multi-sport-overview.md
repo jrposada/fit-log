@@ -29,7 +29,7 @@ FAB       → sport picker → sport-specific logging flow (stack/modal)
 Map       → single unified map, pins from Locations, type-filtered (reached from Home/Browse)
 
 Backend:  one Activity collection (sport discriminator + payload), generalized from
-          TrainingSession. ClimbHistory stays as climbing-specific detail.
+          climbingSession. ClimbHistory stays as climbing-specific detail.
 ```
 
 ## Work packages
@@ -49,7 +49,7 @@ Implement roughly in this order; dependencies noted.
 
 | Decision | Choice | Why |
 |----------|--------|-----|
-| Unification unit | The **session** (`Activity` = generalized `TrainingSession`), not the per-route entry | The session is the common unit across all sports; flattening climb-histories would destroy cross-session "project" tracking and `(climb, owner)` uniqueness |
+| Unification unit | The **session** (`Activity` = generalized `climbingSession`), not the per-route entry | The session is the common unit across all sports; flattening climb-histories would destroy cross-session "project" tracking and `(climb, owner)` uniqueness |
 | Sport selection UX | In-context segmented filter, **not** a global header mode | Avoids hidden-mode errors; sports don't map uniformly onto tabs (gym/apnea have no map) |
 | Browse | One unified map with type-filtered pins | Three near-identical per-sport map tabs would be redundant; one map is a stronger feature |
 | Migration | Greenfield — reshape in place, no reversible backfill | User confirmed negligible existing data |

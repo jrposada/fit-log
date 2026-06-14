@@ -38,6 +38,6 @@ Add `shared/models/activity/activity-stats.ts` public types and a `useActivities
 
 ## Gotchas
 
-- The old `sessions` block in climbing stats (`avgClimbsPerSession`, `avgDurationMinutes`) now derives from `Activity`, not the dropped `TrainingSession` — re-point that query.
+- The old `sessions` block in climbing stats (`avgClimbsPerSession`, `avgDurationMinutes`) now derives from `Activity`, not the dropped `climbingSession` — re-point that query.
 - "Active days" and "streak" must de-dupe multiple activities on the same calendar day in the user's timezone; don't count two sessions as two days. Decide the timezone source (client-passed vs stored) before implementing.
 - Keep route registration order: any `/activities/stats` must be registered **before** `/activities/:id`, mirroring the existing climb-histories ordering gotcha, or `stats` will be parsed as an id.

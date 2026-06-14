@@ -1,23 +1,23 @@
 import type {
-  TrainingSessionsPutRequest,
-  TrainingSessionsPutResponse,
-} from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-put';
+  ClimbingSessionsPutRequest,
+  ClimbingSessionsPutResponse,
+} from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-put';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { Types } from 'mongoose';
 
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import type { IClimbHistory } from '../../models/climb-history.ts';
+import { ClimbingSession } from '../../models/climbing-session.ts';
 import type { ILocation } from '../../models/location.ts';
-import { TrainingSession } from '../../models/training-session.ts';
 import { toApiResponse } from '../api-utils.ts';
 import { hasRequiredClimbHistoryRefs } from '../climb-histories/climb-histories-utils.ts';
-import { toApiTrainingSession } from './training-sessions-mapper.ts';
+import { toApiClimbingSession } from './climbing-sessions-mapper.ts';
 
 const handler = toApiResponse<
-  TrainingSessionsPutResponse,
+  ClimbingSessionsPutResponse,
   unknown,
   unknown,
-  TrainingSessionsPutRequest
+  ClimbingSessionsPutRequest
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
@@ -36,7 +36,7 @@ const handler = toApiResponse<
         : null;
     }
 
-    const updated = await TrainingSession.findOneAndUpdate(
+    const updated = await ClimbingSession.findOneAndUpdate(
       { _id: body.id, owner: userId },
       { $set: update },
       { new: true, runValidators: true }
@@ -50,7 +50,7 @@ const handler = toApiResponse<
     sessionId = updated._id;
   } else {
     const now = new Date();
-    const created = await TrainingSession.create({
+    const created = await ClimbingSession.create({
       owner: userId,
       title: body.title,
       notes: body.notes,
@@ -62,7 +62,7 @@ const handler = toApiResponse<
     sessionId = created._id;
   }
 
-  const session = await TrainingSession.findById(sessionId).populate<{
+  const session = await ClimbingSession.findById(sessionId).populate<{
     location: ILocation | null;
     climbHistories: IClimbHistory[];
   }>(['location', 'climbHistories']);
@@ -82,7 +82,7 @@ const handler = toApiResponse<
     body: {
       success: true,
       data: {
-        trainingSession: toApiTrainingSession(sessionWithValidClimbHistories),
+        climbingSession: toApiClimbingSession(sessionWithValidClimbHistories),
       },
     },
   };

@@ -3,7 +3,7 @@ import { ClimbHistory } from '../climb-histories/climb-history.ts';
 import { Location } from '../locations/location.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
 
-export type TrainingSession = WithTimestamps<{
+export type ClimbingSession = WithTimestamps<{
   /* Data */
   id: string;
   title: string;
@@ -21,7 +21,7 @@ export type TrainingSession = WithTimestamps<{
   };
   climbHistories: (Omit<
     ClimbHistory,
-    'climb' | 'location' | 'sector' | 'trainingSession'
+    'climb' | 'location' | 'sector' | 'climbingSession'
   > & {
     climb: string;
     location: string;

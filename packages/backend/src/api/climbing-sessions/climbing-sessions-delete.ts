@@ -1,22 +1,22 @@
 import type {
-  TrainingSessionsDeleteParams,
-  TrainingSessionsDeleteResponse,
-} from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-delete';
+  ClimbingSessionsDeleteParams,
+  ClimbingSessionsDeleteResponse,
+} from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
-import { TrainingSession } from '../../models/training-session.ts';
+import { ClimbingSession } from '../../models/climbing-session.ts';
 import { toApiResponse } from '../api-utils.ts';
 
 const handler = toApiResponse<
-  TrainingSessionsDeleteResponse,
-  TrainingSessionsDeleteParams
+  ClimbingSessionsDeleteResponse,
+  ClimbingSessionsDeleteParams
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
   const { id } = request.params;
 
-  const result = await TrainingSession.deleteOne({
+  const result = await ClimbingSession.deleteOne({
     _id: id,
     owner: request.user._id,
   });
