@@ -1,8 +1,11 @@
 # API Routes
 
-HTTP transport layer. Each resource folder holds its route handlers plus the
-`<resource>-mapper.ts` that converts model types to API response types.
-`_shared/` holds cross-resource mappers (collaborators, user summaries).
+HTTP transport layer. Each resource folder holds its route handlers, the
+`<resource>-mapper.ts` that converts model types to API response types, and a
+`<resource>-routes.ts` that registers its endpoints (schemas + middlewares +
+handlers) via a `register<Resource>Routes(router)` function, composed in
+`api/router.ts`. `_shared/` holds cross-resource mappers (collaborators, user
+summaries).
 
 ## Handler contract
 
