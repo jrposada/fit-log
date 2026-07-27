@@ -21,7 +21,15 @@
 
 ## Backend
 
-- [ ] **Split API and business layers** — `backend/src/api/` currently owns both HTTP route handlers and business logic, which forces business-layer modules into api folders (e.g. `backend/src/api/climbing-sessions/climbing-sessions-summary.ts` holds summary recompute logic, and `backend/src/api/feed/feed-adapter-climbing.ts` / `feed-adapters.ts` hold feed aggregation logic, none of which are endpoints). Introduce a separate business/service layer (e.g. `backend/src/services/`) and keep `api/` for route handlers only.
+- [ ] **Split API and business layers** — `backend/src/api/` currently owns both HTTP route handlers and business logic, which forces business-layer modules into api folders (e.g. `climbing-sessions-summary.ts`, `feed-adapter-climbing.ts` / `feed-adapters.ts`, none of which are endpoints). Agreed target structure:
+  - `api/routes/<resource>/` — handlers, each with its `<resource>-mapper.ts` colocated. `api/routes/_shared/` for the cross-resource auth mappers (current `api/auth/`).
+  - `api/middlewares/` — current `src/middleware/` (keycloak auth, validate-body/params/query).
+  - `api/infrastructure/` — current `api-utils.ts` (`toApiResponse` wrapper, error→status mapping). Distinct from `src/infrastructure/` (domain errors), which stays.
+  - `api/router.ts` — moved from `src/router.ts`.
+  - `src/auth/` (Mongo filter builders) stays outside `api/` — it's authorization/data-access logic consumed by the business layer.
+  - `src/services/` becomes the business layer: services return model types (populated Mongoose docs / lean domain shapes), never import express or touch status codes, and throw `src/infrastructure/` domain errors. Handlers only parse params → call service → map to api response via `toApi*`.
+  - `api/routes/README.md` documents the handler contract; note the services contract too.
+  - Sequencing: (1) structural pass — `git mv` + import fixes + READMEs, no behavior change; (2) extraction pass, resource by resource, starting with climbing-sessions summary recompute and feed adapters/merge, then fat handlers (`climbs-search.ts`, `climb-histories-stats.ts`, the puts).
 - [ ] **Common pagination layer** — Cursor pagination logic is duplicated across endpoints: `decodeCursor` (base64url + JSON parse + shape validation) and its matching encode/keyset-query logic exist in both `backend/src/api/climb-histories/climb-histories-get.ts` and `backend/src/api/feed/feed-get.ts`, differing only in cursor shape (`updatedAt`/`id` vs `startedAt`/`id`/`sport`). Extract a shared, generic cursor codec + pagination-result helper (encode/decode with per-endpoint schema validation, `items`/`nextCursor` envelope) into a common layer so new paginated endpoints don't re-implement it.
 
 ## App
