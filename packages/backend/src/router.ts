@@ -21,6 +21,7 @@ import { climbsGetQuerySchema } from '@jrposada/fit-log-shared/models/climbs/cli
 import { climbsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/climbs/climbs-get-by-id';
 import { climbsPutRequestSchema } from '@jrposada/fit-log-shared/models/climbs/climbs-put';
 import { climbsSearchQuerySchema } from '@jrposada/fit-log-shared/models/climbs/climbs-search';
+import { feedGetQuerySchema } from '@jrposada/fit-log-shared/models/feed/feed-get';
 import { imagesDeleteParamsSchema } from '@jrposada/fit-log-shared/models/images/images-delete';
 import { imagesPostRequestSchema } from '@jrposada/fit-log-shared/models/images/images-post';
 import { locationsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/locations/locations-delete';
@@ -58,6 +59,7 @@ import { handler as climbsGet } from './api/climbs/climbs-get.ts';
 import { handler as climbsGetById } from './api/climbs/climbs-get-by-id.ts';
 import { handler as climbsPut } from './api/climbs/climbs-put.ts';
 import { handler as climbsSearch } from './api/climbs/climbs-search.ts';
+import { handler as feedGet } from './api/feed/feed-get.ts';
 import { handler as imagesCollaboratorsDelete } from './api/images/images-collaborators-delete.ts';
 import { handler as imagesCollaboratorsPut } from './api/images/images-collaborators-put.ts';
 import { handler as imagesDelete } from './api/images/images-delete.ts';
@@ -96,6 +98,14 @@ router.get('/version', versionGet);
 
 // Me
 router.get('/me', authenticateKeycloak, meGet);
+
+// Feed
+router.get(
+  '/feed',
+  authenticateKeycloak,
+  validateQuery(feedGetQuerySchema),
+  feedGet
+);
 
 // Workouts
 router.get(
