@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@backend/*": ["../backend/src/*"],
+      "@jrposada/fit-log-shared/*": ["../shared/src/*"],
+      "@jrposada/moonboard-sdk": ["../moonboard-sdk/src/index.ts"]
+    }
+  }
+}
