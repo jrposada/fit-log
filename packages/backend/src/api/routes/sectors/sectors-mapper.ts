@@ -1,0 +1,77 @@
+import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
+import type { Sector } from '@jrposada/fit-log-shared/models/sectors/sector';
+import type { MergeType } from 'mongoose';
+
+import type { WithPopulatedOwnership } from '../../../auth/ownership-populate.ts';
+import type { IClimb } from '../../../models/climb.ts';
+import type { IImage } from '../../../models/image.ts';
+import type { ISector } from '../../../models/sector.ts';
+import { hasRequiredRefs } from '../../../services/climb.ts';
+import {
+  toApiCollaborator,
+  toApiDepopulatedCollaborator,
+} from '../_shared/collaborators-mapper.ts';
+import { toApiUserSummary } from '../_shared/user-summary-mapper.ts';
+import { toApiDepopulatedClimb } from '../climbs/climbs-mapper.ts';
+import { toApiDepopulatedImage } from '../images/images-mapper.ts';
+
+function toApiDepopulatedSector(
+  model: MergeType<ISector, { images: IImage[] }>
+): Omit<WithDepopulatedOwnership<Sector>, 'climbs'> & { climbs: string[] } {
+  return {
+    /* Data */
+    id: model._id.toString(),
+    name: model.name,
+    description: model.description,
+    isPrimary: model.isPrimary,
+    latitude: model.latitude,
+    longitude: model.longitude,
+    googleMapsId: model.googleMapsId,
+
+    /* Ownership */
+    owner: model.owner._id.toString(),
+    collaborators: model.collaborators.map(toApiDepopulatedCollaborator),
+
+    /* References */
+    climbs: model.climbs.map((climb) => climb._id.toString()),
+    images: model.images.map(toApiDepopulatedImage),
+
+    /* Timestamps */
+    createdAt: model.createdAt.toISOString(),
+    updatedAt: model.updatedAt.toISOString(),
+  };
+}
+
+function toApiSector(
+  model: MergeType<
+    WithPopulatedOwnership<ISector>,
+    { climbs: IClimb[]; images: IImage[] }
+  >
+): Sector {
+  return {
+    /* Data */
+    id: model._id.toString(),
+    name: model.name,
+    description: model.description,
+    isPrimary: model.isPrimary,
+    latitude: model.latitude,
+    longitude: model.longitude,
+    googleMapsId: model.googleMapsId,
+
+    /* Ownership */
+    owner: toApiUserSummary(model.owner),
+    collaborators: model.collaborators.map(toApiCollaborator),
+
+    /* References */
+    climbs: model.climbs.flatMap((c) =>
+      hasRequiredRefs(c) ? [toApiDepopulatedClimb(c)] : []
+    ),
+    images: model.images.map(toApiDepopulatedImage),
+
+    /* Timestamps */
+    createdAt: model.createdAt.toISOString(),
+    updatedAt: model.updatedAt.toISOString(),
+  };
+}
+
+export { toApiDepopulatedSector, toApiSector };

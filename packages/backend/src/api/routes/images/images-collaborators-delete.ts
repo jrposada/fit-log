@@ -1,0 +1,38 @@
+import type { CollaboratorDeleteParams } from '@jrposada/fit-log-shared/models/auth/collaborator-delete';
+import type { ImagesCollaboratorsResponse } from '@jrposada/fit-log-shared/models/images/images-collaborators';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
+
+import type { PopulatedOwnership } from '../../../auth/ownership-populate.ts';
+import { OWNERSHIP_POPULATE } from '../../../auth/ownership-populate.ts';
+import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
+import { Image } from '../../../models/image.ts';
+import { removeCollaborator } from '../../../utils/collaborator-mutators.ts';
+import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toApiImage } from './images-mapper.ts';
+
+const handler = toApiResponse<
+  ImagesCollaboratorsResponse,
+  CollaboratorDeleteParams
+>(async (request) => {
+  assert(request.user, { msg: 'Unauthorized' });
+
+  const { id, userId } = request.params;
+
+  const image = await removeCollaborator(
+    Image,
+    id,
+    userId,
+    request.user
+  ).populate<PopulatedOwnership>([...OWNERSHIP_POPULATE]);
+
+  if (!image) {
+    throw new ResourceNotFound(`Image ${id} not found or not editable`);
+  }
+
+  return {
+    statusCode: 200,
+    body: { success: true, data: { image: toApiImage(image) } },
+  };
+});
+
+export { handler };
