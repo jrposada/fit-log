@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "allowImportingTsExtensions": true,
+    "paths": {
+      "@jrposada/fit-log-shared/*": ["../shared/src/*"]
+    }
+  }
+}
