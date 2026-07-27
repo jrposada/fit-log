@@ -25,7 +25,7 @@ Because every metric here comes from base fields (`startedAt`, `endedAt`, `sport
 Each sport keeps its own deep-stats endpoint, addressed by sport. Reuse the existing climbing aggregation as-is for the climbing panel:
 
 - Climbing stats stay at `/climb-histories/stats` (unchanged logic: grade distribution, send/flash counts, progression, hardest grade), plus the existing `sessions` block (avg climbs/session, avg duration) which reads `ClimbingSession`.
-- Gym/apnea/padel deep stats are stubbed ([new-sports](multi-sport-new-sports.md)) — the Stats tab shows only the cross-sport layer for those until each is built.
+- Gym deep stats are stubbed ([new-sports](multi-sport-new-sports.md)) — the Stats tab shows only the cross-sport layer for gym until it's built. Same applies to any later sport until it ships its own panel.
 
 Add `shared/models/feed/feed-stats.ts` public types and a `useFeedStats` hook, alongside the retained `useClimbHistoriesStats` hook.
 

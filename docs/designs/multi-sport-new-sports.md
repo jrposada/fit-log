@@ -1,4 +1,4 @@
-# New Sports — "Add a Sport" Contract + Stubs
+# New Sports — "Add a Sport" Contract + Gym Stub
 
 **Date:** 2026-06-14
 
@@ -6,7 +6,7 @@ Part of the [multi-sport refactor](multi-sport-overview.md). Depends on [feed](m
 
 ## What to build
 
-A documented, repeatable contract for adding a sport, plus three entity stubs (gym, apnea, padel) to validate the framework. These stubs intentionally stay at the contract level — full flows are follow-up work.
+A documented, repeatable contract for adding a sport, plus a gym entity stub to validate the framework. The stub intentionally stays at the contract level — full flows are follow-up work. Sports beyond climbing and gym are not designed yet; add them the same way once they're in scope.
 
 ### The "add a sport" contract
 
@@ -20,9 +20,9 @@ Adding a sport means delivering a **self-contained sport package**, and nothing 
 
 The sport must **not** touch the nav shell, the feed list renderer (it reads `SessionSummary`), or the cross-sport stats (they read base fields). If it does, the abstraction is leaking — fix the framework, not the sport.
 
-### Stubs
+### Stub
 
-Each stub is an **entity sketch** — the sport-specific fields its collection carries, plus its `summary` shape. (`owner`/`startedAt`/`location?`/etc. come from the shared base fields and are omitted here.)
+An **entity sketch** — the sport-specific fields its collection carries, plus its `summary` shape. (`owner`/`startedAt`/`location?`/etc. come from the shared base fields and are omitted here.)
 
 **Gym** — `GymSession`, strength / calisthenics.
 
@@ -33,38 +33,18 @@ Each stub is an **entity sketch** — the sport-specific fields its collection c
 
 No location. Likely needs an **exercise catalog** later (analogous to the climbing `Climb` catalog) — out of scope for the stub; flag it.
 
-**Apnea** — `ApneaSession`, static/dynamic breath-hold tables.
-
-| Field | Notes |
-|-------|-------|
-| `tableType` | `'CO2' \| 'O2' \| 'custom'` |
-| `rounds[]` | `{ holdSeconds, restSeconds, completed }` |
-| `summary` | headline = e.g. "CO2 table · 8 rounds"; metric = max hold |
-
-No location. The logging flow is really a **timer/protocol runner**, not a form — the richest of the three; note it as its own sub-design when built.
-
-**Padel** — `PadelMatch`, matches.
-
-| Field | Notes |
-|-------|-------|
-| `result` | sets, e.g. `[{ us, them }]` |
-| `partners[]` / `opponents[]` | free text or, later, contacts |
-| `summary` | headline = the score line; metric = win/loss |
-
-Has a location (courts) → appears on the [unified-map](multi-sport-unified-map.md).
-
 ## Decisions
 
 | Decision | Choice | Why |
 |----------|--------|-----|
 | Sport packaging | Each sport is a self-contained package: own entity/collection + endpoints + feed adapter + log flow + detail (+ optional stats) | Keeps the framework closed for modification, open for extension |
 | No shared session collection | Each sport owns its model; the feed merges them via adapters | The session is the sport's own header/section, not a generic payload |
-| Stubs depth | Entity-field + summary sketches only | Don't design flows for unbuilt sports beyond proving the model fits |
+| Stub depth | Entity-field + summary sketch only | Don't design flows for unbuilt sports beyond proving the model fits |
 | Catalogs | Per-sport, modeled on climbing's `Climb` catalog (e.g. gym exercises) | Reuse the proven catalog/log split; defer to each sport's full build |
+| Sport breadth | Only gym stubbed for now; other sports undesigned | Climbing + gym is the current scope; more sports follow this same contract later |
 
 ## Gotchas
 
-- Every logging flow **must write `summary`** — it's what the History feed and dashboard render, and what ES will index. A sport that forgets it produces blank rows.
+- Every write path that touches a session's derived data **must recompute `summary`**, not just the initial logging flow — it's what the History feed and dashboard render, and what ES will index. A sport that only sets it at creation produces rows that go stale the moment the session is edited (see [feed](multi-sport-feed.md)).
 - Every sport **must register a feed adapter** — otherwise its sessions are invisible to `GET /feed` and the cross-sport stats, even though its own detail screen works. This is the one wiring step that's easy to forget.
-- Apnea's timer-driven logging is materially different from form-based gym/padel logging; don't assume one shared "log form" component covers all sports.
-- Resist adding a map tab or sub-tabs for these sports — that's the exact regression this refactor removes. Map presence is derived from whether the sport has geolocated sessions ([unified-map](multi-sport-unified-map.md)).
+- Resist adding a map tab or sub-tabs for gym — that's the exact regression this refactor removes. Map presence is derived from whether the sport has geolocated sessions ([unified-map](multi-sport-unified-map.md)); gym doesn't, so it never appears there.

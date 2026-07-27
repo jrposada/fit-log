@@ -9,7 +9,7 @@ Part of the [multi-sport refactor](multi-sport-overview.md). Depends on the [fee
 Replace the per-sport navigation with a flat, sport-agnostic shell. Concretely, in `packages/app-mobile/src`:
 
 - **Bottom tabs become fixed and sport-agnostic:** `Home · History · Stats · Profile`, with a **central FAB** for logging. Today's tabs are `Home · Climbing · Training` (`src/navigation/root.tsx`); Climbing's nested stack and its local-`useState` sub-tabs (`climbing-screen.tsx`) go away as *navigation structure* (the screens themselves are re-homed in [climbing-port](multi-sport-climbing-port.md)).
-- **History** = a single screen listing the cross-sport **feed** (via `useFeed`), newest first, rendered from each row's denormalized `summary`. The feed merges every sport's sessions server-side ([feed](multi-sport-feed.md)); the list itself is sport-agnostic. A **segmented control** at the top filters by sport: `All · Climbing · Gym · Apnea · Padel` (a `sport` filter on the feed query). Tapping a row opens the sport's session-detail screen.
+- **History** = a single screen listing the cross-sport **feed** (via `useFeed`), newest first, rendered from each row's denormalized `summary`. The feed merges every sport's sessions server-side ([feed](multi-sport-feed.md)); the list itself is sport-agnostic. A **segmented control** at the top filters by sport: `All · Climbing · Gym` (a `sport` filter on the feed query, extended as more sports are added). Tapping a row opens the sport's session-detail screen.
 - **Stats** = one screen driven by the same segmented filter: cross-sport panels when "All", sport-specific panels when a sport is selected (data from [stats-aggregation](multi-sport-stats-aggregation.md)).
 - **FAB** opens a **sport picker** → routes into that sport's logging flow (a stack/modal owned by the sport package). This is the *only* entry point that is sport-specific in the shell.
 - **Home** = the cross-sport dashboard: recent activity across sports + per-sport summary cards (the existing `home-screen.tsx` stat cards, currently static, generalize to read `useFeedStats` + a short `useFeed` slice). Ship a sensible **default** layout; customization is a later iteration, explicitly out of scope here.
@@ -23,7 +23,7 @@ Root Stack
  ├── Tabs (Home · History · Stats · Profile)  + FAB overlay
  ├── Profile (modal, unchanged)
  └── Sport screens (contributed per sport):
-       climbing/log, climbing/detail, gym/log, apnea/log, padel/log, ...
+       climbing/log, climbing/detail, gym/log, gym/detail, ...
 ```
 
 ## Decisions

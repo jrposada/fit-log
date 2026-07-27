@@ -6,7 +6,7 @@ Part of the [multi-sport refactor](multi-sport-overview.md). Depends on [feed](m
 
 ## What to build
 
-Move the existing climbing experience out of its nested stack (`climbing-stack.tsx`, `climbing-screen.tsx`) and into the unified shell, with no loss of capability. Climbing becomes the **reference implementation** of a sport package — gym/apnea/padel are modeled on it.
+Move the existing climbing experience out of its nested stack (`climbing-stack.tsx`, `climbing-screen.tsx`) and into the unified shell, with no loss of capability. Climbing becomes the **reference implementation** of a sport package — gym (and any later sport) is modeled on it.
 
 Because `ClimbingSession` already exists and stays as its own entity, there is **no data migration here** — this package is the framework wiring (feed adapter + `summary`) plus the mobile re-homing.
 
@@ -33,7 +33,7 @@ Everything below the session — `Climb`, `Sector`, `Hold`/`Spline`, `Image`, gr
 |----------|--------|-----|
 | Logbook → History | Climbing rows live in the shared History feed, filtered | One list across sports; no parallel climbing logbook |
 | Logbook unit | Session detail drills into routes | Aligns climbing with the session-level model the other sports use |
-| Reference sport | Climbing is the template package | It's the most complete; gym/apnea/padel copy its structure |
+| Reference sport | Climbing is the template package | It's the most complete; gym (and later sports) copy its structure |
 | Catalog screens | Reused as-is | Climb/Sector/Location detail are still correct; only their *entry points* change |
 
 ## Gotchas

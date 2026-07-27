@@ -8,9 +8,9 @@ Part of the [multi-sport refactor](multi-sport-overview.md). This is the foundat
 
 Two things: (1) a **contract** that every per-sport session entity satisfies, and (2) a **cross-sport feed** read layer that fans out across those entities and merges them into one chronological list.
 
-There is **no unified `Activity` collection.** `ClimbingSession` (already in `backend/src/models/climbing-session.ts`, renamed from the old training session) stays as-is and is the first entity to satisfy the contract. Future sports add their own collections (`GymSession`, `ApneaSession`, `PadelMatch`) — see [new-sports](multi-sport-new-sports.md).
+There is **no unified `Activity` collection.** `ClimbingSession` (already in `backend/src/models/climbing-session.ts`, renamed from the old training session) stays as-is and is the first entity to satisfy the contract. Gym adds its own collection (`GymSession`) — see [new-sports](multi-sport-new-sports.md). Further sports follow the same pattern later.
 
-`ClimbHistory` is unchanged: a per-route lifetime record keyed `(climb, owner)`, carrying the cross-session `isProject` flag and the full `tries[]` history, linked to a `ClimbingSession`. `Climb`, `Sector`, `Hold`/`Spline`, and `Image` remain climbing catalog objects, untouched. `Location` becomes **shared** across sports (climbing crags, padel courts, dive sites) — see [unified-map](multi-sport-unified-map.md).
+`ClimbHistory` is unchanged: a per-route lifetime record keyed `(climb, owner)`, carrying the cross-session `isProject` flag and the full `tries[]` history, linked to a `ClimbingSession`. `Climb`, `Sector`, `Hold`/`Spline`, and `Image` remain climbing catalog objects, untouched. `Location` becomes **shared** across sports — see [unified-map](multi-sport-unified-map.md).
 
 ### The per-sport session contract
 
@@ -19,7 +19,7 @@ Every sport's session entity must carry these **shared base fields**, on top of 
 | Field | Type | Notes |
 |-------|------|-------|
 | `owner` | ref User | as today |
-| `sport` | `'climbing' \| 'gym' \| 'apnea' \| 'padel'` | constant per collection; the feed adapter tags rows |
+| `sport` | `'climbing' \| 'gym'` (extend as sports are added) | constant per collection; the feed adapter tags rows |
 | `title` | string | user or auto-generated ("Evening session") |
 | `notes?` | string | |
 | `startedAt` | Date | indexed; the cross-collection merge/sort key |
@@ -32,16 +32,18 @@ Every sport's session entity must carry these **shared base fields**, on top of 
 
 ### The `summary` contract
 
-`summary` is a small denormalized object each sport's **logging flow writes** so the feed and dashboard can render rows **without** loading or interpreting each sport's deep data. Suggested shape:
+`summary` is a small denormalized object, **maintained by the owning sport package**, so the feed and dashboard can render rows **without** loading or interpreting each sport's deep data. Suggested shape:
 
 ```
 { headline: string, metric?: { label, value }, count?: number }
 ```
 
 - Climbing → `count: 8`, `metric: { label: "hardest", value: "V6" }`, `headline: "8 routes"`
-- Padel → `headline: "6-4 / 3-6 / 7-5"`, `metric: { label: "result", value: "W" }`
+- Gym → `count: 5`, `metric: { label: "volume", value: "4,200 kg" }`, `headline: "5 exercises · 18 sets"`
 
-Readers never compute `summary`; the owning flow maintains it. This is also exactly the shape ElasticSearch will index later.
+**This is not a single write at session creation — it's a cache recomputed on every write that touches the session's derived data.** A `ClimbingSession` is mutable over its lifetime: climbs are added one at a time via `climb-histories-put`, and existing tries get edited or removed later. Every one of those calls must recompute `summary` on the parent session, the same way `climb-histories-put.ts` already recomputes `climbHistory.status = computeTopStatus(climbHistory.tries)` after every try push — `summary` is that same "recompute the derived field on every write" pattern, one level up. Gym must do the same on every set/exercise mutation, not just when the session is first logged.
+
+Readers (the feed, the dashboard) never compute `summary` — they only ever read the cached value. This is also exactly the shape ElasticSearch will index later: it's not optional to materialize this somewhere, since ES can't do live joins across the normalized deep collections at query time, only index whatever a write produces. Computing `summary` lazily inside `GET /feed` instead would mean re-aggregating each sport's deep data (all tries, all sets) on every paginated page, across every adapter being merged — strictly more expensive, and work that's thrown away once ES takes over the read side. Write-time, recompute-on-every-mutation is the only version of this that survives the ES migration.
 
 ### Cross-sport feed read layer
 
@@ -71,13 +73,14 @@ Mirror the existing `shared/models` + `shared-react/api` pattern:
 | Shared shape | Base fields enforced by convention/mixin, not a shared collection | Gives the feed a uniform projection without coupling the write models |
 | Cross-sport reads | Fan-out + merge across per-sport collections behind `GET /feed` | Ships the unified feed now; the contract is stable |
 | Aggregation engine | Mongo fan-out now → ElasticSearch later, same contract | Cross-sport merge/search is ES-shaped; don't distort write models for reads |
-| Denormalized `summary` | Yes, written by each logging flow | Feed/dashboard render N rows across sports without interpreting N deep shapes; doubles as the ES index doc |
+| Denormalized `summary` | Yes, recomputed by the owning sport package on every write that touches session-derived data (not just at creation) | Feed/dashboard render N rows across sports without interpreting N deep shapes; doubles as the ES index doc; matches the existing `computeTopStatus`-on-every-write precedent |
 | ClimbHistory | Unchanged; stays linked to `ClimbingSession` | Preserves `(climb, owner)` uniqueness, cross-session `isProject`, lifetime `tries[]` |
 | Cursor pagination | Reuse the climb-histories base64 keyset pattern, applied to the merged stream | Consistency with existing pagination |
 
 ## Gotchas
 
 - **`summary` is a denormalized cache, not authoritative.** Detail screens and deep stats read the real data (climb histories, etc.), never `summary`.
+- **`summary` must be recomputed on every session-mutating write, not just at session creation.** For climbing that means `climb-histories-put`/delete recompute the parent session's `summary` on every try add/edit/remove, in addition to `climbing-sessions-put` at creation — miss one write path and the feed row goes stale even though the session's real data is correct.
 - **Merged cursor pagination across N collections is the hard part of `GET /feed`.** A base64 `{startedAt, id, sport}` cursor must resume a *merged* stream deterministically. Simplest correct approach: over-fetch `limit+1` from each adapter past the cursor, merge-sort in memory, slice. Document the chosen approach; this is the piece ES later removes.
 - The `(climb, owner)` unique index on `ClimbHistory` means a route logged in two sessions updates **one** history (adding a `try`), while each session is a distinct `ClimbingSession`. The climbing logging flow must upsert the history and append the session reference, not create duplicates — unchanged from today.
 - `ClimbingSession` has `lastActivityAt` (a live-session concept). It's not part of the feed contract; leave it on the climbing entity only if the in-session UX still needs it. Don't promote it to the shared base fields.
