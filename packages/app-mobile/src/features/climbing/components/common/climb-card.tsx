@@ -1,5 +1,5 @@
-import { Climb } from '@jrposada/fit-log-shared/models/climbs/climb';
 import { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
+import { Climb } from '@jrposada/fit-log-shared/models/climbs/climb';
 import { Location } from '@jrposada/fit-log-shared/models/locations/location';
 import { Sector } from '@jrposada/fit-log-shared/models/sectors/sector';
 import { useClimbHistoriesPut } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-histories-put';
