@@ -4,7 +4,7 @@ import type { MergeType } from 'mongoose';
 import type { IClimbHistory } from '../../models/climb-history.ts';
 import type { IClimbingSession } from '../../models/climbing-session.ts';
 import type { ILocation } from '../../models/location.ts';
-import type { ValidClimbHistoryRefs } from '../routes/climb-histories/climb-histories-utils.ts';
+import type { ValidClimbHistoryRefs } from '../../services/climb-history.ts';
 import { toApiDepopulatedClimbHistory } from './climb-histories.ts';
 import { toApiDepopulatedLocation } from './locations.ts';
 

@@ -5,7 +5,7 @@ import type { IClimbHistory } from '../../models/climb-history.ts';
 import type {
   ValidClimbHistory,
   ValidClimbHistoryRefs,
-} from '../routes/climb-histories/climb-histories-utils.ts';
+} from '../../services/climb-history.ts';
 import { toApiDepopulatedClimbingSession } from './climbing-sessions.ts';
 import { toApiDepopulatedClimb } from './climbs.ts';
 import { toApiDepopulatedLocation } from './locations.ts';

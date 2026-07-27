@@ -8,9 +8,9 @@ import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
 import type { IClimbHistory } from '../../../models/climb-history.ts';
 import { ClimbingSession } from '../../../models/climbing-session.ts';
 import type { ILocation } from '../../../models/location.ts';
+import { hasRequiredClimbHistoryRefs } from '../../../services/climb-history.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiClimbingSession } from '../../mappers/climbing-sessions.ts';
-import { hasRequiredClimbHistoryRefs } from '../climb-histories/climb-histories-utils.ts';
 
 const handler = toApiResponse<
   ClimbingSessionsGetByIdResponse,

@@ -2,13 +2,13 @@ import { GRADE_OPTIONS } from '@jrposada/fit-log-shared/common/climbs/grades';
 import type { SessionSummaryData } from '@jrposada/fit-log-shared/models/feed/feed';
 import type { Types } from 'mongoose';
 
-import type { IClimb } from '../../../models/climb.ts';
-import type { ClimbHistoryStatus } from '../../../models/climb-history.ts';
-import { ClimbHistory } from '../../../models/climb-history.ts';
+import type { IClimb } from '../models/climb.ts';
+import type { ClimbHistoryStatus } from '../models/climb-history.ts';
+import { ClimbHistory } from '../models/climb-history.ts';
 import {
   ClimbingSession,
   EMPTY_CLIMBING_SESSION_SUMMARY,
-} from '../../../models/climbing-session.ts';
+} from '../models/climbing-session.ts';
 
 const GRADES: string[] = [...GRADE_OPTIONS];
 

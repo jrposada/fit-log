@@ -3,27 +3,17 @@ import type {
   ClimbHistoriesGetResponse,
 } from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
-import type { IClimb } from '../../../models/climb.ts';
-import { ClimbHistory } from '../../../models/climb-history.ts';
-import type { IClimbingSession } from '../../../models/climbing-session.ts';
-import type { IImage } from '../../../models/image.ts';
-import type { ILocation } from '../../../models/location.ts';
-import type { ISector } from '../../../models/sector.ts';
+import type { ClimbHistoriesCursor } from '../../../services/climb-history.ts';
+import { getClimbHistories } from '../../../services/climb-history.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiClimbHistory } from '../../mappers/climb-histories.ts';
-import { hasValidRefs } from './climb-histories-utils.ts';
 
-const DEFAULT_LIMIT = 20;
-
-type Cursor = { updatedAt: string; id: string };
-
-function decodeCursor(raw: string): Cursor | null {
+function decodeCursor(raw: string): ClimbHistoriesCursor | null {
   try {
     const json = Buffer.from(raw, 'base64url').toString('utf8');
-    const parsed = JSON.parse(json) as Cursor;
+    const parsed = JSON.parse(json) as ClimbHistoriesCursor;
     if (
       typeof parsed?.updatedAt !== 'string' ||
       typeof parsed?.id !== 'string' ||
@@ -38,7 +28,7 @@ function decodeCursor(raw: string): Cursor | null {
   }
 }
 
-function encodeCursor(cursor: Cursor): string {
+function encodeCursor(cursor: ClimbHistoriesCursor): string {
   return Buffer.from(JSON.stringify(cursor), 'utf8').toString('base64url');
 }
 
@@ -49,106 +39,23 @@ const handler = toApiResponse<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const {
-    limit,
-    cursor,
-    climbId,
-    locationId,
-    sectorId,
-    status,
-    startDate,
-    endDate,
-  } = request.query;
+  const { cursor, ...filters } = request.query;
 
-  // Split 'project' out of status array into an isProject filter
-  const includeProjects = status?.includes('project') ?? false;
-  const dbStatuses = status?.filter((s) => s !== 'project');
-
-  const baseFilter: Record<string, unknown> = {
-    owner: request.user._id,
-    ...(climbId ? { climb: climbId } : {}),
-    ...(locationId ? { location: locationId } : {}),
-    ...(sectorId ? { sector: sectorId } : {}),
-    ...(startDate || endDate
-      ? {
-          updatedAt: {
-            ...(startDate ? { $gte: new Date(startDate) } : {}),
-            ...(endDate ? { $lte: new Date(endDate) } : {}),
-          },
-        }
-      : {}),
-  };
-
-  const statusClauses: Record<string, unknown>[] = [];
-  if (dbStatuses?.length && includeProjects) {
-    statusClauses.push({
-      $or: [
-        { status: { $in: dbStatuses } },
-        { isProject: true, status: { $nin: ['send', 'flash'] } },
-      ],
-    });
-  } else if (dbStatuses?.length) {
-    baseFilter.status = { $in: dbStatuses };
-  } else if (includeProjects) {
-    baseFilter.isProject = true;
-  }
-
-  const decodedCursor = cursor ? decodeCursor(cursor) : null;
-  if (decodedCursor) {
-    const cursorDate = new Date(decodedCursor.updatedAt);
-    const cursorId = new Types.ObjectId(decodedCursor.id);
-    statusClauses.push({
-      $or: [
-        { updatedAt: { $lt: cursorDate } },
-        { updatedAt: cursorDate, _id: { $lt: cursorId } },
-      ],
-    });
-  }
-
-  if (statusClauses.length > 0) {
-    baseFilter.$and = statusClauses;
-  }
-
-  const pageSize = limit ?? DEFAULT_LIMIT;
-
-  const climbHistories = await ClimbHistory.find(baseFilter)
-    .sort({ updatedAt: -1, _id: -1 })
-    .limit(pageSize + 1)
-    .populate<{
-      climb: IClimb;
-      location: ILocation;
-    }>(['climb', 'location'])
-    .populate<{
-      sector: MergeType<ISector, { images: IImage[] }>;
-    }>({
-      path: 'sector',
-      populate: ['images'],
-    })
-    .populate<{ climbingSession: IClimbingSession | null }>('climbingSession');
-
-  const hasMore = climbHistories.length > pageSize;
-  const pageHistories = hasMore
-    ? climbHistories.slice(0, pageSize)
-    : climbHistories;
-
-  const validHistories = pageHistories.filter(hasValidRefs);
-
-  const last = pageHistories[pageHistories.length - 1];
-  const nextCursor =
-    hasMore && last
-      ? encodeCursor({
-          updatedAt: last.updatedAt.toISOString(),
-          id: last._id.toString(),
-        })
-      : null;
+  const { climbHistories, nextCursor } = await getClimbHistories(
+    request.user._id,
+    {
+      ...filters,
+      cursor: cursor ? decodeCursor(cursor) : null,
+    }
+  );
 
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        climbHistories: validHistories.map(toApiClimbHistory),
-        nextCursor,
+        climbHistories: climbHistories.map(toApiClimbHistory),
+        nextCursor: nextCursor ? encodeCursor(nextCursor) : null,
       },
     },
   };
