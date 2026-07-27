@@ -20,7 +20,7 @@
     "install:check": "expo install --check && expo-doctor",
     "lint:eslint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "lint:format": "prettier . --check",
-    "lint:types": "tsc --noEmit",
+    "lint:types": "tsc --noEmit -p tsconfig.dev.json",
     "lint": "run-p lint:*"
   },
   "dependencies": {
