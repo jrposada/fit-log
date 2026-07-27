@@ -16,7 +16,7 @@
     "pnpm": "^10"
   },
   "scripts": {
-    "dev": "expo start",
+    "dev": "EXPO_USE_SOURCE=1 expo start",
     "install:check": "expo install --check && expo-doctor",
     "lint:eslint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "lint:format": "prettier . --check",
