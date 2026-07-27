@@ -1,0 +1,91 @@
+import type {
+  ClimbingSessionsPutRequest,
+  ClimbingSessionsPutResponse,
+} from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-put';
+import { assert } from '@jrposada/fit-log-shared/utils/assert';
+import { Types } from 'mongoose';
+
+import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
+import type { IClimbHistory } from '../../../models/climb-history.ts';
+import { ClimbingSession } from '../../../models/climbing-session.ts';
+import type { ILocation } from '../../../models/location.ts';
+import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toApiClimbingSession } from '../../mappers/climbing-sessions.ts';
+import { hasRequiredClimbHistoryRefs } from '../climb-histories/climb-histories-utils.ts';
+
+const handler = toApiResponse<
+  ClimbingSessionsPutResponse,
+  unknown,
+  unknown,
+  ClimbingSessionsPutRequest
+>(async (request) => {
+  assert(request.user, { msg: 'Unauthorized' });
+
+  const body = request.body;
+  const userId = request.user._id as Types.ObjectId;
+
+  let sessionId: Types.ObjectId;
+
+  if (body.id) {
+    const update: Record<string, unknown> = {};
+    if (body.title !== undefined) update.title = body.title;
+    if (body.notes !== undefined) update.notes = body.notes;
+    if (body.location !== undefined) {
+      update.location = body.location
+        ? new Types.ObjectId(body.location)
+        : null;
+    }
+
+    const updated = await ClimbingSession.findOneAndUpdate(
+      { _id: body.id, owner: userId },
+      { $set: update },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      throw new ResourceNotFound(
+        `Training session ${body.id} not found or not editable`
+      );
+    }
+    sessionId = updated._id;
+  } else {
+    const now = new Date();
+    const created = await ClimbingSession.create({
+      owner: userId,
+      title: body.title,
+      notes: body.notes,
+      location: body.location ? new Types.ObjectId(body.location) : undefined,
+      startedAt: now,
+      lastActivityAt: now,
+      climbHistories: [],
+    });
+    sessionId = created._id;
+  }
+
+  const session = await ClimbingSession.findById(sessionId).populate<{
+    location: ILocation | null;
+    climbHistories: IClimbHistory[];
+  }>(['location', 'climbHistories']);
+
+  if (!session) {
+    throw new ResourceNotFound(
+      `Training session ${sessionId.toString()} not found`
+    );
+  }
+
+  const sessionWithValidClimbHistories = Object.assign(session, {
+    climbHistories: session.climbHistories.filter(hasRequiredClimbHistoryRefs),
+  });
+
+  return {
+    statusCode: 200,
+    body: {
+      success: true,
+      data: {
+        climbingSession: toApiClimbingSession(sessionWithValidClimbHistories),
+      },
+    },
+  };
+});
+
+export { handler };
