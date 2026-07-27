@@ -15,6 +15,7 @@ import type { IImage } from '../../models/image.ts';
 import type { ILocation } from '../../models/location.ts';
 import type { ISector } from '../../models/sector.ts';
 import { toApiResponse } from '../api-utils.ts';
+import { recomputeClimbingSessionSummary } from '../climbing-sessions/climbing-sessions-summary.ts';
 import { toApiClimbHistory } from './climb-histories-mapper.ts';
 import { hasValidRefs } from './climb-histories-utils.ts';
 
@@ -112,6 +113,10 @@ const handler = toApiResponse<
   assert(populated, { msg: 'ClimbHistory not found after save' });
   if (!hasValidRefs(populated)) {
     throw new Error('ClimbHistory references deleted documents');
+  }
+
+  if (populated.climbingSession) {
+    await recomputeClimbingSessionSummary(populated.climbingSession._id);
   }
 
   return {

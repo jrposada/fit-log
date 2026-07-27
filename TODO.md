@@ -19,6 +19,12 @@
 - [ ] **Training Stats** — Placeholder card on training screen. No backend or UI beyond the stub.
 - [ ] **Personal Records** — Placeholder card on training screen. No backend or UI beyond the stub.
 
+## Backend
+
+- [ ] **Split API and business layers** — `backend/src/api/` currently owns both HTTP route handlers and business logic, which forces business-layer modules into api folders (e.g. `backend/src/api/climbing-sessions/climbing-sessions-summary.ts` holds summary recompute logic, and `backend/src/api/feed/feed-adapter-climbing.ts` / `feed-adapters.ts` hold feed aggregation logic, none of which are endpoints). Introduce a separate business/service layer (e.g. `backend/src/services/`) and keep `api/` for route handlers only.
+- [ ] **Common pagination layer** — Cursor pagination logic is duplicated across endpoints: `decodeCursor` (base64url + JSON parse + shape validation) and its matching encode/keyset-query logic exist in both `backend/src/api/climb-histories/climb-histories-get.ts` and `backend/src/api/feed/feed-get.ts`, differing only in cursor shape (`updatedAt`/`id` vs `startedAt`/`id`/`sport`). Extract a shared, generic cursor codec + pagination-result helper (encode/decode with per-endpoint schema validation, `items`/`nextCursor` envelope) into a common layer so new paginated endpoints don't re-implement it.
+
 ## App
 
 - [ ] **User profile / Settings** — User model exists in backend (keycloakId, email, name, roles) but no profile screen or settings UI in the mobile app.
+
