@@ -2,16 +2,16 @@ import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/a
 import type { Location } from '@jrposada/fit-log-shared/models/locations/location';
 import type { MergeType } from 'mongoose';
 
-import type { WithPopulatedOwnership } from '../../../auth/ownership-populate.ts';
-import type { IImage } from '../../../models/image.ts';
-import type { ILocation } from '../../../models/location.ts';
-import type { ISector } from '../../../models/sector.ts';
+import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import type { IImage } from '../../models/image.ts';
+import type { ILocation } from '../../models/location.ts';
+import type { ISector } from '../../models/sector.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
-} from '../_shared/collaborators-mapper.ts';
-import { toApiUserSummary } from '../_shared/user-summary-mapper.ts';
-import { toApiDepopulatedSector } from '../sectors/sectors-mapper.ts';
+} from './collaborators.ts';
+import { toApiDepopulatedSector } from './sectors.ts';
+import { toApiUserSummary } from './user-summary.ts';
 
 function toApiDepopulatedLocation(
   model: ILocation

@@ -11,7 +11,7 @@ import type { IImage } from '../../../models/image.ts';
 import { Location } from '../../../models/location.ts';
 import type { ISector } from '../../../models/sector.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiLocation } from './locations-mapper.ts';
+import { toApiLocation } from '../../mappers/locations.ts';
 
 const handler = toApiResponse<LocationsGetResponse, unknown, LocationsGetQuery>(
   async (request) => {

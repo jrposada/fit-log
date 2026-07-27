@@ -1,12 +1,12 @@
 import type { ClimbingSession } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-session';
 import type { MergeType } from 'mongoose';
 
-import type { IClimbHistory } from '../../../models/climb-history.ts';
-import type { IClimbingSession } from '../../../models/climbing-session.ts';
-import type { ILocation } from '../../../models/location.ts';
-import { toApiDepopulatedClimbHistory } from '../climb-histories/climb-histories-mapper.ts';
-import type { ValidClimbHistoryRefs } from '../climb-histories/climb-histories-utils.ts';
-import { toApiDepopulatedLocation } from '../locations/locations-mapper.ts';
+import type { IClimbHistory } from '../../models/climb-history.ts';
+import type { IClimbingSession } from '../../models/climbing-session.ts';
+import type { ILocation } from '../../models/location.ts';
+import type { ValidClimbHistoryRefs } from '../routes/climb-histories/climb-histories-utils.ts';
+import { toApiDepopulatedClimbHistory } from './climb-histories.ts';
+import { toApiDepopulatedLocation } from './locations.ts';
 
 function toApiDepopulatedClimbingSession(model: IClimbingSession): Omit<
   ClimbingSession,

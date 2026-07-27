@@ -12,7 +12,7 @@ import type { IImage } from '../../../models/image.ts';
 import type { ILocation } from '../../../models/location.ts';
 import type { ISector } from '../../../models/sector.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiClimb } from './climbs-mapper.ts';
+import { toApiClimb } from '../../mappers/climbs.ts';
 
 const handler = toApiResponse<ClimbsGetResponse, unknown, ClimbsGetQuery>(
   async (request) => {

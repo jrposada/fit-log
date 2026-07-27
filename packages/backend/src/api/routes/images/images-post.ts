@@ -11,7 +11,7 @@ import { Image } from '../../../models/image.ts';
 import { ImageProcessor } from '../../../services/image-processor.ts';
 import { upsertOwnedDocument } from '../../../utils/upsert-owned-document.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiImage } from './images-mapper.ts';
+import { toApiImage } from '../../mappers/images.ts';
 
 const handler = toApiResponse<
   ImagesPostResponse,

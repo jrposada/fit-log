@@ -22,7 +22,8 @@
 ## Backend
 
 - [ ] **Split API and business layers** — `backend/src/api/` currently owns both HTTP route handlers and business logic, which forces business-layer modules into api folders (e.g. `climbing-sessions-summary.ts`, `feed-adapter-climbing.ts` / `feed-adapters.ts`, none of which are endpoints). Agreed target structure:
-  - `api/routes/<resource>/` — handlers, each with its `<resource>-mapper.ts` colocated. `api/routes/_shared/` for the cross-resource auth mappers (current `api/auth/`).
+  - `api/routes/<resource>/` — handlers plus a `<resource>-routes.ts` registering the resource's endpoints, composed in `api/router.ts`.
+  - `api/mappers/<entity>.ts` — `toApi*` mappers converting model types to API response types (including the cross-resource collaborators/user-summary mappers).
   - `api/middlewares/` — current `src/middleware/` (keycloak auth, validate-body/params/query).
   - `api/infrastructure/` — current `api-utils.ts` (`toApiResponse` wrapper, error→status mapping). Distinct from `src/infrastructure/` (domain errors), which stays.
   - `api/router.ts` — moved from `src/router.ts`.

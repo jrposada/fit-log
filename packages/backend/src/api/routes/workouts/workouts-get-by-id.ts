@@ -7,7 +7,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
 import { Workout } from '../../../models/workout.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiWorkout } from './workouts-mapper.ts';
+import { toApiWorkout } from '../../mappers/workouts.ts';
 
 const handler = toApiResponse<WorkoutsGetByIdResponse, WorkoutsGetByIdParams>(
   async (request) => {

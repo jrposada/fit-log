@@ -16,7 +16,7 @@ import type { IUser } from '../../../models/user.ts';
 import type { BatchUpsertOwnedItem } from '../../../utils/batch-upsert-owned-document.ts';
 import { batchUpsertOwnedDocument } from '../../../utils/batch-upsert-owned-document.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiSector } from './sectors-mapper.ts';
+import { toApiSector } from '../../mappers/sectors.ts';
 
 async function upsertSectorsBatch(
   session: ClientSession,

@@ -13,7 +13,7 @@ import type { IImage } from '../../../models/image.ts';
 import type { ILocation } from '../../../models/location.ts';
 import type { ISector } from '../../../models/sector.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiClimbHistory } from './climb-histories-mapper.ts';
+import { toApiClimbHistory } from '../../mappers/climb-histories.ts';
 import { hasValidRefs } from './climb-histories-utils.ts';
 
 const DEFAULT_LIMIT = 20;

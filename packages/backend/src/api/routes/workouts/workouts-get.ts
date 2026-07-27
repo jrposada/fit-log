@@ -6,7 +6,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { Workout } from '../../../models/workout.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiWorkout } from './workouts-mapper.ts';
+import { toApiWorkout } from '../../mappers/workouts.ts';
 
 const handler = toApiResponse<WorkoutsGetResponse, unknown, WorkoutsGetQuery>(
   async (request) => {

@@ -10,7 +10,7 @@ import type { IImage } from '../../../models/image.ts';
 import { Sector } from '../../../models/sector.ts';
 import { removeCollaborator } from '../../../utils/collaborator-mutators.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiSector } from './sectors-mapper.ts';
+import { toApiSector } from '../../mappers/sectors.ts';
 
 const handler = toApiResponse<
   SectorsCollaboratorsResponse,

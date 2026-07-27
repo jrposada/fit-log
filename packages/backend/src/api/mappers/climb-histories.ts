@@ -1,15 +1,15 @@
 import type { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
 import type { MergeType } from 'mongoose';
 
-import type { IClimbHistory } from '../../../models/climb-history.ts';
-import { toApiDepopulatedClimbingSession } from '../climbing-sessions/climbing-sessions-mapper.ts';
-import { toApiDepopulatedClimb } from '../climbs/climbs-mapper.ts';
-import { toApiDepopulatedLocation } from '../locations/locations-mapper.ts';
-import { toApiDepopulatedSector } from '../sectors/sectors-mapper.ts';
+import type { IClimbHistory } from '../../models/climb-history.ts';
 import type {
   ValidClimbHistory,
   ValidClimbHistoryRefs,
-} from './climb-histories-utils.ts';
+} from '../routes/climb-histories/climb-histories-utils.ts';
+import { toApiDepopulatedClimbingSession } from './climbing-sessions.ts';
+import { toApiDepopulatedClimb } from './climbs.ts';
+import { toApiDepopulatedLocation } from './locations.ts';
+import { toApiDepopulatedSector } from './sectors.ts';
 
 function toApiDepopulatedClimbHistory(
   model: MergeType<IClimbHistory, ValidClimbHistoryRefs>

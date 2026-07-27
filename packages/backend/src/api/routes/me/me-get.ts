@@ -2,7 +2,7 @@ import type { MeResponse } from '@jrposada/fit-log-shared/models/auth/me';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiMe } from './me-mapper.ts';
+import { toApiMe } from '../../mappers/me.ts';
 
 const handler = toApiResponse<MeResponse>(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });

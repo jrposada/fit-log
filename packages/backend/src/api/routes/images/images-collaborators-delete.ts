@@ -8,7 +8,7 @@ import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
 import { Image } from '../../../models/image.ts';
 import { removeCollaborator } from '../../../utils/collaborator-mutators.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiImage } from './images-mapper.ts';
+import { toApiImage } from '../../mappers/images.ts';
 
 const handler = toApiResponse<
   ImagesCollaboratorsResponse,

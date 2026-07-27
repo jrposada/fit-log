@@ -2,18 +2,18 @@ import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/a
 import type { Sector } from '@jrposada/fit-log-shared/models/sectors/sector';
 import type { MergeType } from 'mongoose';
 
-import type { WithPopulatedOwnership } from '../../../auth/ownership-populate.ts';
-import type { IClimb } from '../../../models/climb.ts';
-import type { IImage } from '../../../models/image.ts';
-import type { ISector } from '../../../models/sector.ts';
-import { hasRequiredRefs } from '../../../services/climb.ts';
+import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import type { IClimb } from '../../models/climb.ts';
+import type { IImage } from '../../models/image.ts';
+import type { ISector } from '../../models/sector.ts';
+import { hasRequiredRefs } from '../../services/climb.ts';
+import { toApiDepopulatedClimb } from './climbs.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
-} from '../_shared/collaborators-mapper.ts';
-import { toApiUserSummary } from '../_shared/user-summary-mapper.ts';
-import { toApiDepopulatedClimb } from '../climbs/climbs-mapper.ts';
-import { toApiDepopulatedImage } from '../images/images-mapper.ts';
+} from './collaborators.ts';
+import { toApiDepopulatedImage } from './images.ts';
+import { toApiUserSummary } from './user-summary.ts';
 
 function toApiDepopulatedSector(
   model: MergeType<ISector, { images: IImage[] }>

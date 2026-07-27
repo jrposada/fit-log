@@ -6,7 +6,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { Session } from '../../../models/session.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
-import { toApiSession } from './sessions-mapper.ts';
+import { toApiSession } from '../../mappers/sessions.ts';
 
 const handler = toApiResponse<SessionsGetResponse, unknown, SessionsGetQuery>(
   async (request) => {
