@@ -4,7 +4,6 @@
     "source.fixAll.ts": "always"
   },
   "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "modificationsIfAvailable",
   "files.insertFinalNewline": true,
   "editor.rulers": [80],
   "i18n-ally.localesPaths": [
