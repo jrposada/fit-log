@@ -34,9 +34,6 @@
         "panel": "dedicated",
         "focus": false,
         "clear": false
-      },
-      "runOptions": {
-        "runOn": "folderOpen"
       }
     },
     {
@@ -72,9 +69,6 @@
         "panel": "dedicated",
         "focus": false,
         "clear": false
-      },
-      "runOptions": {
-        "runOn": "folderOpen"
       }
     },
     {
@@ -110,9 +104,6 @@
         "panel": "dedicated",
         "focus": false,
         "clear": false
-      },
-      "runOptions": {
-        "runOn": "folderOpen"
       }
     },
     {
@@ -144,9 +135,6 @@
         "panel": "dedicated",
         "focus": false,
         "clear": true
-      },
-      "runOptions": {
-        "runOn": "folderOpen"
       }
     },
     {
@@ -178,9 +166,6 @@
         "panel": "dedicated",
         "focus": false,
         "clear": true
-      },
-      "runOptions": {
-        "runOn": "folderOpen"
       }
     },
   ]
