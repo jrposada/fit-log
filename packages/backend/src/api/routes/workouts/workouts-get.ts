@@ -12,9 +12,10 @@ const handler = toApiResponse<WorkoutsGetResponse, unknown, WorkoutsGetQuery>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 
-    const { limit } = request.query;
+    // TODO: add cursor packages/backend/src/api/routes/climb-histories/climb-histories-get.ts
+    const filters = request.query;
 
-    const workouts = await getWorkouts(limit);
+    const workouts = await getWorkouts(filters);
 
     return {
       statusCode: 200,

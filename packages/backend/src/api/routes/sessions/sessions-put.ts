@@ -16,12 +16,7 @@ const handler = toApiResponse<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const sessionPutData = request.body;
-
-  const session = await upsertSession({
-    id: sessionPutData.id,
-    completedAt: sessionPutData.completedAt,
-  });
+  const session = await upsertSession(request.body);
 
   return {
     statusCode: 200,

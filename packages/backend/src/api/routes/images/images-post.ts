@@ -16,9 +16,7 @@ const handler = toApiResponse<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const { base64, mimeType } = request.body;
-
-  const image = await createImage(request.user, { base64, mimeType });
+  const image = await createImage(request.user, request.body);
 
   return {
     statusCode: 201,

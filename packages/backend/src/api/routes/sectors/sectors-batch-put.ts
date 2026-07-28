@@ -18,20 +18,7 @@ const handler = toApiResponse<
 
   const { sectors: sectorsData } = request.body;
 
-  const sectors = await batchUpsertSectors(
-    request.user,
-    sectorsData.map((sectorPutData) => ({
-      id: sectorPutData.id,
-      name: sectorPutData.name,
-      description: sectorPutData.description,
-      isPrimary: sectorPutData.isPrimary,
-      latitude: sectorPutData.latitude,
-      longitude: sectorPutData.longitude,
-      googleMapsId: sectorPutData.googleMapsId,
-      images: sectorPutData.images,
-      climbs: sectorPutData.climbs,
-    }))
-  );
+  const sectors = await batchUpsertSectors(request.user, sectorsData);
 
   return {
     statusCode: 200,

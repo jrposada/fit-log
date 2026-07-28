@@ -13,14 +13,7 @@ const handler = toApiResponse<ClimbsSearchResponse, unknown, ClimbsSearchQuery>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 
-    const { limit, locationId, grade, search } = request.query;
-
-    const { climbs, statusByClimbId } = await searchClimbs({
-      limit,
-      locationId,
-      grade,
-      search,
-    });
+    const { climbs, statusByClimbId } = await searchClimbs(request.query);
 
     const results: ClimbSearchResult[] = climbs.map((climb) => ({
       ...toApiClimb(climb),

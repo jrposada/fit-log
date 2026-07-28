@@ -3,7 +3,13 @@ import type { ISession } from '../models/session.ts';
 import { Session } from '../models/session.ts';
 import { upsertDocument } from '../utils/upsert-document.ts';
 
-async function getSessions(limit?: number): Promise<ISession[]> {
+type GetSessionsOptions = {
+  limit?: number;
+};
+
+async function getSessions(options: GetSessionsOptions): Promise<ISession[]> {
+  const { limit } = options;
+
   const query = Session.find();
 
   if (limit) {

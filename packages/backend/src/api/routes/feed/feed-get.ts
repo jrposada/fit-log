@@ -35,16 +35,11 @@ const handler = toApiResponse<FeedGetResponse, unknown, FeedGetQuery>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 
-    const { limit, cursor, sport, locationId, startDate, endDate } =
-      request.query;
+    const { cursor, ...filters } = request.query;
 
     const { sessions, nextCursor } = await getFeed(request.user._id, {
-      sport,
-      locationId,
-      startDate,
-      endDate,
+      ...filters,
       cursor: cursor ? decodeCursor(cursor) : null,
-      limit,
     });
 
     return {

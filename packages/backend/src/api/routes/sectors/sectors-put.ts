@@ -16,19 +16,7 @@ const handler = toApiResponse<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const sectorPutData = request.body;
-
-  const sector = await upsertSector(request.user, {
-    id: sectorPutData.id,
-    name: sectorPutData.name,
-    description: sectorPutData.description,
-    isPrimary: sectorPutData.isPrimary,
-    latitude: sectorPutData.latitude,
-    longitude: sectorPutData.longitude,
-    googleMapsId: sectorPutData.googleMapsId,
-    images: sectorPutData.images,
-    climbs: sectorPutData.climbs,
-  });
+  const sector = await upsertSector(request.user, request.body);
 
   return {
     statusCode: 200,

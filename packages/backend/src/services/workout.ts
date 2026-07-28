@@ -3,7 +3,13 @@ import type { IWorkout } from '../models/workout.ts';
 import { Workout } from '../models/workout.ts';
 import { upsertDocument } from '../utils/upsert-document.ts';
 
-async function getWorkouts(limit?: number): Promise<IWorkout[]> {
+type GetWorkoutsOptions = {
+  limit?: number;
+};
+
+async function getWorkouts(options: GetWorkoutsOptions): Promise<IWorkout[]> {
+  const { limit } = options;
+
   const query = Workout.find();
 
   if (limit) {

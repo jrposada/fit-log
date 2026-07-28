@@ -16,14 +16,7 @@ const handler = toApiResponse<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const workoutPutData = request.body;
-
-  const workout = await upsertWorkout({
-    id: workoutPutData.id,
-    name: workoutPutData.name,
-    description: workoutPutData.description,
-    exercises: workoutPutData.exercises,
-  });
+  const workout = await upsertWorkout(request.body);
 
   return {
     statusCode: 200,

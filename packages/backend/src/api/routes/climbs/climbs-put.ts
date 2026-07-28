@@ -16,19 +16,7 @@ const handler = toApiResponse<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const climbPutData = request.body;
-
-  const climb = await upsertClimb(request.user, {
-    id: climbPutData.id,
-    name: climbPutData.name,
-    grade: climbPutData.grade,
-    description: climbPutData.description,
-    holds: climbPutData.holds,
-    spline: climbPutData.spline,
-    image: climbPutData.image,
-    sector: climbPutData.sector,
-    location: climbPutData.location,
-  });
+  const climb = await upsertClimb(request.user, request.body);
 
   return {
     statusCode: 200,
