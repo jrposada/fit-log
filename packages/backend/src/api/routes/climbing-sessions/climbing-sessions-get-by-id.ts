@@ -3,12 +3,9 @@ import type {
   ClimbingSessionsGetByIdResponse,
 } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-get-by-id';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
+import type { Types } from 'mongoose';
 
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import type { IClimbHistory } from '../../../models/climb-history.ts';
-import { ClimbingSession } from '../../../models/climbing-session.ts';
-import type { ILocation } from '../../../models/location.ts';
-import { hasRequiredClimbHistoryRefs } from '../../../services/climb-history.ts';
+import { getClimbingSessionById } from '../../../services/climbing-session.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiClimbingSession } from '../../mappers/climbing-sessions.ts';
 
@@ -20,27 +17,17 @@ const handler = toApiResponse<
 
   const { id } = request.params;
 
-  const session = await ClimbingSession.findOne({
-    _id: id,
-    owner: request.user._id,
-  }).populate<{ location: ILocation | null; climbHistories: IClimbHistory[] }>([
-    'location',
-    'climbHistories',
-  ]);
-  if (!session) {
-    throw new ResourceNotFound(`Training session with id ${id} not found`);
-  }
-
-  const sessionWithValidClimbHistories = Object.assign(session, {
-    climbHistories: session.climbHistories.filter(hasRequiredClimbHistoryRefs),
-  });
+  const session = await getClimbingSessionById(
+    request.user._id as Types.ObjectId,
+    id
+  );
 
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        climbingSession: toApiClimbingSession(sessionWithValidClimbHistories),
+        climbingSession: toApiClimbingSession(session),
       },
     },
   };

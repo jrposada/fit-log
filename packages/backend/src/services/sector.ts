@@ -1,0 +1,137 @@
+import type { ClientSession, MergeType } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
+
+import type {
+  PopulatedOwnership,
+  WithPopulatedOwnership,
+} from '../auth/ownership-populate.ts';
+import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
+import ResourceNotFound from '../infrastructure/not-found-error.ts';
+import type { IClimb } from '../models/climb.ts';
+import type { IImage } from '../models/image.ts';
+import type { ISector } from '../models/sector.ts';
+import { Sector } from '../models/sector.ts';
+import type { IUser } from '../models/user.ts';
+import type { BatchUpsertOwnedItem } from '../utils/batch-upsert-owned-document.ts';
+import { batchUpsertOwnedDocument } from '../utils/batch-upsert-owned-document.ts';
+import { upsertOwnedDocument } from '../utils/upsert-owned-document.ts';
+
+/** Fully populated sector, as returned to API mappers. */
+type ValidSector = MergeType<
+  WithPopulatedOwnership<ISector>,
+  { climbs: IClimb[]; images: IImage[] }
+>;
+
+type UpsertSectorInput = {
+  id?: string;
+
+  name: string;
+  description?: string;
+  isPrimary: boolean;
+  latitude: number;
+  longitude: number;
+  googleMapsId?: string;
+
+  images: string[];
+  climbs: string[];
+};
+
+async function upsertSector(
+  user: IUser,
+  input: UpsertSectorInput
+): Promise<ValidSector> {
+  const sector = await upsertOwnedDocument(Sector, input.id, user, {
+    /* Data */
+    name: input.name,
+    description: input.description,
+    isPrimary: input.isPrimary,
+    latitude: input.latitude,
+    longitude: input.longitude,
+    googleMapsId: input.googleMapsId,
+
+    /* References */
+    images: input.images.map((imageId) => new Types.ObjectId(imageId)),
+    climbs: input.climbs.map((climbId) => new Types.ObjectId(climbId)),
+  })
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
+
+  if (!sector) {
+    throw new ResourceNotFound(
+      `Sector ${input.id ?? ''} not found or not editable`
+    );
+  }
+
+  return sector;
+}
+
+async function batchUpsertSectorsInSession(
+  session: ClientSession,
+  items: BatchUpsertOwnedItem<typeof Sector.prototype>[],
+  user: IUser
+): Promise<ValidSector[]> {
+  const { ids, matchedCount } = await batchUpsertOwnedDocument(
+    Sector,
+    items,
+    user,
+    session
+  );
+
+  if (matchedCount < items.length) {
+    throw new ResourceNotFound(
+      `Some sectors not found or not editable (matched ${matchedCount}/${items.length})`
+    );
+  }
+
+  const savedSectors = await Sector.find({ _id: { $in: ids } })
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs'])
+    .session(session);
+
+  // Preserve input order so the response aligns with the request batch.
+  const byId = new Map(savedSectors.map((s) => [s._id.toString(), s]));
+  return ids.flatMap((id) => {
+    const s = byId.get(id.toString());
+    return s ? [s] : [];
+  });
+}
+
+/**
+ * Batched ownership-aware sector upsert, run inside a mongoose transaction
+ * (auto-retried on transient transaction errors via `withTransaction`).
+ */
+async function batchUpsertSectors(
+  user: IUser,
+  items: UpsertSectorInput[]
+): Promise<ValidSector[]> {
+  const bulkItems = items.map<BatchUpsertOwnedItem<typeof Sector.prototype>>(
+    (item) => ({
+      id: item.id,
+      data: {
+        /* Data */
+        name: item.name,
+        description: item.description,
+        isPrimary: item.isPrimary,
+        latitude: item.latitude,
+        longitude: item.longitude,
+        googleMapsId: item.googleMapsId,
+
+        /* References */
+        images: item.images.map((imageId) => new Types.ObjectId(imageId)),
+        climbs: item.climbs.map((climbId) => new Types.ObjectId(climbId)),
+      },
+    })
+  );
+
+  const session = await mongoose.startSession();
+  try {
+    return await session.withTransaction((s) =>
+      batchUpsertSectorsInSession(s, bulkItems, user)
+    );
+  } finally {
+    await session.endSession();
+  }
+}
+
+export { batchUpsertSectors, upsertSector };
+export type { ValidSector };

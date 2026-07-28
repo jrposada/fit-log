@@ -3,9 +3,9 @@ import type {
   ClimbingSessionsDeleteResponse,
 } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
+import type { Types } from 'mongoose';
 
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import { ClimbingSession } from '../../../models/climbing-session.ts';
+import { deleteClimbingSession } from '../../../services/climbing-session.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 
 const handler = toApiResponse<
@@ -16,16 +16,7 @@ const handler = toApiResponse<
 
   const { id } = request.params;
 
-  const result = await ClimbingSession.deleteOne({
-    _id: id,
-    owner: request.user._id,
-  });
-
-  if (result.deletedCount === 0) {
-    throw new ResourceNotFound(
-      `Training session ${id} not found or not deletable`
-    );
-  }
+  await deleteClimbingSession(request.user._id as Types.ObjectId, id);
 
   return {
     statusCode: 200,
