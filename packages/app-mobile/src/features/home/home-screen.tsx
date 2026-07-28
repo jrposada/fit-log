@@ -1,90 +1,134 @@
-import { FunctionComponent } from 'react';
+import { useFeed } from '@jrposada/fit-log-shared-react/api/feed/use-feed';
+import { useFeedStats } from '@jrposada/fit-log-shared-react/api/feed/use-feed-stats';
+import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import EmptyState from '../../library/empty-state';
 import IconCard from '../../library/icon-card';
+import LoadingState from '../../library/loading-state';
+import Measure from '../../library/measure';
 import Screen from '../../library/screen';
+import Section from '../../library/section';
+import Stack from '../../library/stack';
 import { palette, spacing } from '../../library/theme';
-import { Typography } from '../../library/typography';
+import FeedRow from '../feed/components/feed-row';
+import { SPORT_ICONS } from '../feed/sport-icons';
 import { styles } from './home-screen.styles';
 
-type DashboardCard = {
+const RECENT_ACTIVITY_LIMIT = 5;
+
+type HeroCardData = {
   id: string;
-  title: string;
-  value: string;
   icon: string;
   color: string;
+  value: string;
+  title: string;
 };
 
 const HomeScreen: FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const dashboardCards: DashboardCard[] = [
-    {
-      id: '1',
-      title: t('home.total_workouts'),
-      value: '42',
-      icon: '💪',
-      color: palette.green,
-    },
-    {
-      id: '2',
-      title: t('home.this_week'),
-      value: '5',
-      icon: '📅',
-      color: palette.blue,
-    },
-    {
-      id: '3',
-      title: t('home.current_streak'),
-      value: '7 days',
-      icon: '🔥',
-      color: palette.amber,
-    },
-    {
-      id: '4',
-      title: t('home.total_time'),
-      value: '24h 30m',
-      icon: '⏱️',
-      color: palette.plum,
-    },
-    {
-      id: '5',
-      title: t('home.climbs_completed'),
-      value: '128',
-      icon: '🧗',
-      color: palette.coral,
-    },
-    {
-      id: '6',
-      title: t('home.personal_best'),
-      value: 'V7',
-      icon: '🏆',
-      color: palette.gold,
-    },
-  ];
+  const { data: stats, isLoading: isStatsLoading } = useFeedStats();
+  const { items: recentSessions, isLoading: isFeedLoading } = useFeed({
+    limit: RECENT_ACTIVITY_LIMIT,
+  });
+
+  const heroCards = useMemo<HeroCardData[]>(() => {
+    if (!stats) {
+      return [];
+    }
+    return [
+      {
+        id: 'sessions',
+        icon: '🗓️',
+        color: palette.blue,
+        value: String(stats.summary.totalSessions),
+        title: t('home.total_sessions'),
+      },
+      {
+        id: 'streak',
+        icon: '🔥',
+        color: palette.amber,
+        value: String(stats.summary.currentStreak),
+        title: t('home.current_streak'),
+      },
+      {
+        id: 'time',
+        icon: '⏱️',
+        color: palette.plum,
+        value: t('climbing.stats_duration_minutes', {
+          count: Math.round(stats.summary.totalDurationMinutes),
+        }),
+        title: t('home.total_time'),
+      },
+    ];
+  }, [stats, t]);
 
   return (
-    <Screen padding="xl">
-      <Typography
-        size="display"
-        style={{ marginBottom: spacing.xl, marginTop: spacing.md }}
-      >
-        {t('home.title')}
-      </Typography>
-      <View style={styles.cardsContainer}>
-        {dashboardCards.map((card) => (
-          <IconCard
-            key={card.id}
-            icon={card.icon}
-            color={card.color}
-            title={card.title}
-            subtitle={card.value}
-            variant="stat"
-            onPress={() => {}}
-          />
-        ))}
-      </View>
+    <Screen padding="lg">
+      <Stack gap="lg">
+        <LoadingState isLoading={isStatsLoading}>
+          <Measure>
+            {(width) => {
+              const gap = spacing.md;
+              const cardWidth =
+                heroCards.length > 0
+                  ? (width - gap * (heroCards.length - 1)) / heroCards.length
+                  : width;
+              return (
+                <Stack direction="horizontal" gap="md">
+                  {heroCards.map((card) => (
+                    <IconCard
+                      key={card.id}
+                      icon={card.icon}
+                      color={card.color}
+                      title={card.title}
+                      subtitle={card.value}
+                      variant="stat"
+                      style={{ width: cardWidth }}
+                    />
+                  ))}
+                </Stack>
+              );
+            }}
+          </Measure>
+        </LoadingState>
+
+        {stats && stats.bySport.length > 0 && (
+          <Section title={t('home.per_sport_title')} noPadding>
+            <View style={styles.cardsContainer}>
+              {stats.bySport.map((entry) => (
+                <IconCard
+                  key={entry.sport}
+                  icon={SPORT_ICONS[entry.sport]}
+                  color={palette.green}
+                  title={t(`${entry.sport}.title`)}
+                  subtitle={String(entry.count)}
+                  variant="stat"
+                />
+              ))}
+            </View>
+          </Section>
+        )}
+
+        <Section title={t('home.recent_activity')} noPadding>
+          <LoadingState isLoading={isFeedLoading}>
+            {recentSessions.length === 0 ? (
+              <EmptyState message={t('home.empty_sessions_warning')} />
+            ) : (
+              <Stack gap="sm">
+                {recentSessions.map((session) => (
+                  <FeedRow key={session.id} session={session} />
+                ))}
+              </Stack>
+            )}
+          </LoadingState>
+        </Section>
+      </Stack>
+
+      {/* Spacer so the last card isn't hidden behind the central FAB. */}
+      <View style={{ height: spacing['4xl'] }} />
     </Screen>
   );
 };

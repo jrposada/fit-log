@@ -20,41 +20,46 @@ export async function authenticateKeycloak(
     let user = await User.findOne({ keycloakId: decodedToken.authId });
 
     if (!user) {
-      console.log('New user detected, creating DB record...');
-      user = await User.create({
-        keycloakId: decodedToken.authId,
-        email: decodedToken.email,
-        name: decodedToken.name,
-        roles: decodedToken.roles,
-      });
+      // Upsert (not create): concurrent first-time requests for the same new
+      // user would otherwise race a plain create() against the unique index.
+      user = await User.findOneAndUpdate(
+        { keycloakId: decodedToken.authId },
+        {
+          $setOnInsert: {
+            keycloakId: decodedToken.authId,
+            email: decodedToken.email,
+            name: decodedToken.name,
+            roles: decodedToken.roles,
+          },
+        },
+        { new: true, upsert: true, runValidators: true }
+      );
     } else {
-      let hasChanges = false;
-
       const newEmail = decodedToken.email || user.email;
       const newName = decodedToken.name;
       const newRoles = decodedToken.roles;
 
-      if (user.email !== newEmail) {
-        user.email = newEmail;
-        hasChanges = true;
-      }
-
-      if (user.name !== newName) {
-        user.name = newName;
-        hasChanges = true;
-      }
-
-      if (
+      const hasChanges =
+        user.email !== newEmail ||
+        user.name !== newName ||
         user.roles.length !== newRoles.length ||
-        !user.roles.every((role) => newRoles.includes(role))
-      ) {
-        user.roles = newRoles;
-        hasChanges = true;
-      }
+        !user.roles.every((role) => newRoles.includes(role));
 
       if (hasChanges) {
-        await user.save();
+        // findOneAndUpdate is an atomic update, not a versioned document
+        // save() — concurrent requests syncing the same role change no
+        // longer race each other into a VersionError.
+        user = await User.findOneAndUpdate(
+          { keycloakId: decodedToken.authId },
+          { email: newEmail, name: newName, roles: newRoles },
+          { new: true, runValidators: true }
+        );
       }
+    }
+
+    if (!user) {
+      res.status(401).json({ success: false, error: 'User not found' });
+      return;
     }
 
     req.user = user;
