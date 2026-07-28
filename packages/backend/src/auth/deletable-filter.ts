@@ -22,7 +22,7 @@ import type { IUser } from '../models/user.ts';
  *   await Model.deleteOne({ _id: id, ...deletableBy(user) });
  */
 export function deletableBy(user: IUser): DeletableFilter {
-  const userId = user._id as Types.ObjectId;
+  const userId = user._id;
   const isAdmin = user.roles.includes(ADMIN_ROLE);
 
   return {

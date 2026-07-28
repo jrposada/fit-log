@@ -56,7 +56,7 @@ export function registerSeedImagesCommand(parent: Command): void {
         const imageProcessor = new ImageProcessor();
         for (let i = 0; i < num; i++) {
           await seedImage({
-            owner: owner._id as Types.ObjectId,
+            owner: owner._id,
             imageProcessor,
           });
         }

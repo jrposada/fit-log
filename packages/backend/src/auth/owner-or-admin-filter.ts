@@ -14,7 +14,7 @@ type OwnerOrAdminFilter = {
  * able to do so.
  */
 export function ownerOrAdminFilter(user: IUser): OwnerOrAdminFilter {
-  const userId = user._id as Types.ObjectId;
+  const userId = user._id;
   const isAdmin = user.roles.includes(ADMIN_ROLE);
 
   return {

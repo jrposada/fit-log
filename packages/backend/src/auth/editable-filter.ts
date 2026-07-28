@@ -25,7 +25,7 @@ type EditableFilter = {
  *   await Model.updateOne({ _id: id, ...editableBy(user) }, ...);
  */
 export function editableBy(user: IUser): EditableFilter {
-  const userId = user._id as Types.ObjectId;
+  const userId = user._id;
   const isAdmin = user.roles.includes(ADMIN_ROLE);
 
   return {

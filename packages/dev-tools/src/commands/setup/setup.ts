@@ -77,7 +77,7 @@ export function registerSetupCommand(setupCmd: Command): void {
         } else {
           console.log(`Using seed owner ${seedOwner.email}`);
         }
-        const seedOwnerId = seedOwner._id as Types.ObjectId;
+        const seedOwnerId = seedOwner._id;
 
         // Synthetic non-Keycloak owners so seeded data has varied
         // ownership — exercises the "I see other users' public records
@@ -104,14 +104,14 @@ export function registerSetupCommand(setupCmd: Command): void {
           seedOwnerId,
           seedOwnerId,
           seedOwnerId,
-          ...extraOwners.map((u) => u._id as Types.ObjectId),
+          ...extraOwners.map((u) => u._id),
         ];
 
         // Uniform pool for ClimbHistory — anyone can attempt anyone's
         // climb, regardless of who created it.
         const allOwners: Types.ObjectId[] = [
           seedOwnerId,
-          ...extraOwners.map((u) => u._id as Types.ObjectId),
+          ...extraOwners.map((u) => u._id),
         ];
 
         console.log(
@@ -174,7 +174,7 @@ export function registerSetupCommand(setupCmd: Command): void {
 
           await seedClimbHistory({
             owner: faker.helpers.arrayElement(allOwners),
-            climb: climb._id as Types.ObjectId,
+            climb: climb._id,
             location: climb.location,
             sector: climb.sector,
           });

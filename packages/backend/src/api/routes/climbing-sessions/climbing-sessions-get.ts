@@ -3,7 +3,6 @@ import type {
   ClimbingSessionsGetResponse,
 } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import type { Types } from 'mongoose';
 
 import { getClimbingSessions } from '../../../services/climbing-session.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
@@ -18,10 +17,10 @@ const handler = toApiResponse<
 
   const { limit, active } = request.query;
 
-  const sessions = await getClimbingSessions(
-    request.user._id as Types.ObjectId,
-    { limit, active }
-  );
+  const sessions = await getClimbingSessions(request.user._id, {
+    limit,
+    active,
+  });
 
   return {
     statusCode: 200,

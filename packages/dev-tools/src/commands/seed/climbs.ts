@@ -38,7 +38,7 @@ export async function seedClimb(opts: SeedClimbOptions): Promise<IClimb> {
       owner: opts.owner,
       imageProcessor: opts.imageProcessor,
     });
-    imageId = image._id as Types.ObjectId;
+    imageId = image._id;
   }
 
   const climb = await Climb.create({
@@ -105,9 +105,9 @@ export function registerSeedClimbsCommand(parent: Command): void {
         const imageProcessor = new ImageProcessor();
         for (let i = 0; i < num; i++) {
           await seedClimb({
-            owner: owner._id as Types.ObjectId,
+            owner: owner._id,
             sector: sectorId,
-            location: location._id as Types.ObjectId,
+            location: location._id,
             imageProcessor,
           });
         }

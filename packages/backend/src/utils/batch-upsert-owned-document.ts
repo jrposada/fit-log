@@ -26,7 +26,7 @@ export async function batchUpsertOwnedDocument<T extends Document>(
   user: IUser,
   session?: ClientSession
 ): Promise<{ ids: Types.ObjectId[]; matchedCount: number }> {
-  const userId = user._id as Types.ObjectId;
+  const userId = user._id;
   const ids: Types.ObjectId[] = [];
 
   if (items.length === 0) {

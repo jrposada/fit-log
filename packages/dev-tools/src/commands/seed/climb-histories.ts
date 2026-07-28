@@ -80,7 +80,7 @@ export function registerSeedClimbHistoriesCommand(parent: Command): void {
         }
 
         await seedClimbHistory({
-          owner: owner._id as Types.ObjectId,
+          owner: owner._id,
           climb: climbId,
           location: climb.location,
           sector: climb.sector,

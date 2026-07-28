@@ -100,7 +100,7 @@ async function upsertClimbingSession(
   user: IUser,
   input: UpsertClimbingSessionInput
 ): Promise<ValidClimbingSession> {
-  const userId = user._id as Types.ObjectId;
+  const userId = user._id;
 
   let sessionId: Types.ObjectId;
 

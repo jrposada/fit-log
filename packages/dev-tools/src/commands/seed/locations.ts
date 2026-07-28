@@ -53,7 +53,7 @@ export async function seedLocation(
   for (let i = 0; i < sectorsCount; i++) {
     const result = await seedSector({
       owner: opts.owner,
-      location: location._id as Types.ObjectId,
+      location: location._id,
       climbsCount: climbsPerSector,
       imageProcessor: opts.imageProcessor,
     });
@@ -119,7 +119,7 @@ export function registerSeedLocationsCommand(parent: Command): void {
         let totalClimbs = 0;
         for (let i = 0; i < num; i++) {
           const { sectors, climbs } = await seedLocation({
-            owner: owner._id as Types.ObjectId,
+            owner: owner._id,
             sectorsCount: sectorsPerLocation,
             climbsPerSector,
             imageProcessor,

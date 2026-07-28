@@ -26,7 +26,7 @@ export function upsertOwnedDocument<T extends Document>(
   user: IUser,
   data: Partial<T>
 ) {
-  const userId = user._id as Types.ObjectId;
+  const userId = user._id;
 
   if (id) {
     return model.findOneAndUpdate(

@@ -3,7 +3,6 @@ import type {
   ClimbingSessionsDeleteResponse,
 } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import type { Types } from 'mongoose';
 
 import { deleteClimbingSession } from '../../../services/climbing-session.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
@@ -16,7 +15,7 @@ const handler = toApiResponse<
 
   const { id } = request.params;
 
-  await deleteClimbingSession(request.user._id as Types.ObjectId, id);
+  await deleteClimbingSession(request.user._id, id);
 
   return {
     statusCode: 200,
