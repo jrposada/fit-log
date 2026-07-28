@@ -1,7 +1,7 @@
 import { useLocations } from '@jrposada/fit-log-shared-react/api/locations/use-locations';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { FunctionComponent, useMemo } from 'react';
+import { FunctionComponent, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '../../../../library/button';
@@ -29,8 +29,21 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
   const { t } = useTranslation();
   const navigation = useNavigation<LocationSelectorNavigationProp>();
 
-  const { data: locations = [], isLoading: isLoadingLocations } =
-    useLocations();
+  const {
+    items: locations,
+    isLoading: isLoadingLocations,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useLocations();
+
+  // The selector needs the full location list up front, so keep pulling
+  // pages until exhausted instead of exposing pagination in this dropdown.
+  useEffect(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const selectedLocation = locations.find((loc) => loc.id === value);
 
