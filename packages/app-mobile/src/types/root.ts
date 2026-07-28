@@ -1,12 +1,10 @@
-import { NavigatorScreenParams } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-import { ClimbingParamList } from '../features/climbing/types';
 
 export type RootParamList = {
   Home: undefined;
-  Climbing: NavigatorScreenParams<ClimbingParamList>;
-  Training: undefined;
+  History: undefined;
+  Stats: undefined;
+  Profile: undefined;
 };
 
 export type RootStackParamList = {
