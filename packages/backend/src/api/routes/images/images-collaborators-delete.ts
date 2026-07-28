@@ -2,11 +2,7 @@ import type { CollaboratorDeleteParams } from '@jrposada/fit-log-shared/models/a
 import type { ImagesCollaboratorsResponse } from '@jrposada/fit-log-shared/models/images/images-collaborators';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import type { PopulatedOwnership } from '../../../auth/ownership-populate.ts';
-import { OWNERSHIP_POPULATE } from '../../../auth/ownership-populate.ts';
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import { Image } from '../../../models/image.ts';
-import { removeCollaborator } from '../../../utils/collaborator-mutators.ts';
+import { removeImageCollaborator } from '../../../services/image.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiImage } from '../../mappers/images.ts';
 
@@ -18,16 +14,7 @@ const handler = toApiResponse<
 
   const { id, userId } = request.params;
 
-  const image = await removeCollaborator(
-    Image,
-    id,
-    userId,
-    request.user
-  ).populate<PopulatedOwnership>([...OWNERSHIP_POPULATE]);
-
-  if (!image) {
-    throw new ResourceNotFound(`Image ${id} not found or not editable`);
-  }
+  const image = await removeImageCollaborator(request.user, id, userId);
 
   return {
     statusCode: 200,

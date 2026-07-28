@@ -4,15 +4,8 @@ import type {
 } from '@jrposada/fit-log-shared/models/auth/collaborator-put';
 import type { LocationsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/locations/locations-collaborators';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import type { MergeType } from 'mongoose';
 
-import type { PopulatedOwnership } from '../../../auth/ownership-populate.ts';
-import { OWNERSHIP_POPULATE } from '../../../auth/ownership-populate.ts';
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import type { IImage } from '../../../models/image.ts';
-import { Location } from '../../../models/location.ts';
-import type { ISector } from '../../../models/sector.ts';
-import { addOrUpdateCollaborator } from '../../../utils/collaborator-mutators.ts';
+import { addLocationCollaborator } from '../../../services/location.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiLocation } from '../../mappers/locations.ts';
 
@@ -27,24 +20,12 @@ const handler = toApiResponse<
   const { id, userId } = request.params;
   const { permission } = request.body;
 
-  const location = await addOrUpdateCollaborator(
-    Location,
+  const location = await addLocationCollaborator(
+    request.user,
     id,
     userId,
-    permission,
-    request.user
-  )
-    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{
-      sectors: MergeType<ISector, { images: IImage[] }>[];
-    }>({
-      path: 'sectors',
-      populate: ['images'],
-    });
-
-  if (!location) {
-    throw new ResourceNotFound(`Location ${id} not found or not editable`);
-  }
+    permission
+  );
 
   return {
     statusCode: 200,

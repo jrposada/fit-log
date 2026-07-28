@@ -1,3 +1,4 @@
+import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
@@ -15,6 +16,10 @@ import type { IImage } from '../models/image.ts';
 import type { ILocation } from '../models/location.ts';
 import type { ISector } from '../models/sector.ts';
 import type { IUser } from '../models/user.ts';
+import {
+  addOrUpdateCollaborator,
+  removeCollaborator,
+} from '../utils/collaborator-mutators.ts';
 import type { WithRequiredRefs } from '../utils/types.ts';
 import { upsertOwnedDocument } from '../utils/upsert-owned-document.ts';
 
@@ -173,5 +178,58 @@ async function upsertClimb(
   return climb;
 }
 
-export { hasRequiredRefs, searchClimbs, upsertClimb };
+async function addClimbCollaborator(
+  user: IUser,
+  id: string,
+  granteeId: string,
+  permission: CollaboratorPermission
+): Promise<ValidClimb> {
+  const climb = await addOrUpdateCollaborator(
+    Climb,
+    id,
+    granteeId,
+    permission,
+    user
+  )
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{ image: IImage; location: ILocation }>(['image', 'location'])
+    .populate<{ sector: MergeType<ISector, { images: IImage[] }> }>({
+      path: 'sector',
+      populate: ['images'],
+    });
+
+  if (!climb) {
+    throw new ResourceNotFound(`Climb ${id} not found or not editable`);
+  }
+
+  return climb;
+}
+
+async function removeClimbCollaborator(
+  user: IUser,
+  id: string,
+  granteeId: string
+): Promise<ValidClimb> {
+  const climb = await removeCollaborator(Climb, id, granteeId, user)
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{ image: IImage; location: ILocation }>(['image', 'location'])
+    .populate<{ sector: MergeType<ISector, { images: IImage[] }> }>({
+      path: 'sector',
+      populate: ['images'],
+    });
+
+  if (!climb) {
+    throw new ResourceNotFound(`Climb ${id} not found or not editable`);
+  }
+
+  return climb;
+}
+
+export {
+  addClimbCollaborator,
+  hasRequiredRefs,
+  removeClimbCollaborator,
+  searchClimbs,
+  upsertClimb,
+};
 export type { ClimbStatusInfo, ValidClimb };

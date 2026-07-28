@@ -1,15 +1,8 @@
 import type { CollaboratorDeleteParams } from '@jrposada/fit-log-shared/models/auth/collaborator-delete';
 import type { LocationsCollaboratorsResponse } from '@jrposada/fit-log-shared/models/locations/locations-collaborators';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import type { MergeType } from 'mongoose';
 
-import type { PopulatedOwnership } from '../../../auth/ownership-populate.ts';
-import { OWNERSHIP_POPULATE } from '../../../auth/ownership-populate.ts';
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import type { IImage } from '../../../models/image.ts';
-import { Location } from '../../../models/location.ts';
-import type { ISector } from '../../../models/sector.ts';
-import { removeCollaborator } from '../../../utils/collaborator-mutators.ts';
+import { removeLocationCollaborator } from '../../../services/location.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiLocation } from '../../mappers/locations.ts';
 
@@ -21,18 +14,7 @@ const handler = toApiResponse<
 
   const { id, userId } = request.params;
 
-  const location = await removeCollaborator(Location, id, userId, request.user)
-    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{
-      sectors: MergeType<ISector, { images: IImage[] }>[];
-    }>({
-      path: 'sectors',
-      populate: ['images'],
-    });
-
-  if (!location) {
-    throw new ResourceNotFound(`Location ${id} not found or not editable`);
-  }
+  const location = await removeLocationCollaborator(request.user, id, userId);
 
   return {
     statusCode: 200,

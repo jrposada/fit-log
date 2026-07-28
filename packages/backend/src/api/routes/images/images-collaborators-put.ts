@@ -5,11 +5,7 @@ import type {
 import type { ImagesCollaboratorsResponse } from '@jrposada/fit-log-shared/models/images/images-collaborators';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import type { PopulatedOwnership } from '../../../auth/ownership-populate.ts';
-import { OWNERSHIP_POPULATE } from '../../../auth/ownership-populate.ts';
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import { Image } from '../../../models/image.ts';
-import { addOrUpdateCollaborator } from '../../../utils/collaborator-mutators.ts';
+import { addImageCollaborator } from '../../../services/image.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiImage } from '../../mappers/images.ts';
 
@@ -24,17 +20,12 @@ const handler = toApiResponse<
   const { id, userId } = request.params;
   const { permission } = request.body;
 
-  const image = await addOrUpdateCollaborator(
-    Image,
+  const image = await addImageCollaborator(
+    request.user,
     id,
     userId,
-    permission,
-    request.user
-  ).populate<PopulatedOwnership>([...OWNERSHIP_POPULATE]);
-
-  if (!image) {
-    throw new ResourceNotFound(`Image ${id} not found or not editable`);
-  }
+    permission
+  );
 
   return {
     statusCode: 200,

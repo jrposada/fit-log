@@ -1,3 +1,4 @@
+import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { ClientSession, MergeType } from 'mongoose';
 import mongoose, { Types } from 'mongoose';
 
@@ -14,6 +15,10 @@ import { Sector } from '../models/sector.ts';
 import type { IUser } from '../models/user.ts';
 import type { BatchUpsertOwnedItem } from '../utils/batch-upsert-owned-document.ts';
 import { batchUpsertOwnedDocument } from '../utils/batch-upsert-owned-document.ts';
+import {
+  addOrUpdateCollaborator,
+  removeCollaborator,
+} from '../utils/collaborator-mutators.ts';
 import { upsertOwnedDocument } from '../utils/upsert-owned-document.ts';
 
 /** Fully populated sector, as returned to API mappers. */
@@ -133,5 +138,49 @@ async function batchUpsertSectors(
   }
 }
 
-export { batchUpsertSectors, upsertSector };
+async function addSectorCollaborator(
+  user: IUser,
+  id: string,
+  granteeId: string,
+  permission: CollaboratorPermission
+): Promise<ValidSector> {
+  const sector = await addOrUpdateCollaborator(
+    Sector,
+    id,
+    granteeId,
+    permission,
+    user
+  )
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
+
+  if (!sector) {
+    throw new ResourceNotFound(`Sector ${id} not found or not editable`);
+  }
+
+  return sector;
+}
+
+async function removeSectorCollaborator(
+  user: IUser,
+  id: string,
+  granteeId: string
+): Promise<ValidSector> {
+  const sector = await removeCollaborator(Sector, id, granteeId, user)
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{ climbs: IClimb[]; images: IImage[] }>(['images', 'climbs']);
+
+  if (!sector) {
+    throw new ResourceNotFound(`Sector ${id} not found or not editable`);
+  }
+
+  return sector;
+}
+
+export {
+  addSectorCollaborator,
+  batchUpsertSectors,
+  removeSectorCollaborator,
+  upsertSector,
+};
 export type { ValidSector };

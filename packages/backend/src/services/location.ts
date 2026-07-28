@@ -1,3 +1,4 @@
+import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
@@ -12,6 +13,10 @@ import type { ILocation } from '../models/location.ts';
 import { Location } from '../models/location.ts';
 import type { ISector } from '../models/sector.ts';
 import type { IUser } from '../models/user.ts';
+import {
+  addOrUpdateCollaborator,
+  removeCollaborator,
+} from '../utils/collaborator-mutators.ts';
 import { upsertOwnedDocument } from '../utils/upsert-owned-document.ts';
 
 /** Fully populated location, as returned to API mappers. */
@@ -64,5 +69,54 @@ async function upsertLocation(
   return location;
 }
 
-export { upsertLocation };
+async function addLocationCollaborator(
+  user: IUser,
+  id: string,
+  granteeId: string,
+  permission: CollaboratorPermission
+): Promise<ValidLocation> {
+  const location = await addOrUpdateCollaborator(
+    Location,
+    id,
+    granteeId,
+    permission,
+    user
+  )
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{
+      sectors: MergeType<ISector, { images: IImage[] }>[];
+    }>({
+      path: 'sectors',
+      populate: ['images'],
+    });
+
+  if (!location) {
+    throw new ResourceNotFound(`Location ${id} not found or not editable`);
+  }
+
+  return location;
+}
+
+async function removeLocationCollaborator(
+  user: IUser,
+  id: string,
+  granteeId: string
+): Promise<ValidLocation> {
+  const location = await removeCollaborator(Location, id, granteeId, user)
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{
+      sectors: MergeType<ISector, { images: IImage[] }>[];
+    }>({
+      path: 'sectors',
+      populate: ['images'],
+    });
+
+  if (!location) {
+    throw new ResourceNotFound(`Location ${id} not found or not editable`);
+  }
+
+  return location;
+}
+
+export { addLocationCollaborator, removeLocationCollaborator, upsertLocation };
 export type { ValidLocation };
