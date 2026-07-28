@@ -41,34 +41,62 @@ function withValidClimbHistories<T extends { climbHistories: IClimbHistory[] }>(
 
 const CLIMBING_SESSION_POPULATE = ['location', 'climbHistories'] as const;
 
+const DEFAULT_LIMIT = 20;
+
+/** Keyset cursor for the climbing-sessions list, in decoded (plain JSON) form. */
+type ClimbingSessionsCursor = { startedAt: string; id: string };
+
 type GetClimbingSessionsOptions = {
   limit?: number;
+  cursor?: ClimbingSessionsCursor | null;
   active?: boolean;
 };
 
 async function getClimbingSessions(
   owner: Types.ObjectId,
   options: GetClimbingSessionsOptions
-): Promise<ValidClimbingSession[]> {
-  const { limit, active } = options;
+): Promise<{
+  climbingSessions: ValidClimbingSession[];
+  nextCursor: ClimbingSessionsCursor | null;
+}> {
+  const { limit, cursor, active } = options;
 
   const filter: Record<string, unknown> = { owner };
   if (active) {
     filter.endedAt = { $exists: false };
   }
-
-  const query = ClimbingSession.find(filter).sort({ startedAt: -1 });
-
-  if (limit) {
-    query.limit(limit);
+  if (cursor) {
+    const cursorDate = new Date(cursor.startedAt);
+    const cursorId = new Types.ObjectId(cursor.id);
+    filter.$or = [
+      { startedAt: { $lt: cursorDate } },
+      { startedAt: cursorDate, _id: { $lt: cursorId } },
+    ];
   }
 
-  const sessions = await query.populate<{
-    location: ILocation | null;
-    climbHistories: IClimbHistory[];
-  }>([...CLIMBING_SESSION_POPULATE]);
+  const pageSize = limit ?? DEFAULT_LIMIT;
 
-  return sessions.map(withValidClimbHistories);
+  const sessions = await ClimbingSession.find(filter)
+    .sort({ startedAt: -1, _id: -1 })
+    .limit(pageSize + 1)
+    .populate<{
+      location: ILocation | null;
+      climbHistories: IClimbHistory[];
+    }>([...CLIMBING_SESSION_POPULATE]);
+
+  const hasMore = sessions.length > pageSize;
+  const pageSessions = hasMore ? sessions.slice(0, pageSize) : sessions;
+
+  const last = pageSessions[pageSessions.length - 1];
+  const nextCursor =
+    hasMore && last
+      ? { startedAt: last.startedAt.toISOString(), id: last._id.toString() }
+      : null;
+
+  return {
+    climbingSessions: pageSessions.map(withValidClimbHistories),
+    nextCursor,
+  };
 }
 
 async function getClimbingSessionById(
@@ -213,4 +241,4 @@ export {
   recomputeClimbingSessionSummary,
   upsertClimbingSession,
 };
-export type { ValidClimbingSession };
+export type { ClimbingSessionsCursor, ValidClimbingSession };

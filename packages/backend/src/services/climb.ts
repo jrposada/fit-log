@@ -87,9 +87,73 @@ function findClimbsQuery(options: FindClimbsOptions) {
   return query;
 }
 
+const DEFAULT_LIMIT = 20;
+
+/** Keyset cursor for the climbs list, in decoded (plain JSON) form. */
+type ClimbsCursor = { createdAt: string; id: string };
+
+type GetClimbsOptions = FindClimbsOptions & {
+  cursor?: ClimbsCursor | null;
+};
+
 /** Gets climbs across all owners, filtered by the given criteria. */
-async function getClimbs(options: FindClimbsOptions): Promise<ValidClimb[]> {
-  return findClimbsQuery(options);
+async function getClimbs(
+  options: GetClimbsOptions
+): Promise<{ climbs: ValidClimb[]; nextCursor: ClimbsCursor | null }> {
+  const { limit, cursor, locationId, grade, search } = options;
+
+  const andClauses: Record<string, unknown>[] = [];
+  if (search && search.trim()) {
+    andClauses.push({
+      $or: [
+        { name: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+        { grade: { $regex: search, $options: 'i' } },
+      ],
+    });
+  }
+  if (cursor) {
+    const cursorDate = new Date(cursor.createdAt);
+    const cursorId = new Types.ObjectId(cursor.id);
+    andClauses.push({
+      $or: [
+        { createdAt: { $lt: cursorDate } },
+        { createdAt: cursorDate, _id: { $lt: cursorId } },
+      ],
+    });
+  }
+
+  const pageSize = limit ?? DEFAULT_LIMIT;
+
+  const climbs = await Climb.find({
+    ...(locationId ? { location: locationId } : {}),
+    ...(grade && grade.length > 0 ? { grade: { $in: grade } } : {}),
+    ...(andClauses.length > 0 ? { $and: andClauses } : {}),
+  })
+    .sort({ createdAt: -1, _id: -1 })
+    .limit(pageSize + 1)
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{
+      image: IImage;
+      location: ILocation;
+    }>(['image', 'location'])
+    .populate<{
+      sector: MergeType<ISector, { images: IImage[] }>;
+    }>({
+      path: 'sector',
+      populate: ['images'],
+    });
+
+  const hasMore = climbs.length > pageSize;
+  const pageClimbs = hasMore ? climbs.slice(0, pageSize) : climbs;
+
+  const last = pageClimbs[pageClimbs.length - 1];
+  const nextCursor =
+    hasMore && last
+      ? { createdAt: last.createdAt.toISOString(), id: last._id.toString() }
+      : null;
+
+  return { climbs: pageClimbs, nextCursor };
 }
 
 async function getClimbById(id: string): Promise<ValidClimb> {
@@ -274,4 +338,4 @@ export {
   searchClimbs,
   upsertClimb,
 };
-export type { ClimbStatusInfo, ValidClimb };
+export type { ClimbsCursor, ClimbStatusInfo, ValidClimb };

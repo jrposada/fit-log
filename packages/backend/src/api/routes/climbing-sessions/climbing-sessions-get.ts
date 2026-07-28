@@ -3,10 +3,34 @@ import type {
   ClimbingSessionsGetResponse,
 } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
+import { Types } from 'mongoose';
 
+import type { ClimbingSessionsCursor } from '../../../services/climbing-session.ts';
 import { getClimbingSessions } from '../../../services/climbing-session.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiClimbingSession } from '../../mappers/climbing-sessions.ts';
+
+function decodeCursor(raw: string): ClimbingSessionsCursor | null {
+  try {
+    const json = Buffer.from(raw, 'base64url').toString('utf8');
+    const parsed = JSON.parse(json) as ClimbingSessionsCursor;
+    if (
+      typeof parsed?.startedAt !== 'string' ||
+      typeof parsed?.id !== 'string' ||
+      !Types.ObjectId.isValid(parsed.id) ||
+      Number.isNaN(Date.parse(parsed.startedAt))
+    ) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function encodeCursor(cursor: ClimbingSessionsCursor): string {
+  return Buffer.from(JSON.stringify(cursor), 'utf8').toString('base64url');
+}
 
 const handler = toApiResponse<
   ClimbingSessionsGetResponse,
@@ -15,17 +39,23 @@ const handler = toApiResponse<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  // TODO: add cursor packages/backend/src/api/routes/climb-histories/climb-histories-get.ts
-  const filters = request.query;
+  const { cursor, ...filters } = request.query;
 
-  const sessions = await getClimbingSessions(request.user._id, filters);
+  const { climbingSessions, nextCursor } = await getClimbingSessions(
+    request.user._id,
+    {
+      ...filters,
+      cursor: cursor ? decodeCursor(cursor) : null,
+    }
+  );
 
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        climbingSessions: sessions.map(toApiClimbingSession),
+        climbingSessions: climbingSessions.map(toApiClimbingSession),
+        nextCursor: nextCursor ? encodeCursor(nextCursor) : null,
       },
     },
   };

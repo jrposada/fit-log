@@ -26,16 +26,36 @@ type ValidLocation = MergeType<
   { sectors: MergeType<ISector, { images: IImage[] }>[] }
 >;
 
+const DEFAULT_LIMIT = 20;
+
+/** Keyset cursor for the locations list, in decoded (plain JSON) form. */
+type LocationsCursor = { createdAt: string; id: string };
+
 type FindLocationsOptions = {
   limit?: number;
+  cursor?: LocationsCursor | null;
 };
 
 async function getLocations(
   options: FindLocationsOptions
-): Promise<ValidLocation[]> {
-  const { limit } = options;
+): Promise<{ locations: ValidLocation[]; nextCursor: LocationsCursor | null }> {
+  const { limit, cursor } = options;
 
-  const query = Location.find()
+  const filter: Record<string, unknown> = {};
+  if (cursor) {
+    const cursorDate = new Date(cursor.createdAt);
+    const cursorId = new Types.ObjectId(cursor.id);
+    filter.$or = [
+      { createdAt: { $lt: cursorDate } },
+      { createdAt: cursorDate, _id: { $lt: cursorId } },
+    ];
+  }
+
+  const pageSize = limit ?? DEFAULT_LIMIT;
+
+  const locations = await Location.find(filter)
+    .sort({ createdAt: -1, _id: -1 })
+    .limit(pageSize + 1)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
       sectors: MergeType<ISector, { images: IImage[] }>[];
@@ -44,11 +64,16 @@ async function getLocations(
       populate: ['images'],
     });
 
-  if (limit) {
-    query.limit(limit);
-  }
+  const hasMore = locations.length > pageSize;
+  const pageLocations = hasMore ? locations.slice(0, pageSize) : locations;
 
-  return query;
+  const last = pageLocations[pageLocations.length - 1];
+  const nextCursor =
+    hasMore && last
+      ? { createdAt: last.createdAt.toISOString(), id: last._id.toString() }
+      : null;
+
+  return { locations: pageLocations, nextCursor };
 }
 
 async function getLocationById(id: string): Promise<ValidLocation> {
@@ -177,4 +202,4 @@ export {
   removeLocationCollaborator,
   upsertLocation,
 };
-export type { ValidLocation };
+export type { LocationsCursor, ValidLocation };
