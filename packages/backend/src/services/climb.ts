@@ -45,21 +45,14 @@ type ClimbStatusInfo = {
   lastTriedDate?: string;
 };
 
-type SearchClimbsOptions = {
+type FindClimbsOptions = {
   limit?: number;
   locationId?: string;
   grade?: string[];
   search?: string;
 };
 
-/**
- * Searches climbs across all owners, annotated with the requesting user's
- * own try/project status per climb (via a separate, unscoped status lookup).
- */
-async function searchClimbs(options: SearchClimbsOptions): Promise<{
-  climbs: ValidClimb[];
-  statusByClimbId: Map<string, ClimbStatusInfo>;
-}> {
+function findClimbsQuery(options: FindClimbsOptions) {
   const { limit, locationId, grade, search } = options;
 
   const query = Climb.find({
@@ -91,7 +84,44 @@ async function searchClimbs(options: SearchClimbsOptions): Promise<{
     query.limit(limit);
   }
 
-  const climbs = await query;
+  return query;
+}
+
+/** Gets climbs across all owners, filtered by the given criteria. */
+async function getClimbs(options: FindClimbsOptions): Promise<ValidClimb[]> {
+  return findClimbsQuery(options);
+}
+
+async function getClimbById(id: string): Promise<ValidClimb> {
+  const climb = await Climb.findById(id)
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{
+      image: IImage;
+      location: ILocation;
+    }>(['image', 'location'])
+    .populate<{
+      sector: MergeType<ISector, { images: IImage[] }>;
+    }>({
+      path: 'sector',
+      populate: ['images'],
+    });
+
+  if (!climb) {
+    throw new ResourceNotFound(`Climb with id ${id} not found`);
+  }
+
+  return climb;
+}
+
+/**
+ * Searches climbs across all owners, annotated with the requesting user's
+ * own try/project status per climb (via a separate, unscoped status lookup).
+ */
+async function searchClimbs(options: FindClimbsOptions): Promise<{
+  climbs: ValidClimb[];
+  statusByClimbId: Map<string, ClimbStatusInfo>;
+}> {
+  const climbs = await findClimbsQuery(options);
   const climbIds = climbs.map((c) => c._id);
 
   const histories = await ClimbHistory.find({
@@ -237,6 +267,8 @@ async function deleteClimb(user: IUser, id: string): Promise<void> {
 export {
   addClimbCollaborator,
   deleteClimb,
+  getClimbById,
+  getClimbs,
   hasRequiredRefs,
   removeClimbCollaborator,
   searchClimbs,

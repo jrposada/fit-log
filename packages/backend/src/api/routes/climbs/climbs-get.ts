@@ -3,14 +3,8 @@ import type {
   ClimbsGetResponse,
 } from '@jrposada/fit-log-shared/models/climbs/climbs-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
-import type { MergeType } from 'mongoose';
 
-import type { PopulatedOwnership } from '../../../auth/ownership-populate.ts';
-import { OWNERSHIP_POPULATE } from '../../../auth/ownership-populate.ts';
-import { Climb } from '../../../models/climb.ts';
-import type { IImage } from '../../../models/image.ts';
-import type { ILocation } from '../../../models/location.ts';
-import type { ISector } from '../../../models/sector.ts';
+import { getClimbs } from '../../../services/climb.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiClimb } from '../../mappers/climbs.ts';
 
@@ -20,36 +14,7 @@ const handler = toApiResponse<ClimbsGetResponse, unknown, ClimbsGetQuery>(
 
     const { limit, locationId, grade, search } = request.query;
 
-    const query = Climb.find({
-      ...(locationId ? { location: locationId } : {}),
-      ...(grade && grade.length > 0 ? { grade: { $in: grade } } : {}),
-      ...(search && search.trim()
-        ? {
-            $or: [
-              { name: { $regex: search, $options: 'i' } },
-              { description: { $regex: search, $options: 'i' } },
-              { grade: { $regex: search, $options: 'i' } },
-            ],
-          }
-        : {}),
-    });
-
-    if (limit) {
-      query.limit(limit);
-    }
-
-    const climbs = await query
-      .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-      .populate<{
-        image: IImage;
-        location: ILocation;
-      }>(['image', 'location'])
-      .populate<{
-        sector: MergeType<ISector, { images: IImage[] }>;
-      }>({
-        path: 'sector',
-        populate: ['images'],
-      });
+    const climbs = await getClimbs({ limit, locationId, grade, search });
 
     return {
       statusCode: 200,

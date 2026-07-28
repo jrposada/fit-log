@@ -26,6 +26,48 @@ type ValidLocation = MergeType<
   { sectors: MergeType<ISector, { images: IImage[] }>[] }
 >;
 
+type FindLocationsOptions = {
+  limit?: number;
+};
+
+async function getLocations(
+  options: FindLocationsOptions
+): Promise<ValidLocation[]> {
+  const { limit } = options;
+
+  const query = Location.find()
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{
+      sectors: MergeType<ISector, { images: IImage[] }>[];
+    }>({
+      path: 'sectors',
+      populate: ['images'],
+    });
+
+  if (limit) {
+    query.limit(limit);
+  }
+
+  return query;
+}
+
+async function getLocationById(id: string): Promise<ValidLocation> {
+  const location = await Location.findById(id)
+    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+    .populate<{
+      sectors: MergeType<ISector, { images: IImage[] }>[];
+    }>({
+      path: 'sectors',
+      populate: ['images'],
+    });
+
+  if (!location) {
+    throw new ResourceNotFound(`Location with id ${id} not found`);
+  }
+
+  return location;
+}
+
 type UpsertLocationInput = {
   id?: string;
 
@@ -130,6 +172,8 @@ async function deleteLocation(user: IUser, id: string): Promise<void> {
 export {
   addLocationCollaborator,
   deleteLocation,
+  getLocationById,
+  getLocations,
   removeLocationCollaborator,
   upsertLocation,
 };

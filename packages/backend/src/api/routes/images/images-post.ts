@@ -4,12 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/images/images-post';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import type { PopulatedOwnership } from '../../../auth/ownership-populate.ts';
-import { OWNERSHIP_POPULATE } from '../../../auth/ownership-populate.ts';
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import { Image } from '../../../models/image.ts';
-import { ImageProcessor } from '../../../services/image-processor.ts';
-import { upsertOwnedDocument } from '../../../utils/upsert-owned-document.ts';
+import { createImage } from '../../../services/image.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiImage } from '../../mappers/images.ts';
 
@@ -23,23 +18,7 @@ const handler = toApiResponse<
 
   const { base64, mimeType } = request.body;
 
-  const imageProcessor = new ImageProcessor();
-  const processedImage = await imageProcessor.processImageFromBase64(
-    base64,
-    mimeType
-  );
-
-  const image = await upsertOwnedDocument(Image, undefined, request.user, {
-    /* Data */
-    imageUrl: processedImage.imageUrl,
-    thumbnailUrl: processedImage.thumbnailUrl,
-    imageWidth: processedImage.imageWidth,
-    imageHeight: processedImage.imageHeight,
-  }).populate<PopulatedOwnership>([...OWNERSHIP_POPULATE]);
-
-  if (!image) {
-    throw new ResourceNotFound('Image creation failed');
-  }
+  const image = await createImage(request.user, { base64, mimeType });
 
   return {
     statusCode: 201,

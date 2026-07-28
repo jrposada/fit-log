@@ -14,9 +14,41 @@ import {
   addOrUpdateCollaborator,
   removeCollaborator,
 } from '../utils/collaborator-mutators.ts';
+import { upsertOwnedDocument } from '../utils/upsert-owned-document.ts';
+import { ImageProcessor } from './image-processor.ts';
 
 /** Fully populated image, as returned to API mappers. */
 type ValidImage = WithPopulatedOwnership<IImage>;
+
+type CreateImageInput = {
+  base64: string;
+  mimeType: string;
+};
+
+async function createImage(
+  user: IUser,
+  input: CreateImageInput
+): Promise<ValidImage> {
+  const imageProcessor = new ImageProcessor();
+  const processedImage = await imageProcessor.processImageFromBase64(
+    input.base64,
+    input.mimeType
+  );
+
+  const image = await upsertOwnedDocument(Image, undefined, user, {
+    /* Data */
+    imageUrl: processedImage.imageUrl,
+    thumbnailUrl: processedImage.thumbnailUrl,
+    imageWidth: processedImage.imageWidth,
+    imageHeight: processedImage.imageHeight,
+  }).populate<PopulatedOwnership>([...OWNERSHIP_POPULATE]);
+
+  if (!image) {
+    throw new ResourceNotFound('Image creation failed');
+  }
+
+  return image;
+}
 
 async function addImageCollaborator(
   user: IUser,
@@ -66,5 +98,10 @@ async function deleteImage(user: IUser, id: string): Promise<void> {
   }
 }
 
-export { addImageCollaborator, deleteImage, removeImageCollaborator };
+export {
+  addImageCollaborator,
+  createImage,
+  deleteImage,
+  removeImageCollaborator,
+};
 export type { ValidImage };
