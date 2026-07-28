@@ -4,7 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/workout/workout-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { Workout } from '../../../models/workout.ts';
+import { deleteWorkout } from '../../../services/workout.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 
 const handler = toApiResponse<WorkoutsDeleteResponse, WorkoutsDeleteParams>(
@@ -13,7 +13,7 @@ const handler = toApiResponse<WorkoutsDeleteResponse, WorkoutsDeleteParams>(
 
     const { id } = request.params;
 
-    await Workout.deleteOne({ _id: id });
+    await deleteWorkout(id);
 
     return {
       statusCode: 200,

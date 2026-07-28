@@ -4,8 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/workout/workout-put';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { Workout } from '../../../models/workout.ts';
-import { upsertDocument } from '../../../utils/upsert-document.ts';
+import { upsertWorkout } from '../../../services/workout.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiWorkout } from '../../mappers/workouts.ts';
 
@@ -19,7 +18,8 @@ const handler = toApiResponse<
 
   const workoutPutData = request.body;
 
-  const workout = await upsertDocument(Workout, workoutPutData.id, {
+  const workout = await upsertWorkout({
+    id: workoutPutData.id,
     name: workoutPutData.name,
     description: workoutPutData.description,
     exercises: workoutPutData.exercises,

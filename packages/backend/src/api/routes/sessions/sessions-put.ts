@@ -4,8 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/sessions/sessions-put';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { Session } from '../../../models/session.ts';
-import { upsertDocument } from '../../../utils/upsert-document.ts';
+import { upsertSession } from '../../../services/session.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiSession } from '../../mappers/sessions.ts';
 
@@ -19,8 +18,9 @@ const handler = toApiResponse<
 
   const sessionPutData = request.body;
 
-  const session = await upsertDocument(Session, sessionPutData.id, {
-    completedAt: new Date(sessionPutData.completedAt),
+  const session = await upsertSession({
+    id: sessionPutData.id,
+    completedAt: sessionPutData.completedAt,
   });
 
   return {

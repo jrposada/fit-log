@@ -4,7 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/sessions/sessions-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { Session } from '../../../models/session.ts';
+import { getSessions } from '../../../services/session.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiSession } from '../../mappers/sessions.ts';
 
@@ -14,13 +14,7 @@ const handler = toApiResponse<SessionsGetResponse, unknown, SessionsGetQuery>(
 
     const { limit } = request.query;
 
-    const query = Session.find();
-
-    if (limit) {
-      query.limit(limit);
-    }
-
-    const sessions = await query.exec();
+    const sessions = await getSessions(limit);
 
     return {
       statusCode: 200,

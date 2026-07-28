@@ -4,8 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/workout/workout-get-by-id';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import { Workout } from '../../../models/workout.ts';
+import { getWorkoutById } from '../../../services/workout.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiWorkout } from '../../mappers/workouts.ts';
 
@@ -15,11 +14,7 @@ const handler = toApiResponse<WorkoutsGetByIdResponse, WorkoutsGetByIdParams>(
 
     const { id } = request.params;
 
-    const workout = await Workout.findById(id);
-
-    if (!workout) {
-      throw new ResourceNotFound(`Workout with id ${id} not found`);
-    }
+    const workout = await getWorkoutById(id);
 
     return {
       statusCode: 200,

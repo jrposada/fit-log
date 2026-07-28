@@ -4,7 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/sessions/sessions-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { Session } from '../../../models/session.ts';
+import { deleteSession } from '../../../services/session.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 
 const handler = toApiResponse<SessionsDeleteResponse, SessionsDeleteParams>(
@@ -13,7 +13,7 @@ const handler = toApiResponse<SessionsDeleteResponse, SessionsDeleteParams>(
 
     const { id } = request.params;
 
-    await Session.deleteOne({ _id: id });
+    await deleteSession(id);
 
     return {
       statusCode: 200,

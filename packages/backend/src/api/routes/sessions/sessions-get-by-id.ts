@@ -4,8 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/sessions/sessions-get-by-id';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import { Session } from '../../../models/session.ts';
+import { getSessionById } from '../../../services/session.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiSession } from '../../mappers/sessions.ts';
 
@@ -15,11 +14,7 @@ const handler = toApiResponse<SessionsGetByIdResponse, SessionsGetByIdParams>(
 
     const { id } = request.params;
 
-    const session = await Session.findById(id);
-
-    if (!session) {
-      throw new ResourceNotFound(`Session with id ${id} not found`);
-    }
+    const session = await getSessionById(id);
 
     return {
       statusCode: 200,

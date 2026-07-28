@@ -4,7 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/workout/workout-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { Workout } from '../../../models/workout.ts';
+import { getWorkouts } from '../../../services/workout.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 import { toApiWorkout } from '../../mappers/workouts.ts';
 
@@ -14,13 +14,7 @@ const handler = toApiResponse<WorkoutsGetResponse, unknown, WorkoutsGetQuery>(
 
     const { limit } = request.query;
 
-    const query = Workout.find();
-
-    if (limit) {
-      query.limit(limit);
-    }
-
-    const workouts = await query.exec();
+    const workouts = await getWorkouts(limit);
 
     return {
       statusCode: 200,
