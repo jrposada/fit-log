@@ -2,6 +2,7 @@ import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/aut
 import type { ClientSession, MergeType } from 'mongoose';
 import mongoose, { Types } from 'mongoose';
 
+import { deletableBy } from '../auth/deletable-filter.ts';
 import type {
   PopulatedOwnership,
   WithPopulatedOwnership,
@@ -177,9 +178,28 @@ async function removeSectorCollaborator(
   return sector;
 }
 
+async function deleteSector(user: IUser, id: string): Promise<void> {
+  const result = await Sector.deleteOne({ _id: id, ...deletableBy(user) });
+
+  if (result.deletedCount === 0) {
+    throw new ResourceNotFound(`Sector ${id} not found or not deletable`);
+  }
+}
+
+async function batchDeleteSectors(user: IUser, ids: string[]): Promise<number> {
+  const result = await Sector.deleteMany({
+    _id: { $in: ids },
+    ...deletableBy(user),
+  });
+
+  return result.deletedCount || 0;
+}
+
 export {
   addSectorCollaborator,
+  batchDeleteSectors,
   batchUpsertSectors,
+  deleteSector,
   removeSectorCollaborator,
   upsertSector,
 };

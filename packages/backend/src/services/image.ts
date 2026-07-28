@@ -1,5 +1,6 @@
 import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 
+import { deletableBy } from '../auth/deletable-filter.ts';
 import type {
   PopulatedOwnership,
   WithPopulatedOwnership,
@@ -57,5 +58,13 @@ async function removeImageCollaborator(
   return image;
 }
 
-export { addImageCollaborator, removeImageCollaborator };
+async function deleteImage(user: IUser, id: string): Promise<void> {
+  const result = await Image.deleteOne({ _id: id, ...deletableBy(user) });
+
+  if (result.deletedCount === 0) {
+    throw new ResourceNotFound(`Image ${id} not found or not deletable`);
+  }
+}
+
+export { addImageCollaborator, deleteImage, removeImageCollaborator };
 export type { ValidImage };

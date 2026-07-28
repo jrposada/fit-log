@@ -2,6 +2,7 @@ import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/aut
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
+import { deletableBy } from '../auth/deletable-filter.ts';
 import type {
   PopulatedOwnership,
   WithPopulatedOwnership,
@@ -225,8 +226,17 @@ async function removeClimbCollaborator(
   return climb;
 }
 
+async function deleteClimb(user: IUser, id: string): Promise<void> {
+  const result = await Climb.deleteOne({ _id: id, ...deletableBy(user) });
+
+  if (result.deletedCount === 0) {
+    throw new ResourceNotFound(`Climb ${id} not found or not deletable`);
+  }
+}
+
 export {
   addClimbCollaborator,
+  deleteClimb,
   hasRequiredRefs,
   removeClimbCollaborator,
   searchClimbs,

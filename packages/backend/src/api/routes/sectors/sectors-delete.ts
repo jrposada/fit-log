@@ -4,9 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/sectors/sectors-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { deletableBy } from '../../../auth/deletable-filter.ts';
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import { Sector } from '../../../models/sector.ts';
+import { deleteSector } from '../../../services/sector.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 
 const handler = toApiResponse<SectorsDeleteResponse, SectorsDeleteParams>(
@@ -15,14 +13,7 @@ const handler = toApiResponse<SectorsDeleteResponse, SectorsDeleteParams>(
 
     const { id } = request.params;
 
-    const result = await Sector.deleteOne({
-      _id: id,
-      ...deletableBy(request.user),
-    });
-
-    if (result.deletedCount === 0) {
-      throw new ResourceNotFound(`Sector ${id} not found or not deletable`);
-    }
+    await deleteSector(request.user, id);
 
     return {
       statusCode: 200,

@@ -2,6 +2,7 @@ import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/aut
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
+import { deletableBy } from '../auth/deletable-filter.ts';
 import type {
   PopulatedOwnership,
   WithPopulatedOwnership,
@@ -118,5 +119,18 @@ async function removeLocationCollaborator(
   return location;
 }
 
-export { addLocationCollaborator, removeLocationCollaborator, upsertLocation };
+async function deleteLocation(user: IUser, id: string): Promise<void> {
+  const result = await Location.deleteOne({ _id: id, ...deletableBy(user) });
+
+  if (result.deletedCount === 0) {
+    throw new ResourceNotFound(`Location ${id} not found or not deletable`);
+  }
+}
+
+export {
+  addLocationCollaborator,
+  deleteLocation,
+  removeLocationCollaborator,
+  upsertLocation,
+};
 export type { ValidLocation };

@@ -4,8 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/sectors/sectors-batch-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { deletableBy } from '../../../auth/deletable-filter.ts';
-import { Sector } from '../../../models/sector.ts';
+import { batchDeleteSectors } from '../../../services/sector.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 
 const handler = toApiResponse<
@@ -18,17 +17,14 @@ const handler = toApiResponse<
 
   const { ids } = request.body;
 
-  const result = await Sector.deleteMany({
-    _id: { $in: ids },
-    ...deletableBy(request.user),
-  });
+  const deletedCount = await batchDeleteSectors(request.user, ids);
 
   return {
     statusCode: 200,
     body: {
       success: true,
       data: {
-        deletedCount: result.deletedCount || 0,
+        deletedCount,
       },
     },
   };

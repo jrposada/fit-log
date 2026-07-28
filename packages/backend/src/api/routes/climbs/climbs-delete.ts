@@ -4,9 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/climbs/climbs-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { deletableBy } from '../../../auth/deletable-filter.ts';
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import { Climb } from '../../../models/climb.ts';
+import { deleteClimb } from '../../../services/climb.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 
 const handler = toApiResponse<ClimbsDeleteResponse, ClimbsDeleteParams>(
@@ -15,14 +13,7 @@ const handler = toApiResponse<ClimbsDeleteResponse, ClimbsDeleteParams>(
 
     const { id } = request.params;
 
-    const result = await Climb.deleteOne({
-      _id: id,
-      ...deletableBy(request.user),
-    });
-
-    if (result.deletedCount === 0) {
-      throw new ResourceNotFound(`Climb ${id} not found or not deletable`);
-    }
+    await deleteClimb(request.user, id);
 
     return {
       statusCode: 200,

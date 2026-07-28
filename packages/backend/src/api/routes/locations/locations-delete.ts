@@ -4,9 +4,7 @@ import type {
 } from '@jrposada/fit-log-shared/models/locations/locations-delete';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
-import { deletableBy } from '../../../auth/deletable-filter.ts';
-import ResourceNotFound from '../../../infrastructure/not-found-error.ts';
-import { Location } from '../../../models/location.ts';
+import { deleteLocation } from '../../../services/location.ts';
 import { toApiResponse } from '../../infrastructure/api-utils.ts';
 
 const handler = toApiResponse<LocationsDeleteResponse, LocationsDeleteParams>(
@@ -15,14 +13,7 @@ const handler = toApiResponse<LocationsDeleteResponse, LocationsDeleteParams>(
 
     const { id } = request.params;
 
-    const result = await Location.deleteOne({
-      _id: id,
-      ...deletableBy(request.user),
-    });
-
-    if (result.deletedCount === 0) {
-      throw new ResourceNotFound(`Location ${id} not found or not deletable`);
-    }
+    await deleteLocation(request.user, id);
 
     return {
       statusCode: 200,
