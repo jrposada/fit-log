@@ -1,5 +1,7 @@
 import { useFeed } from '@jrposada/fit-log-shared-react/api/feed/use-feed';
 import { useFeedStats } from '@jrposada/fit-log-shared-react/api/feed/use-feed-stats';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -12,6 +14,7 @@ import Screen from '../../library/screen';
 import Section from '../../library/section';
 import Stack from '../../library/stack';
 import { palette, spacing } from '../../library/theme';
+import { RootStackParamList } from '../../types/routes';
 import FeedRow from '../feed/components/feed-row';
 import { SPORT_ICONS } from '../feed/sport-icons';
 import { styles } from './home-screen.styles';
@@ -28,6 +31,8 @@ type HeroCardData = {
 
 const HomeScreen: FunctionComponent = () => {
   const { t } = useTranslation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const { data: stats, isLoading: isStatsLoading } = useFeedStats();
   const { items: recentSessions, isLoading: isFeedLoading } = useFeed({
@@ -94,6 +99,15 @@ const HomeScreen: FunctionComponent = () => {
             }}
           </Measure>
         </LoadingState>
+
+        <IconCard
+          icon="🗺️"
+          color={palette.coral}
+          title={t('home.map_card_title')}
+          subtitle={t('home.map_card_subtitle')}
+          variant="description"
+          onPress={() => navigation.navigate('Map')}
+        />
 
         {stats && stats.bySport.length > 0 && (
           <Section title={t('home.per_sport_title')} noPadding>

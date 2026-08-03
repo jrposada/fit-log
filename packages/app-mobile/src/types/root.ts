@@ -10,6 +10,10 @@ export type RootParamList = {
 export type RootStackParamList = {
   Tabs: undefined;
   Profile: undefined;
+  Map: undefined;
+  LocationDetail: { initialName?: string; locationId?: string } | undefined;
+  MapPointPicker: { latitude?: number; longitude?: number } | undefined;
+  ImagePicker: undefined;
 };
 
 export type ProfileScreenProps = NativeStackScreenProps<
