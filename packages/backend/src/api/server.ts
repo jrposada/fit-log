@@ -5,7 +5,7 @@ import express from 'express';
 
 import type { Lifecycle } from '../infrastructure/lifecycle.ts';
 import { FilesService } from '../services/files.ts';
-import { router } from './router.ts';
+import { router } from './routes/router.ts';
 
 export function createServer(): Lifecycle {
   let server: Server | undefined;
