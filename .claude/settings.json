@@ -1,7 +1,32 @@
 {
   "permissions": {
     "allow": [
-      "Bash(~/.claude/skills/commit/get-status.sh)"
+      "Bash(~/.claude/skills/commit/get-status.sh)",
+
+      "Bash(pnpm --filter @jrposada/fit-log-app-mobile lint:eslint)",
+      "Bash(pnpm --filter @jrposada/fit-log-app-mobile lint:format)",
+      "Bash(pnpm --filter @jrposada/fit-log-app-mobile lint:types)",
+      "Bash(pnpm --filter @jrposada/fit-log-app-mobile lint)",
+
+      "Bash(pnpm --filter @jrposada/fit-log-app-web lint:eslint)",
+      "Bash(pnpm --filter @jrposada/fit-log-app-web lint:format)",
+      "Bash(pnpm --filter @jrposada/fit-log-app-web lint:types)",
+      "Bash(pnpm --filter @jrposada/fit-log-app-web lint)",
+
+      "Bash(pnpm --filter @jrposada/fit-log-backend lint:eslint)",
+      "Bash(pnpm --filter @jrposada/fit-log-backend lint:format)",
+      "Bash(pnpm --filter @jrposada/fit-log-backend lint:types)",
+      "Bash(pnpm --filter @jrposada/fit-log-backend lint)",
+
+      "Bash(pnpm --filter @jrposada/fit-log-shared lint:eslint)",
+      "Bash(pnpm --filter @jrposada/fit-log-shared lint:format)",
+      "Bash(pnpm --filter @jrposada/fit-log-shared lint:types)",
+      "Bash(pnpm --filter @jrposada/fit-log-shared lint)",
+
+      "Bash(pnpm --filter @jrposada/fit-log-shared-react lint:eslint)",
+      "Bash(pnpm --filter @jrposada/fit-log-shared-react lint:format)",
+      "Bash(pnpm --filter @jrposada/fit-log-shared-react lint:types)",
+      "Bash(pnpm --filter @jrposada/fit-log-shared-react lint)"
     ]
   }
 }
