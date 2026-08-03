@@ -5,9 +5,9 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { getFeedStats } from '../../../services/feed-stats.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 
-const handler = toApiResponse<FeedStatsResponse, unknown, FeedStatsQuery>(
+const handler = toRequestHandler<FeedStatsResponse, unknown, FeedStatsQuery>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 

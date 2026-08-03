@@ -5,10 +5,10 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { setClimbHistoryProject } from '../../../services/climb-history.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiClimbHistory } from '../../mappers/climb-histories.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   ClimbHistoryProjectResponse,
   unknown,
   unknown,

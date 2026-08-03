@@ -5,9 +5,9 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { getClimbHistoriesStats } from '../../../services/climb-history.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   ClimbHistoriesStatsResponse,
   unknown,
   ClimbHistoriesStatsQuery

@@ -5,27 +5,28 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { getLocationById } from '../../../services/location.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiLocation } from '../../mappers/locations.ts';
 
-const handler = toApiResponse<LocationsGetByIdResponse, LocationsGetByIdParams>(
-  async (request) => {
-    assert(request.user, { msg: 'Unauthorized' });
+const handler = toRequestHandler<
+  LocationsGetByIdResponse,
+  LocationsGetByIdParams
+>(async (request) => {
+  assert(request.user, { msg: 'Unauthorized' });
 
-    const { id } = request.params;
+  const { id } = request.params;
 
-    const location = await getLocationById(request.user._id, id);
+  const location = await getLocationById(request.user._id, id);
 
-    return {
-      statusCode: 200,
-      body: {
-        success: true,
-        data: {
-          location: toApiLocation(location),
-        },
+  return {
+    statusCode: 200,
+    body: {
+      success: true,
+      data: {
+        location: toApiLocation(location),
       },
-    };
-  }
-);
+    },
+  };
+});
 
 export { handler };

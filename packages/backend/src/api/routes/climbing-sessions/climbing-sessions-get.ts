@@ -7,7 +7,7 @@ import { Types } from 'mongoose';
 
 import type { ClimbingSessionsCursor } from '../../../services/climbing-session.ts';
 import { getClimbingSessions } from '../../../services/climbing-session.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiClimbingSession } from '../../mappers/climbing-sessions.ts';
 
 function decodeCursor(raw: string): ClimbingSessionsCursor | null {
@@ -32,7 +32,7 @@ function encodeCursor(cursor: ClimbingSessionsCursor): string {
   return Buffer.from(JSON.stringify(cursor), 'utf8').toString('base64url');
 }
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   ClimbingSessionsGetResponse,
   unknown,
   ClimbingSessionsGetQuery

@@ -5,10 +5,10 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { upsertLocation } from '../../../services/location.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiLocation } from '../../mappers/locations.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   LocationsPutResponse,
   unknown,
   unknown,

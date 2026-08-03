@@ -7,7 +7,7 @@ import { Types } from 'mongoose';
 
 import type { ClimbHistoriesCursor } from '../../../services/climb-history.ts';
 import { getClimbHistories } from '../../../services/climb-history.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiClimbHistory } from '../../mappers/climb-histories.ts';
 
 function decodeCursor(raw: string): ClimbHistoriesCursor | null {
@@ -32,7 +32,7 @@ function encodeCursor(cursor: ClimbHistoriesCursor): string {
   return Buffer.from(JSON.stringify(cursor), 'utf8').toString('base64url');
 }
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   ClimbHistoriesGetResponse,
   unknown,
   ClimbHistoriesGetQuery

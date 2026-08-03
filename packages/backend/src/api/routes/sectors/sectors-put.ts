@@ -5,10 +5,10 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { upsertSector } from '../../../services/sector.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiSector } from '../../mappers/sectors.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   SectorsPutResponse,
   unknown,
   unknown,

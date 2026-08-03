@@ -1,7 +1,7 @@
 import pkg from '../../../../package.json' with { type: 'json' };
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 
-const handler = toApiResponse(async () => {
+const handler = toRequestHandler(async () => {
   const version = pkg.version;
 
   return {

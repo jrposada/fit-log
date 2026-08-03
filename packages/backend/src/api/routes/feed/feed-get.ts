@@ -7,7 +7,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import type { FeedCursor } from '../../../services/feed.ts';
 import { getFeed } from '../../../services/feed.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 
 function decodeCursor(raw: string): FeedCursor | null {
   try {
@@ -31,7 +31,7 @@ function encodeCursor(cursor: FeedCursor): string {
   return Buffer.from(JSON.stringify(cursor), 'utf8').toString('base64url');
 }
 
-const handler = toApiResponse<FeedGetResponse, unknown, FeedGetQuery>(
+const handler = toRequestHandler<FeedGetResponse, unknown, FeedGetQuery>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 

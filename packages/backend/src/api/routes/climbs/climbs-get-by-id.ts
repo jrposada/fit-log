@@ -5,10 +5,10 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { getClimbById } from '../../../services/climb.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiClimb } from '../../mappers/climbs.ts';
 
-const handler = toApiResponse<ClimbsGetByIdResponse, ClimbsGetByIdParams>(
+const handler = toRequestHandler<ClimbsGetByIdResponse, ClimbsGetByIdParams>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 

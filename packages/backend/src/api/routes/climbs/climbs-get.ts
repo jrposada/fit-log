@@ -7,7 +7,7 @@ import { Types } from 'mongoose';
 
 import type { ClimbsCursor } from '../../../services/climb.ts';
 import { getClimbs } from '../../../services/climb.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiClimb } from '../../mappers/climbs.ts';
 
 function decodeCursor(raw: string): ClimbsCursor | null {
@@ -32,7 +32,7 @@ function encodeCursor(cursor: ClimbsCursor): string {
   return Buffer.from(JSON.stringify(cursor), 'utf8').toString('base64url');
 }
 
-const handler = toApiResponse<ClimbsGetResponse, unknown, ClimbsGetQuery>(
+const handler = toRequestHandler<ClimbsGetResponse, unknown, ClimbsGetQuery>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 

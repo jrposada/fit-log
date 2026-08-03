@@ -5,10 +5,10 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { upsertClimbingSession } from '../../../services/climbing-session.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiClimbingSession } from '../../mappers/climbing-sessions.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   ClimbingSessionsPutResponse,
   unknown,
   unknown,

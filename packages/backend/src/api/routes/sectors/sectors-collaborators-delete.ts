@@ -3,10 +3,10 @@ import type { SectorsCollaboratorsResponse } from '@jrposada/fit-log-shared/mode
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { removeSectorCollaborator } from '../../../services/sector.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiSector } from '../../mappers/sectors.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   SectorsCollaboratorsResponse,
   CollaboratorDeleteParams
 >(async (request) => {

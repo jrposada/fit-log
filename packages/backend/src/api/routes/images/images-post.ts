@@ -5,10 +5,10 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { createImage } from '../../../services/image.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiImage } from '../../mappers/images.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   ImagesPostResponse,
   unknown,
   unknown,

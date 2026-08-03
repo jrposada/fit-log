@@ -6,10 +6,10 @@ import type { ImagesCollaboratorsResponse } from '@jrposada/fit-log-shared/model
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { addImageCollaborator } from '../../../services/image.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiImage } from '../../mappers/images.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   ImagesCollaboratorsResponse,
   CollaboratorPutParams,
   unknown,

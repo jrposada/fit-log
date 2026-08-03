@@ -6,10 +6,10 @@ import type { ClimbsCollaboratorsResponse } from '@jrposada/fit-log-shared/model
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { addClimbCollaborator } from '../../../services/climb.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiClimb } from '../../mappers/climbs.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   ClimbsCollaboratorsResponse,
   CollaboratorPutParams,
   unknown,

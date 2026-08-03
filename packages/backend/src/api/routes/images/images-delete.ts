@@ -5,9 +5,9 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { deleteImage } from '../../../services/image.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 
-const handler = toApiResponse<ImagesDeleteResponse, ImagesDeleteParams>(
+const handler = toRequestHandler<ImagesDeleteResponse, ImagesDeleteParams>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 

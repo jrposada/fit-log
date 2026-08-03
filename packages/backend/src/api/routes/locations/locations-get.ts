@@ -7,7 +7,7 @@ import { Types } from 'mongoose';
 
 import type { LocationsCursor } from '../../../services/location.ts';
 import { getLocations } from '../../../services/location.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiLocation } from '../../mappers/locations.ts';
 
 function decodeCursor(raw: string): LocationsCursor | null {
@@ -32,28 +32,30 @@ function encodeCursor(cursor: LocationsCursor): string {
   return Buffer.from(JSON.stringify(cursor), 'utf8').toString('base64url');
 }
 
-const handler = toApiResponse<LocationsGetResponse, unknown, LocationsGetQuery>(
-  async (request) => {
-    assert(request.user, { msg: 'Unauthorized' });
+const handler = toRequestHandler<
+  LocationsGetResponse,
+  unknown,
+  LocationsGetQuery
+>(async (request) => {
+  assert(request.user, { msg: 'Unauthorized' });
 
-    const { cursor, ...filters } = request.query;
+  const { cursor, ...filters } = request.query;
 
-    const { locations, nextCursor } = await getLocations(request.user._id, {
-      ...filters,
-      cursor: cursor ? decodeCursor(cursor) : null,
-    });
+  const { locations, nextCursor } = await getLocations(request.user._id, {
+    ...filters,
+    cursor: cursor ? decodeCursor(cursor) : null,
+  });
 
-    return {
-      statusCode: 200,
-      body: {
-        success: true,
-        data: {
-          locations: locations.map(toApiLocation),
-          nextCursor: nextCursor ? encodeCursor(nextCursor) : null,
-        },
+  return {
+    statusCode: 200,
+    body: {
+      success: true,
+      data: {
+        locations: locations.map(toApiLocation),
+        nextCursor: nextCursor ? encodeCursor(nextCursor) : null,
       },
-    };
-  }
-);
+    },
+  };
+});
 
 export { handler };

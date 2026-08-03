@@ -6,10 +6,10 @@ import type { LocationsCollaboratorsResponse } from '@jrposada/fit-log-shared/mo
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { addLocationCollaborator } from '../../../services/location.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiLocation } from '../../mappers/locations.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   LocationsCollaboratorsResponse,
   CollaboratorPutParams,
   unknown,

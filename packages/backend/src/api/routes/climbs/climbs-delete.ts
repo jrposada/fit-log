@@ -5,9 +5,9 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { deleteClimb } from '../../../services/climb.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 
-const handler = toApiResponse<ClimbsDeleteResponse, ClimbsDeleteParams>(
+const handler = toRequestHandler<ClimbsDeleteResponse, ClimbsDeleteParams>(
   async (request) => {
     assert(request.user, { msg: 'Unauthorized' });
 

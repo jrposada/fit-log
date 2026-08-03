@@ -5,10 +5,10 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { upsertWorkout } from '../../../services/workout.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 import { toApiWorkout } from '../../mappers/workouts.ts';
 
-const handler = toApiResponse<
+const handler = toRequestHandler<
   WorkoutsPutResponse,
   unknown,
   unknown,

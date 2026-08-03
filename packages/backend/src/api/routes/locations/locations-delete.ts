@@ -5,24 +5,25 @@ import type {
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { deleteLocation } from '../../../services/location.ts';
-import { toApiResponse } from '../../infrastructure/api-utils.ts';
+import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
 
-const handler = toApiResponse<LocationsDeleteResponse, LocationsDeleteParams>(
-  async (request) => {
-    assert(request.user, { msg: 'Unauthorized' });
+const handler = toRequestHandler<
+  LocationsDeleteResponse,
+  LocationsDeleteParams
+>(async (request) => {
+  assert(request.user, { msg: 'Unauthorized' });
 
-    const { id } = request.params;
+  const { id } = request.params;
 
-    await deleteLocation(request.user, id);
+  await deleteLocation(request.user, id);
 
-    return {
-      statusCode: 200,
-      body: {
-        success: true,
-        data: undefined,
-      },
-    };
-  }
-);
+  return {
+    statusCode: 200,
+    body: {
+      success: true,
+      data: undefined,
+    },
+  };
+});
 
 export { handler };
