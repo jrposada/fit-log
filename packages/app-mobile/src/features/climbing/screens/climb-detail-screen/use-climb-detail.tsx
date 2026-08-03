@@ -472,14 +472,14 @@ const useClimbDetail = () => {
   }, [watchedHolds, watchedSpline, navigation, t]);
 
   const handleLogSend = async () => {
-    const climbingSession = await ensureActiveClimbingSession();
+    const trainingSession = await ensureActiveClimbingSession();
     climbHistoriesPut.mutate({
       climb: climbId!,
       location: climb!.location.id,
       sector: climb!.sector.id,
       status: 'send',
       attempts: 1,
-      climbingSession,
+      trainingSession,
     });
   };
 

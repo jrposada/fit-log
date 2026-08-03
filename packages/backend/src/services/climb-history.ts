@@ -36,7 +36,7 @@ type ValidClimbHistory = MergeType<
     climb: WithRequiredRefs<IClimb, ClimbRequiredRefs>;
     location: ILocation;
     sector: MergeType<ISector, { images: IImage[] }>;
-    climbingSession: ITrainingSession | null;
+    trainingSession: ITrainingSession | null;
   }
 >;
 
@@ -80,7 +80,7 @@ async function getValidClimbHistory(
       path: 'sector',
       populate: ['images'],
     })
-    .populate<{ climbingSession: ITrainingSession | null }>('climbingSession');
+    .populate<{ trainingSession: ITrainingSession | null }>('trainingSession');
 
   assert(populated, { msg: 'ClimbHistory not found after save' });
   if (!hasValidRefs(populated)) {
@@ -101,7 +101,7 @@ type GetClimbHistoriesOptions = {
   climbId?: string;
   locationId?: string;
   sectorId?: string;
-  climbingSession?: string;
+  trainingSession?: string;
   status?: ClimbHistoriesGetQueryStatus[];
   startDate?: string;
   endDate?: string;
@@ -120,7 +120,7 @@ async function getClimbHistories(
     climbId,
     locationId,
     sectorId,
-    climbingSession,
+    trainingSession,
     status,
     startDate,
     endDate,
@@ -135,7 +135,7 @@ async function getClimbHistories(
     ...(climbId ? { climb: climbId } : {}),
     ...(locationId ? { location: locationId } : {}),
     ...(sectorId ? { sector: sectorId } : {}),
-    ...(climbingSession ? { climbingSession } : {}),
+    ...(trainingSession ? { trainingSession } : {}),
     ...(startDate || endDate
       ? {
           updatedAt: {
@@ -190,7 +190,7 @@ async function getClimbHistories(
       path: 'sector',
       populate: ['images'],
     })
-    .populate<{ climbingSession: ITrainingSession | null }>('climbingSession');
+    .populate<{ trainingSession: ITrainingSession | null }>('trainingSession');
 
   const hasMore = climbHistories.length > pageSize;
   const pageHistories = hasMore
@@ -226,7 +226,7 @@ async function getClimbHistoryById(
       path: 'sector',
       populate: ['images'],
     })
-    .populate<{ climbingSession: ITrainingSession | null }>('climbingSession');
+    .populate<{ trainingSession: ITrainingSession | null }>('trainingSession');
 
   if (!climbHistory || !hasValidRefs(climbHistory)) {
     throw new ResourceNotFound(`ClimbHistory with id ${id} not found`);
@@ -501,7 +501,7 @@ type UpsertClimbHistoryTryInput = {
   climb: string;
   location: string;
   sector: string;
-  climbingSession?: string;
+  trainingSession?: string;
 
   forced?: boolean;
 };
@@ -519,12 +519,12 @@ async function upsertClimbHistoryTry(
     climb,
     location,
     sector,
-    climbingSession,
+    trainingSession,
     forced,
   } = input;
 
-  if (!tryId && !climbingSession && !forced) {
-    throw new RelatedEntityRequiredError('climbingSession', true);
+  if (!tryId && !trainingSession && !forced) {
+    throw new RelatedEntityRequiredError('trainingSession', true);
   }
 
   const newTry: Partial<IClimbHistoryTry> = {
@@ -568,8 +568,8 @@ async function upsertClimbHistoryTry(
           location: new Types.ObjectId(location),
           sector: new Types.ObjectId(sector),
           owner,
-          climbingSession: climbingSession
-            ? new Types.ObjectId(climbingSession)
+          trainingSession: trainingSession
+            ? new Types.ObjectId(trainingSession)
             : null,
         },
       },
@@ -582,8 +582,8 @@ async function upsertClimbHistoryTry(
 
   const populated = await getValidClimbHistory(climbHistory._id);
 
-  if (populated.climbingSession) {
-    await recomputeTrainingSessionSummary(populated.climbingSession._id);
+  if (populated.trainingSession) {
+    await recomputeTrainingSessionSummary(populated.trainingSession._id);
   }
 
   return populated;
@@ -653,7 +653,7 @@ async function deleteClimbHistory(
     const climbHistory = await ClimbHistory.findOne({ _id: id, owner });
     assert(climbHistory, { msg: 'ClimbHistory not found' });
 
-    affectedSessionId = climbHistory.climbingSession?.toString() ?? null;
+    affectedSessionId = climbHistory.trainingSession?.toString() ?? null;
 
     climbHistory.tries.pull({ _id: tryId });
 
@@ -668,7 +668,7 @@ async function deleteClimbHistory(
       _id: id,
       owner,
     });
-    affectedSessionId = climbHistory?.climbingSession?.toString() ?? null;
+    affectedSessionId = climbHistory?.trainingSession?.toString() ?? null;
   }
 
   if (affectedSessionId) {

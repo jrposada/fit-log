@@ -14,7 +14,7 @@ export type ClimbHistoriesGetQuery = {
   climbId?: string;
   locationId?: string;
   sectorId?: string;
-  climbingSession?: string;
+  trainingSession?: string;
   status?: ClimbHistoriesGetQueryStatus[];
   startDate?: string;
   endDate?: string;
@@ -26,7 +26,7 @@ export const climbHistoriesGetQuerySchema = z.object({
   climbId: z.string().optional(),
   locationId: z.string().optional(),
   sectorId: z.string().optional(),
-  climbingSession: z.string().optional(),
+  trainingSession: z.string().optional(),
   status: z
     .union([
       z.enum(CLIMB_HISTORY_QUERY_STATUSES),

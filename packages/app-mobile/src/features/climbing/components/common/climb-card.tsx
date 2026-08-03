@@ -69,14 +69,14 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
   };
 
   const handleLog = useCallback(async () => {
-    const climbingSession = await ensureActiveClimbingSession();
+    const trainingSession = await ensureActiveClimbingSession();
     climbHistoriesPut.mutate({
       climb: climb.id,
       location: location.id,
       sector: sector.id,
       status: 'send',
       attempts: 1,
-      climbingSession,
+      trainingSession,
     });
   }, [
     climb.id,

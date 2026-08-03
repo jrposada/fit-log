@@ -27,20 +27,23 @@ export interface IClimbHistory extends WithTimestamps<Document> {
   /* Ownership */
   owner: Types.ObjectId;
 
-  /* References – nullable after population if the referenced doc was deleted */
+  /* References */
   climb: Types.ObjectId | null;
   location: Types.ObjectId | null;
   sector: Types.ObjectId | null;
-  /** Optional link to the session it was logged in; null when logged standalone. */
-  climbingSession: Types.ObjectId | null;
+  trainingSession: Types.ObjectId | null;
 }
 
-/**
- * Refs a climb-history can never be without: `climb`/`location`/`sector` are
- * mandatory, while `climbingSession` is optional (a history may be logged
- * without a training session).
- */
-export type ClimbHistoryRequiredRefs = 'climb' | 'location' | 'sector';
+export type ClimbHistoryRefs =
+  | 'climb'
+  | 'location'
+  | 'sector'
+  | 'trainingSession';
+
+export type ClimbHistoryRequiredRefs = Exclude<
+  ClimbHistoryRefs,
+  'trainingSession'
+>;
 
 export function computeTopStatus(
   tries: { status: ClimbHistoryStatus }[]
@@ -121,7 +124,7 @@ const climbHistorySchema = new Schema<IClimbHistory>(
       ref: 'Sector',
       required: true,
     },
-    climbingSession: {
+    trainingSession: {
       type: Schema.Types.ObjectId,
       ref: 'TrainingSession',
       required: false,

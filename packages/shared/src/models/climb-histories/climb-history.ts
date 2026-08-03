@@ -40,7 +40,7 @@ export type ClimbHistory = WithTimestamps<{
   sector: Omit<WithDepopulatedOwnership<Sector>, 'climbs'> & {
     climbs: string[];
   };
-  climbingSession:
+  trainingSession:
     | (Omit<TrainingSession, 'location' | 'climbHistories'> & {
         location?: string;
         climbHistories: string[];

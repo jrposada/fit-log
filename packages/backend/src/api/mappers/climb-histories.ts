@@ -1,7 +1,9 @@
 import type { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
 
+import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
 import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
 import type {
+  ClimbHistoryRefs,
   ClimbHistoryRequiredRefs,
   IClimbHistory,
 } from '../../data/models/climb-history.ts';
@@ -13,11 +15,7 @@ import { toApiDepopulatedTrainingSession } from './training-sessions.ts';
 
 function toApiDepopulatedClimbHistory(
   model: WithRequiredRefs<IClimbHistory, ClimbHistoryRequiredRefs>
-): Omit<ClimbHistory, 'climb' | 'location' | 'sector' | 'climbingSession'> & {
-  climb: string;
-  location: string;
-  sector: string;
-} {
+): WithDepopulatedRefs<ClimbHistory, ClimbHistoryRefs> {
   return {
     /* Data */
     id: model._id.toString(),
@@ -38,6 +36,9 @@ function toApiDepopulatedClimbHistory(
     climb: model.climb.toString(),
     location: model.location.toString(),
     sector: model.sector.toString(),
+    trainingSession: model.trainingSession
+      ? model.trainingSession.toString()
+      : null,
 
     /* Timestamps */
     createdAt: model.createdAt.toISOString(),
@@ -66,8 +67,8 @@ function toApiClimbHistory(model: ValidClimbHistory): ClimbHistory {
     climb: toApiDepopulatedClimb(model.climb),
     location: toApiDepopulatedLocation(model.location),
     sector: toApiDepopulatedSector(model.sector),
-    climbingSession: model.climbingSession
-      ? toApiDepopulatedTrainingSession(model.climbingSession)
+    trainingSession: model.trainingSession
+      ? toApiDepopulatedTrainingSession(model.trainingSession)
       : null,
 
     /* Timestamps */

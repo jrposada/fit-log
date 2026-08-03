@@ -231,7 +231,7 @@ async function recomputeTrainingSessionSummary(
   sessionId: Types.ObjectId | string
 ): Promise<void> {
   const histories = await ClimbHistory.find({
-    climbingSession: sessionId,
+    trainingSession: sessionId,
   }).populate<{ climb: IClimb | null }>('climb');
 
   const summary = computeTrainingSessionSummary(histories);

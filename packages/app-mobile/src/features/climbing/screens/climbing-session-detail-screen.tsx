@@ -38,7 +38,7 @@ const ClimbingSessionDetailScreen: FunctionComponent = () => {
   const { data: session, isLoading: isLoadingSession } =
     useTrainingSessionsById({ id: sessionId });
   const { items: climbHistories, isLoading: isLoadingHistories } =
-    useClimbHistories({ climbingSession: sessionId, limit: 50 });
+    useClimbHistories({ trainingSession: sessionId, limit: 50 });
 
   const climbHistoriesBySector = useMemo(() => {
     const grouped = new Map<
