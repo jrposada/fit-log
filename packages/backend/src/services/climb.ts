@@ -12,27 +12,31 @@ import { removeCollaborator } from '../data/infrastructure/remove-collaborator.t
 import { upsertCollaborator } from '../data/infrastructure/upsert-collaborator.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
 import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
-import type { IClimb } from '../data/models/climb.ts';
+import type { ClimbRequiredRefs, IClimb } from '../data/models/climb.ts';
 import { Climb } from '../data/models/climb.ts';
 import type { ClimbHistoryStatus } from '../data/models/climb-history.ts';
 import { ClimbHistory } from '../data/models/climb-history.ts';
 import type { IImage } from '../data/models/image.ts';
 import type { ILocation } from '../data/models/location.ts';
+import type { IModel3d } from '../data/models/model-3d.ts';
 import type { ISector } from '../data/models/sector.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
 
-function hasRequiredRefs(model: IClimb): model is WithRequiredRefs<IClimb> {
-  return model.image != null && model.location != null && model.sector != null;
+function hasRequiredRefs(
+  model: IClimb
+): model is WithRequiredRefs<IClimb, ClimbRequiredRefs> {
+  return model.location != null && model.sector != null;
 }
 
 /** Fully populated climb, as returned to API mappers. */
 type ValidClimb = MergeType<
   WithPopulatedOwnership<IClimb>,
   {
-    image: IImage;
+    image: IImage | null;
     location: ILocation;
     sector: MergeType<ISector, { images: IImage[] }>;
+    model3d: IModel3d | null;
   }
 >;
 
@@ -68,9 +72,10 @@ function findClimbsQuery(options: FindClimbsOptions) {
   })
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
-      image: IImage;
+      image: IImage | null;
       location: ILocation;
-    }>(['image', 'location'])
+      model3d: IModel3d | null;
+    }>(['image', 'location', 'model3d'])
     .populate<{
       sector: MergeType<ISector, { images: IImage[] }>;
     }>({
@@ -132,9 +137,10 @@ async function getClimbs(
     .limit(pageSize + 1)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
-      image: IImage;
+      image: IImage | null;
       location: ILocation;
-    }>(['image', 'location'])
+      model3d: IModel3d | null;
+    }>(['image', 'location', 'model3d'])
     .populate<{
       sector: MergeType<ISector, { images: IImage[] }>;
     }>({
@@ -158,9 +164,10 @@ async function getClimbById(id: string): Promise<ValidClimb> {
   const climb = await Climb.findById(id)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
-      image: IImage;
+      image: IImage | null;
       location: ILocation;
-    }>(['image', 'location'])
+      model3d: IModel3d | null;
+    }>(['image', 'location', 'model3d'])
     .populate<{
       sector: MergeType<ISector, { images: IImage[] }>;
     }>({
@@ -228,9 +235,10 @@ type UpsertClimbInput = {
   holds: IClimb['holds'];
   spline: IClimb['spline'];
 
-  image: string;
+  image?: string | null;
   sector: string;
   location: string;
+  model3d?: string | null;
 };
 
 async function upsertClimb(
@@ -246,15 +254,17 @@ async function upsertClimb(
     spline: input.spline,
 
     /* References */
-    image: new Types.ObjectId(input.image),
+    image: input.image ? new Types.ObjectId(input.image) : null,
     sector: new Types.ObjectId(input.sector),
     location: new Types.ObjectId(input.location),
+    model3d: input.model3d ? new Types.ObjectId(input.model3d) : null,
   })
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
-      image: IImage;
+      image: IImage | null;
       location: ILocation;
-    }>(['image', 'location'])
+      model3d: IModel3d | null;
+    }>(['image', 'location', 'model3d'])
     .populate<{
       sector: MergeType<ISector, { images: IImage[] }>;
     }>({
@@ -279,7 +289,11 @@ async function addClimbCollaborator(
 ): Promise<ValidClimb> {
   const climb = await upsertCollaborator(Climb, id, granteeId, permission, user)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ image: IImage; location: ILocation }>(['image', 'location'])
+    .populate<{
+      image: IImage | null;
+      location: ILocation;
+      model3d: IModel3d | null;
+    }>(['image', 'location', 'model3d'])
     .populate<{ sector: MergeType<ISector, { images: IImage[] }> }>({
       path: 'sector',
       populate: ['images'],
@@ -299,7 +313,11 @@ async function removeClimbCollaborator(
 ): Promise<ValidClimb> {
   const climb = await removeCollaborator(Climb, id, granteeId, user)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ image: IImage; location: ILocation }>(['image', 'location'])
+    .populate<{
+      image: IImage | null;
+      location: ILocation;
+      model3d: IModel3d | null;
+    }>(['image', 'location', 'model3d'])
     .populate<{ sector: MergeType<ISector, { images: IImage[] }> }>({
       path: 'sector',
       populate: ['images'],

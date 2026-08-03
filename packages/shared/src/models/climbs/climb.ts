@@ -6,6 +6,7 @@ import {
 } from '../auth/with-ownership.ts';
 import { Image } from '../images/image.ts';
 import { Location } from '../locations/location.ts';
+import { Model3d } from '../model-3d/model-3d.ts';
 import { Sector } from '../sectors/sector.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
 
@@ -32,12 +33,13 @@ export type Climb = WithOwnership<
     spline: SplinePoint[];
 
     /* References */
-    image: WithDepopulatedOwnership<Image>;
+    image: WithDepopulatedOwnership<Image> | null;
     location: Omit<WithDepopulatedOwnership<Location>, 'sectors'> & {
       sectors: string[];
     };
     sector: Omit<WithDepopulatedOwnership<Sector>, 'climbs'> & {
       climbs: string[];
     };
+    model3d: WithDepopulatedOwnership<Model3d> | null;
   }>
 >;

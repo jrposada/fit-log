@@ -32,7 +32,15 @@ export interface IClimb extends WithTimestamps<Document>, WithOwnership {
   image: Types.ObjectId | null;
   location: Types.ObjectId | null;
   sector: Types.ObjectId | null;
+  model3d: Types.ObjectId | null;
 }
+
+/**
+ * Refs a climb can never be without: `location`/`sector` are mandatory,
+ * while `image`/`model3d` are optional (a climb needs at least one of the
+ * two, enforced at the API boundary, but neither is guaranteed here).
+ */
+export type ClimbRequiredRefs = 'location' | 'sector';
 
 const holdSchema = new Schema<IHold>(
   {
@@ -113,7 +121,8 @@ const climbSchema = new Schema<IClimb>(
     image: {
       type: Schema.Types.ObjectId,
       ref: 'Image',
-      required: true,
+      required: false,
+      default: null,
     },
     location: {
       type: Schema.Types.ObjectId,
@@ -124,6 +133,12 @@ const climbSchema = new Schema<IClimb>(
       type: Schema.Types.ObjectId,
       ref: 'Sector',
       required: true,
+    },
+    model3d: {
+      type: Schema.Types.ObjectId,
+      ref: 'Model3d',
+      required: false,
+      default: null,
     },
   },
   {

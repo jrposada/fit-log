@@ -22,11 +22,12 @@ export type Sector = WithOwnership<
     images: WithDepopulatedOwnership<Image>[];
     climbs: (Omit<
       WithDepopulatedOwnership<Climb>,
-      'image' | 'location' | 'sector'
+      'image' | 'location' | 'sector' | 'model3d'
     > & {
-      image: string;
+      image: string | null;
       location: string;
       sector: string;
+      model3d: string | null;
     })[];
   }>
 >;

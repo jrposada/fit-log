@@ -133,7 +133,7 @@ const useClimbDetail = () => {
         description: climb.description ?? '',
         holds: climb.holds,
         spline: climb.spline ?? [],
-        image: climb.image.id,
+        image: climb.image?.id ?? '',
         location: climb.location.id,
         sector: climb.sector.id,
       });
@@ -351,7 +351,7 @@ const useClimbDetail = () => {
         description: climb.description ?? '',
         holds: climb.holds,
         spline: climb.spline ?? [],
-        image: climb.image.id,
+        image: climb.image?.id ?? '',
         location: climb.location.id,
         sector: climb.sector.id,
       });

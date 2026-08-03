@@ -23,27 +23,35 @@ export type ClimbsPutRequest = Omit<
   | 'image'
   | 'location'
   | 'sector'
+  | 'model3d'
   | 'owner'
   | 'collaborators'
 > & {
   id?: string;
 
-  image: string;
+  image?: string | null;
   location: string;
   sector: string;
+  model3d?: string | null;
 };
-export const climbsPutRequestSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().nonempty(),
-  grade: z.string().nonempty(),
-  description: z.string().optional(),
-  holds: z.array(holdSchema),
-  spline: z.array(splinePointSchema),
+export const climbsPutRequestSchema = z
+  .object({
+    id: z.string().optional(),
+    name: z.string().nonempty(),
+    grade: z.string().nonempty(),
+    description: z.string().optional(),
+    holds: z.array(holdSchema),
+    spline: z.array(splinePointSchema),
 
-  image: z.string().nonempty(),
-  location: z.string().nonempty(),
-  sector: z.string().nonempty(),
-});
+    image: z.string().nonempty().nullable().optional(),
+    location: z.string().nonempty(),
+    sector: z.string().nonempty(),
+    model3d: z.string().nonempty().nullable().optional(),
+  })
+  .refine((data) => Boolean(data.image) || Boolean(data.model3d), {
+    message: 'A climb requires either an image or a 3D model',
+    path: ['image'],
+  });
 
 export type ClimbsPutResponse = {
   climb: Climb;
