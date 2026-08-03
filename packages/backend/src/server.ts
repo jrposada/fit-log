@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 
 import { router } from './api/router.ts';
-import { connectToDatabase, disconnectFromDatabase } from './database.ts';
+import { connectToDatabase, disconnectFromDatabase } from './data/database.ts';
 import { FilesService } from './services/files.ts';
 
 dotenv.config();
