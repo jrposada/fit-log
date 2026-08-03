@@ -1,29 +1,14 @@
 import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { Image } from '@jrposada/fit-log-shared/models/images/image';
-import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
 import type { IImage } from '../../data/models/image.ts';
+import { resolveFileUrl } from '../infrastructure/resolve-file-url.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
 } from './collaborators.ts';
 import { toApiUserSummary } from './user-summary.ts';
-
-function resolveFileUrl(relativePath: string): string {
-  if (
-    relativePath.startsWith('http://') ||
-    relativePath.startsWith('https://')
-  ) {
-    return relativePath;
-  }
-
-  assert(process.env.PUBLIC_FILES_BASE_URL, {
-    msg: 'PUBLIC_FILES_BASE_URL environment variable is not set',
-  });
-
-  return `${process.env.PUBLIC_FILES_BASE_URL}/${relativePath}`;
-}
 
 function toApiDepopulatedImage(model: IImage): WithDepopulatedOwnership<Image> {
   return {
