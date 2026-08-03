@@ -29,16 +29,17 @@ import z from 'zod';
 
 import { ImagePickerEvents } from '../../../../library/image-picker';
 import { useToast } from '../../../../library/toast';
+import { RootStackParamList } from '../../../../types/routes';
 import { Selection } from '../../components/climb-detail/climb-image/climb-image';
-import { ClimbingParamList } from '../../types';
+import { useActiveClimbingSession } from '../../hooks/use-active-climbing-session';
 import ClimbDetailHeader from './use-climb-detail-header';
 
 export type ClimbDetailNavigationProp = NativeStackNavigationProp<
-  ClimbingParamList,
+  RootStackParamList,
   'ClimbDetail'
 >;
 
-export type ClimbDetailRouteProp = RouteProp<ClimbingParamList, 'ClimbDetail'>;
+export type ClimbDetailRouteProp = RouteProp<RootStackParamList, 'ClimbDetail'>;
 
 type FormData = z.infer<typeof climbsPutRequestSchema>;
 
@@ -85,6 +86,7 @@ const useClimbDetail = () => {
 
   const climbHistoriesPut = useClimbHistoriesPut();
   const climbHistoryProject = useClimbHistoryProject();
+  const { ensureActiveClimbingSession } = useActiveClimbingSession();
 
   const sectors = useMemo(() => location?.sectors ?? [], [location]);
 
@@ -469,13 +471,15 @@ const useClimbDetail = () => {
     );
   }, [watchedHolds, watchedSpline, navigation, t]);
 
-  const handleLogSend = () => {
+  const handleLogSend = async () => {
+    const climbingSession = await ensureActiveClimbingSession();
     climbHistoriesPut.mutate({
       climb: climbId!,
       location: climb!.location.id,
       sector: climb!.sector.id,
       status: 'send',
       attempts: 1,
+      climbingSession,
     });
   };
 

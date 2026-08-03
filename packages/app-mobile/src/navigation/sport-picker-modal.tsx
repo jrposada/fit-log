@@ -1,4 +1,6 @@
 import { Sport, SPORTS } from '@jrposada/fit-log-shared/common/sports/sports';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native';
@@ -8,6 +10,7 @@ import Modal from '../library/modal';
 import Stack from '../library/stack';
 import { useToast } from '../library/toast';
 import { Typography } from '../library/typography';
+import { RootStackParamList } from '../types/routes';
 
 interface SportPickerModalProps {
   visible: boolean;
@@ -15,9 +18,9 @@ interface SportPickerModalProps {
 }
 
 /**
- * Lists the sports a session can be logged for. Selecting one is a no-op
- * placeholder for now — wiring each sport's real logging flow is the
- * climbing-port ticket's job; this shell just needs to exist and be additive.
+ * Lists the sports a session can be logged for. Sports without a wired
+ * logging flow yet fall back to a "coming soon" toast — additive as new
+ * sport packages land their own FAB destination.
  */
 const SportPickerModal: FunctionComponent<SportPickerModalProps> = ({
   visible,
@@ -25,11 +28,22 @@ const SportPickerModal: FunctionComponent<SportPickerModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const toast = useToast();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const handleSelect = (sport: Sport) => {
     onClose();
+    if (sport === 'climbing') {
+      navigation.navigate('ClimbLog');
+      return;
+    }
+    // `Sport` narrows to `never` here today (only 'climbing' exists), which
+    // breaks the i18next key check on the template literal below — cast back
+    // to keep this branch typechecking as new sports are added.
     toast.show(
-      t('nav.sport_flow_coming_soon', { sport: t(`${sport}.title`) }),
+      t('nav.sport_flow_coming_soon', {
+        sport: t(`${sport as Sport}.title`),
+      }),
       'success'
     );
   };

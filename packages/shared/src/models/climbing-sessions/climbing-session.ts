@@ -3,6 +3,10 @@ import { ClimbHistory } from '../climb-histories/climb-history.ts';
 import { Location } from '../locations/location.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
 
+/** A session with no activity for this long is considered stale — the next
+ * write starts a fresh session rather than resuming it. */
+export const SESSION_STALE_MS = 4 * 60 * 60 * 1000;
+
 export type ClimbingSession = WithTimestamps<{
   /* Data */
   id: string;

@@ -1,5 +1,7 @@
 import { SPORTS } from '@jrposada/fit-log-shared/common/sports/sports';
 import { useFeed } from '@jrposada/fit-log-shared-react/api/feed/use-feed';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
@@ -12,13 +14,17 @@ import Screen from '../../library/screen';
 import Section from '../../library/section';
 import Tabs, { TabBarItem } from '../../library/tabs';
 import { spacing } from '../../library/theme';
+import { RootStackParamList } from '../../types/routes';
 import FeedRow from '../feed/components/feed-row';
+import { navigateToSessionDetail } from '../feed/navigate-to-session-detail';
 import { SportFilter } from '../feed/sport-filter-context';
 import { useSportFilter } from '../feed/use-sport-filter';
 
 const HistoryScreen: FunctionComponent = () => {
   const { t } = useTranslation();
   const { sportFilter, setSportFilter } = useSportFilter();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const {
     items: sessions,
@@ -54,7 +60,11 @@ const HistoryScreen: FunctionComponent = () => {
           ) : (
             <>
               {sessions.map((session) => (
-                <FeedRow key={session.id} session={session} />
+                <FeedRow
+                  key={session.id}
+                  session={session}
+                  onPress={(s) => navigateToSessionDetail(navigation, s)}
+                />
               ))}
               {hasNextPage && (
                 <View style={{ paddingTop: spacing.sm }}>

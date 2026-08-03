@@ -12,6 +12,9 @@ export type RootStackParamList = {
   Profile: undefined;
   Map: undefined;
   LocationDetail: { initialName?: string; locationId?: string } | undefined;
+  ClimbDetail: { climbId?: string; locationId?: string };
+  ClimbLog: undefined;
+  ClimbingSessionDetail: { sessionId: string };
   MapPointPicker: { latitude?: number; longitude?: number } | undefined;
   ImagePicker: undefined;
 };
