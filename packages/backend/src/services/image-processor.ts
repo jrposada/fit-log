@@ -14,6 +14,13 @@ export interface ProcessedImage {
   thumbnailPath: string;
 }
 
+const EXTENSION_MAP: Record<string, string> = {
+  'image/jpeg': '.jpeg',
+  'image/jpg': '.jpg',
+  'image/png': '.png',
+  'image/webp': '.webp',
+};
+
 export class ImageProcessor {
   private fullImagesDir: string;
   private thumbnailsDir: string;
@@ -55,14 +62,7 @@ export class ImageProcessor {
   ): Promise<ProcessedImage> {
     await this.ensureDirectories();
 
-    // Get file extension from mime type
-    const extensionMap: Record<string, string> = {
-      'image/jpeg': '.jpeg',
-      'image/jpg': '.jpg',
-      'image/png': '.png',
-      'image/webp': '.webp',
-    };
-    const extension = extensionMap[mimeType] || '.jpg';
+    const extension = EXTENSION_MAP[mimeType] || '.jpg';
 
     // Generate unique file ID
     const fileId = uuid();
