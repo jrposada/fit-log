@@ -55,7 +55,7 @@ export interface WithSessionBase {
   /* Ownership */
   owner: Types.ObjectId;
 
-  /* References – nullable after population if the referenced doc was deleted */
+  /* References */
   location: Types.ObjectId | null;
 }
 

@@ -19,7 +19,7 @@ export interface ITrainingSession
   sport: 'climbing';
   lastActivityAt: Date;
 
-  /* References – nullable after population if the referenced doc was deleted */
+  /* References */
   climbHistories: Types.ObjectId[];
 }
 

@@ -28,7 +28,7 @@ export interface IClimb extends WithTimestamps<Document>, WithOwnership {
   source: string;
   sourceId?: string;
 
-  /* References – nullable after population if the referenced doc was deleted */
+  /* References */
   image: Types.ObjectId | null;
   location: Types.ObjectId | null;
   sector: Types.ObjectId | null;
