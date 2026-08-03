@@ -37,17 +37,17 @@ import { accent, surfaces } from '../../../library/theme';
 import { useToast } from '../../../library/toast';
 import UnsavedBanner from '../../../library/unsaved-banner';
 import Header from '../../../navigation/header';
+import { RootStackParamList } from '../../../types/routes';
 import type { FormData } from '../components/location-detail/form-location';
 import { formDataSchema } from '../components/location-detail/form-location';
 import FormLocationSectors from '../components/location-detail/form-location-sectors';
-import { ClimbingParamList } from '../types';
 
 type LocationDetailNavigationProp = NativeStackNavigationProp<
-  ClimbingParamList,
+  RootStackParamList,
   'LocationDetail'
 >;
 
-type LocationDetailRouteProp = RouteProp<ClimbingParamList, 'LocationDetail'>;
+type LocationDetailRouteProp = RouteProp<RootStackParamList, 'LocationDetail'>;
 
 const LocationDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -86,9 +86,9 @@ const LocationDetailScreen: FunctionComponent = () => {
     !!me && !!existingLocation && canDelete(me, existingLocation);
 
   const locationsPut = useLocationsPut({
-    onSuccess: (data) => {
+    onSuccess: () => {
       if (isCreateMode) {
-        navigation.navigate('ClimbingMain', { newLocationId: data.id });
+        navigation.goBack();
       } else {
         setIsEditMode(false);
         initializedRef.current = false;

@@ -8,14 +8,18 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import AuthStack from '../features/auth/auth-stack';
+import LocationDetailScreen from '../features/climbing/screens/location-detail-screen';
 import { SportFilterProvider } from '../features/feed/sport-filter-context';
 import HistoryScreen from '../features/history/history-screen';
 import HomeHeader from '../features/home/home-header';
 import HomeScreen from '../features/home/home-screen';
+import MapScreen from '../features/map/map-screen';
 import ProfileScreen from '../features/profile/profile-screen';
 import StatsScreen from '../features/stats/stats-screen';
 import { Icon } from '../library/icon';
+import { ImagePickerScreen } from '../library/image-picker';
 import LoadingState from '../library/loading-state';
+import { MapPointPickerScreen } from '../library/map-point-picker';
 import { surfaces } from '../library/theme';
 import { RootParamList, RootStackParamList } from '../types/routes';
 import Fab from './fab';
@@ -80,6 +84,7 @@ const Tabs: FunctionComponent = () => {
 };
 
 const Root: FunctionComponent = () => {
+  const { t } = useTranslation();
   const { isLoading, isAuthenticated } = useAuth();
 
   if (isLoading) {
@@ -109,6 +114,49 @@ const Root: FunctionComponent = () => {
           name="Profile"
           component={ProfileScreen}
           options={{ presentation: 'modal' }}
+        />
+        <Stack.Screen
+          name="Map"
+          component={MapScreen}
+          options={{
+            headerShown: true,
+            header: () => <Header title={t('map.title')} back />,
+          }}
+        />
+        <Stack.Screen
+          name="LocationDetail"
+          component={LocationDetailScreen}
+          options={({ route }) => ({
+            headerShown: true,
+            header: () => (
+              <Header
+                title={
+                  route.params?.locationId
+                    ? t('climbing.update_location_title')
+                    : t('climbing.create_location_title')
+                }
+                mode="modal"
+                back
+              />
+            ),
+            presentation: 'modal',
+          })}
+        />
+        <Stack.Screen
+          name="MapPointPicker"
+          component={MapPointPickerScreen}
+          options={{
+            headerShown: true,
+            presentation: 'modal',
+          }}
+        />
+        <Stack.Screen
+          name="ImagePicker"
+          component={ImagePickerScreen}
+          options={{
+            headerShown: true,
+            presentation: 'modal',
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

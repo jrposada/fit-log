@@ -4,7 +4,13 @@ import { Location } from './location.ts';
 
 export type LocationsPutRequest = Omit<
   Location,
-  'id' | 'createdAt' | 'updatedAt' | 'sectors' | 'owner' | 'collaborators'
+  | 'id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'sectors'
+  | 'owner'
+  | 'collaborators'
+  | 'sports'
 > & {
   id?: string;
 

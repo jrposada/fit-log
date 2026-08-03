@@ -36,6 +36,8 @@ export type FeedAdapterQuery = {
 export interface FeedAdapter {
   sport: Sport;
   fetch(query: FeedAdapterQuery): Promise<SessionSummary[]>;
+  /** Distinct location ids referenced by this owner's sessions in this sport. */
+  distinctLocationIds(ownerId: Types.ObjectId): Promise<string[]>;
 }
 
 /** Total order of the merged stream: `startedAt` desc, `sport` asc, `id` desc. */
@@ -113,4 +115,30 @@ async function getFeed(
   return { sessions, nextCursor };
 }
 
-export { getFeed };
+/**
+ * Sport(s) referencing each location the owner has trained at — the same
+ * fan-out shape as {@link getFeed}, reused to derive map pins from the
+ * per-sport collections instead of a manual location→sport tag.
+ */
+async function getSportsByLocationId(
+  ownerId: Types.ObjectId
+): Promise<Map<string, Sport[]>> {
+  const results = await Promise.all(
+    feedAdapters.map(async (adapter) => ({
+      sport: adapter.sport,
+      locationIds: await adapter.distinctLocationIds(ownerId),
+    }))
+  );
+
+  const sportsByLocationId = new Map<string, Sport[]>();
+  for (const { sport, locationIds } of results) {
+    for (const locationId of locationIds) {
+      const sports = sportsByLocationId.get(locationId) ?? [];
+      sports.push(sport);
+      sportsByLocationId.set(locationId, sports);
+    }
+  }
+  return sportsByLocationId;
+}
+
+export { getFeed, getSportsByLocationId };

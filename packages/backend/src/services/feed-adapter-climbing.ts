@@ -58,6 +58,14 @@ function cursorClause(
 export const climbingFeedAdapter: FeedAdapter = {
   sport: SPORT,
 
+  async distinctLocationIds(ownerId) {
+    const locationIds = await ClimbingSession.distinct('location', {
+      owner: ownerId,
+      location: { $ne: null },
+    });
+    return locationIds.map((id) => id.toString());
+  },
+
   async fetch(query) {
     const baseFilter: Record<string, unknown> = {
       owner: query.ownerId,

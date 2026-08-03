@@ -1,3 +1,4 @@
+import { Sport } from '../../common/sports/sports.ts';
 import {
   WithDepopulatedOwnership,
   WithOwnership,
@@ -15,6 +16,11 @@ export type Location = WithOwnership<
     latitude: number;
     longitude: number;
     googleMapsId?: string;
+
+    /** Derived from the requesting owner's sessions that reference this
+     * location — not a stored tag. Only present on the top-level location
+     * endpoints, not when embedded (depopulated) elsewhere. */
+    sports?: Sport[];
 
     /* References */
     sectors: (Omit<WithDepopulatedOwnership<Sector>, 'climbs'> & {

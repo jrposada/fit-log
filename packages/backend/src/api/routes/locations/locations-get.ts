@@ -38,7 +38,7 @@ const handler = toApiResponse<LocationsGetResponse, unknown, LocationsGetQuery>(
 
     const { cursor, ...filters } = request.query;
 
-    const { locations, nextCursor } = await getLocations({
+    const { locations, nextCursor } = await getLocations(request.user._id, {
       ...filters,
       cursor: cursor ? decodeCursor(cursor) : null,
     });
