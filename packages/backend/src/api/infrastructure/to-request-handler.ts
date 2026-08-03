@@ -25,7 +25,6 @@ export function toRequestHandler<
         req as Request<TParams, unknown, TBody, TQuery>
       );
 
-      // Set custom headers if provided
       if (headers) {
         Object.entries(headers).forEach(([key, value]) => {
           res.setHeader(key, value);
