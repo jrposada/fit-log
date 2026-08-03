@@ -42,11 +42,15 @@ Export that key union as `<Entity>RequiredRefs` next to the model interface
 instead of repeating the literal union at every call site:
 
 ```ts
-// climb.ts
+// climb.ts — no `<Entity>Refs` export yet, so this is a plain literal union
 export type ClimbRequiredRefs = 'location' | 'sector';
 
-// climb-history.ts
-export type ClimbHistoryRequiredRefs = 'climb' | 'location' | 'sector';
+// climb-history.ts — `ClimbHistoryRefs` already exists (see below), so the
+// required set is derived from it rather than re-listed
+export type ClimbHistoryRequiredRefs = Exclude<
+  ClimbHistoryRefs,
+  'trainingSession'
+>;
 ```
 
 Every type guard and mapper that needs "this entity with its required refs
@@ -60,3 +64,38 @@ nullable refs. An entity whose only nullable ref is optional (e.g.
 `WithSessionBase.location`) has nothing to make "required," so it has no
 `<Entity>RequiredRefs` export — don't add one just for the sake of the
 pattern.
+
+## Expressing "all refs" to API mappers: `<Entity>Refs`
+
+`<Entity>RequiredRefs` narrows nullability on the model side. The API mapper
+side (`api/mappers/`, see its README) has a different need: a union of
+_every_ ref key on the entity, required and optional alike, so it can
+collapse each one down to an id string via `WithDepopulatedRefs<T, K>`
+(`data/infrastructure/with-depopulated-refs.ts`) when building the
+`toApiDepopulated<Entity>` return type.
+
+Export that as `<Entity>Refs` next to `<Entity>RequiredRefs` once a mapper
+needs it — not speculatively:
+
+```ts
+// climb-history.ts
+export type ClimbHistoryRefs =
+  | 'climb'
+  | 'location'
+  | 'sector'
+  | 'trainingSession';
+
+export type ClimbHistoryRequiredRefs = Exclude<
+  ClimbHistoryRefs,
+  'trainingSession'
+>;
+```
+
+Once both exist, derive `<Entity>RequiredRefs` from `<Entity>Refs` via
+`Exclude`, naming only the refs that are genuinely optional — don't re-list
+the required ones by hand. This makes `RequiredRefs` a subset of `Refs` by
+construction: a new ref added to `<Entity>Refs` is required by default unless
+you explicitly `Exclude` it, which is the safer direction to forget in (an
+optional ref wrongly treated as required fails loudly via `WithRequiredRefs`
+at the first null; a required ref missing from a hand-maintained list fails
+silently).
