@@ -9,8 +9,9 @@ import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
 import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
-import type { IClimb } from '../data/models/climb.ts';
+import type { ClimbRequiredRefs, IClimb } from '../data/models/climb.ts';
 import type {
+  ClimbHistoryRequiredRefs,
   ClimbHistoryStatus,
   IClimbHistory,
   IClimbHistoryTry,
@@ -28,18 +29,11 @@ import ResourceNotFound from '../infrastructure/not-found-error.ts';
 import RelatedEntityRequiredError from '../infrastructure/related-entity-required-error.ts';
 import { recomputeTrainingSessionSummary } from './training-session.ts';
 
-/** Direct refs on a climb-history that must be non-null to map. */
-type ValidClimbHistoryRefs = {
-  climb: Types.ObjectId;
-  location: Types.ObjectId;
-  sector: Types.ObjectId;
-};
-
 /** Populated climb-history with all nested refs guaranteed non-null. */
 type ValidClimbHistory = MergeType<
   IClimbHistory,
   {
-    climb: WithRequiredRefs<IClimb>;
+    climb: WithRequiredRefs<IClimb, ClimbRequiredRefs>;
     location: ILocation;
     sector: MergeType<ISector, { images: IImage[] }>;
     climbingSession: ITrainingSession | null;
@@ -48,17 +42,13 @@ type ValidClimbHistory = MergeType<
 
 /**
  * Type guard that checks the populated climb-history has a non-null climb
- * whose own refs (image, location, sector) are also non-null.
+ * whose own required refs (location, sector) are also non-null. The climb's
+ * image and model3d are optional and not checked here.
  */
 function hasValidRefs<T extends { climb: IClimb | null }>(
   h: T
-): h is T & { climb: WithRequiredRefs<IClimb> } {
-  return (
-    h.climb != null &&
-    h.climb.image != null &&
-    h.climb.location != null &&
-    h.climb.sector != null
-  );
+): h is T & { climb: WithRequiredRefs<IClimb, ClimbRequiredRefs> } {
+  return h.climb != null && h.climb.location != null && h.climb.sector != null;
 }
 
 /**
@@ -67,7 +57,7 @@ function hasValidRefs<T extends { climb: IClimb | null }>(
  */
 function hasRequiredClimbHistoryRefs<T extends IClimbHistory>(
   h: T
-): h is T & ValidClimbHistoryRefs {
+): h is T & WithRequiredRefs<IClimbHistory, ClimbHistoryRequiredRefs> {
   return h.climb != null && h.location != null && h.sector != null;
 }
 
@@ -696,4 +686,4 @@ export {
   setClimbHistoryProject,
   upsertClimbHistoryTry,
 };
-export type { ClimbHistoriesCursor, ValidClimbHistory, ValidClimbHistoryRefs };
+export type { ClimbHistoriesCursor, ValidClimbHistory };

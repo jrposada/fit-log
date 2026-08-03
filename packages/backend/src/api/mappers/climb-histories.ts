@@ -1,18 +1,18 @@
 import type { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
-import type { MergeType } from 'mongoose';
 
-import type { IClimbHistory } from '../../data/models/climb-history.ts';
+import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
 import type {
-  ValidClimbHistory,
-  ValidClimbHistoryRefs,
-} from '../../services/climb-history.ts';
+  ClimbHistoryRequiredRefs,
+  IClimbHistory,
+} from '../../data/models/climb-history.ts';
+import type { ValidClimbHistory } from '../../services/climb-history.ts';
 import { toApiDepopulatedClimb } from './climbs.ts';
 import { toApiDepopulatedLocation } from './locations.ts';
 import { toApiDepopulatedSector } from './sectors.ts';
 import { toApiDepopulatedTrainingSession } from './training-sessions.ts';
 
 function toApiDepopulatedClimbHistory(
-  model: MergeType<IClimbHistory, ValidClimbHistoryRefs>
+  model: WithRequiredRefs<IClimbHistory, ClimbHistoryRequiredRefs>
 ): Omit<ClimbHistory, 'climb' | 'location' | 'sector' | 'climbingSession'> & {
   climb: string;
   location: string;

@@ -3,8 +3,10 @@ import type { SessionSummaryData } from '@jrposada/fit-log-shared/models/feed/fe
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
+import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import type {
+  ClimbHistoryRequiredRefs,
   ClimbHistoryStatus,
   IClimbHistory,
 } from '../data/models/climb-history.ts';
@@ -17,7 +19,6 @@ import {
 } from '../data/models/training-session.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import type { ValidClimbHistoryRefs } from './climb-history.ts';
 import { hasRequiredClimbHistoryRefs } from './climb-history.ts';
 
 const GRADES: string[] = [...GRADE_OPTIONS];
@@ -26,14 +27,19 @@ const GRADES: string[] = [...GRADE_OPTIONS];
 type ValidTrainingSession = MergeType<
   ITrainingSession,
   {
-    climbHistories: MergeType<IClimbHistory, ValidClimbHistoryRefs>[];
+    climbHistories: WithRequiredRefs<IClimbHistory, ClimbHistoryRequiredRefs>[];
     location: ILocation | null;
   }
 >;
 
 function withValidClimbHistories<T extends { climbHistories: IClimbHistory[] }>(
   session: T
-): MergeType<T, { climbHistories: (IClimbHistory & ValidClimbHistoryRefs)[] }> {
+): MergeType<
+  T,
+  {
+    climbHistories: WithRequiredRefs<IClimbHistory, ClimbHistoryRequiredRefs>[];
+  }
+> {
   return Object.assign(session, {
     climbHistories: session.climbHistories.filter(hasRequiredClimbHistoryRefs),
   });

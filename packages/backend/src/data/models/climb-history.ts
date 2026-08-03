@@ -31,8 +31,16 @@ export interface IClimbHistory extends WithTimestamps<Document> {
   climb: Types.ObjectId | null;
   location: Types.ObjectId | null;
   sector: Types.ObjectId | null;
+  /** Optional link to the session it was logged in; null when logged standalone. */
   climbingSession: Types.ObjectId | null;
 }
+
+/**
+ * Refs a climb-history can never be without: `climb`/`location`/`sector` are
+ * mandatory, while `climbingSession` is optional (a history may be logged
+ * without a training session).
+ */
+export type ClimbHistoryRequiredRefs = 'climb' | 'location' | 'sector';
 
 export function computeTopStatus(
   tries: { status: ClimbHistoryStatus }[]
