@@ -2,7 +2,7 @@ import type { Document, Model } from 'mongoose';
 import { Types } from 'mongoose';
 
 import { editableBy } from '../auth/editable-filter.ts';
-import type { IUser } from '../models/user.ts';
+import type { IUser } from '../data/models/user.ts';
 
 /**
  * Upsert an ownership-aware document in a single DB roundtrip.

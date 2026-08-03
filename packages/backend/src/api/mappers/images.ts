@@ -3,7 +3,7 @@ import type { Image } from '@jrposada/fit-log-shared/models/images/image';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
-import type { IImage } from '../../models/image.ts';
+import type { IImage } from '../../data/models/image.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,

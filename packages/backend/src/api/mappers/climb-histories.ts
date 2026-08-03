@@ -1,7 +1,7 @@
 import type { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
 import type { MergeType } from 'mongoose';
 
-import type { IClimbHistory } from '../../models/climb-history.ts';
+import type { IClimbHistory } from '../../data/models/climb-history.ts';
 import type {
   ValidClimbHistory,
   ValidClimbHistoryRefs,

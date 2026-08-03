@@ -3,9 +3,9 @@ import type { Sector } from '@jrposada/fit-log-shared/models/sectors/sector';
 import type { MergeType } from 'mongoose';
 
 import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
-import type { IClimb } from '../../models/climb.ts';
-import type { IImage } from '../../models/image.ts';
-import type { ISector } from '../../models/sector.ts';
+import type { IClimb } from '../../data/models/climb.ts';
+import type { IImage } from '../../data/models/image.ts';
+import type { ISector } from '../../data/models/sector.ts';
 import { hasRequiredRefs } from '../../services/climb.ts';
 import { toApiDepopulatedClimb } from './climbs.ts';
 import {

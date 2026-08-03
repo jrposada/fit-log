@@ -3,20 +3,20 @@ import type { SessionSummaryData } from '@jrposada/fit-log-shared/models/feed/fe
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
-import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import type { IClimb } from '../models/climb.ts';
+import type { IClimb } from '../data/models/climb.ts';
 import type {
   ClimbHistoryStatus,
   IClimbHistory,
-} from '../models/climb-history.ts';
-import { ClimbHistory } from '../models/climb-history.ts';
-import type { IClimbingSession } from '../models/climbing-session.ts';
+} from '../data/models/climb-history.ts';
+import { ClimbHistory } from '../data/models/climb-history.ts';
+import type { IClimbingSession } from '../data/models/climbing-session.ts';
 import {
   ClimbingSession,
   EMPTY_CLIMBING_SESSION_SUMMARY,
-} from '../models/climbing-session.ts';
-import type { ILocation } from '../models/location.ts';
-import type { IUser } from '../models/user.ts';
+} from '../data/models/climbing-session.ts';
+import type { ILocation } from '../data/models/location.ts';
+import type { IUser } from '../data/models/user.ts';
+import ResourceNotFound from '../infrastructure/not-found-error.ts';
 import type { ValidClimbHistoryRefs } from './climb-history.ts';
 import { hasRequiredClimbHistoryRefs } from './climb-history.ts';
 

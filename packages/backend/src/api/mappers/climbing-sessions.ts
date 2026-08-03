@@ -1,9 +1,9 @@
 import type { ClimbingSession } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-session';
 import type { MergeType } from 'mongoose';
 
-import type { IClimbHistory } from '../../models/climb-history.ts';
-import type { IClimbingSession } from '../../models/climbing-session.ts';
-import type { ILocation } from '../../models/location.ts';
+import type { IClimbHistory } from '../../data/models/climb-history.ts';
+import type { IClimbingSession } from '../../data/models/climbing-session.ts';
+import type { ILocation } from '../../data/models/location.ts';
 import type { ValidClimbHistoryRefs } from '../../services/climb-history.ts';
 import { toApiDepopulatedClimbHistory } from './climb-histories.ts';
 import { toApiDepopulatedLocation } from './locations.ts';

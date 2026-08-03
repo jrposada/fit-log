@@ -4,9 +4,9 @@ import type { Location } from '@jrposada/fit-log-shared/models/locations/locatio
 import type { MergeType } from 'mongoose';
 
 import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
-import type { IImage } from '../../models/image.ts';
-import type { ILocation } from '../../models/location.ts';
-import type { ISector } from '../../models/sector.ts';
+import type { IImage } from '../../data/models/image.ts';
+import type { ILocation } from '../../data/models/location.ts';
+import type { ISector } from '../../data/models/sector.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,

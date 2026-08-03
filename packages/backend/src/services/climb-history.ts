@@ -8,20 +8,23 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
-import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import RelatedEntityRequiredError from '../infrastructure/related-entity-required-error.ts';
-import type { IClimb } from '../models/climb.ts';
+import type { IClimb } from '../data/models/climb.ts';
 import type {
   ClimbHistoryStatus,
   IClimbHistory,
   IClimbHistoryTry,
-} from '../models/climb-history.ts';
-import { ClimbHistory, computeTopStatus } from '../models/climb-history.ts';
-import type { IClimbingSession } from '../models/climbing-session.ts';
-import { ClimbingSession } from '../models/climbing-session.ts';
-import type { IImage } from '../models/image.ts';
-import type { ILocation } from '../models/location.ts';
-import type { ISector } from '../models/sector.ts';
+} from '../data/models/climb-history.ts';
+import {
+  ClimbHistory,
+  computeTopStatus,
+} from '../data/models/climb-history.ts';
+import type { IClimbingSession } from '../data/models/climbing-session.ts';
+import { ClimbingSession } from '../data/models/climbing-session.ts';
+import type { IImage } from '../data/models/image.ts';
+import type { ILocation } from '../data/models/location.ts';
+import type { ISector } from '../data/models/sector.ts';
+import ResourceNotFound from '../infrastructure/not-found-error.ts';
+import RelatedEntityRequiredError from '../infrastructure/related-entity-required-error.ts';
 import type { WithRequiredRefs } from '../utils/types.ts';
 import { recomputeClimbingSessionSummary } from './climbing-session.ts';
 

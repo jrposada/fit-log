@@ -1,11 +1,11 @@
 import type { SessionSummary } from '@jrposada/fit-log-shared/models/feed/feed';
 import { Types } from 'mongoose';
 
-import type { IClimbingSession } from '../models/climbing-session.ts';
+import type { IClimbingSession } from '../data/models/climbing-session.ts';
 import {
   ClimbingSession,
   EMPTY_CLIMBING_SESSION_SUMMARY,
-} from '../models/climbing-session.ts';
+} from '../data/models/climbing-session.ts';
 import type { FeedAdapter, FeedAdapterQuery } from './feed.ts';
 
 const SPORT = 'climbing' as const;

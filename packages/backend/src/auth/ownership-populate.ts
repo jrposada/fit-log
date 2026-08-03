@@ -1,7 +1,7 @@
 import type { MergeType, PopulateOptions } from 'mongoose';
 
-import type { ICollaborator } from '../models/_collaborator.ts';
-import type { IUser } from '../models/user.ts';
+import type { ICollaborator } from '../data/models/_collaborator.ts';
+import type { IUser } from '../data/models/user.ts';
 
 export type PopulatedOwnership = {
   owner: IUser;

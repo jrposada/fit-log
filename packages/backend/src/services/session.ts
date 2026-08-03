@@ -1,8 +1,8 @@
 import { Types } from 'mongoose';
 
+import type { ISession } from '../data/models/session.ts';
+import { Session } from '../data/models/session.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import type { ISession } from '../models/session.ts';
-import { Session } from '../models/session.ts';
 import { upsertDocument } from '../utils/upsert-document.ts';
 
 const DEFAULT_LIMIT = 20;

@@ -1,4 +1,4 @@
-import { ClimbingSession } from '../models/climbing-session.ts';
+import { ClimbingSession } from '../data/models/climbing-session.ts';
 import type { FeedStatsAdapter } from './feed-stats.ts';
 
 const SPORT = 'climbing' as const;

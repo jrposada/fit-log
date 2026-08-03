@@ -9,12 +9,12 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
+import type { IImage } from '../data/models/image.ts';
+import type { ILocation } from '../data/models/location.ts';
+import { Location } from '../data/models/location.ts';
+import type { ISector } from '../data/models/sector.ts';
+import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import type { IImage } from '../models/image.ts';
-import type { ILocation } from '../models/location.ts';
-import { Location } from '../models/location.ts';
-import type { ISector } from '../models/sector.ts';
-import type { IUser } from '../models/user.ts';
 import {
   addOrUpdateCollaborator,
   removeCollaborator,

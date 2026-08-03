@@ -14,7 +14,7 @@
 - **Pattern**: Each model has its own directory with route handlers
 
 ### Database Models
-- **Location**: `backend/src/models/<model-name>.ts`
+- **Location**: `backend/src/data/models/<model-name>.ts`
 - **Pattern**: Mongoose schemas and models
 - **Naming**: PascalCase for model names
 
@@ -32,7 +32,7 @@
 
 ### Adding a New Feature
 1. Define types in `shared/models/<model-name>.ts`
-2. Create DB model in `backend/src/models/<model-name>.ts`
+2. Create DB model in `backend/src/data/models/<model-name>.ts`
 3. Implement API routes in `backend/src/api/<model-name>/*.ts`
 4. Create React hooks in `shared-react/api/<model-name>/*.ts`
 5. Add tests as needed

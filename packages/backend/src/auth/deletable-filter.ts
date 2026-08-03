@@ -13,7 +13,7 @@ type DeletableFilter = {
   >;
 };
 
-import type { IUser } from '../models/user.ts';
+import type { IUser } from '../data/models/user.ts';
 
 /**
  * Mongo filter clause for documents the user can DELETE:

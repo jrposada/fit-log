@@ -4,8 +4,8 @@ import type {
 } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { MergeType } from 'mongoose';
 
-import type { ICollaborator } from '../../models/_collaborator.ts';
-import type { IUser } from '../../models/user.ts';
+import type { ICollaborator } from '../../data/models/_collaborator.ts';
+import type { IUser } from '../../data/models/user.ts';
 import { toApiUserSummary } from './user-summary.ts';
 
 export function toApiDepopulatedCollaborator(

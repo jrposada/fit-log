@@ -1,8 +1,8 @@
 import { Types } from 'mongoose';
 
+import type { IWorkout } from '../data/models/workout.ts';
+import { Workout } from '../data/models/workout.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import type { IWorkout } from '../models/workout.ts';
-import { Workout } from '../models/workout.ts';
 import { upsertDocument } from '../utils/upsert-document.ts';
 
 const DEFAULT_LIMIT = 20;

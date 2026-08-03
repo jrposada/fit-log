@@ -8,12 +8,12 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
+import type { IClimb } from '../data/models/climb.ts';
+import type { IImage } from '../data/models/image.ts';
+import type { ISector } from '../data/models/sector.ts';
+import { Sector } from '../data/models/sector.ts';
+import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import type { IClimb } from '../models/climb.ts';
-import type { IImage } from '../models/image.ts';
-import type { ISector } from '../models/sector.ts';
-import { Sector } from '../models/sector.ts';
-import type { IUser } from '../models/user.ts';
 import type { BatchUpsertOwnedItem } from '../utils/batch-upsert-owned-document.ts';
 import { batchUpsertOwnedDocument } from '../utils/batch-upsert-owned-document.ts';
 import {
