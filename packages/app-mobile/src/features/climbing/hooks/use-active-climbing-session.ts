@@ -1,6 +1,6 @@
-import { SESSION_STALE_MS } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-session';
-import { useClimbingSessions } from '@jrposada/fit-log-shared-react/api/climbing-sessions/use-climbing-sessions';
-import { useClimbingSessionsPut } from '@jrposada/fit-log-shared-react/api/climbing-sessions/use-climbing-sessions-put';
+import { SESSION_STALE_MS } from '@jrposada/fit-log-shared/models/training-sessions/training-session';
+import { useTrainingSessions } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions';
+import { useTrainingSessionsPut } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-put';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,8 +12,8 @@ import { useTranslation } from 'react-i18next';
  */
 function useActiveClimbingSession() {
   const { t } = useTranslation();
-  const { items } = useClimbingSessions({ active: true, limit: 1 });
-  const climbingSessionsPut = useClimbingSessionsPut();
+  const { items } = useTrainingSessions({ active: true, limit: 1 });
+  const trainingSessionsPut = useTrainingSessionsPut();
 
   const ensureActiveClimbingSession = useCallback(async (): Promise<string> => {
     const existing = items[0];
@@ -27,14 +27,14 @@ function useActiveClimbingSession() {
       return existing.id;
     }
 
-    const created = await climbingSessionsPut.mutateAsync({
+    const created = await trainingSessionsPut.mutateAsync({
       title: t('climbing.default_session_title'),
       startedAt: new Date().toISOString(),
       location: null,
       climbHistories: [],
     });
     return created.id;
-  }, [items, climbingSessionsPut, t]);
+  }, [items, trainingSessionsPut, t]);
 
   return {
     activeClimbingSessionId: items[0]?.id,

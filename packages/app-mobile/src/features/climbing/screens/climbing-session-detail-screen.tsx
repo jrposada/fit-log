@@ -1,6 +1,6 @@
 import { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
 import { useClimbHistories } from '@jrposada/fit-log-shared-react/api/climb-histories/use-climb-histories';
-import { useClimbingSessionsById } from '@jrposada/fit-log-shared-react/api/climbing-sessions/use-climbing-sessions-by-id';
+import { useTrainingSessionsById } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-by-id';
 import { formatRelativeDate } from '@jrposada/fit-log-shared-react/beautifiers/date';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -36,7 +36,7 @@ const ClimbingSessionDetailScreen: FunctionComponent = () => {
   const { sessionId } = route.params;
 
   const { data: session, isLoading: isLoadingSession } =
-    useClimbingSessionsById({ id: sessionId });
+    useTrainingSessionsById({ id: sessionId });
   const { items: climbHistories, isLoading: isLoadingHistories } =
     useClimbHistories({ climbingSession: sessionId, limit: 50 });
 

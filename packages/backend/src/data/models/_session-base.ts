@@ -40,7 +40,7 @@ export const sessionSummarySchema = new Schema<SessionSummaryData>(
  * sport-specific fields. `sport` is intentionally not part of the fragment —
  * each collection declares it as its own constant enum value.
  * Combine with `WithTimestamps<Document>`:
- *   interface IClimbingSession extends WithTimestamps<Document>, WithSessionBase { ... }
+ *   interface ITrainingSession extends WithTimestamps<Document>, WithSessionBase { ... }
  */
 export interface WithSessionBase {
   /* Data */
@@ -62,7 +62,7 @@ export interface WithSessionBase {
 /**
  * Schema field definitions for `WithSessionBase`. Spread into a session
  * model's schema definition object:
- *   new Schema<IClimbingSession>({ ...sessionBaseFields, sport: { ... }, ... });
+ *   new Schema<ITrainingSession>({ ...sessionBaseFields, sport: { ... }, ... });
  */
 export const sessionBaseFields: SchemaDefinition<WithSessionBase> = {
   /* Data */

@@ -1,16 +1,16 @@
 import type { SessionSummary } from '@jrposada/fit-log-shared/models/feed/feed';
 import { Types } from 'mongoose';
 
-import type { IClimbingSession } from '../data/models/climbing-session.ts';
+import type { ITrainingSession } from '../data/models/training-session.ts';
 import {
-  ClimbingSession,
-  EMPTY_CLIMBING_SESSION_SUMMARY,
-} from '../data/models/climbing-session.ts';
+  EMPTY_TRAINING_SESSION_SUMMARY,
+  TrainingSession,
+} from '../data/models/training-session.ts';
 import type { FeedAdapter, FeedAdapterQuery } from './feed.ts';
 
 const SPORT = 'climbing' as const;
 
-function toSessionSummary(model: IClimbingSession): SessionSummary {
+function toSessionSummary(model: ITrainingSession): SessionSummary {
   return {
     /* Data */
     id: model._id.toString(),
@@ -19,7 +19,7 @@ function toSessionSummary(model: IClimbingSession): SessionSummary {
     startedAt: model.startedAt.toISOString(),
     endedAt: model.endedAt ? model.endedAt.toISOString() : undefined,
     // Sessions created before the summary cache existed have no value yet.
-    summary: model.summary ?? { ...EMPTY_CLIMBING_SESSION_SUMMARY },
+    summary: model.summary ?? { ...EMPTY_TRAINING_SESSION_SUMMARY },
 
     /* References */
     location: model.location ? model.location.toString() : undefined,
@@ -59,7 +59,7 @@ export const climbingFeedAdapter: FeedAdapter = {
   sport: SPORT,
 
   async distinctLocationIds(ownerId) {
-    const locationIds = await ClimbingSession.distinct('location', {
+    const locationIds = await TrainingSession.distinct('location', {
       owner: ownerId,
       location: { $ne: null },
     });
@@ -88,7 +88,7 @@ export const climbingFeedAdapter: FeedAdapter = {
       baseFilter.$and = clauses;
     }
 
-    const sessions = await ClimbingSession.find(baseFilter)
+    const sessions = await TrainingSession.find(baseFilter)
       .sort({ startedAt: -1, _id: -1 })
       .limit(query.limit);
 

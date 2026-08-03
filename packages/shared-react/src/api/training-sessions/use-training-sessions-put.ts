@@ -1,8 +1,8 @@
 import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
-  ClimbingSessionsPutRequest,
-  ClimbingSessionsPutResponse,
-} from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-put';
+  TrainingSessionsPutRequest,
+  TrainingSessionsPutResponse,
+} from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-put';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -10,34 +10,34 @@ import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { mutation } from '../mutation';
 
-type UseClimbingSessionsPutParams = {
+type UseTrainingSessionsPutParams = {
   onError?: (message: string) => void;
   onSuccess?: (
-    climbingSession: ClimbingSessionsPutResponse['climbingSession']
+    trainingSession: TrainingSessionsPutResponse['trainingSession']
   ) => void;
 };
 
-function useClimbingSessionsPut({
+function useTrainingSessionsPut({
   onError,
   onSuccess,
-}: UseClimbingSessionsPutParams = {}) {
+}: UseTrainingSessionsPutParams = {}) {
   const client = useQueryClient();
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
   const { getToken, refreshToken, logout } = useAuth();
 
   return useMutation<
-    ClimbingSessionsPutResponse['climbingSession'],
+    TrainingSessionsPutResponse['trainingSession'],
     string,
-    ClimbingSessionsPutRequest,
+    TrainingSessionsPutRequest,
     unknown
   >({
     mutationFn: mutation({
       refreshToken,
       logout,
-      fn: async (climbingSession) => {
+      fn: async (trainingSession) => {
         const response = await axios.put<
-          ApiResponse<ClimbingSessionsPutResponse>
-        >(`${apiBaseUrl}/climbing-sessions`, climbingSession, {
+          ApiResponse<TrainingSessionsPutResponse>
+        >(`${apiBaseUrl}/training-sessions`, trainingSession, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${getToken()}`,
@@ -48,20 +48,20 @@ function useClimbingSessionsPut({
           throw new Error('Api error');
         }
 
-        return response.data.data.climbingSession;
+        return response.data.data.trainingSession;
       },
     }),
     onError: (message) => {
-      console.error('Failed to put climbing session:', JSON.stringify(message));
+      console.error('Failed to put training session:', JSON.stringify(message));
       onError?.(message);
     },
-    onSuccess: (climbingSession) => {
+    onSuccess: (trainingSession) => {
       client.invalidateQueries({
-        queryKey: ['climbing-sessions'],
+        queryKey: ['training-sessions'],
       });
-      onSuccess?.(climbingSession);
+      onSuccess?.(trainingSession);
     },
   });
 }
 
-export { useClimbingSessionsPut };
+export { useTrainingSessionsPut };

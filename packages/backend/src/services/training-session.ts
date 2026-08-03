@@ -9,12 +9,12 @@ import type {
   IClimbHistory,
 } from '../data/models/climb-history.ts';
 import { ClimbHistory } from '../data/models/climb-history.ts';
-import type { IClimbingSession } from '../data/models/climbing-session.ts';
-import {
-  ClimbingSession,
-  EMPTY_CLIMBING_SESSION_SUMMARY,
-} from '../data/models/climbing-session.ts';
 import type { ILocation } from '../data/models/location.ts';
+import type { ITrainingSession } from '../data/models/training-session.ts';
+import {
+  EMPTY_TRAINING_SESSION_SUMMARY,
+  TrainingSession,
+} from '../data/models/training-session.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
 import type { ValidClimbHistoryRefs } from './climb-history.ts';
@@ -22,9 +22,9 @@ import { hasRequiredClimbHistoryRefs } from './climb-history.ts';
 
 const GRADES: string[] = [...GRADE_OPTIONS];
 
-/** Fully populated climbing session, as returned to API mappers. */
-type ValidClimbingSession = MergeType<
-  IClimbingSession,
+/** Fully populated training session, as returned to API mappers. */
+type ValidTrainingSession = MergeType<
+  ITrainingSession,
   {
     climbHistories: MergeType<IClimbHistory, ValidClimbHistoryRefs>[];
     location: ILocation | null;
@@ -39,25 +39,25 @@ function withValidClimbHistories<T extends { climbHistories: IClimbHistory[] }>(
   });
 }
 
-const CLIMBING_SESSION_POPULATE = ['location', 'climbHistories'] as const;
+const TRAINING_SESSION_POPULATE = ['location', 'climbHistories'] as const;
 
 const DEFAULT_LIMIT = 20;
 
-/** Keyset cursor for the climbing-sessions list, in decoded (plain JSON) form. */
-type ClimbingSessionsCursor = { startedAt: string; id: string };
+/** Keyset cursor for the training-sessions list, in decoded (plain JSON) form. */
+type TrainingSessionsCursor = { startedAt: string; id: string };
 
-type GetClimbingSessionsOptions = {
+type GetTrainingSessionsOptions = {
   limit?: number;
-  cursor?: ClimbingSessionsCursor | null;
+  cursor?: TrainingSessionsCursor | null;
   active?: boolean;
 };
 
-async function getClimbingSessions(
+async function getTrainingSessions(
   owner: Types.ObjectId,
-  options: GetClimbingSessionsOptions
+  options: GetTrainingSessionsOptions
 ): Promise<{
-  climbingSessions: ValidClimbingSession[];
-  nextCursor: ClimbingSessionsCursor | null;
+  trainingSessions: ValidTrainingSession[];
+  nextCursor: TrainingSessionsCursor | null;
 }> {
   const { limit, cursor, active } = options;
 
@@ -76,13 +76,13 @@ async function getClimbingSessions(
 
   const pageSize = limit ?? DEFAULT_LIMIT;
 
-  const sessions = await ClimbingSession.find(filter)
+  const sessions = await TrainingSession.find(filter)
     .sort({ startedAt: -1, _id: -1 })
     .limit(pageSize + 1)
     .populate<{
       location: ILocation | null;
       climbHistories: IClimbHistory[];
-    }>([...CLIMBING_SESSION_POPULATE]);
+    }>([...TRAINING_SESSION_POPULATE]);
 
   const hasMore = sessions.length > pageSize;
   const pageSessions = hasMore ? sessions.slice(0, pageSize) : sessions;
@@ -94,20 +94,20 @@ async function getClimbingSessions(
       : null;
 
   return {
-    climbingSessions: pageSessions.map(withValidClimbHistories),
+    trainingSessions: pageSessions.map(withValidClimbHistories),
     nextCursor,
   };
 }
 
-async function getClimbingSessionById(
+async function getTrainingSessionById(
   owner: Types.ObjectId,
   id: string
-): Promise<ValidClimbingSession> {
-  const session = await ClimbingSession.findOne({
+): Promise<ValidTrainingSession> {
+  const session = await TrainingSession.findOne({
     _id: id,
     owner,
   }).populate<{ location: ILocation | null; climbHistories: IClimbHistory[] }>([
-    ...CLIMBING_SESSION_POPULATE,
+    ...TRAINING_SESSION_POPULATE,
   ]);
 
   if (!session) {
@@ -117,17 +117,17 @@ async function getClimbingSessionById(
   return withValidClimbHistories(session);
 }
 
-type UpsertClimbingSessionInput = {
+type UpsertTrainingSessionInput = {
   id?: string;
   title?: string;
   notes?: string;
   location?: string | null;
 };
 
-async function upsertClimbingSession(
+async function upsertTrainingSession(
   user: IUser,
-  input: UpsertClimbingSessionInput
-): Promise<ValidClimbingSession> {
+  input: UpsertTrainingSessionInput
+): Promise<ValidTrainingSession> {
   const userId = user._id;
 
   let sessionId: Types.ObjectId;
@@ -142,7 +142,7 @@ async function upsertClimbingSession(
         : null;
     }
 
-    const updated = await ClimbingSession.findOneAndUpdate(
+    const updated = await TrainingSession.findOneAndUpdate(
       { _id: input.id, owner: userId },
       { $set: update },
       { new: true, runValidators: true }
@@ -156,7 +156,7 @@ async function upsertClimbingSession(
     sessionId = updated._id;
   } else {
     const now = new Date();
-    const created = await ClimbingSession.create({
+    const created = await TrainingSession.create({
       owner: userId,
       title: input.title,
       notes: input.notes,
@@ -168,14 +168,14 @@ async function upsertClimbingSession(
     sessionId = created._id;
   }
 
-  return getClimbingSessionById(userId, sessionId.toString());
+  return getTrainingSessionById(userId, sessionId.toString());
 }
 
-async function deleteClimbingSession(
+async function deleteTrainingSession(
   owner: Types.ObjectId,
   id: string
 ): Promise<void> {
-  const result = await ClimbingSession.deleteOne({ _id: id, owner });
+  const result = await TrainingSession.deleteOne({ _id: id, owner });
 
   if (result.deletedCount === 0) {
     throw new ResourceNotFound(
@@ -184,12 +184,12 @@ async function deleteClimbingSession(
   }
 }
 
-function computeClimbingSessionSummary(
+function computeTrainingSessionSummary(
   histories: { status: ClimbHistoryStatus; climb: IClimb | null }[]
 ): SessionSummaryData {
   const count = histories.length;
   if (count === 0) {
-    return { ...EMPTY_CLIMBING_SESSION_SUMMARY };
+    return { ...EMPTY_TRAINING_SESSION_SUMMARY };
   }
 
   // Hardest *sent* grade; only grades present in GRADE_OPTIONS are
@@ -216,29 +216,29 @@ function computeClimbingSessionSummary(
 }
 
 /**
- * Recomputes the denormalized `summary` cache on a climbing session from its
+ * Recomputes the denormalized `summary` cache on a training session from its
  * climb histories. Must run after every write that touches the session's
  * derived data (try add/edit/remove, history delete), mirroring the
  * `computeTopStatus`-on-every-write pattern one level up.
  */
-async function recomputeClimbingSessionSummary(
+async function recomputeTrainingSessionSummary(
   sessionId: Types.ObjectId | string
 ): Promise<void> {
   const histories = await ClimbHistory.find({
     climbingSession: sessionId,
   }).populate<{ climb: IClimb | null }>('climb');
 
-  const summary = computeClimbingSessionSummary(histories);
+  const summary = computeTrainingSessionSummary(histories);
 
-  await ClimbingSession.updateOne({ _id: sessionId }, { $set: { summary } });
+  await TrainingSession.updateOne({ _id: sessionId }, { $set: { summary } });
 }
 
 export {
-  computeClimbingSessionSummary,
-  deleteClimbingSession,
-  getClimbingSessionById,
-  getClimbingSessions,
-  recomputeClimbingSessionSummary,
-  upsertClimbingSession,
+  computeTrainingSessionSummary,
+  deleteTrainingSession,
+  getTrainingSessionById,
+  getTrainingSessions,
+  recomputeTrainingSessionSummary,
+  upsertTrainingSession,
 };
-export type { ClimbingSessionsCursor, ValidClimbingSession };
+export type { TrainingSessionsCursor, ValidTrainingSession };

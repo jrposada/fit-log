@@ -1,19 +1,19 @@
 import type {
-  ClimbingSessionsGetQuery,
-  ClimbingSessionsGetResponse,
-} from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-get';
+  TrainingSessionsGetQuery,
+  TrainingSessionsGetResponse,
+} from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-get';
 import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { Types } from 'mongoose';
 
-import type { ClimbingSessionsCursor } from '../../../services/climbing-session.ts';
-import { getClimbingSessions } from '../../../services/climbing-session.ts';
+import type { TrainingSessionsCursor } from '../../../services/training-session.ts';
+import { getTrainingSessions } from '../../../services/training-session.ts';
 import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
-import { toApiClimbingSession } from '../../mappers/climbing-sessions.ts';
+import { toApiTrainingSession } from '../../mappers/training-sessions.ts';
 
-function decodeCursor(raw: string): ClimbingSessionsCursor | null {
+function decodeCursor(raw: string): TrainingSessionsCursor | null {
   try {
     const json = Buffer.from(raw, 'base64url').toString('utf8');
-    const parsed = JSON.parse(json) as ClimbingSessionsCursor;
+    const parsed = JSON.parse(json) as TrainingSessionsCursor;
     if (
       typeof parsed?.startedAt !== 'string' ||
       typeof parsed?.id !== 'string' ||
@@ -28,20 +28,20 @@ function decodeCursor(raw: string): ClimbingSessionsCursor | null {
   }
 }
 
-function encodeCursor(cursor: ClimbingSessionsCursor): string {
+function encodeCursor(cursor: TrainingSessionsCursor): string {
   return Buffer.from(JSON.stringify(cursor), 'utf8').toString('base64url');
 }
 
 const handler = toRequestHandler<
-  ClimbingSessionsGetResponse,
+  TrainingSessionsGetResponse,
   unknown,
-  ClimbingSessionsGetQuery
+  TrainingSessionsGetQuery
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
   const { cursor, ...filters } = request.query;
 
-  const { climbingSessions, nextCursor } = await getClimbingSessions(
+  const { trainingSessions, nextCursor } = await getTrainingSessions(
     request.user._id,
     {
       ...filters,
@@ -54,7 +54,7 @@ const handler = toRequestHandler<
     body: {
       success: true,
       data: {
-        climbingSessions: climbingSessions.map(toApiClimbingSession),
+        trainingSessions: trainingSessions.map(toApiTrainingSession),
         nextCursor: nextCursor ? encodeCursor(nextCursor) : null,
       },
     },

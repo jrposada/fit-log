@@ -1,5 +1,5 @@
 import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
-import { ClimbingSessionsGetByIdResponse } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-get-by-id';
+import { TrainingSessionsGetByIdResponse } from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-get-by-id';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
@@ -7,23 +7,23 @@ import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
-type UseClimbingSessionsById = {
+type UseTrainingSessionsById = {
   id: string | undefined;
 };
 
-function useClimbingSessionsById({ id }: UseClimbingSessionsById) {
+function useTrainingSessionsById({ id }: UseTrainingSessionsById) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
   const { getToken, refreshToken, logout } = useAuth();
 
   return useQuery({
-    queryKey: ['climbing-sessions', { id }],
+    queryKey: ['training-sessions', { id }],
     queryFn: query({
       refreshToken,
       logout,
       fn: async () => {
         const response = await axios.get<
-          ApiResponse<ClimbingSessionsGetByIdResponse>
-        >(`${apiBaseUrl}/climbing-sessions/${encodeURIComponent(id!)}`, {
+          ApiResponse<TrainingSessionsGetByIdResponse>
+        >(`${apiBaseUrl}/training-sessions/${encodeURIComponent(id!)}`, {
           headers: {
             Authorization: `Bearer ${getToken()}`,
           },
@@ -33,11 +33,11 @@ function useClimbingSessionsById({ id }: UseClimbingSessionsById) {
           throw new Error('Api error');
         }
 
-        return response.data.data.climbingSession;
+        return response.data.data.trainingSession;
       },
     }),
     enabled: !!id,
   });
 }
 
-export { useClimbingSessionsById };
+export { useTrainingSessionsById };

@@ -1,8 +1,8 @@
 import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import {
-  ClimbingSessionsGetQuery,
-  ClimbingSessionsGetResponse,
-} from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-get';
+  TrainingSessionsGetQuery,
+  TrainingSessionsGetResponse,
+} from '@jrposada/fit-log-shared/models/training-sessions/training-sessions-get';
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useMemo } from 'react';
@@ -11,32 +11,32 @@ import { useAuth } from '../../contexts/auth/use-auth';
 import { getEnvVariable } from '../../infrastructure/get-env-variable';
 import { query } from '../query';
 
-type UseClimbingSessionsParams = Omit<ClimbingSessionsGetQuery, 'cursor'>;
+type UseTrainingSessionsParams = Omit<TrainingSessionsGetQuery, 'cursor'>;
 
-function useClimbingSessions({
+function useTrainingSessions({
   limit,
   active,
-}: UseClimbingSessionsParams = {}) {
+}: UseTrainingSessionsParams = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
   const { getToken, refreshToken, logout } = useAuth();
 
   const result = useInfiniteQuery<
-    ClimbingSessionsGetResponse,
+    TrainingSessionsGetResponse,
     Error,
     {
-      pages: ClimbingSessionsGetResponse[];
+      pages: TrainingSessionsGetResponse[];
       pageParams: (string | undefined)[];
     },
     readonly unknown[],
     string | undefined
   >({
-    queryKey: ['climbing-sessions', { limit, active }],
+    queryKey: ['training-sessions', { limit, active }],
     initialPageParam: undefined,
     placeholderData: keepPreviousData,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     queryFn: ({ pageParam }) =>
-      query<ClimbingSessionsGetResponse>({
-        defaultResponse: { climbingSessions: [], nextCursor: null },
+      query<TrainingSessionsGetResponse>({
+        defaultResponse: { trainingSessions: [], nextCursor: null },
         refreshToken,
         logout,
         fn: async () => {
@@ -51,9 +51,9 @@ function useClimbingSessions({
             params.append('cursor', pageParam);
           }
 
-          const url = `${apiBaseUrl}/climbing-sessions${params.toString() ? `?${params.toString()}` : ''}`;
+          const url = `${apiBaseUrl}/training-sessions${params.toString() ? `?${params.toString()}` : ''}`;
           const response = await axios.get<
-            ApiResponse<ClimbingSessionsGetResponse>
+            ApiResponse<TrainingSessionsGetResponse>
           >(url, {
             headers: {
               Authorization: `Bearer ${getToken()}`,
@@ -70,11 +70,11 @@ function useClimbingSessions({
   });
 
   const items = useMemo(
-    () => result.data?.pages.flatMap((page) => page.climbingSessions) ?? [],
+    () => result.data?.pages.flatMap((page) => page.trainingSessions) ?? [],
     [result.data]
   );
 
   return { ...result, items };
 }
 
-export { useClimbingSessions };
+export { useTrainingSessions };

@@ -1,13 +1,13 @@
 import z from 'zod';
 
-import { ClimbingSession } from './climbing-session.ts';
+import { TrainingSession } from './training-session.ts';
 
-export type ClimbingSessionsGetQuery = {
+export type TrainingSessionsGetQuery = {
   limit?: number;
   cursor?: string;
   active?: boolean;
 };
-export const climbingSessionsGetQuerySchema = z.object({
+export const trainingSessionsGetQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(50).optional(),
   cursor: z.string().optional(),
   active: z
@@ -16,7 +16,7 @@ export const climbingSessionsGetQuerySchema = z.object({
     .optional(),
 });
 
-export type ClimbingSessionsGetResponse = {
-  climbingSessions: ClimbingSession[];
+export type TrainingSessionsGetResponse = {
+  trainingSessions: TrainingSession[];
   nextCursor: string | null;
 };

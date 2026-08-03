@@ -18,15 +18,15 @@ import {
   ClimbHistory,
   computeTopStatus,
 } from '../data/models/climb-history.ts';
-import type { IClimbingSession } from '../data/models/climbing-session.ts';
-import { ClimbingSession } from '../data/models/climbing-session.ts';
 import type { IImage } from '../data/models/image.ts';
 import type { ILocation } from '../data/models/location.ts';
 import type { ISector } from '../data/models/sector.ts';
+import type { ITrainingSession } from '../data/models/training-session.ts';
+import { TrainingSession } from '../data/models/training-session.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
 import RelatedEntityRequiredError from '../infrastructure/related-entity-required-error.ts';
 import type { WithRequiredRefs } from '../utils/types.ts';
-import { recomputeClimbingSessionSummary } from './climbing-session.ts';
+import { recomputeTrainingSessionSummary } from './training-session.ts';
 
 /** Direct refs on a climb-history that must be non-null to map. */
 type ValidClimbHistoryRefs = {
@@ -42,7 +42,7 @@ type ValidClimbHistory = MergeType<
     climb: WithRequiredRefs<IClimb>;
     location: ILocation;
     sector: MergeType<ISector, { images: IImage[] }>;
-    climbingSession: IClimbingSession | null;
+    climbingSession: ITrainingSession | null;
   }
 >;
 
@@ -90,7 +90,7 @@ async function getValidClimbHistory(
       path: 'sector',
       populate: ['images'],
     })
-    .populate<{ climbingSession: IClimbingSession | null }>('climbingSession');
+    .populate<{ climbingSession: ITrainingSession | null }>('climbingSession');
 
   assert(populated, { msg: 'ClimbHistory not found after save' });
   if (!hasValidRefs(populated)) {
@@ -200,7 +200,7 @@ async function getClimbHistories(
       path: 'sector',
       populate: ['images'],
     })
-    .populate<{ climbingSession: IClimbingSession | null }>('climbingSession');
+    .populate<{ climbingSession: ITrainingSession | null }>('climbingSession');
 
   const hasMore = climbHistories.length > pageSize;
   const pageHistories = hasMore
@@ -236,7 +236,7 @@ async function getClimbHistoryById(
       path: 'sector',
       populate: ['images'],
     })
-    .populate<{ climbingSession: IClimbingSession | null }>('climbingSession');
+    .populate<{ climbingSession: ITrainingSession | null }>('climbingSession');
 
   if (!climbHistory || !hasValidRefs(climbHistory)) {
     throw new ResourceNotFound(`ClimbHistory with id ${id} not found`);
@@ -455,7 +455,7 @@ async function getClimbHistoriesStats(
     ...(dateRange ? { startedAt: dateRange } : {}),
   };
 
-  const [sessionsRow] = await ClimbingSession.aggregate<SessionsRow>([
+  const [sessionsRow] = await TrainingSession.aggregate<SessionsRow>([
     { $match: sessionMatch },
     {
       $group: {
@@ -593,7 +593,7 @@ async function upsertClimbHistoryTry(
   const populated = await getValidClimbHistory(climbHistory._id);
 
   if (populated.climbingSession) {
-    await recomputeClimbingSessionSummary(populated.climbingSession._id);
+    await recomputeTrainingSessionSummary(populated.climbingSession._id);
   }
 
   return populated;
@@ -682,7 +682,7 @@ async function deleteClimbHistory(
   }
 
   if (affectedSessionId) {
-    await recomputeClimbingSessionSummary(affectedSessionId);
+    await recomputeTrainingSessionSummary(affectedSessionId);
   }
 }
 

@@ -1,9 +1,9 @@
 import { ClimbHistoryStatus } from '../../common/climb-histories/climb-history-statuses.ts';
 import { WithDepopulatedOwnership } from '../auth/with-ownership.ts';
-import { ClimbingSession } from '../climbing-sessions/climbing-session.ts';
 import { Climb } from '../climbs/climb.ts';
 import { Location } from '../locations/location.ts';
 import { Sector } from '../sectors/sector.ts';
+import { TrainingSession } from '../training-sessions/training-session.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
 
 export type ClimbHistoryTry = {
@@ -40,7 +40,7 @@ export type ClimbHistory = WithTimestamps<{
     climbs: string[];
   };
   climbingSession:
-    | (Omit<ClimbingSession, 'location' | 'climbHistories'> & {
+    | (Omit<TrainingSession, 'location' | 'climbHistories'> & {
         location?: string;
         climbHistories: string[];
       })

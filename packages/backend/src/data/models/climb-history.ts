@@ -115,7 +115,7 @@ const climbHistorySchema = new Schema<IClimbHistory>(
     },
     climbingSession: {
       type: Schema.Types.ObjectId,
-      ref: 'climbingSession',
+      ref: 'TrainingSession',
       required: false,
       default: null,
     },

@@ -1,15 +1,15 @@
-import type { ClimbingSession } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-session';
+import type { TrainingSession } from '@jrposada/fit-log-shared/models/training-sessions/training-session';
 import type { MergeType } from 'mongoose';
 
 import type { IClimbHistory } from '../../data/models/climb-history.ts';
-import type { IClimbingSession } from '../../data/models/climbing-session.ts';
 import type { ILocation } from '../../data/models/location.ts';
+import type { ITrainingSession } from '../../data/models/training-session.ts';
 import type { ValidClimbHistoryRefs } from '../../services/climb-history.ts';
 import { toApiDepopulatedClimbHistory } from './climb-histories.ts';
 import { toApiDepopulatedLocation } from './locations.ts';
 
-function toApiDepopulatedClimbingSession(model: IClimbingSession): Omit<
-  ClimbingSession,
+function toApiDepopulatedTrainingSession(model: ITrainingSession): Omit<
+  TrainingSession,
   'location' | 'climbHistories'
 > & {
   location?: string;
@@ -37,15 +37,15 @@ function toApiDepopulatedClimbingSession(model: IClimbingSession): Omit<
   };
 }
 
-function toApiClimbingSession(
+function toApiTrainingSession(
   model: MergeType<
-    IClimbingSession,
+    ITrainingSession,
     {
       climbHistories: MergeType<IClimbHistory, ValidClimbHistoryRefs>[];
       location: ILocation | null;
     }
   >
-): ClimbingSession {
+): TrainingSession {
   return {
     /* Data */
     id: model._id.toString(),
@@ -70,4 +70,4 @@ function toApiClimbingSession(
   };
 }
 
-export { toApiClimbingSession, toApiDepopulatedClimbingSession };
+export { toApiDepopulatedTrainingSession, toApiTrainingSession };

@@ -6,10 +6,10 @@ import type {
   ValidClimbHistory,
   ValidClimbHistoryRefs,
 } from '../../services/climb-history.ts';
-import { toApiDepopulatedClimbingSession } from './climbing-sessions.ts';
 import { toApiDepopulatedClimb } from './climbs.ts';
 import { toApiDepopulatedLocation } from './locations.ts';
 import { toApiDepopulatedSector } from './sectors.ts';
+import { toApiDepopulatedTrainingSession } from './training-sessions.ts';
 
 function toApiDepopulatedClimbHistory(
   model: MergeType<IClimbHistory, ValidClimbHistoryRefs>
@@ -67,7 +67,7 @@ function toApiClimbHistory(model: ValidClimbHistory): ClimbHistory {
     location: toApiDepopulatedLocation(model.location),
     sector: toApiDepopulatedSector(model.sector),
     climbingSession: model.climbingSession
-      ? toApiDepopulatedClimbingSession(model.climbingSession)
+      ? toApiDepopulatedTrainingSession(model.climbingSession)
       : null,
 
     /* Timestamps */

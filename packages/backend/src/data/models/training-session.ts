@@ -1,5 +1,5 @@
-import { SESSION_STALE_MS } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-session';
 import type { SessionSummaryData } from '@jrposada/fit-log-shared/models/feed/feed';
+import { SESSION_STALE_MS } from '@jrposada/fit-log-shared/models/training-sessions/training-session';
 import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
@@ -8,12 +8,12 @@ import { sessionBaseFields, sessionSummarySchema } from './_session-base.ts';
 
 export { SESSION_STALE_MS };
 
-export const EMPTY_CLIMBING_SESSION_SUMMARY: SessionSummaryData = {
+export const EMPTY_TRAINING_SESSION_SUMMARY: SessionSummaryData = {
   headline: '0 routes',
   count: 0,
 };
 
-export interface IClimbingSession
+export interface ITrainingSession
   extends WithTimestamps<Document>, WithSessionBase {
   /* Data */
   sport: 'climbing';
@@ -23,7 +23,7 @@ export interface IClimbingSession
   climbHistories: Types.ObjectId[];
 }
 
-const climbingSessionSchema = new Schema<IClimbingSession>(
+const trainingSessionSchema = new Schema<ITrainingSession>(
   {
     /* Session contract */
     ...sessionBaseFields,
@@ -37,7 +37,7 @@ const climbingSessionSchema = new Schema<IClimbingSession>(
       type: sessionSummarySchema,
       required: true,
       default: (): SessionSummaryData => ({
-        ...EMPTY_CLIMBING_SESSION_SUMMARY,
+        ...EMPTY_TRAINING_SESSION_SUMMARY,
       }),
     },
 
@@ -60,11 +60,11 @@ const climbingSessionSchema = new Schema<IClimbingSession>(
   }
 );
 
-climbingSessionSchema.index({ owner: 1 });
+trainingSessionSchema.index({ owner: 1 });
 // Feed keyset pagination: newest `startedAt` first, `_id` as tiebreaker.
-climbingSessionSchema.index({ owner: 1, startedAt: -1, _id: -1 });
+trainingSessionSchema.index({ owner: 1, startedAt: -1, _id: -1 });
 
-export const ClimbingSession = model<IClimbingSession>(
-  'climbingSession',
-  climbingSessionSchema
+export const TrainingSession = model<ITrainingSession>(
+  'TrainingSession',
+  trainingSessionSchema
 );

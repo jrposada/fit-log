@@ -7,7 +7,7 @@ import { WithTimestamps } from '../utils/with-timestamps.ts';
  * write starts a fresh session rather than resuming it. */
 export const SESSION_STALE_MS = 4 * 60 * 60 * 1000;
 
-export type ClimbingSession = WithTimestamps<{
+export type TrainingSession = WithTimestamps<{
   /* Data */
   id: string;
   title: string;

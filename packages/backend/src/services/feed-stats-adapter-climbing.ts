@@ -1,4 +1,4 @@
-import { ClimbingSession } from '../data/models/climbing-session.ts';
+import { TrainingSession } from '../data/models/training-session.ts';
 import type { FeedStatsAdapter } from './feed-stats.ts';
 
 const SPORT = 'climbing' as const;
@@ -19,7 +19,7 @@ export const climbingFeedStatsAdapter: FeedStatsAdapter = {
         : {}),
     };
 
-    const sessions = await ClimbingSession.find(filter)
+    const sessions = await TrainingSession.find(filter)
       .select({ startedAt: 1, endedAt: 1 })
       .lean();
 
