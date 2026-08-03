@@ -8,7 +8,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
-import type { WithRequiredRefs } from '../data/infrastructure/types.ts';
+import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import type {
   ClimbHistoryStatus,

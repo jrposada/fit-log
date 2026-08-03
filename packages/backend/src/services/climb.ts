@@ -10,8 +10,8 @@ import type {
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
 import { addOrUpdateCollaborator } from '../data/infrastructure/add-or-update-collaborator.ts';
 import { removeCollaborator } from '../data/infrastructure/remove-collaborator.ts';
-import type { WithRequiredRefs } from '../data/infrastructure/types.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
+import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import { Climb } from '../data/models/climb.ts';
 import type { ClimbHistoryStatus } from '../data/models/climb-history.ts';
