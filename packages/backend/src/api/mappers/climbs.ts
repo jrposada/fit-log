@@ -1,14 +1,14 @@
 import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { Climb } from '@jrposada/fit-log-shared/models/climbs/climb';
-import type { MergeType } from 'mongoose';
 
-import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
 import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
-import type { ClimbRequiredRefs, IClimb } from '../../data/models/climb.ts';
-import type { IImage } from '../../data/models/image.ts';
-import type { ILocation } from '../../data/models/location.ts';
-import type { IModel3d } from '../../data/models/model-3d.ts';
-import type { ISector } from '../../data/models/sector.ts';
+import type {
+  ClimbRefs,
+  ClimbRequiredRefs,
+  IClimb,
+} from '../../data/models/climb.ts';
+import type { ValidClimb } from '../../services/climb.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
@@ -21,15 +21,7 @@ import { toApiUserSummary } from './user-summary.ts';
 
 function toApiDepopulatedClimb(
   model: WithRequiredRefs<IClimb, ClimbRequiredRefs>
-): Omit<
-  WithDepopulatedOwnership<Climb>,
-  'image' | 'location' | 'sector' | 'model3d'
-> & {
-  image: string | null;
-  location: string;
-  sector: string;
-  model3d: string | null;
-} {
+): WithDepopulatedRefs<WithDepopulatedOwnership<Climb>, ClimbRefs> {
   return {
     /* Data */
     id: model._id.toString(),
@@ -55,17 +47,7 @@ function toApiDepopulatedClimb(
   };
 }
 
-function toApiClimb(
-  model: MergeType<
-    WithPopulatedOwnership<IClimb>,
-    {
-      image: IImage | null;
-      location: ILocation;
-      sector: MergeType<ISector, { images: IImage[] }>;
-      model3d: IModel3d | null;
-    }
-  >
-): Climb {
+function toApiClimb(model: ValidClimb): Climb {
   return {
     /* Data */
     id: model._id.toString(),

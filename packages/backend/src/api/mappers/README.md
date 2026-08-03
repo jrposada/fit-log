@@ -44,22 +44,28 @@ each end has its own aux type in `data/infrastructure/`. Don't hand-roll
 
 - **Output (the API shape)** — `WithDepopulatedRefs<T, K>`. Start from the
   full API type (`shared/models/<entity>.ts`) and collapse the named refs down
-  to id strings: `Omit<T, K> & { [P in K]: string }`. A ref whose type
-  includes `null` depopulates to `string | null` — the null case survives, it
-  isn't dropped. This means `K` should be _every_ ref on the entity, not just
-  the required ones, or a ref will silently disappear from the return type
-  instead of becoming a string.
+  to their id(s): `Omit<T, K> & { [P in K]: ... }`. A ref typed as an array
+  (e.g. a Location's `sectors`) collapses to `string[]`. A scalar ref whose
+  type includes `null` (an optional ref) collapses to `string | null` — the
+  null case survives, it isn't dropped — and every other scalar ref collapses
+  to `string`. This means `K` should be _every_ ref on the entity that the API
+  shape actually depopulates, or a ref will silently keep its populated type
+  instead of collapsing. A ref the API shape always embeds fully instead of
+  collapsing (e.g. a Sector's `images` — a leaf doc with no further references
+  to break) is simply left out of `K`.
 
 ### Naming convention
 
-Each model file (`data/models/<entity>.ts`) exports two key-union types next
-to the interface:
+Each model file (`data/models/<entity>.ts`) exports key-union types next to
+the interface:
 
-- `<Entity>Refs` — all refs on the entity. Feed this to `WithDepopulatedRefs`
-  for the return type.
-- `<Entity>RequiredRefs` — the subset that's mandatory (a strict subset of
-  `<Entity>Refs`, or equal to it if the entity has no optional refs). Feed
-  this to `WithRequiredRefs` for the input model type.
+- `<Entity>Refs` — every ref on the entity that the API shape depopulates
+  (scalar or array). Feed this to `WithDepopulatedRefs` for the return type.
+- `<Entity>RequiredRefs` — the subset of `<Entity>Refs` that's mandatory (or
+  equal to it if the entity has no optional refs). Feed this to
+  `WithRequiredRefs` for the input model type. Array refs are never optional
+  here — they default to `[]`, never `null` — so this only ever names scalar
+  refs.
 
 ```ts
 function toApiDepopulatedClimbHistory(

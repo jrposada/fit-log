@@ -17,6 +17,9 @@ export interface ILocation extends WithTimestamps<Document>, WithOwnership {
   /* References */
   sectors: Types.ObjectId[];
 }
+
+export type LocationRefs = 'sectors';
+
 const locationSchema = new Schema<ILocation>(
   {
     /* Data */

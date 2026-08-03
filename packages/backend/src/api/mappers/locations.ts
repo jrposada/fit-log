@@ -3,10 +3,9 @@ import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/a
 import type { Location } from '@jrposada/fit-log-shared/models/locations/location';
 import type { MergeType } from 'mongoose';
 
-import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
-import type { IImage } from '../../data/models/image.ts';
-import type { ILocation } from '../../data/models/location.ts';
-import type { ISector } from '../../data/models/sector.ts';
+import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
+import type { ILocation, LocationRefs } from '../../data/models/location.ts';
+import type { ValidLocation } from '../../services/location.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
@@ -16,7 +15,7 @@ import { toApiUserSummary } from './user-summary.ts';
 
 function toApiDepopulatedLocation(
   model: ILocation
-): Omit<WithDepopulatedOwnership<Location>, 'sectors'> & { sectors: string[] } {
+): WithDepopulatedRefs<WithDepopulatedOwnership<Location>, LocationRefs> {
   return {
     /* Data */
     id: model._id.toString(),
@@ -40,10 +39,7 @@ function toApiDepopulatedLocation(
 }
 
 function toApiLocation(
-  model: MergeType<
-    WithPopulatedOwnership<ILocation>,
-    { sectors: MergeType<ISector, { images: IImage[] }>[]; sports?: Sport[] }
-  >
+  model: MergeType<ValidLocation, { sports?: Sport[] }>
 ): Location {
   return {
     /* Data */

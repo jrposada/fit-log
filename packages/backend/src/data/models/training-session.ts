@@ -23,6 +23,14 @@ export interface ITrainingSession
   climbHistories: Types.ObjectId[];
 }
 
+/**
+ * `location` (inherited from `WithSessionBase`) isn't included: the API
+ * shape depopulates it to an optional property (`location?:`) rather than a
+ * nullable one, which the generic helper's null-check can't express — the
+ * mapper composes that one by hand instead.
+ */
+export type TrainingSessionRefs = 'climbHistories';
+
 const trainingSessionSchema = new Schema<ITrainingSession>(
   {
     /* Session contract */

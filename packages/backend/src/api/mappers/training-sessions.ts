@@ -1,22 +1,19 @@
 import type { TrainingSession } from '@jrposada/fit-log-shared/models/training-sessions/training-session';
-import type { MergeType } from 'mongoose';
 
-import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
+import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
 import type {
-  ClimbHistoryRequiredRefs,
-  IClimbHistory,
-} from '../../data/models/climb-history.ts';
-import type { ILocation } from '../../data/models/location.ts';
-import type { ITrainingSession } from '../../data/models/training-session.ts';
+  ITrainingSession,
+  TrainingSessionRefs,
+} from '../../data/models/training-session.ts';
+import type { ValidTrainingSession } from '../../services/training-session.ts';
 import { toApiDepopulatedClimbHistory } from './climb-histories.ts';
 import { toApiDepopulatedLocation } from './locations.ts';
 
 function toApiDepopulatedTrainingSession(model: ITrainingSession): Omit<
-  TrainingSession,
-  'location' | 'climbHistories'
+  WithDepopulatedRefs<TrainingSession, TrainingSessionRefs>,
+  'location'
 > & {
   location?: string;
-  climbHistories: string[];
 } {
   return {
     /* Data */
@@ -40,18 +37,7 @@ function toApiDepopulatedTrainingSession(model: ITrainingSession): Omit<
   };
 }
 
-function toApiTrainingSession(
-  model: MergeType<
-    ITrainingSession,
-    {
-      climbHistories: WithRequiredRefs<
-        IClimbHistory,
-        ClimbHistoryRequiredRefs
-      >[];
-      location: ILocation | null;
-    }
-  >
-): TrainingSession {
+function toApiTrainingSession(model: ValidTrainingSession): TrainingSession {
   return {
     /* Data */
     id: model._id.toString(),

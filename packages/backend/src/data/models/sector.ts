@@ -19,6 +19,14 @@ export interface ISector extends WithTimestamps<Document>, WithOwnership {
   images: Types.ObjectId[];
   climbs: Types.ObjectId[];
 }
+
+/**
+ * `images` isn't included: the API shape always embeds images fully (they
+ * have no further references to break), so it never collapses to an id
+ * string the way `climbs` does.
+ */
+export type SectorRefs = 'climbs';
+
 const sectorSchema = new Schema<ISector>(
   {
     /* Data */
