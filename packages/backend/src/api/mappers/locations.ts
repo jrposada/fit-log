@@ -1,3 +1,4 @@
+import type { Sport } from '@jrposada/fit-log-shared/common/sports/sports';
 import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { Location } from '@jrposada/fit-log-shared/models/locations/location';
 import type { MergeType } from 'mongoose';
@@ -41,7 +42,7 @@ function toApiDepopulatedLocation(
 function toApiLocation(
   model: MergeType<
     WithPopulatedOwnership<ILocation>,
-    { sectors: MergeType<ISector, { images: IImage[] }>[] }
+    { sectors: MergeType<ISector, { images: IImage[] }>[]; sports?: Sport[] }
   >
 ): Location {
   return {
@@ -52,6 +53,7 @@ function toApiLocation(
     latitude: model.latitude,
     longitude: model.longitude,
     googleMapsId: model.googleMapsId,
+    sports: model.sports,
 
     /* Ownership */
     owner: toApiUserSummary(model.owner),

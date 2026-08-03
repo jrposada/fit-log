@@ -14,7 +14,7 @@ const handler = toApiResponse<LocationsGetByIdResponse, LocationsGetByIdParams>(
 
     const { id } = request.params;
 
-    const location = await getLocationById(id);
+    const location = await getLocationById(request.user._id, id);
 
     return {
       statusCode: 200,

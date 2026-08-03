@@ -1,3 +1,4 @@
+import type { Sport } from '@jrposada/fit-log-shared/common/sports/sports';
 import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
@@ -19,12 +20,27 @@ import {
   removeCollaborator,
 } from '../utils/collaborator-mutators.ts';
 import { upsertOwnedDocument } from '../utils/upsert-owned-document.ts';
+import { getSportsByLocationId } from './feed.ts';
 
 /** Fully populated location, as returned to API mappers. */
 type ValidLocation = MergeType<
   WithPopulatedOwnership<ILocation>,
   { sectors: MergeType<ISector, { images: IImage[] }>[] }
 >;
+
+/** A location annotated with the requesting owner's derived sport(s). */
+type LocationWithSports = MergeType<ValidLocation, { sports: Sport[] }>;
+
+function attachSports(
+  locations: ValidLocation[],
+  sportsByLocationId: Map<string, Sport[]>
+): LocationWithSports[] {
+  return locations.map((location) =>
+    Object.assign(location, {
+      sports: sportsByLocationId.get(location._id.toString()) ?? [],
+    })
+  );
+}
 
 const DEFAULT_LIMIT = 20;
 
@@ -37,8 +53,12 @@ type FindLocationsOptions = {
 };
 
 async function getLocations(
+  ownerId: Types.ObjectId,
   options: FindLocationsOptions
-): Promise<{ locations: ValidLocation[]; nextCursor: LocationsCursor | null }> {
+): Promise<{
+  locations: LocationWithSports[];
+  nextCursor: LocationsCursor | null;
+}> {
   const { limit, cursor } = options;
 
   const filter: Record<string, unknown> = {};
@@ -53,16 +73,19 @@ async function getLocations(
 
   const pageSize = limit ?? DEFAULT_LIMIT;
 
-  const locations = await Location.find(filter)
-    .sort({ createdAt: -1, _id: -1 })
-    .limit(pageSize + 1)
-    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{
-      sectors: MergeType<ISector, { images: IImage[] }>[];
-    }>({
-      path: 'sectors',
-      populate: ['images'],
-    });
+  const [locations, sportsByLocationId] = await Promise.all([
+    Location.find(filter)
+      .sort({ createdAt: -1, _id: -1 })
+      .limit(pageSize + 1)
+      .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+      .populate<{
+        sectors: MergeType<ISector, { images: IImage[] }>[];
+      }>({
+        path: 'sectors',
+        populate: ['images'],
+      }),
+    getSportsByLocationId(ownerId),
+  ]);
 
   const hasMore = locations.length > pageSize;
   const pageLocations = hasMore ? locations.slice(0, pageSize) : locations;
@@ -73,24 +96,33 @@ async function getLocations(
       ? { createdAt: last.createdAt.toISOString(), id: last._id.toString() }
       : null;
 
-  return { locations: pageLocations, nextCursor };
+  return {
+    locations: attachSports(pageLocations, sportsByLocationId),
+    nextCursor,
+  };
 }
 
-async function getLocationById(id: string): Promise<ValidLocation> {
-  const location = await Location.findById(id)
-    .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{
-      sectors: MergeType<ISector, { images: IImage[] }>[];
-    }>({
-      path: 'sectors',
-      populate: ['images'],
-    });
+async function getLocationById(
+  ownerId: Types.ObjectId,
+  id: string
+): Promise<LocationWithSports> {
+  const [location, sportsByLocationId] = await Promise.all([
+    Location.findById(id)
+      .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
+      .populate<{
+        sectors: MergeType<ISector, { images: IImage[] }>[];
+      }>({
+        path: 'sectors',
+        populate: ['images'],
+      }),
+    getSportsByLocationId(ownerId),
+  ]);
 
   if (!location) {
     throw new ResourceNotFound(`Location with id ${id} not found`);
   }
 
-  return location;
+  return attachSports([location], sportsByLocationId)[0]!;
 }
 
 type UpsertLocationInput = {
@@ -202,4 +234,4 @@ export {
   removeLocationCollaborator,
   upsertLocation,
 };
-export type { LocationsCursor, ValidLocation };
+export type { LocationsCursor, LocationWithSports, ValidLocation };
