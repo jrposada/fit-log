@@ -8,12 +8,10 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
+import { addOrUpdateCollaborator } from '../data/infrastructure/add-or-update-collaborator.ts';
 import type { BatchUpsertOwnedItem } from '../data/infrastructure/batch-upsert-owned-document.ts';
 import { batchUpsertOwnedDocument } from '../data/infrastructure/batch-upsert-owned-document.ts';
-import {
-  addOrUpdateCollaborator,
-  removeCollaborator,
-} from '../data/infrastructure/collaborator-mutators.ts';
+import { removeCollaborator } from '../data/infrastructure/remove-collaborator.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import type { IImage } from '../data/models/image.ts';
