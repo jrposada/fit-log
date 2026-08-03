@@ -8,8 +8,8 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
-import { addOrUpdateCollaborator } from '../data/infrastructure/add-or-update-collaborator.ts';
 import { removeCollaborator } from '../data/infrastructure/remove-collaborator.ts';
+import { upsertCollaborator } from '../data/infrastructure/upsert-collaborator.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
 import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
 import type { IClimb } from '../data/models/climb.ts';
@@ -277,13 +277,7 @@ async function addClimbCollaborator(
   granteeId: string,
   permission: CollaboratorPermission
 ): Promise<ValidClimb> {
-  const climb = await addOrUpdateCollaborator(
-    Climb,
-    id,
-    granteeId,
-    permission,
-    user
-  )
+  const climb = await upsertCollaborator(Climb, id, granteeId, permission, user)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{ image: IImage; location: ILocation }>(['image', 'location'])
     .populate<{ sector: MergeType<ISector, { images: IImage[] }> }>({

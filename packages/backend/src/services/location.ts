@@ -9,8 +9,8 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
-import { addOrUpdateCollaborator } from '../data/infrastructure/add-or-update-collaborator.ts';
 import { removeCollaborator } from '../data/infrastructure/remove-collaborator.ts';
+import { upsertCollaborator } from '../data/infrastructure/upsert-collaborator.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
 import type { IImage } from '../data/models/image.ts';
 import type { ILocation } from '../data/models/location.ts';
@@ -173,7 +173,7 @@ async function addLocationCollaborator(
   granteeId: string,
   permission: CollaboratorPermission
 ): Promise<ValidLocation> {
-  const location = await addOrUpdateCollaborator(
+  const location = await upsertCollaborator(
     Location,
     id,
     granteeId,

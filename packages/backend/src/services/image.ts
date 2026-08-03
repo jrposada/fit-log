@@ -6,8 +6,8 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
-import { addOrUpdateCollaborator } from '../data/infrastructure/add-or-update-collaborator.ts';
 import { removeCollaborator } from '../data/infrastructure/remove-collaborator.ts';
+import { upsertCollaborator } from '../data/infrastructure/upsert-collaborator.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
 import type { IImage } from '../data/models/image.ts';
 import { Image } from '../data/models/image.ts';
@@ -54,7 +54,7 @@ async function addImageCollaborator(
   granteeId: string,
   permission: CollaboratorPermission
 ): Promise<ValidImage> {
-  const image = await addOrUpdateCollaborator(
+  const image = await upsertCollaborator(
     Image,
     id,
     granteeId,

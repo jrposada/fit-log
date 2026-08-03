@@ -16,7 +16,7 @@ import type { IUser } from '../models/user.ts';
  * Resolves to `null` when the doc doesn't exist or the requester isn't
  * authorized; the caller decides 404 vs 403.
  */
-export function addOrUpdateCollaborator<T extends Document>(
+export function upsertCollaborator<T extends Document>(
   model: Model<T>,
   id: string,
   granteeId: string,

@@ -8,10 +8,10 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
-import { addOrUpdateCollaborator } from '../data/infrastructure/add-or-update-collaborator.ts';
 import type { BatchUpsertOwnedItem } from '../data/infrastructure/batch-upsert-owned-document.ts';
 import { batchUpsertOwnedDocument } from '../data/infrastructure/batch-upsert-owned-document.ts';
 import { removeCollaborator } from '../data/infrastructure/remove-collaborator.ts';
+import { upsertCollaborator } from '../data/infrastructure/upsert-collaborator.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import type { IImage } from '../data/models/image.ts';
@@ -143,7 +143,7 @@ async function addSectorCollaborator(
   granteeId: string,
   permission: CollaboratorPermission
 ): Promise<ValidSector> {
-  const sector = await addOrUpdateCollaborator(
+  const sector = await upsertCollaborator(
     Sector,
     id,
     granteeId,
