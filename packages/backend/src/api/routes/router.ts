@@ -8,7 +8,6 @@ import { registerImagesRoutes } from './images/images-routes.ts';
 import { registerLocationsRoutes } from './locations/locations-routes.ts';
 import { registerMeRoutes } from './me/me-routes.ts';
 import { registerSectorsRoutes } from './sectors/sectors-routes.ts';
-import { registerSessionsRoutes } from './sessions/sessions-routes.ts';
 import { registerVersionRoutes } from './version/version-routes.ts';
 import { registerWorkoutsRoutes } from './workouts/workouts-routes.ts';
 
@@ -18,7 +17,6 @@ registerVersionRoutes(router);
 registerMeRoutes(router);
 registerFeedRoutes(router);
 registerWorkoutsRoutes(router);
-registerSessionsRoutes(router);
 registerClimbingSessionsRoutes(router);
 registerLocationsRoutes(router);
 registerSectorsRoutes(router);
