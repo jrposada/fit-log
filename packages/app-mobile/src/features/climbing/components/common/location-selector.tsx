@@ -10,12 +10,10 @@ import LoadingState from '../../../../library/loading-state';
 import Section from '../../../../library/section';
 import Select from '../../../../library/select';
 import { Typography } from '../../../../library/typography';
-import { ClimbingParamList } from '../../types';
+import { RootStackParamList } from '../../../../types/routes';
 
-type LocationSelectorNavigationProp = NativeStackNavigationProp<
-  ClimbingParamList,
-  'ClimbingMain'
->;
+type LocationSelectorNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
 
 export interface LocationSelectorProps {
   value: string;

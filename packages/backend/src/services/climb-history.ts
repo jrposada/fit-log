@@ -108,6 +108,7 @@ type GetClimbHistoriesOptions = {
   climbId?: string;
   locationId?: string;
   sectorId?: string;
+  climbingSession?: string;
   status?: ClimbHistoriesGetQueryStatus[];
   startDate?: string;
   endDate?: string;
@@ -126,6 +127,7 @@ async function getClimbHistories(
     climbId,
     locationId,
     sectorId,
+    climbingSession,
     status,
     startDate,
     endDate,
@@ -140,6 +142,7 @@ async function getClimbHistories(
     ...(climbId ? { climb: climbId } : {}),
     ...(locationId ? { location: locationId } : {}),
     ...(sectorId ? { sector: sectorId } : {}),
+    ...(climbingSession ? { climbingSession } : {}),
     ...(startDate || endDate
       ? {
           updatedAt: {

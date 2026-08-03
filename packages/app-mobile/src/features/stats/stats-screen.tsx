@@ -1,4 +1,4 @@
-import { SPORTS } from '@jrposada/fit-log-shared/common/sports/sports';
+import { Sport, SPORTS } from '@jrposada/fit-log-shared/common/sports/sports';
 import { useFeedStats } from '@jrposada/fit-log-shared-react/api/feed/use-feed-stats';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,7 @@ import Stack from '../../library/stack';
 import Tabs, { TabBarItem } from '../../library/tabs';
 import { accent, ink, palette, spacing, typography } from '../../library/theme';
 import { Typography } from '../../library/typography';
+import ClimbingStatsPanel from '../climbing/components/climbing-stats-panel/climbing-stats-panel';
 import { SportFilter } from '../feed/sport-filter-context';
 import { SPORT_ICONS } from '../feed/sport-icons';
 import { useSportFilter } from '../feed/use-sport-filter';
@@ -130,9 +131,18 @@ const StatsScreen: FunctionComponent = () => {
         onChange={setSportFilter}
       />
 
-      {sportFilter !== 'all' ? (
+      {sportFilter === 'climbing' ? (
+        <ClimbingStatsPanel />
+      ) : sportFilter !== 'all' ? (
         <Section gap="md">
-          <EmptyState message={t('stats.climbing_placeholder')} />
+          {/* `sportFilter` narrows to `never` here today (only 'climbing'
+              exists), which breaks the i18next key check below — cast back
+              to keep this branch typechecking as new sports are added. */}
+          <EmptyState
+            message={t('stats.sport_placeholder', {
+              sport: t(`${sportFilter as Sport}.title`),
+            })}
+          />
         </Section>
       ) : (
         <Section gap="md">

@@ -1,3 +1,4 @@
+import { SESSION_STALE_MS } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-session';
 import type { SessionSummaryData } from '@jrposada/fit-log-shared/models/feed/feed';
 import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
@@ -5,7 +6,7 @@ import { model, Schema } from 'mongoose';
 import type { WithSessionBase } from './_session-base.ts';
 import { sessionBaseFields, sessionSummarySchema } from './_session-base.ts';
 
-export const SESSION_STALE_MS = 4 * 60 * 60 * 1000;
+export { SESSION_STALE_MS };
 
 export const EMPTY_CLIMBING_SESSION_SUMMARY: SessionSummaryData = {
   headline: '0 routes',

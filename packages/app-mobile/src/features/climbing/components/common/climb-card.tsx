@@ -16,7 +16,8 @@ import Separator from '../../../../library/separator';
 import Stack from '../../../../library/stack';
 import { accent, semantic } from '../../../../library/theme';
 import { Typography } from '../../../../library/typography';
-import { ClimbingParamList } from '../../types';
+import { RootStackParamList } from '../../../../types/routes';
+import { useActiveClimbingSession } from '../../hooks/use-active-climbing-session';
 import ClimbStatusBadge from './climb-status-badge';
 import GradeBadge from './grade-badge';
 
@@ -27,10 +28,7 @@ const SWIPE_COLORS = {
   leftEmphasis: accent.emphasis,
 } as const;
 
-type ClimbCardNavigationProp = NativeStackNavigationProp<
-  ClimbingParamList,
-  'ClimbingMain'
->;
+type ClimbCardNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 interface ClimbCardProps {
   climb: Pick<Climb, 'id' | 'name' | 'grade'>;
@@ -54,6 +52,7 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
 
   const climbHistoriesPut = useClimbHistoriesPut();
   const climbHistoryProject = useClimbHistoryProject();
+  const { ensureActiveClimbingSession } = useActiveClimbingSession();
 
   const loading = climbHistoriesPut.isPending || climbHistoryProject.isPending;
 
@@ -69,15 +68,23 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
     navigation.navigate('ClimbDetail', { climbId: climb.id });
   };
 
-  const handleLog = useCallback(() => {
+  const handleLog = useCallback(async () => {
+    const climbingSession = await ensureActiveClimbingSession();
     climbHistoriesPut.mutate({
       climb: climb.id,
       location: location.id,
       sector: sector.id,
       status: 'send',
       attempts: 1,
+      climbingSession,
     });
-  }, [climb.id, climbHistoriesPut, location.id, sector.id]);
+  }, [
+    climb.id,
+    climbHistoriesPut,
+    ensureActiveClimbingSession,
+    location.id,
+    sector.id,
+  ]);
 
   const handleToggleProject = useCallback(() => {
     climbHistoryProject.mutate({

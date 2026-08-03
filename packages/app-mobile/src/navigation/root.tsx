@@ -8,6 +8,9 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import AuthStack from '../features/auth/auth-stack';
+import ClimbDetailScreen from '../features/climbing/screens/climb-detail-screen';
+import ClimbLogScreen from '../features/climbing/screens/climb-log-screen';
+import ClimbingSessionDetailScreen from '../features/climbing/screens/climbing-session-detail-screen';
 import LocationDetailScreen from '../features/climbing/screens/location-detail-screen';
 import { SportFilterProvider } from '../features/feed/sport-filter-context';
 import HistoryScreen from '../features/history/history-screen';
@@ -141,6 +144,27 @@ const Root: FunctionComponent = () => {
             ),
             presentation: 'modal',
           })}
+        />
+        <Stack.Screen
+          name="ClimbDetail"
+          component={ClimbDetailScreen}
+          options={{
+            presentation: 'modal',
+            gestureEnabled: true,
+          }}
+        />
+        <Stack.Screen
+          name="ClimbLog"
+          component={ClimbLogScreen}
+          options={{
+            headerShown: true,
+            header: () => <Header title={t('climbing.title')} back />,
+          }}
+        />
+        <Stack.Screen
+          name="ClimbingSessionDetail"
+          component={ClimbingSessionDetailScreen}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
           name="MapPointPicker"

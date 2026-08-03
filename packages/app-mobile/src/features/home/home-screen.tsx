@@ -16,6 +16,7 @@ import Stack from '../../library/stack';
 import { palette, spacing } from '../../library/theme';
 import { RootStackParamList } from '../../types/routes';
 import FeedRow from '../feed/components/feed-row';
+import { navigateToSessionDetail } from '../feed/navigate-to-session-detail';
 import { SPORT_ICONS } from '../feed/sport-icons';
 import { styles } from './home-screen.styles';
 
@@ -133,7 +134,11 @@ const HomeScreen: FunctionComponent = () => {
             ) : (
               <Stack gap="sm">
                 {recentSessions.map((session) => (
-                  <FeedRow key={session.id} session={session} />
+                  <FeedRow
+                    key={session.id}
+                    session={session}
+                    onPress={(s) => navigateToSessionDetail(navigation, s)}
+                  />
                 ))}
               </Stack>
             )}

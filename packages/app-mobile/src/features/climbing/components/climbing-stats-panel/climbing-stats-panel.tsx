@@ -128,7 +128,7 @@ const ChartCard: FunctionComponent<{
   </Card>
 );
 
-const StatsTab: FunctionComponent = () => {
+const ClimbingStatsPanel: FunctionComponent = () => {
   const { t, i18n } = useTranslation();
 
   // Short month names follow the configured language (e.g. Jun / juin / Jun.).
@@ -436,4 +436,4 @@ const StatsTab: FunctionComponent = () => {
   );
 };
 
-export default StatsTab;
+export default ClimbingStatsPanel;
