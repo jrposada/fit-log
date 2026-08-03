@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { IWorkout } from '@backend/models/workout';
+import { IWorkout } from '@backend/data/models/workout';
 import { fakeExercise } from './exercises';
 
 export function fakeWorkout(): Partial<

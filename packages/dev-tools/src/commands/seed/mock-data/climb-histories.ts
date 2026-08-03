@@ -3,7 +3,7 @@ import {
   ClimbHistoryStatus,
   IClimbHistoryTry,
   STATUS_PRIORITY,
-} from '@backend/models/climb-history';
+} from '@backend/data/models/climb-history';
 import { CLIMB_HISTORY_STATUSES } from '@jrposada/fit-log-shared/common/climb-histories/climb-history-statuses';
 
 function fakeTry(): IClimbHistoryTry {

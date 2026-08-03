@@ -1,6 +1,9 @@
-import { connectToDatabase, disconnectFromDatabase } from '@backend/database';
-import { Image, IImage } from '@backend/models/image';
-import { User } from '@backend/models/user';
+import {
+  connectToDatabase,
+  disconnectFromDatabase,
+} from '../../utils/database';
+import { Image, IImage } from '@backend/data/models/image';
+import { User } from '@backend/data/models/user';
 import { FilesService } from '@backend/services/files';
 import { ImageProcessor } from '@backend/services/image-processor';
 import type { Command } from 'commander';

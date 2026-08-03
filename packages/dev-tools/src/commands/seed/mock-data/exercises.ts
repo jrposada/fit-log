@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { IExercise } from '@backend/models/workout';
+import { IExercise } from '@backend/data/models/workout';
 
 export function fakeExercise(): IExercise {
   return {

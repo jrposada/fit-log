@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { ISector } from '@backend/models/sector';
+import { ISector } from '@backend/data/models/sector';
 
 export function fakeSector(): Partial<
   Omit<ISector, '_id' | 'createdAt' | 'updatedAt'>

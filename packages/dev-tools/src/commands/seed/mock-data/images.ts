@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { IImage } from '@backend/models/image';
+import { IImage } from '@backend/data/models/image';
 import { ImageProcessor } from '@backend/services/image-processor';
 import sharp from 'sharp';
 

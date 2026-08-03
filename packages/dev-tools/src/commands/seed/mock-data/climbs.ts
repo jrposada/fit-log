@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { IClimb } from '@backend/models/climb';
+import { IClimb } from '@backend/data/models/climb';
 import { GRADE_OPTIONS } from '@jrposada/fit-log-shared/common/climbs/grades';
 import { HOLD_TYPES } from '@jrposada/fit-log-shared/common/climbs/holds';
 

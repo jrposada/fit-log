@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { ILocation } from '@backend/models/location';
+import { ILocation } from '@backend/data/models/location';
 
 export function fakeLocation(): Partial<
   Omit<ILocation, '_id' | 'createdAt' | 'updatedAt'>

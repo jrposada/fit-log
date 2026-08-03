@@ -1,7 +1,13 @@
-import { connectToDatabase, disconnectFromDatabase } from '@backend/database';
-import { Climb } from '@backend/models/climb';
-import { ClimbHistory, IClimbHistory } from '@backend/models/climb-history';
-import { User } from '@backend/models/user';
+import {
+  connectToDatabase,
+  disconnectFromDatabase,
+} from '../../utils/database';
+import { Climb } from '@backend/data/models/climb';
+import {
+  ClimbHistory,
+  IClimbHistory,
+} from '@backend/data/models/climb-history';
+import { User } from '@backend/data/models/user';
 import type { Command } from 'commander';
 import { Types } from 'mongoose';
 

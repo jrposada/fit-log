@@ -1,14 +1,17 @@
 import type { Command } from 'commander';
 import { confirm } from '@inquirer/prompts';
-import { connectToDatabase, disconnectFromDatabase } from '@backend/database';
-import { User } from '@backend/models/user';
-import { Workout } from '@backend/models/workout';
-import { Location } from '@backend/models/location';
-import { Sector } from '@backend/models/sector';
-import { Climb } from '@backend/models/climb';
-import { ClimbHistory } from '@backend/models/climb-history';
-import { Session } from '@backend/models/session';
-import { Image } from '@backend/models/image';
+import {
+  connectToDatabase,
+  disconnectFromDatabase,
+} from '../../utils/database';
+import { User } from '@backend/data/models/user';
+import { Workout } from '@backend/data/models/workout';
+import { Location } from '@backend/data/models/location';
+import { Sector } from '@backend/data/models/sector';
+import { Climb } from '@backend/data/models/climb';
+import { ClimbHistory } from '@backend/data/models/climb-history';
+import { TrainingSession } from '@backend/data/models/training-session';
+import { Image } from '@backend/data/models/image';
 import { execSync } from 'child_process';
 import * as fs from 'fs/promises';
 import * as path from 'path';
@@ -81,7 +84,7 @@ async function nukeDatabase() {
     { name: 'Sector', model: Sector },
     { name: 'Climb', model: Climb },
     { name: 'ClimbHistory', model: ClimbHistory },
-    { name: 'Session', model: Session },
+    { name: 'TrainingSession', model: TrainingSession },
     { name: 'Image', model: Image },
   ];
 

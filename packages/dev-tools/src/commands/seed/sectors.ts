@@ -1,8 +1,11 @@
-import { connectToDatabase, disconnectFromDatabase } from '@backend/database';
-import { IClimb } from '@backend/models/climb';
-import { Location } from '@backend/models/location';
-import { ISector, Sector } from '@backend/models/sector';
-import { User } from '@backend/models/user';
+import {
+  connectToDatabase,
+  disconnectFromDatabase,
+} from '../../utils/database';
+import { IClimb } from '@backend/data/models/climb';
+import { Location } from '@backend/data/models/location';
+import { ISector, Sector } from '@backend/data/models/sector';
+import { User } from '@backend/data/models/user';
 import { FilesService } from '@backend/services/files';
 import { ImageProcessor } from '@backend/services/image-processor';
 import type { Command } from 'commander';

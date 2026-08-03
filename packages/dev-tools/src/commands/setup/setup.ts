@@ -1,5 +1,8 @@
-import { connectToDatabase, disconnectFromDatabase } from '@backend/database';
-import { User } from '@backend/models/user';
+import {
+  connectToDatabase,
+  disconnectFromDatabase,
+} from '../../utils/database';
+import { User } from '@backend/data/models/user';
 import { FilesService } from '@backend/services/files';
 import { ImageProcessor } from '@backend/services/image-processor';
 import { faker } from '@faker-js/faker';

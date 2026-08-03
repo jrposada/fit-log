@@ -1,5 +1,8 @@
-import { connectToDatabase, disconnectFromDatabase } from '@backend/database';
-import { IWorkout, Workout } from '@backend/models/workout';
+import {
+  connectToDatabase,
+  disconnectFromDatabase,
+} from '../../utils/database';
+import { IWorkout, Workout } from '@backend/data/models/workout';
 import type { Command } from 'commander';
 
 import { fakeWorkout } from './mock-data/workouts';
