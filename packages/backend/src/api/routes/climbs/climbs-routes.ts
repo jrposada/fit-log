@@ -10,7 +10,7 @@ import { climbsPutRequestSchema } from '@jrposada/fit-log-shared/models/climbs/c
 import { climbsSearchQuerySchema } from '@jrposada/fit-log-shared/models/climbs/climbs-search';
 import type { Router } from 'express';
 
-import { authenticateKeycloak } from '../../middlewares/auth.ts';
+import { authenticate } from '../../middlewares/authenticate.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -25,45 +25,45 @@ import { handler as climbsSearch } from './climbs-search.ts';
 export function registerClimbsRoutes(router: Router): void {
   router.get(
     '/climbs',
-    authenticateKeycloak,
+    authenticate,
     validateQuery(climbsGetQuerySchema),
     climbsGet
   );
   // Must be registered before '/climbs/:id' so 'search' is not matched as an id.
   router.get(
     '/climbs/search',
-    authenticateKeycloak,
+    authenticate,
     validateQuery(climbsSearchQuerySchema),
     climbsSearch
   );
   router.get(
     '/climbs/:id',
-    authenticateKeycloak,
+    authenticate,
     validateParams(climbsGetByIdParamsSchema),
     climbsGetById
   );
   router.put(
     '/climbs',
-    authenticateKeycloak,
+    authenticate,
     validateBody(climbsPutRequestSchema),
     climbsPut
   );
   router.delete(
     '/climbs/:id',
-    authenticateKeycloak,
+    authenticate,
     validateParams(climbsDeleteParamsSchema),
     climbsDelete
   );
   router.put(
     '/climbs/:id/collaborators/:userId',
-    authenticateKeycloak,
+    authenticate,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     climbsCollaboratorsPut
   );
   router.delete(
     '/climbs/:id/collaborators/:userId',
-    authenticateKeycloak,
+    authenticate,
     validateParams(collaboratorDeleteParamsSchema),
     climbsCollaboratorsDelete
   );

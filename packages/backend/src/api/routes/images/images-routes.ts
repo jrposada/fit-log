@@ -7,7 +7,7 @@ import { imagesDeleteParamsSchema } from '@jrposada/fit-log-shared/models/images
 import { imagesPostRequestSchema } from '@jrposada/fit-log-shared/models/images/images-post';
 import type { Router } from 'express';
 
-import { authenticateKeycloak } from '../../middlewares/auth.ts';
+import { authenticate } from '../../middlewares/authenticate.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { handler as imagesCollaboratorsDelete } from './images-collaborators-delete.ts';
@@ -18,26 +18,26 @@ import { handler as imagesPost } from './images-post.ts';
 export function registerImagesRoutes(router: Router): void {
   router.post(
     '/images',
-    authenticateKeycloak,
+    authenticate,
     validateBody(imagesPostRequestSchema),
     imagesPost
   );
   router.delete(
     '/images/:id',
-    authenticateKeycloak,
+    authenticate,
     validateParams(imagesDeleteParamsSchema),
     imagesDelete
   );
   router.put(
     '/images/:id/collaborators/:userId',
-    authenticateKeycloak,
+    authenticate,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     imagesCollaboratorsPut
   );
   router.delete(
     '/images/:id/collaborators/:userId',
-    authenticateKeycloak,
+    authenticate,
     validateParams(collaboratorDeleteParamsSchema),
     imagesCollaboratorsDelete
   );

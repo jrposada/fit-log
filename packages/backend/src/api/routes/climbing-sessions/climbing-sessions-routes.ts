@@ -4,7 +4,7 @@ import { climbingSessionsGetByIdParamsSchema } from '@jrposada/fit-log-shared/mo
 import { climbingSessionsPutRequestSchema } from '@jrposada/fit-log-shared/models/climbing-sessions/climbing-sessions-put';
 import type { Router } from 'express';
 
-import { authenticateKeycloak } from '../../middlewares/auth.ts';
+import { authenticate } from '../../middlewares/authenticate.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -16,25 +16,25 @@ import { handler as climbingSessionsPut } from './climbing-sessions-put.ts';
 export function registerClimbingSessionsRoutes(router: Router): void {
   router.get(
     '/climbing-sessions',
-    authenticateKeycloak,
+    authenticate,
     validateQuery(climbingSessionsGetQuerySchema),
     climbingSessionsGet
   );
   router.get(
     '/climbing-sessions/:id',
-    authenticateKeycloak,
+    authenticate,
     validateParams(climbingSessionsGetByIdParamsSchema),
     climbingSessionsGetById
   );
   router.put(
     '/climbing-sessions',
-    authenticateKeycloak,
+    authenticate,
     validateBody(climbingSessionsPutRequestSchema),
     climbingSessionsPut
   );
   router.delete(
     '/climbing-sessions/:id',
-    authenticateKeycloak,
+    authenticate,
     validateParams(climbingSessionsDeleteParamsSchema),
     climbingSessionsDelete
   );

@@ -9,7 +9,7 @@ import { locationsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/lo
 import { locationsPutRequestSchema } from '@jrposada/fit-log-shared/models/locations/locations-put';
 import type { Router } from 'express';
 
-import { authenticateKeycloak } from '../../middlewares/auth.ts';
+import { authenticate } from '../../middlewares/authenticate.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -23,38 +23,38 @@ import { handler as locationsPut } from './locations-put.ts';
 export function registerLocationsRoutes(router: Router): void {
   router.get(
     '/locations',
-    authenticateKeycloak,
+    authenticate,
     validateQuery(locationsGetQuerySchema),
     locationsGet
   );
   router.get(
     '/locations/:id',
-    authenticateKeycloak,
+    authenticate,
     validateParams(locationsGetByIdParamsSchema),
     locationsGetById
   );
   router.put(
     '/locations',
-    authenticateKeycloak,
+    authenticate,
     validateBody(locationsPutRequestSchema),
     locationsPut
   );
   router.delete(
     '/locations/:id',
-    authenticateKeycloak,
+    authenticate,
     validateParams(locationsDeleteParamsSchema),
     locationsDelete
   );
   router.put(
     '/locations/:id/collaborators/:userId',
-    authenticateKeycloak,
+    authenticate,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     locationsCollaboratorsPut
   );
   router.delete(
     '/locations/:id/collaborators/:userId',
-    authenticateKeycloak,
+    authenticate,
     validateParams(collaboratorDeleteParamsSchema),
     locationsCollaboratorsDelete
   );

@@ -4,7 +4,7 @@ import { workoutsGetByIdParamsSchema } from '@jrposada/fit-log-shared/models/wor
 import { workoutsPutRequestSchema } from '@jrposada/fit-log-shared/models/workout/workout-put';
 import type { Router } from 'express';
 
-import { authenticateKeycloak } from '../../middlewares/auth.ts';
+import { authenticate } from '../../middlewares/authenticate.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -16,25 +16,25 @@ import { handler as workoutsPut } from './workouts-put.ts';
 export function registerWorkoutsRoutes(router: Router): void {
   router.get(
     '/workouts',
-    authenticateKeycloak,
+    authenticate,
     validateQuery(workoutsGetQuerySchema),
     workoutsGet
   );
   router.get(
     '/workouts/:id',
-    authenticateKeycloak,
+    authenticate,
     validateParams(workoutsGetByIdParamsSchema),
     workoutsGetById
   );
   router.put(
     '/workouts',
-    authenticateKeycloak,
+    authenticate,
     validateBody(workoutsPutRequestSchema),
     workoutsPut
   );
   router.delete(
     '/workouts/:id',
-    authenticateKeycloak,
+    authenticate,
     validateParams(workoutsDeleteParamsSchema),
     workoutsDelete
   );

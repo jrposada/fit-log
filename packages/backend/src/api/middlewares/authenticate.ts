@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from 'express';
 import { User } from '../../data/models/user.ts';
 import Keycloak from '../../services/keycloak.ts';
 
-export async function authenticateKeycloak(
+export async function authenticate(
   req: Request,
   res: Response,
   next: NextFunction

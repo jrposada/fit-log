@@ -9,7 +9,7 @@ import { sectorsDeleteParamsSchema } from '@jrposada/fit-log-shared/models/secto
 import { sectorsPutRequestSchema } from '@jrposada/fit-log-shared/models/sectors/sectors-put';
 import type { Router } from 'express';
 
-import { authenticateKeycloak } from '../../middlewares/auth.ts';
+import { authenticate } from '../../middlewares/authenticate.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { handler as sectorsBatchDelete } from './sectors-batch-delete.ts';
@@ -22,38 +22,38 @@ import { handler as sectorsPut } from './sectors-put.ts';
 export function registerSectorsRoutes(router: Router): void {
   router.put(
     '/sectors',
-    authenticateKeycloak,
+    authenticate,
     validateBody(sectorsPutRequestSchema),
     sectorsPut
   );
   router.put(
     '/sectors/batch',
-    authenticateKeycloak,
+    authenticate,
     validateBody(sectorsBatchPutRequestSchema),
     sectorsBatchPut
   );
   router.delete(
     '/sectors/:id',
-    authenticateKeycloak,
+    authenticate,
     validateParams(sectorsDeleteParamsSchema),
     sectorsDelete
   );
   router.delete(
     '/sectors',
-    authenticateKeycloak,
+    authenticate,
     validateBody(sectorsBatchDeleteRequestSchema),
     sectorsBatchDelete
   );
   router.put(
     '/sectors/:id/collaborators/:userId',
-    authenticateKeycloak,
+    authenticate,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     sectorsCollaboratorsPut
   );
   router.delete(
     '/sectors/:id/collaborators/:userId',
-    authenticateKeycloak,
+    authenticate,
     validateParams(collaboratorDeleteParamsSchema),
     sectorsCollaboratorsDelete
   );
