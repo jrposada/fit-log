@@ -18,10 +18,10 @@
   "scripts": {
     "build": "tsc",
     "dev:db": "docker-compose --project-name fit-log up -d",
-    "dev:server": "TSX_TSCONFIG_PATH=tsconfig.dev.json tsx watch src/server.ts",
+    "dev:server": "TSX_TSCONFIG_PATH=tsconfig.dev.json tsx watch src/index.ts",
     "dev": "run-p dev:*",
     "format": "prettier . --write",
-    "start": "node dist/server.js",
+    "start": "node dist/index.js",
     "lint:eslint": "eslint .",
     "lint:format": "prettier . --check",
     "lint:types": "tsc --noEmit -p tsconfig.dev.json",
