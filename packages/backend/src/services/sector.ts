@@ -8,19 +8,19 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
+import type { BatchUpsertOwnedItem } from '../data/infrastructure/batch-upsert-owned-document.ts';
+import { batchUpsertOwnedDocument } from '../data/infrastructure/batch-upsert-owned-document.ts';
+import {
+  addOrUpdateCollaborator,
+  removeCollaborator,
+} from '../data/infrastructure/collaborator-mutators.ts';
+import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import type { IImage } from '../data/models/image.ts';
 import type { ISector } from '../data/models/sector.ts';
 import { Sector } from '../data/models/sector.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import type { BatchUpsertOwnedItem } from '../utils/batch-upsert-owned-document.ts';
-import { batchUpsertOwnedDocument } from '../utils/batch-upsert-owned-document.ts';
-import {
-  addOrUpdateCollaborator,
-  removeCollaborator,
-} from '../utils/collaborator-mutators.ts';
-import { upsertOwnedDocument } from '../utils/upsert-owned-document.ts';
 
 /** Fully populated sector, as returned to API mappers. */
 type ValidSector = MergeType<

@@ -8,6 +8,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
+import type { WithRequiredRefs } from '../data/infrastructure/types.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import type {
   ClimbHistoryStatus,
@@ -25,7 +26,6 @@ import type { ITrainingSession } from '../data/models/training-session.ts';
 import { TrainingSession } from '../data/models/training-session.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
 import RelatedEntityRequiredError from '../infrastructure/related-entity-required-error.ts';
-import type { WithRequiredRefs } from '../utils/types.ts';
 import { recomputeTrainingSessionSummary } from './training-session.ts';
 
 /** Direct refs on a climb-history that must be non-null to map. */

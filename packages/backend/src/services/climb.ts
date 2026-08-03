@@ -8,6 +8,12 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
+import {
+  addOrUpdateCollaborator,
+  removeCollaborator,
+} from '../data/infrastructure/collaborator-mutators.ts';
+import type { WithRequiredRefs } from '../data/infrastructure/types.ts';
+import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import { Climb } from '../data/models/climb.ts';
 import type { ClimbHistoryStatus } from '../data/models/climb-history.ts';
@@ -17,12 +23,6 @@ import type { ILocation } from '../data/models/location.ts';
 import type { ISector } from '../data/models/sector.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import {
-  addOrUpdateCollaborator,
-  removeCollaborator,
-} from '../utils/collaborator-mutators.ts';
-import type { WithRequiredRefs } from '../utils/types.ts';
-import { upsertOwnedDocument } from '../utils/upsert-owned-document.ts';
 
 function hasRequiredRefs(model: IClimb): model is WithRequiredRefs<IClimb> {
   return model.image != null && model.location != null && model.sector != null;

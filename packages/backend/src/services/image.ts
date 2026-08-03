@@ -6,15 +6,15 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
+import {
+  addOrUpdateCollaborator,
+  removeCollaborator,
+} from '../data/infrastructure/collaborator-mutators.ts';
+import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
 import type { IImage } from '../data/models/image.ts';
 import { Image } from '../data/models/image.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import {
-  addOrUpdateCollaborator,
-  removeCollaborator,
-} from '../utils/collaborator-mutators.ts';
-import { upsertOwnedDocument } from '../utils/upsert-owned-document.ts';
 import { ImageProcessor } from './image-processor.ts';
 
 /** Fully populated image, as returned to API mappers. */

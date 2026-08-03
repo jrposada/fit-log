@@ -3,11 +3,11 @@ import type { Climb } from '@jrposada/fit-log-shared/models/climbs/climb';
 import type { MergeType } from 'mongoose';
 
 import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import type { WithRequiredRefs } from '../../data/infrastructure/types.ts';
 import type { IClimb } from '../../data/models/climb.ts';
 import type { IImage } from '../../data/models/image.ts';
 import type { ILocation } from '../../data/models/location.ts';
 import type { ISector } from '../../data/models/sector.ts';
-import type { WithRequiredRefs } from '../../utils/types.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
