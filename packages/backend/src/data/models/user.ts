@@ -7,9 +7,8 @@ export interface IUser extends WithTimestamps<Document> {
   email: string;
   name: string;
   roles: string[];
-
-  /* References */
 }
+
 const userSchema = new Schema<IUser>(
   {
     keycloakId: {

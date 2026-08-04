@@ -1,13 +1,26 @@
+// TODO: Atomic split
+
 import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import { COLLABORATOR_PERMISSIONS } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { SchemaDefinition, Types } from 'mongoose';
 import { Schema } from 'mongoose';
 
+import type { WithRefs } from '../infrastructure/with-refs.ts';
+import type { IUser } from './user.ts';
+
 export type { CollaboratorPermission };
 export { COLLABORATOR_PERMISSIONS };
 
-export interface ICollaborator {
-  user: Types.ObjectId;
+export type CollaboratorPopulatedRefs = {
+  user: IUser | null;
+};
+
+export type CollaboratorRequiredRefs = Exclude<
+  keyof CollaboratorPopulatedRefs,
+  ''
+>;
+
+export interface ICollaborator extends WithRefs<CollaboratorPopulatedRefs> {
   permission: CollaboratorPermission;
 }
 

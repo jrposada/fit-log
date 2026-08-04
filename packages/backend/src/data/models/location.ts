@@ -1,10 +1,22 @@
-import type { Document, Types, WithTimestamps } from 'mongoose';
+import type { Document, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
+import type { WithRefs } from '../infrastructure/with-refs.ts';
 import type { WithOwnership } from './_collaborator.ts';
 import { ownershipFields } from './_collaborator.ts';
+import type { ISector } from './sector.ts';
 
-export interface ILocation extends WithTimestamps<Document>, WithOwnership {
+export type LocationPopulatedRefs = {
+  sectors: ISector[];
+};
+
+export type LocationRequiredRefs = Exclude<keyof LocationPopulatedRefs, ''>;
+
+export interface ILocation
+  extends
+    WithTimestamps<Document>,
+    WithOwnership,
+    WithRefs<LocationPopulatedRefs> {
   /* Data */
   name: string;
   description?: string;
@@ -13,12 +25,7 @@ export interface ILocation extends WithTimestamps<Document>, WithOwnership {
   latitude: number;
   longitude: number;
   googleMapsId?: string;
-
-  /* References */
-  sectors: Types.ObjectId[];
 }
-
-export type LocationRefs = 'sectors';
 
 const locationSchema = new Schema<ILocation>(
   {

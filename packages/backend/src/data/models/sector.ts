@@ -1,19 +1,24 @@
 import type { Document, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
-import type { Ref } from '../infrastructure/ref.ts';
+import type { WithRefs } from '../infrastructure/with-refs.ts';
 import type { WithOwnership } from './_collaborator.ts';
 import { ownershipFields } from './_collaborator.ts';
 import type { IClimb } from './climb.ts';
 import type { IImage } from './image.ts';
 
-type SectorPopulatedRefs = {
+export type SectorPopulatedRefs = {
   images: IImage[];
   climbs: IClimb[];
 };
 
+export type SectorRequiredRefs = Exclude<keyof SectorPopulatedRefs, ''>;
+
 export interface ISector
-  extends WithTimestamps<Document>, WithOwnership, Ref<SectorPopulatedRefs> {
+  extends
+    WithTimestamps<Document>,
+    WithOwnership,
+    WithRefs<SectorPopulatedRefs> {
   /* Data */
   name: string;
   description?: string;
@@ -24,13 +29,6 @@ export interface ISector
   longitude: number;
   googleMapsId?: string;
 }
-
-/**
- * `images` isn't included: the API shape always embeds images fully (they
- * have no further references to break), so it never collapses to an id
- * string the way `climbs` does.
- */
-export type SectorRefs = 'climbs';
 
 const sectorSchema = new Schema<ISector>(
   {

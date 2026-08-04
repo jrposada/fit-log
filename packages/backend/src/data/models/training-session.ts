@@ -5,6 +5,7 @@ import { model, Schema } from 'mongoose';
 
 import type { WithSessionBase } from './_session-base.ts';
 import { sessionBaseFields, sessionSummarySchema } from './_session-base.ts';
+import type { IClimbHistory } from './climb-history.ts';
 
 export { SESSION_STALE_MS };
 
@@ -12,6 +13,15 @@ export const EMPTY_TRAINING_SESSION_SUMMARY: SessionSummaryData = {
   headline: '0 routes',
   count: 0,
 };
+
+export type TrainingSessionPopulatedRefs = {
+  climbHistories: IClimbHistory[];
+};
+
+export type TrainingSessionRequiredRefs = Exclude<
+  keyof TrainingSessionPopulatedRefs,
+  ''
+>;
 
 export interface ITrainingSession
   extends WithTimestamps<Document>, WithSessionBase {
@@ -22,14 +32,6 @@ export interface ITrainingSession
   /* References */
   climbHistories: Types.ObjectId[];
 }
-
-/**
- * `location` (inherited from `WithSessionBase`) isn't included: the API
- * shape depopulates it to an optional property (`location?:`) rather than a
- * nullable one, which the generic helper's null-check can't express — the
- * mapper composes that one by hand instead.
- */
-export type TrainingSessionRefs = 'climbHistories';
 
 const trainingSessionSchema = new Schema<ITrainingSession>(
   {

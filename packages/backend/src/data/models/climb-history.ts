@@ -3,6 +3,12 @@ import { CLIMB_HISTORY_STATUSES } from '@jrposada/fit-log-shared/common/climb-hi
 import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
+import type { WithRefs } from '../infrastructure/with-refs.ts';
+import type { IClimb } from './climb.ts';
+import type { ILocation } from './location.ts';
+import type { ISector } from './sector.ts';
+import type { ITrainingSession } from './training-session.ts';
+
 export type { ClimbHistoryStatus };
 
 export const STATUS_PRIORITY: Record<ClimbHistoryStatus, number> = {
@@ -17,33 +23,6 @@ export interface IClimbHistoryTry {
   notes?: string;
   date: Date;
 }
-
-export interface IClimbHistory extends WithTimestamps<Document> {
-  /* Data */
-  status: ClimbHistoryStatus;
-  isProject: boolean;
-  tries: Types.DocumentArray<IClimbHistoryTry>;
-
-  /* Ownership */
-  owner: Types.ObjectId;
-
-  /* References */
-  climb: Types.ObjectId | null;
-  location: Types.ObjectId | null;
-  sector: Types.ObjectId | null;
-  trainingSession: Types.ObjectId | null;
-}
-
-export type ClimbHistoryRefs =
-  | 'climb'
-  | 'location'
-  | 'sector'
-  | 'trainingSession';
-
-export type ClimbHistoryRequiredRefs = Exclude<
-  ClimbHistoryRefs,
-  'trainingSession'
->;
 
 export function computeTopStatus(
   tries: { status: ClimbHistoryStatus }[]
@@ -81,6 +60,29 @@ const climbHistoryTrySchema = new Schema<IClimbHistoryTry>(
   },
   { _id: true }
 );
+
+export type ClimbHistoryPopulatedRefs = {
+  climb: IClimb | null;
+  location: ILocation | null;
+  sector: ISector | null;
+  trainingSession: ITrainingSession | null;
+};
+
+export type ClimbHistoryRequiredRefs = Exclude<
+  keyof ClimbHistoryPopulatedRefs,
+  'trainingSession'
+>;
+
+export interface IClimbHistory
+  extends WithTimestamps<Document>, WithRefs<ClimbHistoryPopulatedRefs> {
+  /* Data */
+  status: ClimbHistoryStatus;
+  isProject: boolean;
+  tries: Types.DocumentArray<IClimbHistoryTry>;
+
+  /* Ownership */
+  owner: Types.ObjectId;
+}
 
 const climbHistorySchema = new Schema<IClimbHistory>(
   {
