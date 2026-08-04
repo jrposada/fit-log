@@ -1,9 +1,8 @@
 import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { Sector } from '@jrposada/fit-log-shared/models/sectors/sector';
-import type { MergeType } from 'mongoose';
 
 import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
-import type { IImage } from '../../data/models/image.ts';
+import type { WithPopulatedRefs } from '../../data/infrastructure/with-populated-refs.ts';
 import type { ISector, SectorRefs } from '../../data/models/sector.ts';
 import { hasRequiredRefs } from '../../services/climb.ts';
 import type { ValidSector } from '../../services/sector.ts';
@@ -16,7 +15,7 @@ import { toApiDepopulatedImage } from './images.ts';
 import { toApiUserSummary } from './user-summary.ts';
 
 function toApiDepopulatedSector(
-  model: MergeType<ISector, { images: IImage[] }>
+  model: WithPopulatedRefs<ISector, 'images'>
 ): WithDepopulatedRefs<WithDepopulatedOwnership<Sector>, SectorRefs> {
   return {
     /* Data */

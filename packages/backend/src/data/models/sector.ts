@@ -1,10 +1,19 @@
-import type { Document, Types, WithTimestamps } from 'mongoose';
+import type { Document, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
+import type { Ref } from '../infrastructure/ref.ts';
 import type { WithOwnership } from './_collaborator.ts';
 import { ownershipFields } from './_collaborator.ts';
+import type { IClimb } from './climb.ts';
+import type { IImage } from './image.ts';
 
-export interface ISector extends WithTimestamps<Document>, WithOwnership {
+type SectorPopulatedRefs = {
+  images: IImage[];
+  climbs: IClimb[];
+};
+
+export interface ISector
+  extends WithTimestamps<Document>, WithOwnership, Ref<SectorPopulatedRefs> {
   /* Data */
   name: string;
   description?: string;
@@ -14,10 +23,6 @@ export interface ISector extends WithTimestamps<Document>, WithOwnership {
   latitude: number;
   longitude: number;
   googleMapsId?: string;
-
-  /* References */
-  images: Types.ObjectId[];
-  climbs: Types.ObjectId[];
 }
 
 /**
