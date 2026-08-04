@@ -79,3 +79,36 @@ If an entity's API type needs a ref removed entirely (not depopulated to a
 string) for a given call site — rather than every ref in `<Entity>Refs` — Omit
 it from the API type before handing the result to `WithDepopulatedRefs`, e.g.
 `WithDepopulatedRefs<Omit<Entity, 'someRef'>, EntityRequiredRefs>`.
+
+## Typing a mapper input that needs a ref populated: `WithPopulatedRefs<T, K>`
+
+Both mapper variants sometimes need a ref populated with the full document
+rather than left as an id — `toApi<Entity>` needs every first-level ref
+populated, and even `toApiDepopulated<Entity>` needs it for refs the API
+shape always embeds fully rather than collapsing (e.g. a Sector's `images`,
+see `<Entity>Refs` above). Don't hand-roll this with `MergeType`:
+
+```ts
+// don't — restates what `images` populates to at the call site
+function toApiDepopulatedSector(
+  model: MergeType<ISector, { images: IImage[] }>
+) {
+  /* ... */
+}
+```
+
+Use `WithPopulatedRefs<T, K>` (`data/infrastructure/with-populated-refs.ts`)
+instead — it reads the populated type for each key straight off the model
+interface (see "Expressing 'populated' to services and mappers" in
+`data/models/README.md`), so the mapper only names which ref is populated:
+
+```ts
+function toApiDepopulatedSector(
+  model: WithPopulatedRefs<ISector, 'images'>
+): WithDepopulatedRefs<WithDepopulatedOwnership<Sector>, SectorRefs> {
+  /* ... */
+}
+```
+
+If a mapper needs more than one ref populated, pass a union:
+`WithPopulatedRefs<IEntity, 'refA' | 'refB'>`.

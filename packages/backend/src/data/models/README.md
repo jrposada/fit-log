@@ -99,3 +99,81 @@ you explicitly `Exclude` it, which is the safer direction to forget in (an
 optional ref wrongly treated as required fails loudly via `WithRequiredRefs`
 at the first null; a required ref missing from a hand-maintained list fails
 silently).
+
+## Expressing "populated" to services and mappers: `Ref<T>`
+
+`<Entity>Refs`/`<Entity>RequiredRefs` above are about the _depopulated_
+direction: a ref that's a full document collapsing down to an id string.
+Services and mappers also need the opposite direction just as often — a ref
+typed `Types.ObjectId`/`Types.ObjectId[]` on the interface temporarily holding
+a full populated document after a `.populate()` call. Before `Ref<T>`
+existed, every call site re-declared this by hand:
+
+```ts
+// repeated at every service/mapper that populates a Sector's images
+MergeType<ISector, { images: IImage[] }>;
+```
+
+which works, but means the populated type of `images` (`IImage[]`) is
+decided anew at each call site instead of by `ISector` itself. `Ref<T>`
+(`data/infrastructure/ref.ts`) and `WithPopulatedRefs<T, K>`
+(`data/infrastructure/with-populated-refs.ts`) let the model file be the one
+place that decides what each ref populates to.
+
+`Ref<T>` takes a map of ref field name -> populated type and does two things:
+it derives the actual depopulated field types the interface needs
+(`Types.ObjectId`/`Types.ObjectId[]`, array-ness read off the map), and it
+stashes the original map on a phantom, `unique symbol`-keyed property that's
+optional and never assigned — it exists purely for other types to read back,
+never at runtime.
+
+```ts
+// sector.ts
+type SectorPopulatedRefs = {
+  images: IImage[];
+  climbs: IClimb[];
+};
+
+export interface ISector
+  extends WithTimestamps<Document>, WithOwnership, Ref<SectorPopulatedRefs> {
+  /* Data */
+  name: string;
+  /* ... */
+  /* `images`/`climbs` are NOT listed here — Ref<SectorPopulatedRefs> supplies
+     them as Types.ObjectId[] */
+}
+```
+
+`WithPopulatedRefs<T, K extends keyof RefsOf<T>>` reads that map back off `T`
+via `RefsOf<T>` and swaps in the populated type for the named keys, leaving
+every other field (including other refs, still depopulated) untouched:
+
+```ts
+WithPopulatedRefs<ISector, 'images'>;
+// => images: IImage[]; climbs stays Types.ObjectId[]; everything else untouched
+```
+
+Because the populated type comes from `ISector` itself, the caller only
+names _which_ ref is populated, never _what_ it populates to — there is
+nothing left to get out of sync.
+
+### Naming convention
+
+Name the map `<Entity>PopulatedRefs` and keep it **unexported**, next to the
+interface. Nothing outside the model file should ever need it by name —
+`WithPopulatedRefs<IEntity, K>` recovers it automatically via `RefsOf<T>`, so
+exporting it would just be a second, redundant way to say the same thing:
+
+```ts
+type SectorPopulatedRefs = {
+  images: IImage[];
+  climbs: IClimb[];
+};
+```
+
+List every ref the entity has, even ones `<Entity>Refs` leaves out (e.g.
+`images`, which the API shape always embeds fully and therefore never
+appears in `SectorRefs`) — `<Entity>PopulatedRefs` and `<Entity>Refs` answer
+different questions about the same ref set and shouldn't be conflated into
+one type: a ref can need collapsing to an id string in one context and
+population with the full document in another, independently.
