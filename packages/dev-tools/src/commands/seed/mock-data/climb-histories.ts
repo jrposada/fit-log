@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
 import {
   ClimbHistoryStatus,
-  IClimbHistoryTry,
   STATUS_PRIORITY,
 } from '@backend/data/models/climb-history';
+import { IClimbHistoryTry } from '@backend/data/models/climb-history-try';
 import { CLIMB_HISTORY_STATUSES } from '@jrposada/fit-log-shared/common/climb-histories/climb-history-statuses';
 
 function fakeTry(): IClimbHistoryTry {
