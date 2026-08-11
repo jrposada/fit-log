@@ -22,3 +22,14 @@ export type WithRefs<T> = {
 };
 
 export type RefsOf<T> = T extends { [refsBrand]?: infer R } ? R : never;
+
+/**
+ * Restamps `T` with a new ref-map brand `R`, discarding whatever brand `T`
+ * carried before. `refsBrand` is only accessible inside this file, so callers
+ * that need to adjust the ref-map (e.g. `WithRequiredRefs`, when it strips
+ * `null` from a ref field and needs the populated-type map to agree) go
+ * through this instead of writing the phantom property themselves.
+ */
+export type WithBrand<T, R> = Omit<T, typeof refsBrand> & {
+  [refsBrand]?: R;
+};
