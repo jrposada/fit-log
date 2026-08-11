@@ -8,18 +8,21 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
+import type { WithPopulatedRefs } from '../data/infrastructure/with-populated-refs.ts';
 import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
+import type { WithRequiredOwnership } from '../data/models/_collaborator.ts';
 import type { ClimbRequiredRefs, IClimb } from '../data/models/climb.ts';
 import type {
+  ClimbHistoryPopulatedRefs,
   ClimbHistoryRequiredRefs,
   ClimbHistoryStatus,
   IClimbHistory,
-  IClimbHistoryTry,
 } from '../data/models/climb-history.ts';
 import {
   ClimbHistory,
   computeTopStatus,
 } from '../data/models/climb-history.ts';
+import type { IClimbHistoryTry } from '../data/models/climb-history-try.ts';
 import type { IImage } from '../data/models/image.ts';
 import type { ILocation } from '../data/models/location.ts';
 import type { ISector } from '../data/models/sector.ts';
@@ -30,13 +33,19 @@ import RelatedEntityRequiredError from '../infrastructure/related-entity-require
 import { recomputeTrainingSessionSummary } from './training-session.ts';
 
 /** Populated climb-history with all nested refs guaranteed non-null. */
-type ValidClimbHistory = MergeType<
-  IClimbHistory,
+type ValidClimbHistory = WithPopulatedRefs<
+  WithRequiredRefs<IClimbHistory, ClimbHistoryRequiredRefs>,
+  keyof ClimbHistoryPopulatedRefs,
   {
-    climb: WithRequiredRefs<IClimb, ClimbRequiredRefs>;
-    location: ILocation;
-    sector: MergeType<ISector, { images: IImage[] }>;
-    trainingSession: ITrainingSession | null;
+    climb: WithRequiredOwnership<WithRequiredRefs<IClimb, ClimbRequiredRefs>>;
+    location: WithRequiredOwnership<ILocation>;
+    sector: WithRequiredOwnership<
+      WithPopulatedRefs<
+        ISector,
+        'images',
+        { images: WithRequiredOwnership<IImage>[] }
+      >
+    >;
   }
 >;
 
@@ -71,11 +80,13 @@ async function getValidClimbHistory(
 ): Promise<ValidClimbHistory> {
   const populated = await ClimbHistory.findById(id)
     .populate<{
-      climb: IClimb;
-      location: ILocation;
+      climb: WithRequiredOwnership<IClimb>;
+      location: WithRequiredOwnership<ILocation>;
     }>(['climb', 'location'])
     .populate<{
-      sector: MergeType<ISector, { images: IImage[] }>;
+      sector: WithRequiredOwnership<
+        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+      >;
     }>({
       path: 'sector',
       populate: ['images'],
@@ -181,11 +192,13 @@ async function getClimbHistories(
     .sort({ updatedAt: -1, _id: -1 })
     .limit(pageSize + 1)
     .populate<{
-      climb: IClimb;
-      location: ILocation;
+      climb: WithRequiredOwnership<IClimb>;
+      location: WithRequiredOwnership<ILocation>;
     }>(['climb', 'location'])
     .populate<{
-      sector: MergeType<ISector, { images: IImage[] }>;
+      sector: WithRequiredOwnership<
+        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+      >;
     }>({
       path: 'sector',
       populate: ['images'],
@@ -217,11 +230,13 @@ async function getClimbHistoryById(
 ): Promise<ValidClimbHistory> {
   const climbHistory = await ClimbHistory.findOne({ _id: id, owner })
     .populate<{
-      climb: IClimb;
-      location: ILocation;
+      climb: WithRequiredOwnership<IClimb>;
+      location: WithRequiredOwnership<ILocation>;
     }>(['climb', 'location'])
     .populate<{
-      sector: MergeType<ISector, { images: IImage[] }>;
+      sector: WithRequiredOwnership<
+        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+      >;
     }>({
       path: 'sector',
       populate: ['images'],

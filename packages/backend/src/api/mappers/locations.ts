@@ -4,7 +4,13 @@ import type { Location } from '@jrposada/fit-log-shared/models/locations/locatio
 import type { MergeType } from 'mongoose';
 
 import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
-import type { ILocation, LocationRefs } from '../../data/models/location.ts';
+import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
+import type { WithRequiredOwnership } from '../../data/models/_collaborator.ts';
+import type {
+  ILocation,
+  LocationPopulatedRefs,
+  LocationRequiredRefs,
+} from '../../data/models/location.ts';
 import type { ValidLocation } from '../../services/location.ts';
 import {
   toApiCollaborator,
@@ -14,8 +20,14 @@ import { toApiDepopulatedSector } from './sectors.ts';
 import { toApiUserSummary } from './user-summary.ts';
 
 function toApiDepopulatedLocation(
-  model: ILocation
-): WithDepopulatedRefs<WithDepopulatedOwnership<Location>, LocationRefs> {
+  model: WithRequiredRefs<
+    WithRequiredOwnership<ILocation>,
+    LocationRequiredRefs
+  >
+): WithDepopulatedRefs<
+  WithDepopulatedOwnership<Location>,
+  keyof LocationPopulatedRefs
+> {
   return {
     /* Data */
     id: model._id.toString(),

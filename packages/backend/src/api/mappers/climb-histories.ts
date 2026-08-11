@@ -3,7 +3,7 @@ import type { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histori
 import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
 import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
 import type {
-  ClimbHistoryRefs,
+  ClimbHistoryPopulatedRefs,
   ClimbHistoryRequiredRefs,
   IClimbHistory,
 } from '../../data/models/climb-history.ts';
@@ -15,7 +15,7 @@ import { toApiDepopulatedTrainingSession } from './training-sessions.ts';
 
 function toApiDepopulatedClimbHistory(
   model: WithRequiredRefs<IClimbHistory, ClimbHistoryRequiredRefs>
-): WithDepopulatedRefs<ClimbHistory, ClimbHistoryRefs> {
+): WithDepopulatedRefs<ClimbHistory, keyof ClimbHistoryPopulatedRefs> {
   return {
     /* Data */
     id: model._id.toString(),

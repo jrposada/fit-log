@@ -4,6 +4,7 @@ import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
 import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
+import type { WithRequiredOwnership } from '../data/models/_collaborator.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import type {
   ClimbHistoryRequiredRefs,
@@ -28,7 +29,7 @@ type ValidTrainingSession = MergeType<
   ITrainingSession,
   {
     climbHistories: WithRequiredRefs<IClimbHistory, ClimbHistoryRequiredRefs>[];
-    location: ILocation | null;
+    location: WithRequiredOwnership<ILocation> | null;
   }
 >;
 
@@ -86,7 +87,7 @@ async function getTrainingSessions(
     .sort({ startedAt: -1, _id: -1 })
     .limit(pageSize + 1)
     .populate<{
-      location: ILocation | null;
+      location: WithRequiredOwnership<ILocation> | null;
       climbHistories: IClimbHistory[];
     }>([...TRAINING_SESSION_POPULATE]);
 
@@ -112,9 +113,10 @@ async function getTrainingSessionById(
   const session = await TrainingSession.findOne({
     _id: id,
     owner,
-  }).populate<{ location: ILocation | null; climbHistories: IClimbHistory[] }>([
-    ...TRAINING_SESSION_POPULATE,
-  ]);
+  }).populate<{
+    location: WithRequiredOwnership<ILocation> | null;
+    climbHistories: IClimbHistory[];
+  }>([...TRAINING_SESSION_POPULATE]);
 
   if (!session) {
     throw new ResourceNotFound(`Training session with id ${id} not found`);
