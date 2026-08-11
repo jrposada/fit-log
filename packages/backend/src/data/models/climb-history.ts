@@ -3,6 +3,14 @@ import { CLIMB_HISTORY_STATUSES } from '@jrposada/fit-log-shared/common/climb-hi
 import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
+import type { WithRefs } from '../infrastructure/with-refs.ts';
+import type { IClimb } from './climb.ts';
+import type { IClimbHistoryTry } from './climb-history-try.ts';
+import { climbHistoryTrySchema } from './climb-history-try.ts';
+import type { ILocation } from './location.ts';
+import type { ISector } from './sector.ts';
+import type { ITrainingSession } from './training-session.ts';
+
 export type { ClimbHistoryStatus };
 
 export const STATUS_PRIORITY: Record<ClimbHistoryStatus, number> = {
@@ -10,40 +18,6 @@ export const STATUS_PRIORITY: Record<ClimbHistoryStatus, number> = {
   send: 2,
   attempt: 1,
 };
-
-export interface IClimbHistoryTry {
-  status: ClimbHistoryStatus;
-  attempts?: number;
-  notes?: string;
-  date: Date;
-}
-
-export interface IClimbHistory extends WithTimestamps<Document> {
-  /* Data */
-  status: ClimbHistoryStatus;
-  isProject: boolean;
-  tries: Types.DocumentArray<IClimbHistoryTry>;
-
-  /* Ownership */
-  owner: Types.ObjectId;
-
-  /* References */
-  climb: Types.ObjectId | null;
-  location: Types.ObjectId | null;
-  sector: Types.ObjectId | null;
-  trainingSession: Types.ObjectId | null;
-}
-
-export type ClimbHistoryRefs =
-  | 'climb'
-  | 'location'
-  | 'sector'
-  | 'trainingSession';
-
-export type ClimbHistoryRequiredRefs = Exclude<
-  ClimbHistoryRefs,
-  'trainingSession'
->;
 
 export function computeTopStatus(
   tries: { status: ClimbHistoryStatus }[]
@@ -57,30 +31,28 @@ export function computeTopStatus(
   return best;
 }
 
-const climbHistoryTrySchema = new Schema<IClimbHistoryTry>(
-  {
-    status: {
-      type: String,
-      enum: [...CLIMB_HISTORY_STATUSES],
-      required: true,
-    },
-    attempts: {
-      type: Number,
-      required: false,
-      min: 1,
-    },
-    notes: {
-      type: String,
-      required: false,
-    },
-    date: {
-      type: Date,
-      required: true,
-      default: Date.now,
-    },
-  },
-  { _id: true }
-);
+export type ClimbHistoryPopulatedRefs = {
+  climb: IClimb | null;
+  location: ILocation | null;
+  sector: ISector | null;
+  trainingSession: ITrainingSession | null;
+};
+
+export type ClimbHistoryRequiredRefs = Exclude<
+  keyof ClimbHistoryPopulatedRefs,
+  'trainingSession'
+>;
+
+export interface IClimbHistory
+  extends WithTimestamps<Document>, WithRefs<ClimbHistoryPopulatedRefs> {
+  /* Data */
+  status: ClimbHistoryStatus;
+  isProject: boolean;
+  tries: Types.DocumentArray<IClimbHistoryTry>;
+
+  /* Ownership */
+  owner: Types.ObjectId;
+}
 
 const climbHistorySchema = new Schema<IClimbHistory>(
   {

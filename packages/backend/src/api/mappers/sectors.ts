@@ -3,7 +3,14 @@ import type { Sector } from '@jrposada/fit-log-shared/models/sectors/sector';
 
 import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
 import type { WithPopulatedRefs } from '../../data/infrastructure/with-populated-refs.ts';
-import type { ISector, SectorRefs } from '../../data/models/sector.ts';
+import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
+import type { WithRequiredOwnership } from '../../data/models/_collaborator.ts';
+import type { IImage } from '../../data/models/image.ts';
+import type {
+  ISector,
+  SectorPopulatedRefs,
+  SectorRequiredRefs,
+} from '../../data/models/sector.ts';
 import { hasRequiredRefs } from '../../services/climb.ts';
 import type { ValidSector } from '../../services/sector.ts';
 import { toApiDepopulatedClimb } from './climbs.ts';
@@ -15,8 +22,17 @@ import { toApiDepopulatedImage } from './images.ts';
 import { toApiUserSummary } from './user-summary.ts';
 
 function toApiDepopulatedSector(
-  model: WithPopulatedRefs<ISector, 'images'>
-): WithDepopulatedRefs<WithDepopulatedOwnership<Sector>, SectorRefs> {
+  model: WithPopulatedRefs<
+    WithRequiredRefs<WithRequiredOwnership<ISector>, SectorRequiredRefs>,
+    'images',
+    {
+      images: WithRequiredOwnership<IImage>[];
+    }
+  >
+): WithDepopulatedRefs<
+  WithDepopulatedOwnership<Sector>,
+  Exclude<keyof SectorPopulatedRefs, 'images'>
+> {
   return {
     /* Data */
     id: model._id.toString(),

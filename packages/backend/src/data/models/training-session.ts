@@ -3,43 +3,103 @@ import { SESSION_STALE_MS } from '@jrposada/fit-log-shared/models/training-sessi
 import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
-import type { WithSessionBase } from './_session-base.ts';
-import { sessionBaseFields, sessionSummarySchema } from './_session-base.ts';
+import type { WithRefs } from '../infrastructure/with-refs.ts';
+import type { IClimbHistory } from './climb-history.ts';
+import type { ILocation } from './location.ts';
 
 export { SESSION_STALE_MS };
+export type { SessionSummaryData };
 
 export const EMPTY_TRAINING_SESSION_SUMMARY: SessionSummaryData = {
   headline: '0 routes',
   count: 0,
 };
 
+const sessionSummarySchema = new Schema<SessionSummaryData>(
+  {
+    headline: {
+      type: String,
+      required: true,
+    },
+    metric: {
+      type: new Schema<NonNullable<SessionSummaryData['metric']>>(
+        {
+          label: {
+            type: String,
+            required: true,
+          },
+          value: {
+            type: String,
+            required: true,
+          },
+        },
+        { _id: false }
+      ),
+      required: false,
+    },
+    count: {
+      type: Number,
+      required: false,
+    },
+  },
+  { _id: false }
+);
+
+export type TrainingSessionPopulatedRefs = {
+  location: ILocation | null;
+  climbHistories: IClimbHistory[];
+};
+
+export type TrainingSessionRequiredRefs = Exclude<
+  keyof TrainingSessionPopulatedRefs,
+  'location'
+>;
+
 export interface ITrainingSession
-  extends WithTimestamps<Document>, WithSessionBase {
+  extends WithTimestamps<Document>, WithRefs<TrainingSessionPopulatedRefs> {
   /* Data */
   sport: 'climbing';
+  title: string;
+  notes?: string;
+  startedAt: Date;
+  endedAt?: Date;
   lastActivityAt: Date;
+  /** Denormalized cache, recomputed by the owning sport package on every
+   * write that touches the session's derived data. Never authoritative. */
+  summary: SessionSummaryData;
 
-  /* References */
-  climbHistories: Types.ObjectId[];
+  /* Ownership */
+  owner: Types.ObjectId;
 }
-
-/**
- * `location` (inherited from `WithSessionBase`) isn't included: the API
- * shape depopulates it to an optional property (`location?:`) rather than a
- * nullable one, which the generic helper's null-check can't express — the
- * mapper composes that one by hand instead.
- */
-export type TrainingSessionRefs = 'climbHistories';
 
 const trainingSessionSchema = new Schema<ITrainingSession>(
   {
-    /* Session contract */
-    ...sessionBaseFields,
+    /* Data */
     sport: {
       type: String,
       enum: ['climbing'],
       required: true,
       default: 'climbing',
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    notes: {
+      type: String,
+      required: false,
+    },
+    startedAt: {
+      type: Date,
+      required: true,
+    },
+    endedAt: {
+      type: Date,
+      required: false,
+    },
+    lastActivityAt: {
+      type: Date,
+      required: true,
     },
     summary: {
       type: sessionSummarySchema,
@@ -49,13 +109,20 @@ const trainingSessionSchema = new Schema<ITrainingSession>(
       }),
     },
 
-    /* Data */
-    lastActivityAt: {
-      type: Date,
+    /* Ownership */
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
     },
 
     /* References */
+    location: {
+      type: Schema.Types.ObjectId,
+      ref: 'Location',
+      required: false,
+      default: null,
+    },
     climbHistories: {
       type: [Schema.Types.ObjectId],
       ref: 'ClimbHistory',

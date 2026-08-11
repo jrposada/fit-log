@@ -1,10 +1,14 @@
 import type { HoldType } from '@jrposada/fit-log-shared/common/climbs/holds';
 import { HOLD_TYPES } from '@jrposada/fit-log-shared/common/climbs/holds';
-import type { Document, Types, WithTimestamps } from 'mongoose';
+import type { Document, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
+import type { WithRefs } from '../infrastructure/with-refs.ts';
 import type { WithOwnership } from './_collaborator.ts';
 import { ownershipFields } from './_collaborator.ts';
+import type { ILocation } from './location.ts';
+import type { IModel3d } from './model-3d.ts';
+import type { ISector } from './sector.ts';
 
 export interface IHold {
   x: number;
@@ -12,37 +16,6 @@ export interface IHold {
   radius: number;
   type: HoldType;
 }
-
-export interface ISplinePoint {
-  x: number;
-  y: number;
-}
-
-export interface IClimb extends WithTimestamps<Document>, WithOwnership {
-  /* Data */
-  name: string;
-  grade: string;
-  description?: string;
-  holds: IHold[];
-  spline: ISplinePoint[];
-  source: string;
-  sourceId?: string;
-
-  /* References */
-  image: Types.ObjectId | null;
-  location: Types.ObjectId | null;
-  sector: Types.ObjectId | null;
-  model3d: Types.ObjectId | null;
-}
-
-export type ClimbRefs = 'image' | 'location' | 'sector' | 'model3d';
-
-/**
- * Refs a climb can never be without: `location`/`sector` are mandatory,
- * while `image`/`model3d` are optional (a climb needs at least one of the
- * two, enforced at the API boundary, but neither is guaranteed here).
- */
-export type ClimbRequiredRefs = 'location' | 'sector';
 
 const holdSchema = new Schema<IHold>(
   {
@@ -67,6 +40,11 @@ const holdSchema = new Schema<IHold>(
   { _id: false }
 );
 
+export interface ISplinePoint {
+  x: number;
+  y: number;
+}
+
 const splinePointSchema = new Schema<ISplinePoint>(
   {
     x: {
@@ -80,6 +58,33 @@ const splinePointSchema = new Schema<ISplinePoint>(
   },
   { _id: false }
 );
+
+export type ClimbPopulatedRefs = {
+  image: IClimb | null;
+  location: ILocation | null;
+  sector: ISector | null;
+  model3d: IModel3d | null;
+};
+
+export type ClimbRequiredRefs = Exclude<
+  keyof ClimbPopulatedRefs,
+  'image' | 'model3d'
+>;
+
+export interface IClimb
+  extends
+    WithTimestamps<Document>,
+    WithOwnership,
+    WithRefs<ClimbPopulatedRefs> {
+  /* Data */
+  name: string;
+  grade: string;
+  description?: string;
+  holds: IHold[];
+  spline: ISplinePoint[];
+  source: string;
+  sourceId?: string;
+}
 
 const climbSchema = new Schema<IClimb>(
   {

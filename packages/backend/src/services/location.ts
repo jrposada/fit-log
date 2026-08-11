@@ -12,6 +12,7 @@ import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
 import { removeCollaborator } from '../data/infrastructure/remove-collaborator.ts';
 import { upsertCollaborator } from '../data/infrastructure/upsert-collaborator.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
+import type { WithRequiredOwnership } from '../data/models/_collaborator.ts';
 import type { IImage } from '../data/models/image.ts';
 import type { ILocation } from '../data/models/location.ts';
 import { Location } from '../data/models/location.ts';
@@ -23,7 +24,11 @@ import { getSportsByLocationId } from './feed.ts';
 /** Fully populated location, as returned to API mappers. */
 type ValidLocation = MergeType<
   WithPopulatedOwnership<ILocation>,
-  { sectors: MergeType<ISector, { images: IImage[] }>[] }
+  {
+    sectors: WithRequiredOwnership<
+      MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+    >[];
+  }
 >;
 
 /** A location annotated with the requesting owner's derived sport(s). */
@@ -77,7 +82,9 @@ async function getLocations(
       .limit(pageSize + 1)
       .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
       .populate<{
-        sectors: MergeType<ISector, { images: IImage[] }>[];
+        sectors: WithRequiredOwnership<
+          MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        >[];
       }>({
         path: 'sectors',
         populate: ['images'],
@@ -108,7 +115,9 @@ async function getLocationById(
     Location.findById(id)
       .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
       .populate<{
-        sectors: MergeType<ISector, { images: IImage[] }>[];
+        sectors: WithRequiredOwnership<
+          MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        >[];
       }>({
         path: 'sectors',
         populate: ['images'],
@@ -152,7 +161,9 @@ async function upsertLocation(
   })
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
-      sectors: MergeType<ISector, { images: IImage[] }>[];
+      sectors: WithRequiredOwnership<
+        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+      >[];
     }>({
       path: 'sectors',
       populate: ['images'],
@@ -182,7 +193,9 @@ async function addLocationCollaborator(
   )
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
-      sectors: MergeType<ISector, { images: IImage[] }>[];
+      sectors: WithRequiredOwnership<
+        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+      >[];
     }>({
       path: 'sectors',
       populate: ['images'],
@@ -203,7 +216,9 @@ async function removeLocationCollaborator(
   const location = await removeCollaborator(Location, id, granteeId, user)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
-      sectors: MergeType<ISector, { images: IImage[] }>[];
+      sectors: WithRequiredOwnership<
+        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+      >[];
     }>({
       path: 'sectors',
       populate: ['images'],

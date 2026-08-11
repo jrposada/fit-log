@@ -1,20 +1,18 @@
+import type { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
 import type { TrainingSession } from '@jrposada/fit-log-shared/models/training-sessions/training-session';
 
-import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
+import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
 import type {
   ITrainingSession,
-  TrainingSessionRefs,
+  TrainingSessionRequiredRefs,
 } from '../../data/models/training-session.ts';
 import type { ValidTrainingSession } from '../../services/training-session.ts';
 import { toApiDepopulatedClimbHistory } from './climb-histories.ts';
 import { toApiDepopulatedLocation } from './locations.ts';
 
-function toApiDepopulatedTrainingSession(model: ITrainingSession): Omit<
-  WithDepopulatedRefs<TrainingSession, TrainingSessionRefs>,
-  'location'
-> & {
-  location?: string;
-} {
+function toApiDepopulatedTrainingSession(
+  model: WithRequiredRefs<ITrainingSession, TrainingSessionRequiredRefs>
+): NonNullable<ClimbHistory['trainingSession']> {
   return {
     /* Data */
     id: model._id.toString(),

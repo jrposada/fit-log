@@ -3,8 +3,9 @@ import type { Climb } from '@jrposada/fit-log-shared/models/climbs/climb';
 
 import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
 import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
+import type { WithRequiredOwnership } from '../../data/models/_collaborator.ts';
 import type {
-  ClimbRefs,
+  ClimbPopulatedRefs,
   ClimbRequiredRefs,
   IClimb,
 } from '../../data/models/climb.ts';
@@ -20,8 +21,11 @@ import { toApiDepopulatedSector } from './sectors.ts';
 import { toApiUserSummary } from './user-summary.ts';
 
 function toApiDepopulatedClimb(
-  model: WithRequiredRefs<IClimb, ClimbRequiredRefs>
-): WithDepopulatedRefs<WithDepopulatedOwnership<Climb>, ClimbRefs> {
+  model: WithRequiredOwnership<WithRequiredRefs<IClimb, ClimbRequiredRefs>>
+): WithDepopulatedRefs<
+  WithDepopulatedOwnership<Climb>,
+  keyof ClimbPopulatedRefs
+> {
   return {
     /* Data */
     id: model._id.toString(),

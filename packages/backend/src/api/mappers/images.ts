@@ -2,6 +2,7 @@ import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/a
 import type { Image } from '@jrposada/fit-log-shared/models/images/image';
 
 import type { WithPopulatedOwnership } from '../../auth/ownership-populate.ts';
+import type { WithRequiredOwnership } from '../../data/models/_collaborator.ts';
 import type { IImage } from '../../data/models/image.ts';
 import { resolveFileUrl } from '../infrastructure/resolve-file-url.ts';
 import {
@@ -10,7 +11,9 @@ import {
 } from './collaborators.ts';
 import { toApiUserSummary } from './user-summary.ts';
 
-function toApiDepopulatedImage(model: IImage): WithDepopulatedOwnership<Image> {
+function toApiDepopulatedImage(
+  model: WithRequiredOwnership<IImage>
+): WithDepopulatedOwnership<Image> {
   return {
     /* Data */
     id: model._id.toString(),
