@@ -4,7 +4,6 @@ export type RootParamList = {
   Home: undefined;
   History: undefined;
   Stats: undefined;
-  Profile: undefined;
 };
 
 export type RootStackParamList = {

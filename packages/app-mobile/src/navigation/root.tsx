@@ -70,15 +70,6 @@ const Tabs: FunctionComponent = () => {
               tabBarIcon: () => <Icon icon="📊" size="lg" />,
             }}
           />
-          <Tab.Screen
-            name="Profile"
-            component={ProfileScreen}
-            options={{
-              headerShown: false,
-              tabBarLabel: t('app_bar.profile'),
-              tabBarIcon: () => <Icon icon="👤" size="lg" />,
-            }}
-          />
         </Tab.Navigator>
         <Fab />
       </View>
