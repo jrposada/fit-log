@@ -2,6 +2,8 @@ import {
   connectToDatabase,
   disconnectFromDatabase,
 } from '../../utils/database';
+import { IClimb } from '@backend/data/models/climb';
+import { IClimbHistory } from '@backend/data/models/climb-history';
 import { User } from '@backend/data/models/user';
 import { FilesService } from '@backend/services/files';
 import { ImageProcessor } from '@backend/services/image-processor';
@@ -12,6 +14,7 @@ import { Types } from 'mongoose';
 import { seedClimbHistory } from '../seed/climb-histories';
 import { seedLocation } from '../seed/locations';
 import { seedMoonboardProblems } from '../seed/moonboard-problems';
+import { seedTrainingSession } from '../seed/training-sessions';
 import { seedWorkout } from '../seed/workouts';
 import { findKeycloakUserByEmail } from '../../utils/keycloak-admin';
 
@@ -21,6 +24,7 @@ interface CliOptions {
   climbsPerSector: string;
   numWorkouts: string;
   climbHistoryChance: string;
+  numTrainingSessions: string;
 }
 
 export function registerSetupCommand(setupCmd: Command): void {
@@ -36,12 +40,18 @@ export function registerSetupCommand(setupCmd: Command): void {
       'Chance (0-1) each climb has history',
       '0.6'
     )
+    .option(
+      '--num-training-sessions <value>',
+      'Number of standalone (history-less) training sessions to also create',
+      '20'
+    )
     .action(async (options: CliOptions) => {
       const numLocations = parseInt(options.numLocations);
       const sectorsPerLocation = parseInt(options.sectorsPerLocation);
       const climbsPerSector = parseInt(options.climbsPerSector);
       const numWorkouts = parseInt(options.numWorkouts);
       const climbHistoryChance = parseFloat(options.climbHistoryChance);
+      const numTrainingSessions = parseInt(options.numTrainingSessions);
 
       try {
         await connectToDatabase();
@@ -160,6 +170,13 @@ export function registerSetupCommand(setupCmd: Command): void {
         let historyCount = 0;
         let climbsProcessed = 0;
         const climbLogEvery = Math.max(1, Math.floor(allClimbs.length / 20));
+        // Histories grouped by (owner, location) so the training-session
+        // pass below can bundle a user's attempts at one location into
+        // realistic sessions.
+        const historiesByOwnerLocation = new Map<
+          string,
+          { history: IClimbHistory; climb: IClimb }[]
+        >();
         for (const climb of allClimbs) {
           climbsProcessed += 1;
           if (!faker.datatype.boolean({ probability: climbHistoryChance })) {
@@ -175,13 +192,20 @@ export function registerSetupCommand(setupCmd: Command): void {
           }
           if (!climb.location || !climb.sector) continue;
 
-          await seedClimbHistory({
-            owner: faker.helpers.arrayElement(allOwners),
+          const owner = faker.helpers.arrayElement(allOwners);
+          const history = await seedClimbHistory({
+            owner,
             climb: climb._id,
             location: climb.location,
             sector: climb.sector,
           });
           historyCount += 1;
+
+          const groupKey = `${owner.toString()}|${climb.location.toString()}`;
+          const group = historiesByOwnerLocation.get(groupKey) ?? [];
+          group.push({ history, climb });
+          historiesByOwnerLocation.set(groupKey, group);
+
           if (
             climbsProcessed % climbLogEvery === 0 ||
             climbsProcessed === allClimbs.length
@@ -192,6 +216,51 @@ export function registerSetupCommand(setupCmd: Command): void {
           }
         }
         console.log(`✓ Seeded ${historyCount} climb histories`);
+
+        // Training sessions pass — bundle each (owner, location) group of
+        // climb histories into a handful of sessions, modelling separate
+        // visits to that location. Owner/location come back out of the
+        // group key built while seeding histories above.
+        console.log('Seeding training sessions from climb histories...');
+        let trainingSessionCount = 0;
+        for (const [groupKey, entries] of historiesByOwnerLocation) {
+          const [ownerId, locationId] = groupKey.split('|');
+          const owner = new Types.ObjectId(ownerId);
+          const location = new Types.ObjectId(locationId);
+
+          const shuffled = faker.helpers.shuffle(entries);
+          let cursor = 0;
+          while (cursor < shuffled.length) {
+            const chunkSize = faker.number.int({
+              min: 1,
+              max: Math.min(6, shuffled.length - cursor),
+            });
+            const chunk = shuffled.slice(cursor, cursor + chunkSize);
+            cursor += chunkSize;
+
+            await seedTrainingSession({
+              owner,
+              location,
+              climbHistories: chunk,
+            });
+            trainingSessionCount += 1;
+          }
+        }
+        console.log(
+          `✓ Seeded ${trainingSessionCount} training sessions from climb histories`
+        );
+
+        console.log(
+          `Seeding ${numTrainingSessions} standalone training sessions...`
+        );
+        for (let i = 0; i < numTrainingSessions; i++) {
+          await seedTrainingSession({
+            owner: faker.helpers.arrayElement(allOwners),
+          });
+        }
+        console.log(
+          `✓ Seeded ${numTrainingSessions} standalone training sessions`
+        );
 
         console.log(`Seeding ${numWorkouts} workouts...`);
         const workoutLogEvery = Math.max(1, Math.floor(numWorkouts / 20));
