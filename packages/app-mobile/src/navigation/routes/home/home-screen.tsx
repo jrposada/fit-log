@@ -125,7 +125,7 @@ const HomeScreen: FunctionComponent = () => {
                   color={palette.green}
                   title={t(`${entry.sport}.title`)}
                   subtitle={String(entry.count)}
-                  variant="stat"
+                  variant="description"
                 />
               ))}
             </View>

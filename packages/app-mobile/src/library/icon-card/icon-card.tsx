@@ -28,21 +28,12 @@ const IconCard: FunctionComponent<IconCardProps> = ({
       variant="elevatedStrong"
       highlight={color}
       onPress={onPress}
-      style={[styles.layout, style]}
+      style={[styles.layout, styles[`layout--${variant}`], style]}
     >
       <Text style={styles.icon}>{icon}</Text>
-      <View style={styles.content}>
-        {variant === 'stat' ? (
-          <>
-            <Text style={styles.statTitle}>{title}</Text>
-            <Text style={[styles.statSubtitle, { color }]}>{subtitle}</Text>
-          </>
-        ) : (
-          <>
-            <Text style={[styles.descriptionTitle, { color }]}>{title}</Text>
-            <Text style={styles.descriptionSubtitle}>{subtitle}</Text>
-          </>
-        )}
+      <View style={[styles.content, styles[`content--${variant}`]]}>
+        <Text style={[styles.title]}>{title}</Text>
+        <Text style={[styles.subtitle, { color }]}>{subtitle}</Text>
       </View>
     </Card>
   );

@@ -18,6 +18,7 @@ import { useClimbsPut } from '@jrposada/fit-log-shared-react/api/climbs/use-clim
 import { useImagesPost } from '@jrposada/fit-log-shared-react/api/images/use-images-post';
 import { useLocationsById } from '@jrposada/fit-log-shared-react/api/locations/use-locations-by-id';
 import { useMe } from '@jrposada/fit-log-shared-react/api/me/use-me';
+// import { useTrainingSessionsActive } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-active';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -31,7 +32,6 @@ import { ImagePickerEvents } from '../../../../library/image-picker';
 import { useToast } from '../../../../library/toast';
 import { RootStackParamList } from '../../../../types/routes';
 import { Selection } from '../../components/climb-detail/climb-image/climb-image';
-import { useActiveClimbingSession } from '../../hooks/use-active-climbing-session';
 import ClimbDetailHeader from './use-climb-detail-header';
 
 export type ClimbDetailNavigationProp = NativeStackNavigationProp<
@@ -86,7 +86,7 @@ const useClimbDetail = () => {
 
   const climbHistoriesPut = useClimbHistoriesPut();
   const climbHistoryProject = useClimbHistoryProject();
-  const { ensureActiveClimbingSession } = useActiveClimbingSession();
+  // const { ensureActiveClimbingSession } = useTrainingSessionsActive();
 
   const sectors = useMemo(() => location?.sectors ?? [], [location]);
 
@@ -472,15 +472,15 @@ const useClimbDetail = () => {
   }, [watchedHolds, watchedSpline, navigation, t]);
 
   const handleLogSend = async () => {
-    const trainingSession = await ensureActiveClimbingSession();
-    climbHistoriesPut.mutate({
-      climb: climbId!,
-      location: climb!.location.id,
-      sector: climb!.sector.id,
-      status: 'send',
-      attempts: 1,
-      trainingSession,
-    });
+    // const trainingSession = await ensureActiveClimbingSession();
+    // climbHistoriesPut.mutate({
+    //   climb: climbId!,
+    //   location: climb!.location.id,
+    //   sector: climb!.sector.id,
+    //   status: 'send',
+    //   attempts: 1,
+    //   trainingSession,
+    // });
   };
 
   const handleToggleProject = () => {

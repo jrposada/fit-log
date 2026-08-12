@@ -4,31 +4,47 @@ import { ink, spacing, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   layout: {
-    flexDirection: 'row',
     alignItems: 'center',
   },
+  ['layout--stat']: {
+    flexDirection: 'column',
+  },
+  ['layout--description']: {
+    flexDirection: 'row',
+  },
+
   icon: {
     fontSize: 40,
-    marginRight: 15,
   },
+
   content: {
     flex: 1,
+
+    display: 'flex',
+
+    gap: spacing.xs,
   },
-  statTitle: {
+  ['content--stat']: {
+    alignItems: 'center',
+  },
+  ['content--description']: {},
+
+  title: {},
+  ['title--stat']: {
     ...typography.callout,
     color: ink.secondary,
-    marginBottom: spacing.xs,
   },
-  statSubtitle: {
+  ['title--description']: {
+    ...typography.heading,
+    fontWeight: 'bold',
+  },
+
+  subtitle: {},
+  ['subtitle--stat']: {
     ...typography.display,
     fontWeight: 'bold',
   },
-  descriptionTitle: {
-    ...typography.heading,
-    fontWeight: 'bold',
-    marginBottom: spacing.xs,
-  },
-  descriptionSubtitle: {
+  ['subtitle--description']: {
     ...typography.callout,
     color: ink.secondary,
   },

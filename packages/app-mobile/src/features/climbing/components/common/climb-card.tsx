@@ -17,7 +17,6 @@ import Stack from '../../../../library/stack';
 import { accent, semantic } from '../../../../library/theme';
 import { Typography } from '../../../../library/typography';
 import { RootStackParamList } from '../../../../types/routes';
-import { useActiveClimbingSession } from '../../hooks/use-active-climbing-session';
 import ClimbStatusBadge from './climb-status-badge';
 import GradeBadge from './grade-badge';
 
@@ -52,7 +51,7 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
 
   const climbHistoriesPut = useClimbHistoriesPut();
   const climbHistoryProject = useClimbHistoryProject();
-  const { ensureActiveClimbingSession } = useActiveClimbingSession();
+  // const { ensureActiveClimbingSession } = useActiveClimbingSession();
 
   const loading = climbHistoriesPut.isPending || climbHistoryProject.isPending;
 
@@ -68,23 +67,26 @@ const ClimbCard: FunctionComponent<ClimbCardProps> = ({
     navigation.navigate('ClimbDetail', { climbId: climb.id });
   };
 
-  const handleLog = useCallback(async () => {
-    const trainingSession = await ensureActiveClimbingSession();
-    climbHistoriesPut.mutate({
-      climb: climb.id,
-      location: location.id,
-      sector: sector.id,
-      status: 'send',
-      attempts: 1,
-      trainingSession,
-    });
-  }, [
-    climb.id,
-    climbHistoriesPut,
-    ensureActiveClimbingSession,
-    location.id,
-    sector.id,
-  ]);
+  const handleLog = useCallback(
+    async () => {
+      // const trainingSession = await ensureActiveClimbingSession();
+      // climbHistoriesPut.mutate({
+      //   climb: climb.id,
+      //   location: location.id,
+      //   sector: sector.id,
+      //   status: 'send',
+      //   attempts: 1,
+      //   trainingSession,
+      // });
+    },
+    [
+      // climb.id,
+      // climbHistoriesPut,
+      // ensureActiveClimbingSession,
+      // location.id,
+      // sector.id,
+    ]
+  );
 
   const handleToggleProject = useCallback(() => {
     climbHistoryProject.mutate({
