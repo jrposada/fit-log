@@ -17,8 +17,8 @@ navigation/
     <route>-options.tsx          # the route's chrome: header, presentation,
                                  # tab bar entry, params → title
     <route>.styles.ts            # optional, screen-local styles
-  header.tsx
-  fab.tsx
+  common/          # components shared across multiple routes
+    ...
   sport-picker-modal.tsx
   types.ts         # RootParamList, RootStackParamList, screen props
 ```

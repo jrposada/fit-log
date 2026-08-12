@@ -10,7 +10,7 @@ import MapView, {
 } from 'react-native-maps';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import Header from '../../navigation/header';
+import Header from '../../navigation/common/header';
 import Button from '../button';
 import { spacing } from '../theme';
 import { useToast } from '../toast';

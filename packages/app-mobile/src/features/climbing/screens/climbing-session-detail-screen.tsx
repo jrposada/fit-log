@@ -15,7 +15,7 @@ import Section from '../../../library/section';
 import Separator from '../../../library/separator';
 import Stack from '../../../library/stack';
 import { Typography } from '../../../library/typography';
-import Header from '../../../navigation/header';
+import Header from '../../../navigation/common/header';
 import { RootStackParamList } from '../../../types/routes';
 import ClimbCard from '../components/common/climb-card';
 

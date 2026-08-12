@@ -1,9 +1,9 @@
 import { FunctionComponent, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import IconButton from '../library/icon-button';
-import { shadows, spacing } from '../library/theme';
-import SportPickerModal from './sport-picker-modal';
+import IconButton from '../../library/icon-button';
+import { shadows, spacing } from '../../library/theme';
+import SportPickerModal from '../sport-picker-modal';
 
 const Fab: FunctionComponent = () => {
   const insets = useSafeAreaInsets();

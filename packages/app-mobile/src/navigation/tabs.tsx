@@ -8,8 +8,8 @@ import HistoryScreen from '../features/history/history-screen';
 import StatsScreen from '../features/stats/stats-screen';
 import { Icon } from '../library/icon';
 import { RootParamList } from '../types/routes';
-import Fab from './fab';
-import Header from './header';
+import Fab from './common/fab';
+import Header from './common/header';
 import { homeOptions } from './routes/home/home-options';
 import HomeScreen from './routes/home/home-screen';
 

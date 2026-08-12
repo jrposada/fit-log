@@ -3,11 +3,11 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent } from 'react';
 
-import AvatarButton from '../library/avatar-button/avatar-button';
+import AvatarButton from '../../library/avatar-button/avatar-button';
 import ScreenHeader, {
   ScreenHeaderProps,
-} from '../library/screen-header/screen-header';
-import { RootStackParamList } from '../types/routes';
+} from '../../library/screen-header/screen-header';
+import { RootStackParamList } from '../../types/routes';
 
 type HeaderProps = Omit<ScreenHeaderProps, 'onBackPress'> & {
   back?: boolean;

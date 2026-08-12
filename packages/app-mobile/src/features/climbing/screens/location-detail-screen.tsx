@@ -36,7 +36,7 @@ import Section from '../../../library/section';
 import { accent, surfaces } from '../../../library/theme';
 import { useToast } from '../../../library/toast';
 import UnsavedBanner from '../../../library/unsaved-banner';
-import Header from '../../../navigation/header';
+import Header from '../../../navigation/common/header';
 import { RootStackParamList } from '../../../types/routes';
 import type { FormData } from '../components/location-detail/form-location';
 import { formDataSchema } from '../components/location-detail/form-location';

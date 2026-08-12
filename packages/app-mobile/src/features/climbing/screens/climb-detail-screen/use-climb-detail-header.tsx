@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import IconButton from '../../../../library/icon-button';
 import Stack from '../../../../library/stack';
-import Header from '../../../../navigation/header';
+import Header from '../../../../navigation/common/header';
 import GradeBadge from '../../components/common/grade-badge';
 
 interface ClimbDetailHeaderProps {

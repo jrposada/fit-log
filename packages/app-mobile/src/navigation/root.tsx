@@ -17,7 +17,7 @@ import LoadingState from '../library/loading-state';
 import { MapPointPickerScreen } from '../library/map-point-picker';
 import { surfaces } from '../library/theme';
 import { RootStackParamList } from '../types/routes';
-import Header from './header';
+import Header from './common/header';
 import Tabs from './tabs';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

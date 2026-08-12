@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 
-import Header from '../../navigation/header';
+import Header from '../../navigation/common/header';
 import { accent } from '../theme';
 import { useToast } from '../toast';
 import { ImagePickerEvents, ImagePickerResult } from './image-picker-events';
