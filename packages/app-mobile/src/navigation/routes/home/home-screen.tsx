@@ -6,19 +6,19 @@ import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import EmptyState from '../../library/empty-state';
-import IconCard from '../../library/icon-card';
-import LoadingState from '../../library/loading-state';
-import Measure from '../../library/measure';
-import Screen from '../../library/screen';
-import Section from '../../library/section';
-import Stack from '../../library/stack';
-import { palette, spacing } from '../../library/theme';
-import { RootStackParamList } from '../../types/routes';
-import FeedRow from '../feed/components/feed-row';
-import { navigateToSessionDetail } from '../feed/navigate-to-session-detail';
-import { SPORT_ICONS } from '../feed/sport-icons';
-import { styles } from './home-screen.styles';
+import FeedRow from '../../../features/feed/components/feed-row';
+import { navigateToSessionDetail } from '../../../features/feed/navigate-to-session-detail';
+import { SPORT_ICONS } from '../../../features/feed/sport-icons';
+import EmptyState from '../../../library/empty-state';
+import IconCard from '../../../library/icon-card';
+import LoadingState from '../../../library/loading-state';
+import Measure from '../../../library/measure';
+import Screen from '../../../library/screen';
+import Section from '../../../library/section';
+import Stack from '../../../library/stack';
+import { palette, spacing } from '../../../library/theme';
+import { RootStackParamList } from '../../../types/routes';
+import { styles } from './home.styles';
 
 const RECENT_ACTIVITY_LIMIT = 5;
 

@@ -5,13 +5,13 @@ import { View } from 'react-native';
 
 import { SportFilterProvider } from '../features/feed/sport-filter-context';
 import HistoryScreen from '../features/history/history-screen';
-import HomeHeader from '../features/home/home-header';
-import HomeScreen from '../features/home/home-screen';
 import StatsScreen from '../features/stats/stats-screen';
 import { Icon } from '../library/icon';
 import { RootParamList } from '../types/routes';
 import Fab from './fab';
 import Header from './header';
+import { homeOptions } from './routes/home/home-options';
+import HomeScreen from './routes/home/home-screen';
 
 const Tab = createBottomTabNavigator<RootParamList>();
 
@@ -30,11 +30,7 @@ const Tabs: FunctionComponent = () => {
           <Tab.Screen
             name="Home"
             component={HomeScreen}
-            options={{
-              header: () => <HomeHeader />,
-              tabBarLabel: t('app_bar.home'),
-              tabBarIcon: () => <Icon icon="🏠" size="lg" />,
-            }}
+            options={homeOptions(t)}
           />
           <Tab.Screen
             name="History"
