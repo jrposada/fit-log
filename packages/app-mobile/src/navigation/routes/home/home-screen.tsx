@@ -1,13 +1,13 @@
 import { useFeed } from '@jrposada/fit-log-shared-react/api/feed/use-feed';
 import { useFeedStats } from '@jrposada/fit-log-shared-react/api/feed/use-feed-stats';
+import { useTrainingSessionsActive } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-active';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import ActiveSessionCard from '../../../features/climbing/components/common/active-session-card';
-import { useActiveClimbingSession } from '../../../features/climbing/hooks/use-active-climbing-session';
+import ActiveTrainingSessionCard from '../../../features/climbing/components/common/active-training-session-card';
 import FeedRow from '../../../features/feed/components/feed-row';
 import { navigateToSessionDetail } from '../../../features/feed/navigate-to-session-detail';
 import { SPORT_ICONS } from '../../../features/feed/sport-icons';
@@ -41,7 +41,7 @@ const HomeScreen: FunctionComponent = () => {
   const { items: recentSessions, isLoading: isFeedLoading } = useFeed({
     limit: RECENT_ACTIVITY_LIMIT,
   });
-  const { activeSession } = useActiveClimbingSession();
+  const { data: activeTrainingSession } = useTrainingSessionsActive();
 
   const heroCards = useMemo<HeroCardData[]>(() => {
     if (!stats) {
@@ -77,12 +77,12 @@ const HomeScreen: FunctionComponent = () => {
   return (
     <Screen padding="lg">
       <Stack gap="lg">
-        {activeSession && (
-          <ActiveSessionCard
-            session={activeSession}
+        {activeTrainingSession && (
+          <ActiveTrainingSessionCard
+            session={activeTrainingSession}
             onPress={() =>
               navigation.navigate('ClimbingSessionDetail', {
-                sessionId: activeSession.id,
+                sessionId: activeTrainingSession.id,
               })
             }
           />

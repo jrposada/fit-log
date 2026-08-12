@@ -10,7 +10,7 @@ import { accent } from '../../../../library/theme';
 import { Typography } from '../../../../library/typography';
 import { SPORT_ICONS } from '../../../feed/sport-icons';
 
-interface ActiveSessionCardProps {
+interface ActiveTrainingSessionCardProps {
   session: TrainingSession;
   onPress: () => void;
 }
@@ -32,10 +32,9 @@ function formatElapsed(
   });
 }
 
-const ActiveSessionCard: FunctionComponent<ActiveSessionCardProps> = ({
-  session,
-  onPress,
-}) => {
+const ActiveTrainingSessionCard: FunctionComponent<
+  ActiveTrainingSessionCardProps
+> = ({ session, onPress }) => {
   const { t } = useTranslation();
 
   return (
@@ -65,4 +64,4 @@ const ActiveSessionCard: FunctionComponent<ActiveSessionCardProps> = ({
   );
 };
 
-export default ActiveSessionCard;
+export default ActiveTrainingSessionCard;
