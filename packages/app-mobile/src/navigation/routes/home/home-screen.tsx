@@ -6,6 +6,8 @@ import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import ActiveSessionCard from '../../../features/climbing/components/common/active-session-card';
+import { useActiveClimbingSession } from '../../../features/climbing/hooks/use-active-climbing-session';
 import FeedRow from '../../../features/feed/components/feed-row';
 import { navigateToSessionDetail } from '../../../features/feed/navigate-to-session-detail';
 import { SPORT_ICONS } from '../../../features/feed/sport-icons';
@@ -39,6 +41,7 @@ const HomeScreen: FunctionComponent = () => {
   const { items: recentSessions, isLoading: isFeedLoading } = useFeed({
     limit: RECENT_ACTIVITY_LIMIT,
   });
+  const { activeSession } = useActiveClimbingSession();
 
   const heroCards = useMemo<HeroCardData[]>(() => {
     if (!stats) {
@@ -74,6 +77,17 @@ const HomeScreen: FunctionComponent = () => {
   return (
     <Screen padding="lg">
       <Stack gap="lg">
+        {activeSession && (
+          <ActiveSessionCard
+            session={activeSession}
+            onPress={() =>
+              navigation.navigate('ClimbingSessionDetail', {
+                sessionId: activeSession.id,
+              })
+            }
+          />
+        )}
+
         <LoadingState isLoading={isStatsLoading}>
           <Measure>
             {(width) => {

@@ -15,16 +15,22 @@ function useActiveClimbingSession() {
   const { items } = useTrainingSessions({ active: true, limit: 1 });
   const trainingSessionsPut = useTrainingSessionsPut();
 
-  const ensureActiveClimbingSession = useCallback(async (): Promise<string> => {
-    const existing = items[0];
-    const isStale =
-      !!existing &&
-      Date.now() -
-        new Date(existing.lastActivityAt ?? existing.startedAt).getTime() >
-        SESSION_STALE_MS;
+  const existing = items[0];
+  // Staleness is a wall-clock comparison by nature — there's no `isActive`
+  // flag from the server, only `endedAt` presence, so "still active" has to
+  // be re-derived against the current time on every render.
+  // eslint-disable-next-line react-hooks/purity -- Date.now() is deliberate here, see comment above.
+  const now = Date.now();
+  const isStale =
+    !!existing &&
+    now - new Date(existing.lastActivityAt ?? existing.startedAt).getTime() >
+      SESSION_STALE_MS;
 
-    if (existing && !isStale) {
-      return existing.id;
+  const activeSession = existing && !isStale ? existing : undefined;
+
+  const ensureActiveClimbingSession = useCallback(async (): Promise<string> => {
+    if (activeSession) {
+      return activeSession.id;
     }
 
     const created = await trainingSessionsPut.mutateAsync({
@@ -34,10 +40,11 @@ function useActiveClimbingSession() {
       climbHistories: [],
     });
     return created.id;
-  }, [items, trainingSessionsPut, t]);
+  }, [activeSession, trainingSessionsPut, t]);
 
   return {
-    activeClimbingSessionId: items[0]?.id,
+    activeSession,
+    activeClimbingSessionId: activeSession?.id,
     ensureActiveClimbingSession,
   };
 }
