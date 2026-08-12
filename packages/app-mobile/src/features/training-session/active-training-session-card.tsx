@@ -2,13 +2,13 @@ import { TrainingSession } from '@jrposada/fit-log-shared/models/training-sessio
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Badge } from '../../../../library/badge';
-import Card from '../../../../library/card';
-import Separator from '../../../../library/separator';
-import Stack from '../../../../library/stack';
-import { accent } from '../../../../library/theme';
-import { Typography } from '../../../../library/typography';
-import { SPORT_ICONS } from '../../../feed/sport-icons';
+import { Badge } from '../../library/badge';
+import Card from '../../library/card';
+import Separator from '../../library/separator';
+import Stack from '../../library/stack';
+import { accent } from '../../library/theme';
+import { Typography } from '../../library/typography';
+import { SPORT_ICONS } from '../feed/sport-icons';
 
 interface ActiveTrainingSessionCardProps {
   session: TrainingSession;

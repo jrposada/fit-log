@@ -7,10 +7,10 @@ import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import ActiveTrainingSessionCard from '../../../features/climbing/components/common/active-training-session-card';
 import FeedRow from '../../../features/feed/components/feed-row';
 import { navigateToSessionDetail } from '../../../features/feed/navigate-to-session-detail';
 import { SPORT_ICONS } from '../../../features/feed/sport-icons';
+import ActiveTrainingSessionCard from '../../../features/training-session/active-training-session-card';
 import EmptyState from '../../../library/empty-state';
 import IconCard from '../../../library/icon-card';
 import LoadingState from '../../../library/loading-state';
