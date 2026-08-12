@@ -20,7 +20,7 @@ import { styles } from './map-screen.styles';
 
 type MapFilter = 'all' | Sport;
 
-type MapNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Map'>;
+type MapNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const DEFAULT_REGION = {
   latitude: 32.7157,

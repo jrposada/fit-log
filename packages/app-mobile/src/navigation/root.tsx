@@ -10,7 +10,6 @@ import ClimbDetailScreen from '../features/climbing/screens/climb-detail-screen'
 import ClimbLogScreen from '../features/climbing/screens/climb-log-screen';
 import ClimbingSessionDetailScreen from '../features/climbing/screens/climbing-session-detail-screen';
 import LocationDetailScreen from '../features/climbing/screens/location-detail-screen';
-import MapScreen from '../features/map/map-screen';
 import ProfileScreen from '../features/profile/profile-screen';
 import { ImagePickerScreen } from '../library/image-picker';
 import LoadingState from '../library/loading-state';
@@ -53,14 +52,6 @@ const Root: FunctionComponent = () => {
           name="Profile"
           component={ProfileScreen}
           options={{ presentation: 'modal' }}
-        />
-        <Stack.Screen
-          name="Map"
-          component={MapScreen}
-          options={{
-            headerShown: true,
-            header: () => <Header title={t('map.title')} back />,
-          }}
         />
         <Stack.Screen
           name="LocationDetail"

@@ -5,6 +5,7 @@ import { View } from 'react-native';
 
 import { SportFilterProvider } from '../features/feed/sport-filter-context';
 import HistoryScreen from '../features/history/history-screen';
+import MapScreen from '../features/map/map-screen';
 import StatsScreen from '../features/stats/stats-screen';
 import { Icon } from '../library/icon';
 import { RootParamList } from '../types/routes';
@@ -48,6 +49,15 @@ const Tabs: FunctionComponent = () => {
               header: () => <Header title={t('app_bar.stats')} />,
               tabBarLabel: t('app_bar.stats'),
               tabBarIcon: () => <Icon icon="📊" size="lg" />,
+            }}
+          />
+          <Tab.Screen
+            name="Map"
+            component={MapScreen}
+            options={{
+              header: () => <Header title={t('app_bar.map')} />,
+              tabBarLabel: t('app_bar.map'),
+              tabBarIcon: () => <Icon icon="🗺️" size="lg" />,
             }}
           />
         </Tab.Navigator>

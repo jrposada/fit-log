@@ -101,15 +101,6 @@ const HomeScreen: FunctionComponent = () => {
           </Measure>
         </LoadingState>
 
-        <IconCard
-          icon="🗺️"
-          color={palette.coral}
-          title={t('home.map_card_title')}
-          subtitle={t('home.map_card_subtitle')}
-          variant="description"
-          onPress={() => navigation.navigate('Map')}
-        />
-
         {stats && stats.bySport.length > 0 && (
           <Section title={t('home.per_sport_title')} noPadding>
             <View style={styles.cardsContainer}>

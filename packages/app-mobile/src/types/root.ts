@@ -4,12 +4,12 @@ export type RootParamList = {
   Home: undefined;
   History: undefined;
   Stats: undefined;
+  Map: undefined;
 };
 
 export type RootStackParamList = {
   Tabs: undefined;
   Profile: undefined;
-  Map: undefined;
   LocationDetail: { initialName?: string; locationId?: string } | undefined;
   ClimbDetail: { climbId?: string; locationId?: string };
   ClimbLog: undefined;
