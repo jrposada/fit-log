@@ -9,8 +9,8 @@ import MapScreen from '../features/map/map-screen';
 import StatsScreen from '../features/stats/stats-screen';
 import { Icon } from '../library/icon';
 import { RootParamList } from '../types/routes';
-import Fab from './common/fab';
 import Header from './common/header';
+import SessionFlyover from './common/session-flyover';
 import { homeOptions } from './routes/home/home-options';
 import HomeScreen from './routes/home/home-screen';
 
@@ -61,7 +61,7 @@ const Tabs: FunctionComponent = () => {
             }}
           />
         </Tab.Navigator>
-        <Fab />
+        <SessionFlyover />
       </View>
     </SportFilterProvider>
   );

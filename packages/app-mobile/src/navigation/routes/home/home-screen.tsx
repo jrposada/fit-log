@@ -1,6 +1,5 @@
 import { useFeed } from '@jrposada/fit-log-shared-react/api/feed/use-feed';
 import { useFeedStats } from '@jrposada/fit-log-shared-react/api/feed/use-feed-stats';
-import { useTrainingSessionsActive } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-active';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useMemo } from 'react';
@@ -10,7 +9,6 @@ import { View } from 'react-native';
 import FeedRow from '../../../features/feed/components/feed-row';
 import { navigateToSessionDetail } from '../../../features/feed/navigate-to-session-detail';
 import { SPORT_ICONS } from '../../../features/feed/sport-icons';
-import ActiveTrainingSessionCard from '../../../features/training-session/active-training-session-card';
 import EmptyState from '../../../library/empty-state';
 import IconCard from '../../../library/icon-card';
 import LoadingState from '../../../library/loading-state';
@@ -41,7 +39,6 @@ const HomeScreen: FunctionComponent = () => {
   const { items: recentSessions, isLoading: isFeedLoading } = useFeed({
     limit: RECENT_ACTIVITY_LIMIT,
   });
-  const { data: activeTrainingSession } = useTrainingSessionsActive();
 
   const heroCards = useMemo<HeroCardData[]>(() => {
     if (!stats) {
@@ -77,17 +74,6 @@ const HomeScreen: FunctionComponent = () => {
   return (
     <Screen padding="lg">
       <Stack gap="lg">
-        {activeTrainingSession && (
-          <ActiveTrainingSessionCard
-            session={activeTrainingSession}
-            onPress={() =>
-              navigation.navigate('ClimbingSessionDetail', {
-                sessionId: activeTrainingSession.id,
-              })
-            }
-          />
-        )}
-
         <LoadingState isLoading={isStatsLoading}>
           <Measure>
             {(width) => {
@@ -151,7 +137,7 @@ const HomeScreen: FunctionComponent = () => {
         </Section>
       </Stack>
 
-      {/* Spacer so the last card isn't hidden behind the central FAB. */}
+      {/* Spacer so the last card isn't hidden behind the session flyover. */}
       <View style={{ height: spacing['4xl'] }} />
     </Screen>
   );

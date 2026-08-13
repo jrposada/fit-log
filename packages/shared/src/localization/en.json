@@ -266,6 +266,7 @@
   "map.empty": "No locations yet",
   "nav.fab_label": "Log a session",
   "nav.sport_flow_coming_soon": "{{sport}} logging is coming soon",
+  "nav.start_session": "Start Session",
   "session.completed_at": "Workout Date",
   "session.create": "New Session",
   "session.update": "Update Session",
