@@ -59,6 +59,7 @@ function useTrainingSessionsPut({
       client.invalidateQueries({
         queryKey: ['training-sessions'],
       });
+      client.invalidateQueries({ queryKey: ['feed'] });
       onSuccess?.(trainingSession);
     },
   });
