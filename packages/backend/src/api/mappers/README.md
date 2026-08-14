@@ -1,8 +1,16 @@
 # API Mappers
 
-One file per entity. Mappers convert backend model types (Mongoose docs) into
-the API response types defined in `shared/models/`, and are the only place that
-conversion happens — handlers call them, nothing else formats responses.
+One file per entity. Mappers are the only place API-shape conversion happens
+— handlers call them, nothing else formats a response or builds a service
+input directly from `request.body`. Each file owns both directions for its
+entity:
+
+- **Model → API type** — converts a backend model (Mongoose doc) into the API
+  response types defined in `shared/models/`. See "The two variants" below.
+- **API type → service input** — converts an API request type into the
+  upsert input type the entity's service function expects. See "Mapping
+  requests into service inputs" below.
+
 Cross-resource shapes (collaborators, user summaries) have their own files.
 
 ## The two variants
@@ -26,6 +34,26 @@ mappers use when this entity appears as a reference.
 Consequently: use `toApi<Entity>` for the endpoint's primary resource (and
 populate accordingly), and `toApiDepopulated<Entity>` whenever the entity is
 nested inside another response.
+
+## Mapping requests into service inputs
+
+The reverse direction: turning an API request type (`shared/models/`) into
+whatever the entity's `upsert<Entity>` service function actually takes —
+**`toUpsert<Entity>Input`**, mirroring `toApi<Entity>` on the response side.
+Create and update stay a single service call with an optional `id`, not
+separate service functions: the service layer already resolves create vs.
+update from `id`'s presence (see `upsert-document.ts`/
+`upsert-owned-document.ts`), and duplicating that branch at the mapper or
+route level would just be a second place for the two to drift apart.
+
+The target type (`Upsert<Entity>Input`) is derived with
+`EntityAttributes<IEntity>` (`data/infrastructure/entity-attributes.ts`) plus
+an optional `id`, never a hand-picked field list. `EntityAttributes<T>` strips
+the Mongoose `Document`/`WithTimestamps` surface off `T`, leaving just its
+schema-defined data fields. This keeps the input type tied to the model
+instead of a copy of it: a field added to `IEntity` flows into the mapper's
+output automatically, rather than being silently dropped until someone
+remembers to add it to a `Pick`.
 
 ## Typing `toApiDepopulated<Entity>` with the ref helper types
 
