@@ -1,22 +1,30 @@
 import type { Document, Model } from 'mongoose';
 import { Types } from 'mongoose';
 
+/**
+ * Upsert a document in a single DB roundtrip.
+ *
+ * Update path (`id` given): `findByIdAndUpdate` without `upsert` — returns
+ * `null` if no document exists with that id, so the caller can 404 instead
+ * of silently creating one.
+ *
+ * Create path (no `id`): upsert with a fresh, collision-proof `_id`.
+ */
 export function upsertDocument<T extends Document>(
   model: Model<T>,
   id: string | undefined,
   data: Partial<T>
 ) {
-  const _id = id ? new Types.ObjectId(id) : new Types.ObjectId();
-
-  return model
-    .findByIdAndUpdate(_id, data, {
+  if (id) {
+    return model.findByIdAndUpdate(id, data, {
       new: true,
-      upsert: true,
       runValidators: true,
-    })
-    .orFail(
-      new Error(
-        `${model.modelName} with ID "${_id ?? ''}" could not be upsert.`
-      )
-    );
+    });
+  }
+
+  return model.findByIdAndUpdate(new Types.ObjectId(), data, {
+    new: true,
+    upsert: true,
+    runValidators: true,
+  });
 }
