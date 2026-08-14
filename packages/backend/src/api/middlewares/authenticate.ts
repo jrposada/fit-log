@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from 'express';
 
 import { User } from '../../data/models/user.ts';
 import Keycloak from '../../services/keycloak.ts';
+import { RequestContext } from '../../services/request-context.ts';
 
 export async function authenticate(
   req: Request,
@@ -65,7 +66,10 @@ export async function authenticate(
     req.user = user;
     next();
   } catch (error) {
-    console.log('Keycloak authentication failed', error);
+    console.log(
+      `[${RequestContext.getTraceId()}] Keycloak authentication failed`,
+      error
+    );
     res.status(401).end();
     return;
   }

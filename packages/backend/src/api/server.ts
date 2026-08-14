@@ -5,6 +5,7 @@ import express from 'express';
 
 import type { Lifecycle } from '../infrastructure/lifecycle.ts';
 import { FilesService } from '../services/files.ts';
+import { traceId } from './middlewares/trace-id.ts';
 import { router } from './routes/router.ts';
 
 export function createServer(): Lifecycle {
@@ -16,6 +17,7 @@ export function createServer(): Lifecycle {
     const app = express();
 
     app.use(cors());
+    app.use(traceId);
     app.use(express.json({ limit: '50mb' }));
 
     app.use('/files', express.static(FilesService.publicDir()));
