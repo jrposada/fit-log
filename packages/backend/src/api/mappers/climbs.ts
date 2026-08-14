@@ -1,5 +1,7 @@
 import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { Climb } from '@jrposada/fit-log-shared/models/climbs/climb';
+import type { ClimbsPutRequest } from '@jrposada/fit-log-shared/models/climbs/climbs-put';
+import { Types } from 'mongoose';
 
 import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
 import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
@@ -9,7 +11,7 @@ import type {
   ClimbRequiredRefs,
   IClimb,
 } from '../../data/models/climb.ts';
-import type { ValidClimb } from '../../services/climb.ts';
+import type { UpsertClimbInput, ValidClimb } from '../../services/climb.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
@@ -77,4 +79,22 @@ function toApiClimb(model: ValidClimb): Climb {
   };
 }
 
-export { toApiClimb, toApiDepopulatedClimb };
+function toUpsertClimbInput(request: ClimbsPutRequest): UpsertClimbInput {
+  return {
+    /* Data */
+    id: request.id,
+    name: request.name,
+    grade: request.grade,
+    description: request.description,
+    holds: request.holds,
+    spline: request.spline,
+
+    /* References */
+    image: request.image ? new Types.ObjectId(request.image) : null,
+    location: new Types.ObjectId(request.location),
+    sector: new Types.ObjectId(request.sector),
+    model3d: request.model3d ? new Types.ObjectId(request.model3d) : null,
+  };
+}
+
+export { toApiClimb, toApiDepopulatedClimb, toUpsertClimbInput };

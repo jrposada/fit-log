@@ -6,7 +6,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { upsertClimb } from '../../../services/climb.ts';
 import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
-import { toApiClimb } from '../../mappers/climbs.ts';
+import { toApiClimb, toUpsertClimbInput } from '../../mappers/climbs.ts';
 
 const handler = toRequestHandler<
   ClimbsPutResponse,
@@ -16,7 +16,10 @@ const handler = toRequestHandler<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const climb = await upsertClimb(request.user, request.body);
+  const climb = await upsertClimb(
+    request.user,
+    toUpsertClimbInput(request.body)
+  );
 
   return {
     statusCode: 200,

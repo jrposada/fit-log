@@ -8,11 +8,15 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
+import type { EntityAttributes } from '../data/infrastructure/entity-attributes.ts';
 import { removeCollaborator } from '../data/infrastructure/remove-collaborator.ts';
 import { upsertCollaborator } from '../data/infrastructure/upsert-collaborator.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
 import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
-import type { WithRequiredOwnership } from '../data/models/_collaborator.ts';
+import type {
+  WithOwnership,
+  WithRequiredOwnership,
+} from '../data/models/_collaborator.ts';
 import type { ClimbRequiredRefs, IClimb } from '../data/models/climb.ts';
 import { Climb } from '../data/models/climb.ts';
 import type { ClimbHistoryStatus } from '../data/models/climb-history.ts';
@@ -235,39 +239,24 @@ async function searchClimbs(options: FindClimbsOptions): Promise<{
   return { climbs, statusByClimbId };
 }
 
-type UpsertClimbInput = {
-  id?: string;
-
-  name: string;
-  grade: string;
-  description?: string;
-  holds: IClimb['holds'];
-  spline: IClimb['spline'];
-
-  image?: string | null;
-  sector: string;
-  location: string;
-  model3d?: string | null;
-};
+/**
+ * `source`/`sourceId` are provenance fields set internally (e.g. by an
+ * import pipeline), never by the PUT endpoint — excluded here alongside the
+ * ownership fields, which are likewise never client-supplied (collaborators
+ * are managed via their own endpoints; see `upsertOwnedDocument`).
+ */
+type UpsertClimbInput = Omit<
+  EntityAttributes<WithRequiredRefs<IClimb, ClimbRequiredRefs>>,
+  keyof WithOwnership | 'source' | 'sourceId'
+> & { id?: string };
 
 async function upsertClimb(
   user: IUser,
   input: UpsertClimbInput
 ): Promise<ValidClimb> {
-  const climb = await upsertOwnedDocument(Climb, input.id, user, {
-    /* Data */
-    name: input.name,
-    grade: input.grade,
-    description: input.description,
-    holds: input.holds,
-    spline: input.spline,
+  const { id, ...data } = input;
 
-    /* References */
-    image: input.image ? new Types.ObjectId(input.image) : null,
-    sector: new Types.ObjectId(input.sector),
-    location: new Types.ObjectId(input.location),
-    model3d: input.model3d ? new Types.ObjectId(input.model3d) : null,
-  })
+  const climb = await upsertOwnedDocument(Climb, id, user, data)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
       image: WithRequiredOwnership<IImage> | null;
@@ -284,9 +273,7 @@ async function upsertClimb(
     });
 
   if (!climb) {
-    throw new ResourceNotFound(
-      `Climb ${input.id ?? ''} not found or not editable`
-    );
+    throw new ResourceNotFound(`Climb ${id ?? ''} not found or not editable`);
   }
 
   return climb;
@@ -367,4 +354,4 @@ export {
   searchClimbs,
   upsertClimb,
 };
-export type { ClimbsCursor, ClimbStatusInfo, ValidClimb };
+export type { ClimbsCursor, ClimbStatusInfo, UpsertClimbInput, ValidClimb };
