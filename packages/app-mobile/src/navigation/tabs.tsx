@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import ActivityScreen from '../features/activity/activity-screen';
+import ExploreScreen from '../features/explore/explore-screen';
 import { SportFilterProvider } from '../features/feed/sport-filter-context';
-import MapScreen from '../features/map/map-screen';
 import ActiveTrainingSessionFlyover from '../features/training-sessions/active-training-session/active-training-session-flyover';
 import { Icon } from '../library/icon';
 import { RootParamList } from '../types/routes';
@@ -42,12 +42,12 @@ const Tabs: FunctionComponent = () => {
             }}
           />
           <Tab.Screen
-            name="Map"
-            component={MapScreen}
+            name="Explore"
+            component={ExploreScreen}
             options={{
-              header: () => <Header title={t('app_bar.map')} />,
-              tabBarLabel: t('app_bar.map'),
-              tabBarIcon: () => <Icon icon="🗺️" size="lg" />,
+              header: () => <Header title={t('app_bar.explore')} />,
+              tabBarLabel: t('app_bar.explore'),
+              tabBarIcon: () => <Icon icon="🧭" size="lg" />,
             }}
           />
         </Tab.Navigator>
