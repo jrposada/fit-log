@@ -12,6 +12,7 @@ import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
 import { logRequest } from '../../middlewares/log-request.ts';
+import { logResponse } from '../../middlewares/log-response.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -28,6 +29,7 @@ export function registerClimbsRoutes(router: Router): void {
     '/climbs',
     authenticate,
     logRequest,
+    logResponse,
     validateQuery(climbsGetQuerySchema),
     climbsGet
   );
@@ -36,6 +38,7 @@ export function registerClimbsRoutes(router: Router): void {
     '/climbs/search',
     authenticate,
     logRequest,
+    logResponse,
     validateQuery(climbsSearchQuerySchema),
     climbsSearch
   );
@@ -43,6 +46,7 @@ export function registerClimbsRoutes(router: Router): void {
     '/climbs/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(climbsGetByIdParamsSchema),
     climbsGetById
   );
@@ -50,6 +54,7 @@ export function registerClimbsRoutes(router: Router): void {
     '/climbs',
     authenticate,
     logRequest,
+    logResponse,
     validateBody(climbsPutRequestSchema),
     climbsPut
   );
@@ -57,6 +62,7 @@ export function registerClimbsRoutes(router: Router): void {
     '/climbs/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(climbsDeleteParamsSchema),
     climbsDelete
   );
@@ -64,6 +70,7 @@ export function registerClimbsRoutes(router: Router): void {
     '/climbs/:id/collaborators/:userId',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     climbsCollaboratorsPut
@@ -72,6 +79,7 @@ export function registerClimbsRoutes(router: Router): void {
     '/climbs/:id/collaborators/:userId',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(collaboratorDeleteParamsSchema),
     climbsCollaboratorsDelete
   );

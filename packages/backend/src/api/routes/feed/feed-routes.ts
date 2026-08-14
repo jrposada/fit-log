@@ -4,6 +4,7 @@ import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
 import { logRequest } from '../../middlewares/log-request.ts';
+import { logResponse } from '../../middlewares/log-response.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
 import { handler as feedGet } from './feed-get.ts';
 import { handler as feedStats } from './feed-stats.ts';
@@ -13,6 +14,7 @@ export function registerFeedRoutes(router: Router): void {
     '/feed',
     authenticate,
     logRequest,
+    logResponse,
     validateQuery(feedGetQuerySchema),
     feedGet
   );
@@ -22,6 +24,7 @@ export function registerFeedRoutes(router: Router): void {
     '/feed/stats',
     authenticate,
     logRequest,
+    logResponse,
     validateQuery(feedStatsQuerySchema),
     feedStats
   );

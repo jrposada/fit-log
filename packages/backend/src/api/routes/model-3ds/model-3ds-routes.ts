@@ -9,6 +9,7 @@ import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
 import { logRequest } from '../../middlewares/log-request.ts';
+import { logResponse } from '../../middlewares/log-response.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { handler as model3dsCollaboratorsDelete } from './model-3ds-collaborators-delete.ts';
@@ -21,6 +22,7 @@ export function registerModel3dsRoutes(router: Router): void {
     '/model-3ds',
     authenticate,
     logRequest,
+    logResponse,
     validateBody(model3dsPostRequestSchema),
     model3dsPost
   );
@@ -28,6 +30,7 @@ export function registerModel3dsRoutes(router: Router): void {
     '/model-3ds/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(model3dsDeleteParamsSchema),
     model3dsDelete
   );
@@ -35,6 +38,7 @@ export function registerModel3dsRoutes(router: Router): void {
     '/model-3ds/:id/collaborators/:userId',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     model3dsCollaboratorsPut
@@ -43,6 +47,7 @@ export function registerModel3dsRoutes(router: Router): void {
     '/model-3ds/:id/collaborators/:userId',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(collaboratorDeleteParamsSchema),
     model3dsCollaboratorsDelete
   );

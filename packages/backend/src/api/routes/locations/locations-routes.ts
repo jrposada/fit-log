@@ -11,6 +11,7 @@ import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
 import { logRequest } from '../../middlewares/log-request.ts';
+import { logResponse } from '../../middlewares/log-response.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -26,6 +27,7 @@ export function registerLocationsRoutes(router: Router): void {
     '/locations',
     authenticate,
     logRequest,
+    logResponse,
     validateQuery(locationsGetQuerySchema),
     locationsGet
   );
@@ -33,6 +35,7 @@ export function registerLocationsRoutes(router: Router): void {
     '/locations/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(locationsGetByIdParamsSchema),
     locationsGetById
   );
@@ -40,6 +43,7 @@ export function registerLocationsRoutes(router: Router): void {
     '/locations',
     authenticate,
     logRequest,
+    logResponse,
     validateBody(locationsPutRequestSchema),
     locationsPut
   );
@@ -47,6 +51,7 @@ export function registerLocationsRoutes(router: Router): void {
     '/locations/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(locationsDeleteParamsSchema),
     locationsDelete
   );
@@ -54,6 +59,7 @@ export function registerLocationsRoutes(router: Router): void {
     '/locations/:id/collaborators/:userId',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     locationsCollaboratorsPut
@@ -62,6 +68,7 @@ export function registerLocationsRoutes(router: Router): void {
     '/locations/:id/collaborators/:userId',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(collaboratorDeleteParamsSchema),
     locationsCollaboratorsDelete
   );

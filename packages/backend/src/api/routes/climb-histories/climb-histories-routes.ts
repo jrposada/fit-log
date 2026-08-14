@@ -11,6 +11,7 @@ import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
 import { logRequest } from '../../middlewares/log-request.ts';
+import { logResponse } from '../../middlewares/log-response.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -26,6 +27,7 @@ export function registerClimbHistoriesRoutes(router: Router): void {
     '/climb-histories',
     authenticate,
     logRequest,
+    logResponse,
     validateQuery(climbHistoriesGetQuerySchema),
     climbHistoriesGet
   );
@@ -34,6 +36,7 @@ export function registerClimbHistoriesRoutes(router: Router): void {
     '/climb-histories/stats',
     authenticate,
     logRequest,
+    logResponse,
     validateQuery(climbHistoriesStatsQuerySchema),
     climbHistoriesStats
   );
@@ -41,6 +44,7 @@ export function registerClimbHistoriesRoutes(router: Router): void {
     '/climb-histories/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(climbHistoriesGetByIdParamsSchema),
     climbHistoriesGetById
   );
@@ -48,6 +52,7 @@ export function registerClimbHistoriesRoutes(router: Router): void {
     '/climb-histories',
     authenticate,
     logRequest,
+    logResponse,
     validateBody(climbHistoriesPutRequestSchema),
     climbHistoriesPut
   );
@@ -55,6 +60,7 @@ export function registerClimbHistoriesRoutes(router: Router): void {
     '/climb-histories/project',
     authenticate,
     logRequest,
+    logResponse,
     validateBody(climbHistoryProjectRequestSchema),
     climbHistoriesProject
   );
@@ -62,6 +68,7 @@ export function registerClimbHistoriesRoutes(router: Router): void {
     '/climb-histories/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(climbHistoriesDeleteParamsSchema),
     validateQuery(climbHistoriesDeleteQuerySchema),
     climbHistoriesDelete

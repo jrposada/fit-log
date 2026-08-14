@@ -6,6 +6,7 @@ import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
 import { logRequest } from '../../middlewares/log-request.ts';
+import { logResponse } from '../../middlewares/log-response.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -19,6 +20,7 @@ export function registerWorkoutsRoutes(router: Router): void {
     '/workouts',
     authenticate,
     logRequest,
+    logResponse,
     validateQuery(workoutsGetQuerySchema),
     workoutsGet
   );
@@ -26,6 +28,7 @@ export function registerWorkoutsRoutes(router: Router): void {
     '/workouts/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(workoutsGetByIdParamsSchema),
     workoutsGetById
   );
@@ -33,6 +36,7 @@ export function registerWorkoutsRoutes(router: Router): void {
     '/workouts',
     authenticate,
     logRequest,
+    logResponse,
     validateBody(workoutsPutRequestSchema),
     workoutsPut
   );
@@ -40,6 +44,7 @@ export function registerWorkoutsRoutes(router: Router): void {
     '/workouts/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(workoutsDeleteParamsSchema),
     workoutsDelete
   );

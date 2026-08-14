@@ -11,6 +11,7 @@ import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
 import { logRequest } from '../../middlewares/log-request.ts';
+import { logResponse } from '../../middlewares/log-response.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { handler as sectorsBatchDelete } from './sectors-batch-delete.ts';
@@ -25,6 +26,7 @@ export function registerSectorsRoutes(router: Router): void {
     '/sectors',
     authenticate,
     logRequest,
+    logResponse,
     validateBody(sectorsPutRequestSchema),
     sectorsPut
   );
@@ -32,6 +34,7 @@ export function registerSectorsRoutes(router: Router): void {
     '/sectors/batch',
     authenticate,
     logRequest,
+    logResponse,
     validateBody(sectorsBatchPutRequestSchema),
     sectorsBatchPut
   );
@@ -39,6 +42,7 @@ export function registerSectorsRoutes(router: Router): void {
     '/sectors/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(sectorsDeleteParamsSchema),
     sectorsDelete
   );
@@ -46,6 +50,7 @@ export function registerSectorsRoutes(router: Router): void {
     '/sectors',
     authenticate,
     logRequest,
+    logResponse,
     validateBody(sectorsBatchDeleteRequestSchema),
     sectorsBatchDelete
   );
@@ -53,6 +58,7 @@ export function registerSectorsRoutes(router: Router): void {
     '/sectors/:id/collaborators/:userId',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     sectorsCollaboratorsPut
@@ -61,6 +67,7 @@ export function registerSectorsRoutes(router: Router): void {
     '/sectors/:id/collaborators/:userId',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(collaboratorDeleteParamsSchema),
     sectorsCollaboratorsDelete
   );

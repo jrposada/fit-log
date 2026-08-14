@@ -9,6 +9,7 @@ import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
 import { logRequest } from '../../middlewares/log-request.ts';
+import { logResponse } from '../../middlewares/log-response.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { handler as imagesCollaboratorsDelete } from './images-collaborators-delete.ts';
@@ -21,6 +22,7 @@ export function registerImagesRoutes(router: Router): void {
     '/images',
     authenticate,
     logRequest,
+    logResponse,
     validateBody(imagesPostRequestSchema),
     imagesPost
   );
@@ -28,6 +30,7 @@ export function registerImagesRoutes(router: Router): void {
     '/images/:id',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(imagesDeleteParamsSchema),
     imagesDelete
   );
@@ -35,6 +38,7 @@ export function registerImagesRoutes(router: Router): void {
     '/images/:id/collaborators/:userId',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     imagesCollaboratorsPut
@@ -43,6 +47,7 @@ export function registerImagesRoutes(router: Router): void {
     '/images/:id/collaborators/:userId',
     authenticate,
     logRequest,
+    logResponse,
     validateParams(collaboratorDeleteParamsSchema),
     imagesCollaboratorsDelete
   );
