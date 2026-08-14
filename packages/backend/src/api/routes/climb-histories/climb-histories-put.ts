@@ -6,7 +6,10 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { upsertClimbHistoryTry } from '../../../services/climb-history.ts';
 import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
-import { toApiClimbHistory } from '../../mappers/climb-histories.ts';
+import {
+  toApiClimbHistory,
+  toUpsertClimbHistoryTryInput,
+} from '../../mappers/climb-histories.ts';
 
 const handler = toRequestHandler<
   ClimbHistoriesPutResponse,
@@ -18,7 +21,7 @@ const handler = toRequestHandler<
 
   const climbHistory = await upsertClimbHistoryTry(
     request.user._id,
-    request.body
+    toUpsertClimbHistoryTryInput(request.body)
   );
 
   return {

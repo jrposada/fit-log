@@ -701,4 +701,8 @@ export {
   setClimbHistoryProject,
   upsertClimbHistoryTry,
 };
-export type { ClimbHistoriesCursor, ValidClimbHistory };
+export type {
+  ClimbHistoriesCursor,
+  UpsertClimbHistoryTryInput,
+  ValidClimbHistory,
+};

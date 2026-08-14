@@ -1,3 +1,4 @@
+import type { ClimbHistoriesPutRequest } from '@jrposada/fit-log-shared/models/climb-histories/climb-histories-put';
 import type { ClimbHistory } from '@jrposada/fit-log-shared/models/climb-histories/climb-history';
 
 import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
@@ -7,7 +8,10 @@ import type {
   ClimbHistoryRequiredRefs,
   IClimbHistory,
 } from '../../data/models/climb-history.ts';
-import type { ValidClimbHistory } from '../../services/climb-history.ts';
+import type {
+  UpsertClimbHistoryTryInput,
+  ValidClimbHistory,
+} from '../../services/climb-history.ts';
 import { toApiDepopulatedClimb } from './climbs.ts';
 import { toApiDepopulatedLocation } from './locations.ts';
 import { toApiDepopulatedSector } from './sectors.ts';
@@ -77,4 +81,28 @@ function toApiClimbHistory(model: ValidClimbHistory): ClimbHistory {
   };
 }
 
-export { toApiClimbHistory, toApiDepopulatedClimbHistory };
+function toUpsertClimbHistoryTryInput(
+  request: ClimbHistoriesPutRequest
+): UpsertClimbHistoryTryInput {
+  return {
+    tryId: request.tryId,
+
+    status: request.status,
+    attempts: request.attempts,
+    notes: request.notes,
+    date: request.date,
+
+    climb: request.climb,
+    location: request.location,
+    sector: request.sector,
+    trainingSession: request.trainingSession,
+
+    forced: request.forced,
+  };
+}
+
+export {
+  toApiClimbHistory,
+  toApiDepopulatedClimbHistory,
+  toUpsertClimbHistoryTryInput,
+};
