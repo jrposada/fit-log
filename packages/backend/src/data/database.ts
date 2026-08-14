@@ -5,6 +5,10 @@ import type { Lifecycle } from '../infrastructure/lifecycle.ts';
 import Logger from '../infrastructure/logger.ts';
 
 export function createDatabase(): Lifecycle {
+  function onConnection() {
+    Logger.info('✅ Connected to MongoDB');
+  }
+
   function onError(error: Error) {
     Logger.error('MongoDB connection error:', error);
   }
@@ -18,11 +22,11 @@ export function createDatabase(): Lifecycle {
       msg: 'DATABASE_ENDPOINT is not set',
     });
 
+    mongoose.connection.on('connection', onConnection);
     mongoose.connection.on('error', onError);
     mongoose.connection.on('disconnected', onDisconnected);
 
     await mongoose.connect(process.env.DATABASE_ENDPOINT);
-    Logger.info('✅ Connected to MongoDB');
   }
 
   async function stop(): Promise<void> {
