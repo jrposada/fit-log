@@ -6,7 +6,10 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { upsertTrainingSession } from '../../../services/training-session.ts';
 import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
-import { toApiTrainingSession } from '../../mappers/training-sessions.ts';
+import {
+  toApiTrainingSession,
+  toUpsertTrainingSessionInput,
+} from '../../mappers/training-sessions.ts';
 
 const handler = toRequestHandler<
   TrainingSessionsPutResponse,
@@ -16,7 +19,10 @@ const handler = toRequestHandler<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const session = await upsertTrainingSession(request.user, request.body);
+  const session = await upsertTrainingSession(
+    request.user,
+    toUpsertTrainingSessionInput(request.body)
+  );
 
   return {
     statusCode: 200,

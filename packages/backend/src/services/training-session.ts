@@ -3,6 +3,7 @@ import type { SessionSummaryData } from '@jrposada/fit-log-shared/models/feed/fe
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
+import type { EntityAttributes } from '../data/infrastructure/entity-attributes.ts';
 import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
 import type { WithRequiredOwnership } from '../data/models/_collaborator.ts';
 import type { IClimb } from '../data/models/climb.ts';
@@ -125,53 +126,49 @@ async function getTrainingSessionById(
   return withValidClimbHistories(session);
 }
 
-type UpsertTrainingSessionInput = {
-  id?: string;
-  title?: string;
-  notes?: string;
-  location?: string | null;
-};
+/**
+ * `owner` is set by the service from the authenticated user; `summary` is a
+ * denormalized cache recomputed elsewhere — both excluded for the same
+ * reason `source`/`sourceId` are excluded on climb/location/sector.
+ * Everything else, including `sport` and `lastActivityAt`, flows through as
+ * the model actually requires it (a full PUT replace on update); the mapper
+ * is responsible for producing a value even where the API type allows
+ * omitting one — see `toUpsertTrainingSessionInput`.
+ */
+type UpsertTrainingSessionInput = Omit<
+  EntityAttributes<ITrainingSession>,
+  'owner' | 'summary'
+> & { id?: string };
 
 async function upsertTrainingSession(
   user: IUser,
   input: UpsertTrainingSessionInput
 ): Promise<ValidTrainingSession> {
+  const { id, ...data } = input;
   const userId = user._id;
 
   let sessionId: Types.ObjectId;
 
-  if (input.id) {
-    const update: Record<string, unknown> = {};
-    if (input.title !== undefined) update.title = input.title;
-    if (input.notes !== undefined) update.notes = input.notes;
-    if (input.location !== undefined) {
-      update.location = input.location
-        ? new Types.ObjectId(input.location)
-        : null;
-    }
-
+  if (id) {
     const updated = await TrainingSession.findOneAndUpdate(
-      { _id: input.id, owner: userId },
-      { $set: update },
+      { _id: id, owner: userId },
+      { $set: data },
       { new: true, runValidators: true }
     );
 
     if (!updated) {
       throw new ResourceNotFound(
-        `Training session ${input.id} not found or not editable`
+        `Training session ${id} not found or not editable`
       );
     }
     sessionId = updated._id;
   } else {
     const now = new Date();
     const created = await TrainingSession.create({
+      ...data,
       owner: userId,
-      title: input.title,
-      notes: input.notes,
-      location: input.location ? new Types.ObjectId(input.location) : undefined,
       startedAt: now,
       lastActivityAt: now,
-      climbHistories: [],
     });
     sessionId = created._id;
   }
@@ -249,4 +246,8 @@ export {
   recomputeTrainingSessionSummary,
   upsertTrainingSession,
 };
-export type { TrainingSessionsCursor, ValidTrainingSession };
+export type {
+  TrainingSessionsCursor,
+  UpsertTrainingSessionInput,
+  ValidTrainingSession,
+};
