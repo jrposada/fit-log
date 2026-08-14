@@ -12,11 +12,12 @@ function useTrainingSessionsActive() {
   const { getToken, refreshToken, logout } = useAuth();
 
   return useQuery<
-    TrainingSessionsGetResponse['trainingSessions'][number] | undefined,
+    TrainingSessionsGetResponse['trainingSessions'][number] | null,
     Error
   >({
     queryKey: ['training-sessions', { active: true }],
     queryFn: query({
+      defaultResponse: null,
       refreshToken,
       logout,
       fn: async () => {
@@ -36,7 +37,7 @@ function useTrainingSessionsActive() {
           throw new Error('Api error');
         }
 
-        return response.data.data.trainingSessions[0];
+        return response.data.data.trainingSessions[0] ?? null;
       },
     }),
   });
