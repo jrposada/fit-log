@@ -3,10 +3,9 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import ActivityScreen from '../features/activity/activity-screen';
 import { SportFilterProvider } from '../features/feed/sport-filter-context';
-import HistoryScreen from '../features/history/history-screen';
 import MapScreen from '../features/map/map-screen';
-import StatsScreen from '../features/stats/stats-screen';
 import { Icon } from '../library/icon';
 import { RootParamList } from '../types/routes';
 import Header from './common/header';
@@ -34,20 +33,11 @@ const Tabs: FunctionComponent = () => {
             options={homeOptions(t)}
           />
           <Tab.Screen
-            name="History"
-            component={HistoryScreen}
+            name="Activity"
+            component={ActivityScreen}
             options={{
-              header: () => <Header title={t('app_bar.history')} />,
-              tabBarLabel: t('app_bar.history'),
-              tabBarIcon: () => <Icon icon="📜" size="lg" />,
-            }}
-          />
-          <Tab.Screen
-            name="Stats"
-            component={StatsScreen}
-            options={{
-              header: () => <Header title={t('app_bar.stats')} />,
-              tabBarLabel: t('app_bar.stats'),
+              header: () => <Header title={t('app_bar.activity')} />,
+              tabBarLabel: t('app_bar.activity'),
               tabBarIcon: () => <Icon icon="📊" size="lg" />,
             }}
           />

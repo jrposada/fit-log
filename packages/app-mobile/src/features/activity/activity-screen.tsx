@@ -1,21 +1,29 @@
-import { Sport, SPORTS } from '@jrposada/fit-log-shared/common/sports/sports';
+import { SPORTS } from '@jrposada/fit-log-shared/common/sports/sports';
+import { useFeed } from '@jrposada/fit-log-shared-react/api/feed/use-feed';
 import { useFeedStats } from '@jrposada/fit-log-shared-react/api/feed/use-feed-stats';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
 
+import Button from '../../library/button';
 import Card from '../../library/card';
 import EmptyState from '../../library/empty-state';
 import LoadingState from '../../library/loading-state';
 import Measure from '../../library/measure';
+import RefetchBar from '../../library/refetch-bar';
 import Screen from '../../library/screen';
 import Section from '../../library/section';
 import Stack from '../../library/stack';
 import Tabs, { TabBarItem } from '../../library/tabs';
 import { accent, ink, palette, spacing, typography } from '../../library/theme';
 import { Typography } from '../../library/typography';
+import { RootStackParamList } from '../../types/routes';
 import ClimbingStatsPanel from '../climbing/components/climbing-stats-panel/climbing-stats-panel';
+import FeedRow from '../feed/components/feed-row';
+import { navigateToSessionDetail } from '../feed/navigate-to-session-detail';
 import { SportFilter } from '../feed/sport-filter-context';
 import { SPORT_ICONS } from '../feed/sport-icons';
 import { useSportFilter } from '../feed/use-sport-filter';
@@ -61,13 +69,28 @@ const SummaryCard: FunctionComponent<{
   </Card>
 );
 
-const StatsScreen: FunctionComponent = () => {
+const ActivityScreen: FunctionComponent = () => {
   const { t } = useTranslation();
   const { sportFilter, setSportFilter } = useSportFilter();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const { data, isLoading } = useFeedStats(
+  const { data, isLoading: isStatsLoading } = useFeedStats(
     sportFilter === 'all' ? undefined : { sport: sportFilter }
   );
+
+  const {
+    items: sessions,
+    isLoading: isSessionsLoading,
+    isFetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useFeed({ sport: sportFilter === 'all' ? undefined : sportFilter });
+
+  const showInitialLoader = isSessionsLoading && sessions.length === 0;
+  const showRefetchIndicator =
+    isFetching && !isSessionsLoading && !isFetchingNextPage;
 
   const filterItems: TabBarItem<SportFilter>[] = [
     { id: 'all', label: t('common.filter_all') },
@@ -121,7 +144,7 @@ const StatsScreen: FunctionComponent = () => {
     [data?.activity]
   );
 
-  const showEmpty = !data || data.summary.totalSessions === 0;
+  const showStats = data && data.summary.totalSessions > 0;
 
   return (
     <Screen stickyHeaderIndices={[0]}>
@@ -131,25 +154,12 @@ const StatsScreen: FunctionComponent = () => {
         onChange={setSportFilter}
       />
 
-      {sportFilter === 'climbing' ? (
-        <ClimbingStatsPanel />
-      ) : sportFilter !== 'all' ? (
+      {sportFilter === 'climbing' && <ClimbingStatsPanel />}
+
+      {sportFilter === 'all' && (
         <Section gap="md">
-          {/* `sportFilter` narrows to `never` here today (only 'climbing'
-              exists), which breaks the i18next key check below — cast back
-              to keep this branch typechecking as new sports are added. */}
-          <EmptyState
-            message={t('stats.sport_placeholder', {
-              sport: t(`${sportFilter as Sport}.title`),
-            })}
-          />
-        </Section>
-      ) : (
-        <Section gap="md">
-          <LoadingState isLoading={isLoading}>
-            {showEmpty ? (
-              <EmptyState message={t('stats.empty')} />
-            ) : (
+          <LoadingState isLoading={isStatsLoading}>
+            {showStats && (
               <>
                 <Measure>
                   {(width) => {
@@ -174,7 +184,7 @@ const StatsScreen: FunctionComponent = () => {
                   <Card variant="elevated" size="lg">
                     <Stack gap="sm">
                       <Typography size="body" weight="semibold">
-                        {t('stats.activity_title')}
+                        {t('stats.chart_title')}
                       </Typography>
                       <Measure>
                         {(width) => (
@@ -238,10 +248,46 @@ const StatsScreen: FunctionComponent = () => {
           </LoadingState>
         </Section>
       )}
-      {/* Spacer so the last card isn't hidden behind the central FAB. */}
+
+      <Section gap="md">
+        <Typography size="body" weight="semibold">
+          {t('activity.sessions_title')}
+        </Typography>
+        <RefetchBar active={showRefetchIndicator} />
+
+        <LoadingState isLoading={showInitialLoader}>
+          {sessions.length === 0 ? (
+            <EmptyState message={t('activity.empty')} />
+          ) : (
+            <>
+              {sessions.map((session) => (
+                <FeedRow
+                  key={session.id}
+                  session={session}
+                  onPress={(s) => navigateToSessionDetail(navigation, s)}
+                />
+              ))}
+              {hasNextPage && (
+                <View style={{ paddingTop: spacing.sm }}>
+                  {isFetchingNextPage ? (
+                    <ActivityIndicator />
+                  ) : (
+                    <Button
+                      title={t('actions.load_more')}
+                      variant="outline"
+                      onPress={() => fetchNextPage()}
+                    />
+                  )}
+                </View>
+              )}
+            </>
+          )}
+        </LoadingState>
+      </Section>
+      {/* Spacer so the last row isn't hidden behind the central FAB. */}
       <View style={{ height: spacing['4xl'] }} />
     </Screen>
   );
 };
 
-export default StatsScreen;
+export default ActivityScreen;

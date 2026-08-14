@@ -118,7 +118,7 @@ const HomeScreen: FunctionComponent = () => {
           </Section>
         )}
 
-        <Section title={t('home.recent_activity')} noPadding>
+        <Section title={t('home.recent_sessions')} noPadding>
           <LoadingState isLoading={isFeedLoading}>
             {recentSessions.length === 0 ? (
               <EmptyState message={t('home.empty_sessions_warning')} />
