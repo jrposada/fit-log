@@ -10,6 +10,7 @@ import { sectorsPutRequestSchema } from '@jrposada/fit-log-shared/models/sectors
 import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
+import { logRequest } from '../../middlewares/log-request.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { handler as sectorsBatchDelete } from './sectors-batch-delete.ts';
@@ -23,30 +24,35 @@ export function registerSectorsRoutes(router: Router): void {
   router.put(
     '/sectors',
     authenticate,
+    logRequest,
     validateBody(sectorsPutRequestSchema),
     sectorsPut
   );
   router.put(
     '/sectors/batch',
     authenticate,
+    logRequest,
     validateBody(sectorsBatchPutRequestSchema),
     sectorsBatchPut
   );
   router.delete(
     '/sectors/:id',
     authenticate,
+    logRequest,
     validateParams(sectorsDeleteParamsSchema),
     sectorsDelete
   );
   router.delete(
     '/sectors',
     authenticate,
+    logRequest,
     validateBody(sectorsBatchDeleteRequestSchema),
     sectorsBatchDelete
   );
   router.put(
     '/sectors/:id/collaborators/:userId',
     authenticate,
+    logRequest,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     sectorsCollaboratorsPut
@@ -54,6 +60,7 @@ export function registerSectorsRoutes(router: Router): void {
   router.delete(
     '/sectors/:id/collaborators/:userId',
     authenticate,
+    logRequest,
     validateParams(collaboratorDeleteParamsSchema),
     sectorsCollaboratorsDelete
   );

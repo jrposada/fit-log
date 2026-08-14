@@ -10,6 +10,7 @@ import { locationsPutRequestSchema } from '@jrposada/fit-log-shared/models/locat
 import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
+import { logRequest } from '../../middlewares/log-request.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -24,30 +25,35 @@ export function registerLocationsRoutes(router: Router): void {
   router.get(
     '/locations',
     authenticate,
+    logRequest,
     validateQuery(locationsGetQuerySchema),
     locationsGet
   );
   router.get(
     '/locations/:id',
     authenticate,
+    logRequest,
     validateParams(locationsGetByIdParamsSchema),
     locationsGetById
   );
   router.put(
     '/locations',
     authenticate,
+    logRequest,
     validateBody(locationsPutRequestSchema),
     locationsPut
   );
   router.delete(
     '/locations/:id',
     authenticate,
+    logRequest,
     validateParams(locationsDeleteParamsSchema),
     locationsDelete
   );
   router.put(
     '/locations/:id/collaborators/:userId',
     authenticate,
+    logRequest,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     locationsCollaboratorsPut
@@ -55,6 +61,7 @@ export function registerLocationsRoutes(router: Router): void {
   router.delete(
     '/locations/:id/collaborators/:userId',
     authenticate,
+    logRequest,
     validateParams(collaboratorDeleteParamsSchema),
     locationsCollaboratorsDelete
   );

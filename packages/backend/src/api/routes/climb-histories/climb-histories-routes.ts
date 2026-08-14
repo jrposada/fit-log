@@ -10,6 +10,7 @@ import { climbHistoriesStatsQuerySchema } from '@jrposada/fit-log-shared/models/
 import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
+import { logRequest } from '../../middlewares/log-request.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -24,6 +25,7 @@ export function registerClimbHistoriesRoutes(router: Router): void {
   router.get(
     '/climb-histories',
     authenticate,
+    logRequest,
     validateQuery(climbHistoriesGetQuerySchema),
     climbHistoriesGet
   );
@@ -31,30 +33,35 @@ export function registerClimbHistoriesRoutes(router: Router): void {
   router.get(
     '/climb-histories/stats',
     authenticate,
+    logRequest,
     validateQuery(climbHistoriesStatsQuerySchema),
     climbHistoriesStats
   );
   router.get(
     '/climb-histories/:id',
     authenticate,
+    logRequest,
     validateParams(climbHistoriesGetByIdParamsSchema),
     climbHistoriesGetById
   );
   router.put(
     '/climb-histories',
     authenticate,
+    logRequest,
     validateBody(climbHistoriesPutRequestSchema),
     climbHistoriesPut
   );
   router.put(
     '/climb-histories/project',
     authenticate,
+    logRequest,
     validateBody(climbHistoryProjectRequestSchema),
     climbHistoriesProject
   );
   router.delete(
     '/climb-histories/:id',
     authenticate,
+    logRequest,
     validateParams(climbHistoriesDeleteParamsSchema),
     validateQuery(climbHistoriesDeleteQuerySchema),
     climbHistoriesDelete

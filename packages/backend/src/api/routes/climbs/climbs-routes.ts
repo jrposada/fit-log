@@ -11,6 +11,7 @@ import { climbsSearchQuerySchema } from '@jrposada/fit-log-shared/models/climbs/
 import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
+import { logRequest } from '../../middlewares/log-request.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -26,6 +27,7 @@ export function registerClimbsRoutes(router: Router): void {
   router.get(
     '/climbs',
     authenticate,
+    logRequest,
     validateQuery(climbsGetQuerySchema),
     climbsGet
   );
@@ -33,30 +35,35 @@ export function registerClimbsRoutes(router: Router): void {
   router.get(
     '/climbs/search',
     authenticate,
+    logRequest,
     validateQuery(climbsSearchQuerySchema),
     climbsSearch
   );
   router.get(
     '/climbs/:id',
     authenticate,
+    logRequest,
     validateParams(climbsGetByIdParamsSchema),
     climbsGetById
   );
   router.put(
     '/climbs',
     authenticate,
+    logRequest,
     validateBody(climbsPutRequestSchema),
     climbsPut
   );
   router.delete(
     '/climbs/:id',
     authenticate,
+    logRequest,
     validateParams(climbsDeleteParamsSchema),
     climbsDelete
   );
   router.put(
     '/climbs/:id/collaborators/:userId',
     authenticate,
+    logRequest,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     climbsCollaboratorsPut
@@ -64,6 +71,7 @@ export function registerClimbsRoutes(router: Router): void {
   router.delete(
     '/climbs/:id/collaborators/:userId',
     authenticate,
+    logRequest,
     validateParams(collaboratorDeleteParamsSchema),
     climbsCollaboratorsDelete
   );

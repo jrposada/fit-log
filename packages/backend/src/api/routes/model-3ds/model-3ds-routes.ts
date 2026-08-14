@@ -8,6 +8,7 @@ import { model3dsPostRequestSchema } from '@jrposada/fit-log-shared/models/model
 import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
+import { logRequest } from '../../middlewares/log-request.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { handler as model3dsCollaboratorsDelete } from './model-3ds-collaborators-delete.ts';
@@ -19,18 +20,21 @@ export function registerModel3dsRoutes(router: Router): void {
   router.post(
     '/model-3ds',
     authenticate,
+    logRequest,
     validateBody(model3dsPostRequestSchema),
     model3dsPost
   );
   router.delete(
     '/model-3ds/:id',
     authenticate,
+    logRequest,
     validateParams(model3dsDeleteParamsSchema),
     model3dsDelete
   );
   router.put(
     '/model-3ds/:id/collaborators/:userId',
     authenticate,
+    logRequest,
     validateParams(collaboratorPutParamsSchema),
     validateBody(collaboratorPutRequestSchema),
     model3dsCollaboratorsPut
@@ -38,6 +42,7 @@ export function registerModel3dsRoutes(router: Router): void {
   router.delete(
     '/model-3ds/:id/collaborators/:userId',
     authenticate,
+    logRequest,
     validateParams(collaboratorDeleteParamsSchema),
     model3dsCollaboratorsDelete
   );

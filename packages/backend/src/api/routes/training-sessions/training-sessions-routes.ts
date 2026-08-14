@@ -5,6 +5,7 @@ import { trainingSessionsPutRequestSchema } from '@jrposada/fit-log-shared/model
 import type { Router } from 'express';
 
 import { authenticate } from '../../middlewares/authenticate.ts';
+import { logRequest } from '../../middlewares/log-request.ts';
 import { validateBody } from '../../middlewares/validate-body.ts';
 import { validateParams } from '../../middlewares/validate-params.ts';
 import { validateQuery } from '../../middlewares/validate-query.ts';
@@ -17,24 +18,28 @@ export function registerTrainingSessionsRoutes(router: Router): void {
   router.get(
     '/training-sessions',
     authenticate,
+    logRequest,
     validateQuery(trainingSessionsGetQuerySchema),
     trainingSessionsGet
   );
   router.get(
     '/training-sessions/:id',
     authenticate,
+    logRequest,
     validateParams(trainingSessionsGetByIdParamsSchema),
     trainingSessionsGetById
   );
   router.put(
     '/training-sessions',
     authenticate,
+    logRequest,
     validateBody(trainingSessionsPutRequestSchema),
     trainingSessionsPut
   );
   router.delete(
     '/training-sessions/:id',
     authenticate,
+    logRequest,
     validateParams(trainingSessionsDeleteParamsSchema),
     trainingSessionsDelete
   );
