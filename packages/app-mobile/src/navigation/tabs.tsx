@@ -6,10 +6,10 @@ import { View } from 'react-native';
 import ActivityScreen from '../features/activity/activity-screen';
 import { SportFilterProvider } from '../features/feed/sport-filter-context';
 import MapScreen from '../features/map/map-screen';
+import ActiveTrainingSessionFlyover from '../features/training-sessions/active-training-session/active-training-session-flyover';
 import { Icon } from '../library/icon';
 import { RootParamList } from '../types/routes';
 import Header from './common/header';
-import TrainingSessionFlyover from './flyovers/training-session-flyover';
 import { homeOptions } from './routes/home/home-options';
 import HomeScreen from './routes/home/home-screen';
 
@@ -51,7 +51,7 @@ const Tabs: FunctionComponent = () => {
             }}
           />
         </Tab.Navigator>
-        <TrainingSessionFlyover />
+        <ActiveTrainingSessionFlyover />
       </View>
     </SportFilterProvider>
   );
