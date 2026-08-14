@@ -9,7 +9,7 @@ import MapScreen from '../features/map/map-screen';
 import { Icon } from '../library/icon';
 import { RootParamList } from '../types/routes';
 import Header from './common/header';
-import SessionFlyover from './flyovers/session-flyover';
+import TrainingSessionFlyover from './flyovers/training-session-flyover';
 import { homeOptions } from './routes/home/home-options';
 import HomeScreen from './routes/home/home-screen';
 
@@ -51,7 +51,7 @@ const Tabs: FunctionComponent = () => {
             }}
           />
         </Tab.Navigator>
-        <SessionFlyover />
+        <TrainingSessionFlyover />
       </View>
     </SportFilterProvider>
   );

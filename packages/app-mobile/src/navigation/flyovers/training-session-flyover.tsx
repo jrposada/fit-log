@@ -16,7 +16,7 @@ import { accent, shadows, spacing } from '../../library/theme';
 import { useToast } from '../../library/toast';
 import { Typography } from '../../library/typography';
 import SportPickerModal from '../sport-picker-modal';
-import { styles } from './session-flyover.styles';
+import { styles } from './training-session-flyover.styles';
 
 function formatDuration(startedAt: string): string {
   const totalSeconds = Math.max(
@@ -142,7 +142,7 @@ const ActiveFlyover: FunctionComponent<ActiveFlyoverProps> = ({ session }) => {
   );
 };
 
-const SessionFlyover: FunctionComponent = () => {
+const TrainingSessionFlyover: FunctionComponent = () => {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const [isPickerVisible, setPickerVisible] = useState(false);
@@ -181,4 +181,4 @@ const SessionFlyover: FunctionComponent = () => {
   );
 };
 
-export default SessionFlyover;
+export default TrainingSessionFlyover;
