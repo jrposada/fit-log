@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 
+import type { EntityAttributes } from '../data/infrastructure/entity-attributes.ts';
 import { upsertDocument } from '../data/infrastructure/upsert-document.ts';
 import type { IWorkout } from '../data/models/workout.ts';
 import { Workout } from '../data/models/workout.ts';
@@ -58,24 +59,27 @@ async function getWorkoutById(id: string): Promise<IWorkout> {
   return workout;
 }
 
-type UpsertWorkoutInput = {
-  id?: string;
-  name: string;
-  description: string;
-  exercises: IWorkout['exercises'];
-};
+type UpsertWorkoutInput = EntityAttributes<IWorkout> & { id?: string };
 
 async function upsertWorkout(input: UpsertWorkoutInput): Promise<IWorkout> {
-  return upsertDocument(Workout, input.id, {
-    name: input.name,
-    description: input.description,
-    exercises: input.exercises,
-  });
+  const { id, ...data } = input;
+
+  const workout = await upsertDocument(Workout, id, data);
+
+  if (!workout) {
+    throw new ResourceNotFound(`Workout ${id ?? ''} not found`);
+  }
+
+  return workout;
 }
 
 async function deleteWorkout(id: string): Promise<void> {
-  await Workout.deleteOne({ _id: id });
+  const result = await Workout.deleteOne({ _id: id });
+
+  if (result.deletedCount === 0) {
+    throw new ResourceNotFound(`Workout with id ${id} not found`);
+  }
 }
 
 export { deleteWorkout, getWorkoutById, getWorkouts, upsertWorkout };
-export type { WorkoutsCursor };
+export type { UpsertWorkoutInput, WorkoutsCursor };

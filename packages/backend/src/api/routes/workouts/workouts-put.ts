@@ -6,7 +6,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { upsertWorkout } from '../../../services/workout.ts';
 import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
-import { toApiWorkout } from '../../mappers/workouts.ts';
+import { toApiWorkout, toUpsertWorkoutInput } from '../../mappers/workouts.ts';
 
 const handler = toRequestHandler<
   WorkoutsPutResponse,
@@ -16,7 +16,7 @@ const handler = toRequestHandler<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const workout = await upsertWorkout(request.body);
+  const workout = await upsertWorkout(toUpsertWorkoutInput(request.body));
 
   return {
     statusCode: 200,
