@@ -4,11 +4,12 @@ import type { RelatedEntityRequired } from '@jrposada/fit-log-shared/models/erro
 import type { Response } from 'express';
 
 import ForbiddenError from '../../infrastructure/forbidden-error.ts';
+import Logger from '../../infrastructure/logger.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import RelatedEntityRequiredError from '../../infrastructure/related-entity-required-error.ts';
 
 export function handleApiError<TError = unknown>(error: TError, res: Response) {
-  console.error('API Error:', error);
+  Logger.error('API Error:', error);
 
   let status = 500;
   const body: ApiResponse<unknown> = {

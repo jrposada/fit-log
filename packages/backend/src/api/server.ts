@@ -4,6 +4,7 @@ import cors from 'cors';
 import express from 'express';
 
 import type { Lifecycle } from '../infrastructure/lifecycle.ts';
+import Logger from '../infrastructure/logger.ts';
 import { FilesService } from '../services/files.ts';
 import { traceId } from './middlewares/trace-id.ts';
 import { router } from './routes/router.ts';
@@ -31,7 +32,7 @@ export function createServer(): Lifecycle {
     return await new Promise<void>((resolve, reject) => {
       server = app
         .listen(port, () => {
-          console.log(`🚀 Server is running on http://localhost:${port}`);
+          Logger.info(`🚀 Server is running on http://localhost:${port}`);
           resolve();
         })
         .on('error', reject);

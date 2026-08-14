@@ -3,6 +3,7 @@ import path from 'path';
 import sharp from 'sharp';
 import { v4 as uuid } from 'uuid';
 
+import Logger from '../infrastructure/logger.ts';
 import { FilesService } from './files.ts';
 
 export interface ProcessedImage {
@@ -106,7 +107,7 @@ export class ImageProcessor {
       await fs.unlink(imagePath);
       await fs.unlink(thumbnailPath);
     } catch (error) {
-      console.error('Failed to delete image files:', error);
+      Logger.error('Failed to delete image files:', error);
       // Don't throw - allow database cleanup to continue even if file deletion fails
     }
   }

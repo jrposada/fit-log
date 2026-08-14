@@ -2,14 +2,15 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import mongoose from 'mongoose';
 
 import type { Lifecycle } from '../infrastructure/lifecycle.ts';
+import Logger from '../infrastructure/logger.ts';
 
 export function createDatabase(): Lifecycle {
   function onError(error: Error) {
-    console.error('MongoDB connection error:', error);
+    Logger.error('MongoDB connection error:', error);
   }
 
   function onDisconnected() {
-    console.log('MongoDB disconnected');
+    Logger.info('MongoDB disconnected');
   }
 
   async function start(): Promise<void> {
@@ -21,7 +22,7 @@ export function createDatabase(): Lifecycle {
     mongoose.connection.on('disconnected', onDisconnected);
 
     await mongoose.connect(process.env.DATABASE_ENDPOINT);
-    console.log('✅ Connected to MongoDB');
+    Logger.info('✅ Connected to MongoDB');
   }
 
   async function stop(): Promise<void> {
@@ -29,7 +30,7 @@ export function createDatabase(): Lifecycle {
     mongoose.connection.off('disconnected', onDisconnected);
 
     await mongoose.disconnect();
-    console.log('🔌 Disconnected from MongoDB');
+    Logger.info('🔌 Disconnected from MongoDB');
   }
 
   return { start, stop };
