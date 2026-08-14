@@ -1,10 +1,11 @@
-import type { Document, WithTimestamps } from 'mongoose';
+import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
 import type { WithOwnership } from './_collaborator.ts';
 import { ownershipFields } from './_collaborator.ts';
 
-export interface IModel3d extends WithTimestamps<Document>, WithOwnership {
+export interface IModel3d
+  extends WithTimestamps<Document<Types.ObjectId>>, WithOwnership {
   /* Data */
   modelUrl: string;
   mimeType: string;

@@ -56,7 +56,9 @@ export type TrainingSessionRequiredRefs = Exclude<
 >;
 
 export interface ITrainingSession
-  extends WithTimestamps<Document>, WithRefs<TrainingSessionPopulatedRefs> {
+  extends
+    WithTimestamps<Document<Types.ObjectId>>,
+    WithRefs<TrainingSessionPopulatedRefs> {
   /* Data */
   sport: 'climbing';
   title: string;

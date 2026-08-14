@@ -1,7 +1,7 @@
-import type { Document, WithTimestamps } from 'mongoose';
+import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
-export interface IUser extends WithTimestamps<Document> {
+export interface IUser extends WithTimestamps<Document<Types.ObjectId>> {
   /* Data */
   keycloakId: string;
   email: string;

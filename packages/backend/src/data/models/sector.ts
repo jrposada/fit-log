@@ -1,4 +1,4 @@
-import type { Document, WithTimestamps } from 'mongoose';
+import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
 import type { WithRefs } from '../infrastructure/with-refs.ts';
@@ -16,7 +16,7 @@ export type SectorRequiredRefs = Exclude<keyof SectorPopulatedRefs, ''>;
 
 export interface ISector
   extends
-    WithTimestamps<Document>,
+    WithTimestamps<Document<Types.ObjectId>>,
     WithOwnership,
     WithRefs<SectorPopulatedRefs> {
   /* Data */

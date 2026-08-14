@@ -38,7 +38,7 @@ export type ClimbRequiredRefs = Exclude<
 
 export interface IClimb
   extends
-    WithTimestamps<Document>,
+    WithTimestamps<Document<Types.ObjectId>>,
     WithOwnership,
     WithRefs<ClimbPopulatedRefs> {
   /* Data */

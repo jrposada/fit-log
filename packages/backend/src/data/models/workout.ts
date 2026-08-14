@@ -1,5 +1,5 @@
 import { INTENSITY_UNITS } from '@jrposada/fit-log-shared/common/workout/intensity-units';
-import type { Document, WithTimestamps } from 'mongoose';
+import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
 export interface IExercise {
@@ -56,7 +56,7 @@ const exerciseSchema = new Schema<IExercise>(
   { _id: false }
 );
 
-export interface IWorkout extends WithTimestamps<Document> {
+export interface IWorkout extends WithTimestamps<Document<Types.ObjectId>> {
   name: string;
   description: string;
   exercises: IExercise[];

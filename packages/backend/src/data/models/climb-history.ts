@@ -44,7 +44,9 @@ export type ClimbHistoryRequiredRefs = Exclude<
 >;
 
 export interface IClimbHistory
-  extends WithTimestamps<Document>, WithRefs<ClimbHistoryPopulatedRefs> {
+  extends
+    WithTimestamps<Document<Types.ObjectId>>,
+    WithRefs<ClimbHistoryPopulatedRefs> {
   /* Data */
   status: ClimbHistoryStatus;
   isProject: boolean;

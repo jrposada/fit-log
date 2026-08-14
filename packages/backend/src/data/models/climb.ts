@@ -1,6 +1,6 @@
 import type { HoldType } from '@jrposada/fit-log-shared/common/climbs/holds';
 import { HOLD_TYPES } from '@jrposada/fit-log-shared/common/climbs/holds';
-import type { Document, WithTimestamps } from 'mongoose';
+import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
 import type { WithRefs } from '../infrastructure/with-refs.ts';
@@ -73,7 +73,7 @@ export type ClimbRequiredRefs = Exclude<
 
 export interface IClimb
   extends
-    WithTimestamps<Document>,
+    WithTimestamps<Document<Types.ObjectId>>,
     WithOwnership,
     WithRefs<ClimbPopulatedRefs> {
   /* Data */

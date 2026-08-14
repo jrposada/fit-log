@@ -43,8 +43,8 @@ export const collaboratorSchema = new Schema<ICollaborator>(
 
 /**
  * Marker interface for models that have ownership semantics.
- * Combine with `WithTimestamps<Document>`:
- *   interface IClimb extends WithTimestamps<Document>, WithOwnership { ... }
+ * Combine with `WithTimestamps<Document<Types.ObjectId>>`:
+ *   interface IClimb extends WithTimestamps<Document<Types.ObjectId>>, WithOwnership { ... }
  */
 export interface WithOwnership {
   owner: Types.ObjectId;
