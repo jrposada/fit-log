@@ -1,7 +1,9 @@
 import type { Sport } from '@jrposada/fit-log-shared/common/sports/sports';
 import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { Location } from '@jrposada/fit-log-shared/models/locations/location';
+import type { LocationsPutRequest } from '@jrposada/fit-log-shared/models/locations/locations-put';
 import type { MergeType } from 'mongoose';
+import { Types } from 'mongoose';
 
 import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
 import type { WithRequiredRefs } from '../../data/infrastructure/with-required-refs.ts';
@@ -11,7 +13,10 @@ import type {
   LocationPopulatedRefs,
   LocationRequiredRefs,
 } from '../../data/models/location.ts';
-import type { ValidLocation } from '../../services/location.ts';
+import type {
+  UpsertLocationInput,
+  ValidLocation,
+} from '../../services/location.ts';
 import {
   toApiCollaborator,
   toApiDepopulatedCollaborator,
@@ -76,4 +81,21 @@ function toApiLocation(
   };
 }
 
-export { toApiDepopulatedLocation, toApiLocation };
+function toUpsertLocationInput(
+  request: LocationsPutRequest
+): UpsertLocationInput {
+  return {
+    /* Data */
+    id: request.id,
+    name: request.name,
+    description: request.description,
+    latitude: request.latitude,
+    longitude: request.longitude,
+    googleMapsId: request.googleMapsId,
+
+    /* References */
+    sectors: request.sectors.map((sectorId) => new Types.ObjectId(sectorId)),
+  };
+}
+
+export { toApiDepopulatedLocation, toApiLocation, toUpsertLocationInput };

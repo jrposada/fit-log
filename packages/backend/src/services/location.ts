@@ -9,10 +9,14 @@ import type {
   WithPopulatedOwnership,
 } from '../auth/ownership-populate.ts';
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
+import type { EntityAttributes } from '../data/infrastructure/entity-attributes.ts';
 import { removeCollaborator } from '../data/infrastructure/remove-collaborator.ts';
 import { upsertCollaborator } from '../data/infrastructure/upsert-collaborator.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
-import type { WithRequiredOwnership } from '../data/models/_collaborator.ts';
+import type {
+  WithOwnership,
+  WithRequiredOwnership,
+} from '../data/models/_collaborator.ts';
 import type { IImage } from '../data/models/image.ts';
 import type { ILocation } from '../data/models/location.ts';
 import { Location } from '../data/models/location.ts';
@@ -132,33 +136,24 @@ async function getLocationById(
   return attachSports([location], sportsByLocationId)[0]!;
 }
 
-type UpsertLocationInput = {
-  id?: string;
-
-  name: string;
-  description?: string;
-  latitude: number;
-  longitude: number;
-  googleMapsId?: string;
-
-  sectors: string[];
-};
+/**
+ * `source` is a provenance field set internally (e.g. by an import
+ * pipeline), never by the PUT endpoint — excluded here alongside the
+ * ownership fields, which are likewise never client-supplied (collaborators
+ * are managed via their own endpoints; see `upsertOwnedDocument`).
+ */
+type UpsertLocationInput = Omit<
+  EntityAttributes<ILocation>,
+  keyof WithOwnership | 'source'
+> & { id?: string };
 
 async function upsertLocation(
   user: IUser,
   input: UpsertLocationInput
 ): Promise<ValidLocation> {
-  const location = await upsertOwnedDocument(Location, input.id, user, {
-    /* Data */
-    name: input.name,
-    description: input.description,
-    latitude: input.latitude,
-    longitude: input.longitude,
-    googleMapsId: input.googleMapsId,
+  const { id, ...data } = input;
 
-    /* References */
-    sectors: input.sectors.map((sectorId) => new Types.ObjectId(sectorId)),
-  })
+  const location = await upsertOwnedDocument(Location, id, user, data)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
       sectors: WithRequiredOwnership<
@@ -171,7 +166,7 @@ async function upsertLocation(
 
   if (!location) {
     throw new ResourceNotFound(
-      `Location ${input.id ?? ''} not found or not editable`
+      `Location ${id ?? ''} not found or not editable`
     );
   }
 
@@ -247,4 +242,9 @@ export {
   removeLocationCollaborator,
   upsertLocation,
 };
-export type { LocationsCursor, LocationWithSports, ValidLocation };
+export type {
+  LocationsCursor,
+  LocationWithSports,
+  UpsertLocationInput,
+  ValidLocation,
+};

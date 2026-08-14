@@ -6,7 +6,10 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { upsertLocation } from '../../../services/location.ts';
 import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
-import { toApiLocation } from '../../mappers/locations.ts';
+import {
+  toApiLocation,
+  toUpsertLocationInput,
+} from '../../mappers/locations.ts';
 
 const handler = toRequestHandler<
   LocationsPutResponse,
@@ -16,7 +19,10 @@ const handler = toRequestHandler<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const location = await upsertLocation(request.user, request.body);
+  const location = await upsertLocation(
+    request.user,
+    toUpsertLocationInput(request.body)
+  );
 
   return {
     statusCode: 200,
