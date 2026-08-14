@@ -1,5 +1,7 @@
 import type { WithDepopulatedOwnership } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { Sector } from '@jrposada/fit-log-shared/models/sectors/sector';
+import type { SectorsPutRequest } from '@jrposada/fit-log-shared/models/sectors/sectors-put';
+import { Types } from 'mongoose';
 
 import type { WithDepopulatedRefs } from '../../data/infrastructure/with-depopulated-refs.ts';
 import type { WithPopulatedRefs } from '../../data/infrastructure/with-populated-refs.ts';
@@ -12,7 +14,7 @@ import type {
   SectorRequiredRefs,
 } from '../../data/models/sector.ts';
 import { hasRequiredRefs } from '../../services/climb.ts';
-import type { ValidSector } from '../../services/sector.ts';
+import type { UpsertSectorInput, ValidSector } from '../../services/sector.ts';
 import { toApiDepopulatedClimb } from './climbs.ts';
 import {
   toApiCollaborator,
@@ -84,4 +86,21 @@ function toApiSector(model: ValidSector): Sector {
   };
 }
 
-export { toApiDepopulatedSector, toApiSector };
+function toUpsertSectorInput(request: SectorsPutRequest): UpsertSectorInput {
+  return {
+    /* Data */
+    id: request.id,
+    name: request.name,
+    description: request.description,
+    isPrimary: request.isPrimary,
+    latitude: request.latitude,
+    longitude: request.longitude,
+    googleMapsId: request.googleMapsId,
+
+    /* References */
+    images: request.images.map((imageId) => new Types.ObjectId(imageId)),
+    climbs: request.climbs.map((climbId) => new Types.ObjectId(climbId)),
+  };
+}
+
+export { toApiDepopulatedSector, toApiSector, toUpsertSectorInput };

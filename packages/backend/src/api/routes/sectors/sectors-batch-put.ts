@@ -6,7 +6,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { batchUpsertSectors } from '../../../services/sector.ts';
 import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
-import { toApiSector } from '../../mappers/sectors.ts';
+import { toApiSector, toUpsertSectorInput } from '../../mappers/sectors.ts';
 
 const handler = toRequestHandler<
   SectorsBatchPutResponse,
@@ -18,7 +18,10 @@ const handler = toRequestHandler<
 
   const { sectors: sectorsData } = request.body;
 
-  const sectors = await batchUpsertSectors(request.user, sectorsData);
+  const sectors = await batchUpsertSectors(
+    request.user,
+    sectorsData.map(toUpsertSectorInput)
+  );
 
   return {
     statusCode: 200,

@@ -1,6 +1,6 @@
 import type { CollaboratorPermission } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import type { ClientSession, MergeType } from 'mongoose';
-import mongoose, { Types } from 'mongoose';
+import mongoose from 'mongoose';
 
 import { deletableBy } from '../auth/deletable-filter.ts';
 import type {
@@ -10,10 +10,14 @@ import type {
 import { OWNERSHIP_POPULATE } from '../auth/ownership-populate.ts';
 import type { BatchUpsertOwnedItem } from '../data/infrastructure/batch-upsert-owned-document.ts';
 import { batchUpsertOwnedDocument } from '../data/infrastructure/batch-upsert-owned-document.ts';
+import type { EntityAttributes } from '../data/infrastructure/entity-attributes.ts';
 import { removeCollaborator } from '../data/infrastructure/remove-collaborator.ts';
 import { upsertCollaborator } from '../data/infrastructure/upsert-collaborator.ts';
 import { upsertOwnedDocument } from '../data/infrastructure/upsert-owned-document.ts';
-import type { WithRequiredOwnership } from '../data/models/_collaborator.ts';
+import type {
+  WithOwnership,
+  WithRequiredOwnership,
+} from '../data/models/_collaborator.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import type { IImage } from '../data/models/image.ts';
 import type { ISector } from '../data/models/sector.ts';
@@ -27,37 +31,24 @@ type ValidSector = MergeType<
   { climbs: IClimb[]; images: WithRequiredOwnership<IImage>[] }
 >;
 
-type UpsertSectorInput = {
-  id?: string;
-
-  name: string;
-  description?: string;
-  isPrimary: boolean;
-  latitude: number;
-  longitude: number;
-  googleMapsId?: string;
-
-  images: string[];
-  climbs: string[];
-};
+/**
+ * `source` is a provenance field set internally (e.g. by an import
+ * pipeline), never by the PUT endpoint — excluded here alongside the
+ * ownership fields, which are likewise never client-supplied (collaborators
+ * are managed via their own endpoints; see `upsertOwnedDocument`).
+ */
+type UpsertSectorInput = Omit<
+  EntityAttributes<ISector>,
+  keyof WithOwnership | 'source'
+> & { id?: string };
 
 async function upsertSector(
   user: IUser,
   input: UpsertSectorInput
 ): Promise<ValidSector> {
-  const sector = await upsertOwnedDocument(Sector, input.id, user, {
-    /* Data */
-    name: input.name,
-    description: input.description,
-    isPrimary: input.isPrimary,
-    latitude: input.latitude,
-    longitude: input.longitude,
-    googleMapsId: input.googleMapsId,
+  const { id, ...data } = input;
 
-    /* References */
-    images: input.images.map((imageId) => new Types.ObjectId(imageId)),
-    climbs: input.climbs.map((climbId) => new Types.ObjectId(climbId)),
-  })
+  const sector = await upsertOwnedDocument(Sector, id, user, data)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{ climbs: IClimb[]; images: WithRequiredOwnership<IImage>[] }>([
       'images',
@@ -65,9 +56,7 @@ async function upsertSector(
     ]);
 
   if (!sector) {
-    throw new ResourceNotFound(
-      `Sector ${input.id ?? ''} not found or not editable`
-    );
+    throw new ResourceNotFound(`Sector ${id ?? ''} not found or not editable`);
   }
 
   return sector;
@@ -116,22 +105,7 @@ async function batchUpsertSectors(
   items: UpsertSectorInput[]
 ): Promise<ValidSector[]> {
   const bulkItems = items.map<BatchUpsertOwnedItem<typeof Sector.prototype>>(
-    (item) => ({
-      id: item.id,
-      data: {
-        /* Data */
-        name: item.name,
-        description: item.description,
-        isPrimary: item.isPrimary,
-        latitude: item.latitude,
-        longitude: item.longitude,
-        googleMapsId: item.googleMapsId,
-
-        /* References */
-        images: item.images.map((imageId) => new Types.ObjectId(imageId)),
-        climbs: item.climbs.map((climbId) => new Types.ObjectId(climbId)),
-      },
-    })
+    ({ id, ...data }) => ({ id, data })
   );
 
   const session = await mongoose.startSession();
@@ -214,4 +188,4 @@ export {
   removeSectorCollaborator,
   upsertSector,
 };
-export type { ValidSector };
+export type { UpsertSectorInput, ValidSector };

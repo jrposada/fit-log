@@ -6,7 +6,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 
 import { upsertSector } from '../../../services/sector.ts';
 import { toRequestHandler } from '../../infrastructure/to-request-handler.ts';
-import { toApiSector } from '../../mappers/sectors.ts';
+import { toApiSector, toUpsertSectorInput } from '../../mappers/sectors.ts';
 
 const handler = toRequestHandler<
   SectorsPutResponse,
@@ -16,7 +16,10 @@ const handler = toRequestHandler<
 >(async (request) => {
   assert(request.user, { msg: 'Unauthorized' });
 
-  const sector = await upsertSector(request.user, request.body);
+  const sector = await upsertSector(
+    request.user,
+    toUpsertSectorInput(request.body)
+  );
 
   return {
     statusCode: 200,
