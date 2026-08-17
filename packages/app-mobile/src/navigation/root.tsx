@@ -14,13 +14,13 @@ import ClimbDetailScreen from '../features/climbing/screens/climb-detail-screen'
 import ClimbLogScreen from '../features/climbing/screens/climb-log-screen';
 import ClimbingSessionDetailScreen from '../features/climbing/screens/climbing-session-detail-screen';
 import LocationDetailScreen from '../features/climbing/screens/location-detail-screen';
-import ProfileScreen from '../features/profile/profile-screen';
 import { ImagePickerScreen } from '../library/image-picker';
 import LoadingState from '../library/loading-state';
 import { MapPointPickerScreen } from '../library/map-point-picker';
 import { accent, borders, ink, surfaces } from '../library/theme';
 import { RootStackParamList } from '../types/routes';
 import Header from './common/header';
+import ProfileScreen from './routes/profile/profile-screen';
 import Tabs from './tabs';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
