@@ -5,18 +5,15 @@ import { useClimbsSearch } from '@jrposada/fit-log-shared-react/api/climbs/use-c
 import { useLocations } from '@jrposada/fit-log-shared-react/api/locations/use-locations';
 import { useDebounce } from '@jrposada/fit-log-shared-react/hooks/use-debounce';
 import { FunctionComponent, useEffect, useState } from 'react';
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { z } from 'zod';
 
 import FormTextInput from '../../library/form/form-text-input';
 import LoadingState from '../../library/loading-state';
-import Section from '../../library/section';
-import Separator from '../../library/separator';
 import Tabs, { TabBarItem } from '../../library/tabs';
-import FormGradeChips from '../climbing/components/common/form-grade-chips';
-import LocationSelector from '../climbing/components/common/location-selector';
+import ExploreFilterChips from './components/explore-filter-chips';
 import ExploreListView from './components/explore-list-view';
 import ExploreMapView from './components/explore-map-view';
 import { styles } from './explore-screen.styles';
@@ -103,33 +100,37 @@ const ExploreContent: FunctionComponent<{
   return (
     <FormProvider {...methods}>
       <View style={styles.container}>
-        <Section gap="md">
+        <View style={styles.filterHeader}>
           <FormTextInput
             name="search"
             placeholder={t('climbing.browse_search_placeholder')}
           />
 
-          <Separator />
-
-          <Controller
-            control={methods.control}
-            name="locationId"
-            render={({ field }) => (
-              <LocationSelector
-                onChange={field.onChange}
-                value={field.value!}
-              />
-            )}
+          <Tabs.Bar<ExploreView>
+            items={viewItems}
+            activeId={view}
+            onChange={setView}
           />
 
-          <FormGradeChips name="grade" />
-        </Section>
-
-        <Tabs.Bar<ExploreView>
-          items={viewItems}
-          activeId={view}
-          onChange={setView}
-        />
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.chipRow}
+          >
+            <ExploreFilterChips
+              grade={(grade as ClimbGrade[] | undefined) ?? []}
+              onGradeChange={(grades) =>
+                methods.setValue('grade', grades, { shouldDirty: true })
+              }
+              locationId={locationId || ''}
+              onLocationChange={(id) =>
+                methods.setValue('locationId', id, { shouldDirty: true })
+              }
+              locations={locations}
+              isLoadingLocations={isLoadingLocations}
+            />
+          </ScrollView>
+        </View>
 
         <View style={styles.content}>
           {view === 'map' ? (
