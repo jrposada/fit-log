@@ -21,6 +21,7 @@ export function fakeSector(): Partial<
     }),
     source: 'user',
     images: [],
+    models3d: [],
     climbs: [],
   };
 }

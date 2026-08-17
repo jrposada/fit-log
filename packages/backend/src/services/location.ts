@@ -20,18 +20,28 @@ import type {
 import type { IImage } from '../data/models/image.ts';
 import type { ILocation } from '../data/models/location.ts';
 import { Location } from '../data/models/location.ts';
+import type { IModel3d } from '../data/models/model-3d.ts';
 import type { ISector } from '../data/models/sector.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
 import { getSportsByLocationId } from './feed.ts';
 
+/** Sector-population shape shared by every location lookup below. */
+type PopulatedLocationSector = WithRequiredOwnership<
+  MergeType<
+    ISector,
+    {
+      images: WithRequiredOwnership<IImage>[];
+      models3d: WithRequiredOwnership<IModel3d>[];
+    }
+  >
+>;
+
 /** Fully populated location, as returned to API mappers. */
 type ValidLocation = MergeType<
   WithPopulatedOwnership<ILocation>,
   {
-    sectors: WithRequiredOwnership<
-      MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
-    >[];
+    sectors: PopulatedLocationSector[];
   }
 >;
 
@@ -86,12 +96,10 @@ async function getLocations(
       .limit(pageSize + 1)
       .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
       .populate<{
-        sectors: WithRequiredOwnership<
-          MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
-        >[];
+        sectors: PopulatedLocationSector[];
       }>({
         path: 'sectors',
-        populate: ['images'],
+        populate: ['images', 'models3d'],
       }),
     getSportsByLocationId(ownerId),
   ]);
@@ -119,12 +127,10 @@ async function getLocationById(
     Location.findById(id)
       .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
       .populate<{
-        sectors: WithRequiredOwnership<
-          MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
-        >[];
+        sectors: PopulatedLocationSector[];
       }>({
         path: 'sectors',
-        populate: ['images'],
+        populate: ['images', 'models3d'],
       }),
     getSportsByLocationId(ownerId),
   ]);
@@ -156,12 +162,10 @@ async function upsertLocation(
   const location = await upsertOwnedDocument(Location, id, user, data)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
-      sectors: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
-      >[];
+      sectors: PopulatedLocationSector[];
     }>({
       path: 'sectors',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     });
 
   if (!location) {
@@ -188,12 +192,10 @@ async function addLocationCollaborator(
   )
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
-      sectors: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
-      >[];
+      sectors: PopulatedLocationSector[];
     }>({
       path: 'sectors',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     });
 
   if (!location) {
@@ -211,12 +213,10 @@ async function removeLocationCollaborator(
   const location = await removeCollaborator(Location, id, granteeId, user)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
     .populate<{
-      sectors: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
-      >[];
+      sectors: PopulatedLocationSector[];
     }>({
       path: 'sectors',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     });
 
   if (!location) {

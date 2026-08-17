@@ -41,7 +41,13 @@ type ValidClimb = MergeType<
     image: WithRequiredOwnership<IImage> | null;
     location: WithRequiredOwnership<ILocation>;
     sector: WithRequiredOwnership<
-      MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+      MergeType<
+        ISector,
+        {
+          images: WithRequiredOwnership<IImage>[];
+          models3d: WithRequiredOwnership<IModel3d>[];
+        }
+      >
     >;
     model3d: WithRequiredOwnership<IModel3d> | null;
   }
@@ -85,11 +91,17 @@ function findClimbsQuery(options: FindClimbsOptions) {
     }>(['image', 'location', 'model3d'])
     .populate<{
       sector: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        MergeType<
+          ISector,
+          {
+            images: WithRequiredOwnership<IImage>[];
+            models3d: WithRequiredOwnership<IModel3d>[];
+          }
+        >
       >;
     }>({
       path: 'sector',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     });
 
   if (limit) {
@@ -152,11 +164,17 @@ async function getClimbs(
     }>(['image', 'location', 'model3d'])
     .populate<{
       sector: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        MergeType<
+          ISector,
+          {
+            images: WithRequiredOwnership<IImage>[];
+            models3d: WithRequiredOwnership<IModel3d>[];
+          }
+        >
       >;
     }>({
       path: 'sector',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     });
 
   const hasMore = climbs.length > pageSize;
@@ -181,11 +199,17 @@ async function getClimbById(id: string): Promise<ValidClimb> {
     }>(['image', 'location', 'model3d'])
     .populate<{
       sector: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        MergeType<
+          ISector,
+          {
+            images: WithRequiredOwnership<IImage>[];
+            models3d: WithRequiredOwnership<IModel3d>[];
+          }
+        >
       >;
     }>({
       path: 'sector',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     });
 
   if (!climb) {
@@ -265,11 +289,17 @@ async function upsertClimb(
     }>(['image', 'location', 'model3d'])
     .populate<{
       sector: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        MergeType<
+          ISector,
+          {
+            images: WithRequiredOwnership<IImage>[];
+            models3d: WithRequiredOwnership<IModel3d>[];
+          }
+        >
       >;
     }>({
       path: 'sector',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     });
 
   if (!climb) {
@@ -294,11 +324,17 @@ async function addClimbCollaborator(
     }>(['image', 'location', 'model3d'])
     .populate<{
       sector: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        MergeType<
+          ISector,
+          {
+            images: WithRequiredOwnership<IImage>[];
+            models3d: WithRequiredOwnership<IModel3d>[];
+          }
+        >
       >;
     }>({
       path: 'sector',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     });
 
   if (!climb) {
@@ -322,11 +358,17 @@ async function removeClimbCollaborator(
     }>(['image', 'location', 'model3d'])
     .populate<{
       sector: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        MergeType<
+          ISector,
+          {
+            images: WithRequiredOwnership<IImage>[];
+            models3d: WithRequiredOwnership<IModel3d>[];
+          }
+        >
       >;
     }>({
       path: 'sector',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     });
 
   if (!climb) {

@@ -6,9 +6,11 @@ import type { WithOwnership } from './_collaborator.ts';
 import { ownershipFields } from './_collaborator.ts';
 import type { IClimb } from './climb.ts';
 import type { IImage } from './image.ts';
+import type { IModel3d } from './model-3d.ts';
 
 export type SectorPopulatedRefs = {
   images: IImage[];
+  models3d: IModel3d[];
   climbs: IClimb[];
 };
 
@@ -72,6 +74,12 @@ const sectorSchema = new Schema<ISector>(
     images: {
       type: [Schema.Types.ObjectId],
       ref: 'Image',
+      required: true,
+      default: [],
+    },
+    models3d: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Model3d',
       required: true,
       default: [],
     },

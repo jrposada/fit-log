@@ -8,6 +8,7 @@ export type SectorsPutRequest = Omit<
   | 'createdAt'
   | 'updatedAt'
   | 'images'
+  | 'models3d'
   | 'climbs'
   | 'owner'
   | 'collaborators'
@@ -15,6 +16,7 @@ export type SectorsPutRequest = Omit<
   id?: string;
 
   images: string[];
+  models3d: string[];
   climbs: string[];
 };
 export const sectorsPutRequestSchema = z.object({
@@ -28,6 +30,7 @@ export const sectorsPutRequestSchema = z.object({
   googleMapsId: z.string().optional(),
 
   images: z.array(z.string().nonempty()),
+  models3d: z.array(z.string().nonempty()),
   climbs: z.array(z.string().nonempty()),
 });
 

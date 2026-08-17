@@ -145,6 +145,7 @@ const FormLocationSectors: FunctionComponent = () => {
       latitude: 0,
       longitude: 0,
       images: [],
+      models3d: [],
       climbs: [],
       _tempId: `temp-${tempIdCounter.current}`,
       _status: 'new',

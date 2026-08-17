@@ -20,6 +20,7 @@ import type {
 } from '../data/models/_collaborator.ts';
 import type { IClimb } from '../data/models/climb.ts';
 import type { IImage } from '../data/models/image.ts';
+import type { IModel3d } from '../data/models/model-3d.ts';
 import type { ISector } from '../data/models/sector.ts';
 import { Sector } from '../data/models/sector.ts';
 import type { IUser } from '../data/models/user.ts';
@@ -28,7 +29,11 @@ import ResourceNotFound from '../infrastructure/not-found-error.ts';
 /** Fully populated sector, as returned to API mappers. */
 type ValidSector = MergeType<
   WithPopulatedOwnership<ISector>,
-  { climbs: IClimb[]; images: WithRequiredOwnership<IImage>[] }
+  {
+    climbs: IClimb[];
+    images: WithRequiredOwnership<IImage>[];
+    models3d: WithRequiredOwnership<IModel3d>[];
+  }
 >;
 
 /**
@@ -50,10 +55,11 @@ async function upsertSector(
 
   const sector = await upsertOwnedDocument(Sector, id, user, data)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ climbs: IClimb[]; images: WithRequiredOwnership<IImage>[] }>([
-      'images',
-      'climbs',
-    ]);
+    .populate<{
+      climbs: IClimb[];
+      images: WithRequiredOwnership<IImage>[];
+      models3d: WithRequiredOwnership<IModel3d>[];
+    }>(['images', 'models3d', 'climbs']);
 
   if (!sector) {
     throw new ResourceNotFound(`Sector ${id ?? ''} not found or not editable`);
@@ -82,10 +88,11 @@ async function batchUpsertSectorsInSession(
 
   const savedSectors = await Sector.find({ _id: { $in: ids } })
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ climbs: IClimb[]; images: WithRequiredOwnership<IImage>[] }>([
-      'images',
-      'climbs',
-    ])
+    .populate<{
+      climbs: IClimb[];
+      images: WithRequiredOwnership<IImage>[];
+      models3d: WithRequiredOwnership<IModel3d>[];
+    }>(['images', 'models3d', 'climbs'])
     .session(session);
 
   // Preserve input order so the response aligns with the request batch.
@@ -132,10 +139,11 @@ async function addSectorCollaborator(
     user
   )
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ climbs: IClimb[]; images: WithRequiredOwnership<IImage>[] }>([
-      'images',
-      'climbs',
-    ]);
+    .populate<{
+      climbs: IClimb[];
+      images: WithRequiredOwnership<IImage>[];
+      models3d: WithRequiredOwnership<IModel3d>[];
+    }>(['images', 'models3d', 'climbs']);
 
   if (!sector) {
     throw new ResourceNotFound(`Sector ${id} not found or not editable`);
@@ -151,10 +159,11 @@ async function removeSectorCollaborator(
 ): Promise<ValidSector> {
   const sector = await removeCollaborator(Sector, id, granteeId, user)
     .populate<PopulatedOwnership>([...OWNERSHIP_POPULATE])
-    .populate<{ climbs: IClimb[]; images: WithRequiredOwnership<IImage>[] }>([
-      'images',
-      'climbs',
-    ]);
+    .populate<{
+      climbs: IClimb[];
+      images: WithRequiredOwnership<IImage>[];
+      models3d: WithRequiredOwnership<IModel3d>[];
+    }>(['images', 'models3d', 'climbs']);
 
   if (!sector) {
     throw new ResourceNotFound(`Sector ${id} not found or not editable`);

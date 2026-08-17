@@ -3,6 +3,7 @@ import {
   canDelete,
   canEdit,
 } from '@jrposada/fit-log-shared/models/auth/with-ownership';
+import type { Location } from '@jrposada/fit-log-shared/models/locations/location';
 import { useImagesPost } from '@jrposada/fit-log-shared-react/api/images/use-images-post';
 import { useLocationsById } from '@jrposada/fit-log-shared-react/api/locations/use-locations-by-id';
 import { useLocationsDelete } from '@jrposada/fit-log-shared-react/api/locations/use-locations-delete';
@@ -48,6 +49,19 @@ type LocationDetailNavigationProp = NativeStackNavigationProp<
 >;
 
 type LocationDetailRouteProp = RouteProp<RootStackParamList, 'LocationDetail'>;
+
+/**
+ * The form only lets a climb reference a 3D model, not upload/manage one
+ * directly — so the sector's `models3d` pool is carried through as plain
+ * ids, the same way `climbs` already is, rather than as editable objects
+ * like `images`.
+ */
+function toFormSectors(sectors: Location['sectors']): FormData['sectors'] {
+  return sectors.map((sector) => ({
+    ...sector,
+    models3d: sector.models3d.map((model) => model.id),
+  }));
+}
 
 const LocationDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -244,7 +258,7 @@ const LocationDetailScreen: FunctionComponent = () => {
         latitude: existingLocation.latitude,
         longitude: existingLocation.longitude,
         googleMapsId: existingLocation.googleMapsId,
-        sectors: existingLocation.sectors,
+        sectors: toFormSectors(existingLocation.sectors),
       });
       initializedRef.current = true;
     }
@@ -259,7 +273,7 @@ const LocationDetailScreen: FunctionComponent = () => {
         latitude: existingLocation.latitude,
         longitude: existingLocation.longitude,
         googleMapsId: existingLocation.googleMapsId,
-        sectors: existingLocation.sectors,
+        sectors: toFormSectors(existingLocation.sectors),
       });
     }
     setIsEditMode(true);

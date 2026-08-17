@@ -25,6 +25,7 @@ import {
 import type { IClimbHistoryTry } from '../data/models/climb-history-try.ts';
 import type { IImage } from '../data/models/image.ts';
 import type { ILocation } from '../data/models/location.ts';
+import type { IModel3d } from '../data/models/model-3d.ts';
 import type { ISector } from '../data/models/sector.ts';
 import type { ITrainingSession } from '../data/models/training-session.ts';
 import { TrainingSession } from '../data/models/training-session.ts';
@@ -42,8 +43,11 @@ type ValidClimbHistory = WithPopulatedRefs<
     sector: WithRequiredOwnership<
       WithPopulatedRefs<
         ISector,
-        'images',
-        { images: WithRequiredOwnership<IImage>[] }
+        'images' | 'models3d',
+        {
+          images: WithRequiredOwnership<IImage>[];
+          models3d: WithRequiredOwnership<IModel3d>[];
+        }
       >
     >;
   }
@@ -85,11 +89,17 @@ async function getValidClimbHistory(
     }>(['climb', 'location'])
     .populate<{
       sector: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        MergeType<
+          ISector,
+          {
+            images: WithRequiredOwnership<IImage>[];
+            models3d: WithRequiredOwnership<IModel3d>[];
+          }
+        >
       >;
     }>({
       path: 'sector',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     })
     .populate<{ trainingSession: ITrainingSession | null }>('trainingSession');
 
@@ -197,11 +207,17 @@ async function getClimbHistories(
     }>(['climb', 'location'])
     .populate<{
       sector: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        MergeType<
+          ISector,
+          {
+            images: WithRequiredOwnership<IImage>[];
+            models3d: WithRequiredOwnership<IModel3d>[];
+          }
+        >
       >;
     }>({
       path: 'sector',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     })
     .populate<{ trainingSession: ITrainingSession | null }>('trainingSession');
 
@@ -235,11 +251,17 @@ async function getClimbHistoryById(
     }>(['climb', 'location'])
     .populate<{
       sector: WithRequiredOwnership<
-        MergeType<ISector, { images: WithRequiredOwnership<IImage>[] }>
+        MergeType<
+          ISector,
+          {
+            images: WithRequiredOwnership<IImage>[];
+            models3d: WithRequiredOwnership<IModel3d>[];
+          }
+        >
       >;
     }>({
       path: 'sector',
-      populate: ['images'],
+      populate: ['images', 'models3d'],
     })
     .populate<{ trainingSession: ITrainingSession | null }>('trainingSession');
 
