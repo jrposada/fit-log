@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { GRADE_OPTIONS } from '@jrposada/fit-log-shared/common/climbs/grades';
 import { HoldType } from '@jrposada/fit-log-shared/common/climbs/holds';
 import {
   canDelete,
   canEdit,
 } from '@jrposada/fit-log-shared/models/auth/with-ownership';
 import {
+  Climb,
   Hold,
   SplinePoint,
 } from '@jrposada/fit-log-shared/models/climbs/climb';
@@ -18,21 +20,49 @@ import { useClimbsPut } from '@jrposada/fit-log-shared-react/api/climbs/use-clim
 import { useImagesPost } from '@jrposada/fit-log-shared-react/api/images/use-images-post';
 import { useLocationsById } from '@jrposada/fit-log-shared-react/api/locations/use-locations-by-id';
 import { useMe } from '@jrposada/fit-log-shared-react/api/me/use-me';
-// import { useTrainingSessionsActive } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-active';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Alert, LayoutChangeEvent, Linking, Platform } from 'react-native';
+import {
+  Alert,
+  LayoutChangeEvent,
+  Linking,
+  Platform,
+  ScrollView,
+} from 'react-native';
+import Animated, { LinearTransition } from 'react-native-reanimated';
 import z from 'zod';
 
-import { ImagePickerEvents } from '../../../../library/image-picker';
-import { useToast } from '../../../../library/toast';
-import { RootStackParamList } from '../../../../types/routes';
-import { Selection } from '../../components/climb-detail/climb-image/climb-image';
-import ClimbDetailHeader from './use-climb-detail-header';
+import ClimbImage from '../../../features/climbing/components/climb-detail/climb-image';
+import { Selection } from '../../../features/climbing/components/climb-detail/climb-image/climb-image';
+import ClimbImageEditCard from '../../../features/climbing/components/climb-detail/climb-image/climb-image-edit-card';
+import GradeBadge from '../../../features/climbing/components/common/grade-badge';
+import Button from '../../../library/button';
+import EmptyState from '../../../library/empty-state';
+import { FormReadonlyProvider } from '../../../library/form/form-readonly-context';
+import FormTextArea from '../../../library/form/form-text-area';
+import FormTextInput from '../../../library/form/form-text-input';
+import IconButton from '../../../library/icon-button';
+import { ImagePickerEvents } from '../../../library/image-picker';
+import LoadingState from '../../../library/loading-state';
+import Screen from '../../../library/screen';
+import Section from '../../../library/section';
+import Select from '../../../library/select';
+import Stack from '../../../library/stack';
+import { surfaces } from '../../../library/theme';
+import { useToast } from '../../../library/toast';
+import { Typography } from '../../../library/typography';
+import { RootStackParamList } from '../../../types/routes';
+import Header from '../../common/header';
 
 export type ClimbDetailNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -43,7 +73,188 @@ export type ClimbDetailRouteProp = RouteProp<RootStackParamList, 'ClimbDetail'>;
 
 type FormData = z.infer<typeof climbsPutRequestSchema>;
 
-const useClimbDetail = () => {
+type ClimbDetailHeaderProps = {
+  isCreateMode: boolean;
+  isEditMode: boolean;
+  isDirty: boolean;
+  isLoadingClimb: boolean;
+  climb: Climb | undefined;
+  canEdit: boolean;
+  onBackPress: () => void;
+  onCancelEdit: () => void;
+  onEnterEditMode: () => void;
+  onOpenMap: () => void;
+};
+
+const ClimbDetailHeader: FunctionComponent<ClimbDetailHeaderProps> = ({
+  isCreateMode,
+  isEditMode,
+  isDirty,
+  isLoadingClimb,
+  climb,
+  canEdit,
+  onBackPress,
+  onCancelEdit,
+  onEnterEditMode,
+  onOpenMap,
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Header
+      title={isCreateMode ? t('climbing.create_climb_title') : climb?.name}
+      subtitle={
+        !isCreateMode &&
+        climb &&
+        `${climb.location.name} · ${climb.sector.name}`
+      }
+      extra={!isCreateMode && climb && <GradeBadge grade={climb.grade} />}
+      action={
+        !isCreateMode && (
+          <Stack direction="horizontal" gap="sm">
+            <IconButton icon="location-on" onPress={onOpenMap} />
+            {canEdit && (
+              <IconButton
+                icon={isEditMode && isDirty ? 'warning' : 'edit'}
+                variant={isEditMode ? 'primary' : 'default'}
+                onPress={isEditMode ? onCancelEdit : onEnterEditMode}
+              />
+            )}
+          </Stack>
+        )
+      }
+      loading={isLoadingClimb}
+      mode="modal"
+      back
+      onBackPress={onBackPress}
+    />
+  );
+};
+
+type ClimbDetailFooterProps = {
+  isCreateMode: boolean;
+  isEditMode: boolean;
+  isSubmitDisabled: boolean;
+  isSaving: boolean;
+  isDeleting: boolean;
+  isHistoryPending: boolean;
+  isProject: boolean;
+  isProjectPending: boolean;
+  isCompleted: boolean;
+  canDelete: boolean;
+  selection: Selection;
+  onSubmit: () => void;
+  onCancel: () => void;
+  onDelete: () => void;
+  handleLogSend: () => void;
+  onToggleProject: () => void;
+  onSelectionMove: (dx: number, dy: number) => void;
+  onSelectionResize: (scaleFactor: number) => void;
+};
+
+const ClimbDetailFooter: FunctionComponent<ClimbDetailFooterProps> = ({
+  isCreateMode,
+  isEditMode,
+  isSubmitDisabled,
+  isSaving,
+  isDeleting,
+  isHistoryPending,
+  isProject,
+  isProjectPending,
+  isCompleted,
+  canDelete,
+  selection,
+  onSubmit,
+  onCancel,
+  onDelete,
+  handleLogSend,
+  onToggleProject: handleToggleProject,
+  onSelectionMove: handleSelectionMove,
+  onSelectionResize: handleSelectionResize,
+}) => {
+  const { t } = useTranslation();
+
+  if (isCreateMode) {
+    return (
+      <Button
+        variant="primary"
+        title={
+          isSaving ? t('climbing.saving') : t('climbing.create_climb_title')
+        }
+        onPress={onSubmit}
+        disabled={isSubmitDisabled}
+      />
+    );
+  }
+
+  if (selection) {
+    return (
+      <ClimbImageEditCard
+        selectionType={selection.type}
+        onMove={handleSelectionMove}
+        onResize={selection?.type === 'hold' && handleSelectionResize}
+      />
+    );
+  }
+
+  if (isEditMode) {
+    return (
+      <Stack direction="horizontal" gap="md">
+        {canDelete && (
+          <IconButton
+            variant="destructive"
+            icon="delete"
+            size="lg"
+            onPress={onDelete}
+            disabled={isDeleting}
+          />
+        )}
+        <Button
+          fullWidth
+          variant="outline"
+          title={t('actions.cancel')}
+          onPress={onCancel}
+        />
+        <Button
+          fullWidth
+          variant="primary"
+          title={isSaving ? t('climbing.saving') : t('actions.save')}
+          onPress={onSubmit}
+          disabled={isSubmitDisabled}
+        />
+      </Stack>
+    );
+  }
+
+  if (!isCompleted) {
+    return (
+      <Section variant="transparent" direction="horizontal" gap="md">
+        <Button
+          fullWidth
+          variant="primary"
+          title={`✓ ${t('climbing.browse_log_send')}`}
+          onPress={handleLogSend}
+          disabled={isHistoryPending}
+        />
+        <Button
+          fullWidth
+          variant="outline"
+          title={
+            isProject
+              ? t('climbing.unproject_action')
+              : `+ ${t('climbing.project_action')}`
+          }
+          onPress={handleToggleProject}
+          disabled={isProjectPending}
+        />
+      </Section>
+    );
+  }
+
+  return null;
+};
+
+const ClimbDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
   const toast = useToast();
   const navigation = useNavigation<ClimbDetailNavigationProp>();
@@ -86,7 +297,6 @@ const useClimbDetail = () => {
 
   const climbHistoriesPut = useClimbHistoriesPut();
   const climbHistoryProject = useClimbHistoryProject();
-  // const { ensureActiveClimbingSession } = useTrainingSessionsActive();
 
   const sectors = useMemo(() => location?.sectors ?? [], [location]);
 
@@ -528,76 +738,166 @@ const useClimbDetail = () => {
   const selectedSector = sectors.find((s) => s.id === watchedSector);
   const isSubmitDisabled =
     !isValid || !isDirty || climbsPut.isPending || imagesPost.isPending;
+  const isCompleted =
+    userStatus?.status === 'flash' || userStatus?.status === 'send';
+  const attempts =
+    userStatus?.tries.reduce((sum, tr) => sum + (tr.attempts || 0), 0) ?? 0;
 
-  return {
-    // Form
-    methods,
-    isDirty,
-    isValid,
-    handleSubmit,
+  if (!isCreateMode && isLoadingClimb) {
+    return (
+      <LoadingState isLoading style={{ backgroundColor: surfaces.page }} />
+    );
+  }
 
-    // Mode flags
-    isCreateMode,
-    isEditMode,
-    isLoadingClimb,
-    isLoadingLocation,
-    canEdit: canEditClimb,
-    canDelete: canDeleteClimb,
+  if (!isCreateMode && !climb) {
+    return <EmptyState message={t('climbing.climb_not_found')} />;
+  }
 
-    // Data
-    climb,
-    sectors,
-    selectedSector,
-    userStatus,
-    imageUri,
-    scrollHeight,
-    isCompleted:
-      userStatus?.status === 'flash' || userStatus?.status === 'send',
-    attempts:
-      userStatus?.tries.reduce((sum, tr) => sum + (tr.attempts || 0), 0) ?? 0,
+  return (
+    <FormProvider {...methods}>
+      <FormReadonlyProvider readonly={!isEditMode}>
+        <Screen
+          presentation="modal"
+          footerVariant={isEditMode && selection ? 'transparent' : 'default'}
+          keyboardAvoiding={isEditMode}
+          onContentLayout={handleScrollLayout}
+          footer={
+            <ClimbDetailFooter
+              isCreateMode={isCreateMode}
+              isEditMode={isEditMode}
+              isSubmitDisabled={isSubmitDisabled}
+              isSaving={climbsPut.isPending}
+              isDeleting={deleteClimb.isPending}
+              isHistoryPending={climbHistoriesPut.isPending}
+              isProject={userStatus?.isProject || false}
+              isProjectPending={climbHistoryProject.isPending}
+              isCompleted={isCompleted}
+              canDelete={canDeleteClimb}
+              selection={selection}
+              onSubmit={handleSubmit(onSubmit)}
+              onCancel={handleCancelEdit}
+              onDelete={handleDelete}
+              handleLogSend={handleLogSend}
+              onToggleProject={handleToggleProject}
+              onSelectionMove={handleSelectionMove}
+              onSelectionResize={handleSelectionResize}
+            />
+          }
+        >
+          {watchedImage && imageUri ? (
+            <Animated.View layout={LinearTransition}>
+              <ClimbImage
+                source={{ uri: imageUri }}
+                holds={watchedHolds}
+                spline={watchedSpline}
+                selection={selection}
+                onSelectionChange={setSelection}
+                style={{
+                  height: scrollHeight,
+                }}
+                editable={isEditMode}
+                onHoldAdd={handleHoldAdd}
+                onHoldRemove={handleHoldRemove}
+                onHoldTypeChange={handleHoldTypeChange}
+                onSplinePointAdd={handleSplinePointAdd}
+                onSplinePointInsert={handleSplinePointInsert}
+                onSplinePointRemove={handleSplinePointRemove}
+                onChangeImage={isCreateMode ? handleChangeImage : undefined}
+                isImageUploading={imagesPost.isPending}
+              />
+            </Animated.View>
+          ) : (
+            <Section title={t('climbing.select_image')}>
+              <Button
+                variant="primary"
+                title={
+                  imagesPost.isPending
+                    ? t('climbing.uploading_image')
+                    : t('climbing.select_image')
+                }
+                onPress={handleSelectImage}
+                disabled={imagesPost.isPending}
+              />
+            </Section>
+          )}
 
-    // Selection
-    selection,
-    setSelection,
-    hasSelection: selection !== null,
-    handleSelectionMove,
-    handleSelectionResize,
+          <Stack padding="lg" gap="lg">
+            <Section>
+              <FormTextInput
+                name="name"
+                label={t('climbing.climb_name')}
+                placeholder={t('climbing.enter_climb_name')}
+                maxLength={100}
+                required
+                showCharacterCount
+              />
+            </Section>
 
-    // Watched form values
-    watchedHolds,
-    watchedSpline,
-    watchedGrade,
-    watchedImage,
+            <Section>
+              <FormTextArea
+                name="description"
+                label={t('climbing.description')}
+                placeholder={t('climbing.add_description')}
+                maxLength={500}
+                numberOfLines={4}
+              />
+            </Section>
 
-    // Submission state
-    isSubmitDisabled,
-    isClimbSaving: climbsPut.isPending,
-    isClimbDeleting: deleteClimb.isPending,
-    isImageUploading: imagesPost.isPending,
-    isHistoryPending: climbHistoriesPut.isPending,
-    isProjectPending: climbHistoryProject.isPending,
+            {isEditMode && (
+              <Section title={t('climbing.grade')}>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ gap: 8 }}
+                >
+                  {GRADE_OPTIONS.map((grade) => (
+                    <GradeBadge
+                      key={grade}
+                      grade={grade}
+                      variant={watchedGrade === grade ? 'filled' : 'ghost'}
+                      onPress={() => handleGradeSelect(grade)}
+                    />
+                  ))}
+                </ScrollView>
+              </Section>
+            )}
 
-    // Handlers
-    onSubmit,
-    handleHoldAdd,
-    handleHoldRemove,
-    handleHoldTypeChange,
-    handleHoldResize,
-    handleHoldMove,
-    handleSplinePointAdd,
-    handleSplinePointInsert,
-    handleSplinePointRemove,
-    handleSplinePointMove,
-    handleDelete,
-    handleCancelEdit,
-    handleScrollLayout,
-    handleSectorChange,
-    handleGradeSelect,
-    handleSelectImage,
-    handleChangeImage,
-    handleLogSend,
-    handleToggleProject,
-  };
+            {isCreateMode && (
+              <Section title={t('climbing.sector')}>
+                <LoadingState isLoading={isLoadingLocation}>
+                  <Select
+                    options={sectors.map((s) => s.name)}
+                    value={selectedSector?.name || ''}
+                    onChange={handleSectorChange}
+                    placeholder={t('climbing.select_sector')}
+                    searchPlaceholder={t('climbing.search_sector')}
+                    closeButtonLabel={t('actions.close')}
+                    emptyStateMessage={t('climbing.no_sectors_found')}
+                  />
+                </LoadingState>
+              </Section>
+            )}
+
+            {!isCreateMode && !isEditMode && (
+              <Section title={t('climbing.browse_your_status')}>
+                <Typography size="callout" color="secondary">
+                  {userStatus?.status === 'flash' &&
+                    `✓ ${t('climbing.status_flash')}`}
+                  {userStatus?.status === 'send' &&
+                    `✓ ${t('climbing.status_sent')}: ${t('climbing.attempts_count', { count: attempts })}`}
+                  {userStatus?.status === 'attempt' &&
+                    t('climbing.attempts_count', { count: attempts })}
+                  {!userStatus?.status && t('climbing.status_not_tried')}
+                  {userStatus?.isProject &&
+                    ` · 🎯 ${t('climbing.status_project')}`}
+                </Typography>
+              </Section>
+            )}
+          </Stack>
+        </Screen>
+      </FormReadonlyProvider>
+    </FormProvider>
+  );
 };
 
-export default useClimbDetail;
+export default ClimbDetailScreen;
