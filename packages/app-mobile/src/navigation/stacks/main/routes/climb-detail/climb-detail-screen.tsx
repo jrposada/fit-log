@@ -42,27 +42,27 @@ import {
 import Animated, { LinearTransition } from 'react-native-reanimated';
 import z from 'zod';
 
-import ClimbImage from '../../../features/climbing/components/climb-detail/climb-image';
-import { Selection } from '../../../features/climbing/components/climb-detail/climb-image/climb-image';
-import ClimbImageEditCard from '../../../features/climbing/components/climb-detail/climb-image/climb-image-edit-card';
-import GradeBadge from '../../../features/climbing/components/common/grade-badge';
-import Button from '../../../library/button';
-import EmptyState from '../../../library/empty-state';
-import { FormReadonlyProvider } from '../../../library/form/form-readonly-context';
-import FormTextArea from '../../../library/form/form-text-area';
-import FormTextInput from '../../../library/form/form-text-input';
-import IconButton from '../../../library/icon-button';
-import { ImagePickerEvents } from '../../../library/image-picker';
-import LoadingState from '../../../library/loading-state';
-import Screen from '../../../library/screen';
-import Section from '../../../library/section';
-import Select from '../../../library/select';
-import Stack from '../../../library/stack';
-import { surfaces } from '../../../library/theme';
-import { useToast } from '../../../library/toast';
-import { Typography } from '../../../library/typography';
-import { RootStackParamList } from '../../../types/routes';
-import Header from '../../common/header';
+import ClimbImage from '../../../../../features/climbing/components/climb-detail/climb-image';
+import { Selection } from '../../../../../features/climbing/components/climb-detail/climb-image/climb-image';
+import ClimbImageEditCard from '../../../../../features/climbing/components/climb-detail/climb-image/climb-image-edit-card';
+import GradeBadge from '../../../../../features/climbing/components/common/grade-badge';
+import Button from '../../../../../library/button';
+import EmptyState from '../../../../../library/empty-state';
+import { FormReadonlyProvider } from '../../../../../library/form/form-readonly-context';
+import FormTextArea from '../../../../../library/form/form-text-area';
+import FormTextInput from '../../../../../library/form/form-text-input';
+import IconButton from '../../../../../library/icon-button';
+import { ImagePickerEvents } from '../../../../../library/image-picker';
+import LoadingState from '../../../../../library/loading-state';
+import Screen from '../../../../../library/screen';
+import Section from '../../../../../library/section';
+import Select from '../../../../../library/select';
+import Stack from '../../../../../library/stack';
+import { surfaces } from '../../../../../library/theme';
+import { useToast } from '../../../../../library/toast';
+import { Typography } from '../../../../../library/typography';
+import { RootStackParamList } from '../../../../../types/routes';
+import Header from '../../../../common/header';
 
 export type ClimbDetailNavigationProp = NativeStackNavigationProp<
   RootStackParamList,

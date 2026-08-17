@@ -3,8 +3,8 @@ import { FunctionComponent } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Icon, IconName } from '../library/icon';
-import { accent, ink } from '../library/theme';
+import { Icon, IconName } from '../../../library/icon';
+import { accent, ink } from '../../../library/theme';
 import { styles } from './bottom-tab-bar.styles';
 
 const TAB_ICONS: Record<string, IconName> = {

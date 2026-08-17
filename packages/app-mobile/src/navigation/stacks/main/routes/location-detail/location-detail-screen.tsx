@@ -23,24 +23,24 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Alert, Linking, Platform, View } from 'react-native';
 
-import type { FormData } from '../../../features/climbing/components/location-detail/form-location';
-import { formDataSchema } from '../../../features/climbing/components/location-detail/form-location';
-import FormLocationSectors from '../../../features/climbing/components/location-detail/form-location-sectors';
-import Button from '../../../library/button';
-import EmptyState from '../../../library/empty-state';
-import FormMapPointPicker from '../../../library/form/form-map-point-picker';
-import { FormReadonlyProvider } from '../../../library/form/form-readonly-context';
-import FormTextArea from '../../../library/form/form-text-area';
-import FormTextInput from '../../../library/form/form-text-input';
-import IconButton from '../../../library/icon-button';
-import LoadingState from '../../../library/loading-state';
-import Screen from '../../../library/screen';
-import Section from '../../../library/section';
-import { accent, surfaces } from '../../../library/theme';
-import { useToast } from '../../../library/toast';
-import UnsavedBanner from '../../../library/unsaved-banner';
-import { RootStackParamList } from '../../../types/routes';
-import Header from '../../common/header';
+import type { FormData } from '../../../../../features/climbing/components/location-detail/form-location';
+import { formDataSchema } from '../../../../../features/climbing/components/location-detail/form-location';
+import FormLocationSectors from '../../../../../features/climbing/components/location-detail/form-location-sectors';
+import Button from '../../../../../library/button';
+import EmptyState from '../../../../../library/empty-state';
+import FormMapPointPicker from '../../../../../library/form/form-map-point-picker';
+import { FormReadonlyProvider } from '../../../../../library/form/form-readonly-context';
+import FormTextArea from '../../../../../library/form/form-text-area';
+import FormTextInput from '../../../../../library/form/form-text-input';
+import IconButton from '../../../../../library/icon-button';
+import LoadingState from '../../../../../library/loading-state';
+import Screen from '../../../../../library/screen';
+import Section from '../../../../../library/section';
+import { accent, surfaces } from '../../../../../library/theme';
+import { useToast } from '../../../../../library/toast';
+import UnsavedBanner from '../../../../../library/unsaved-banner';
+import { RootStackParamList } from '../../../../../types/routes';
+import Header from '../../../../common/header';
 
 type LocationDetailNavigationProp = NativeStackNavigationProp<
   RootStackParamList,

@@ -7,17 +7,17 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ClimbCard from '../../../features/climbing/components/common/climb-card';
-import CollapsibleSection from '../../../library/collapsible-section';
-import EmptyState from '../../../library/empty-state';
-import LoadingState from '../../../library/loading-state';
-import Screen from '../../../library/screen';
-import Section from '../../../library/section';
-import Separator from '../../../library/separator';
-import Stack from '../../../library/stack';
-import { Typography } from '../../../library/typography';
-import { RootStackParamList } from '../../../types/routes';
-import Header from '../../common/header';
+import ClimbCard from '../../../../../features/climbing/components/common/climb-card';
+import CollapsibleSection from '../../../../../library/collapsible-section';
+import EmptyState from '../../../../../library/empty-state';
+import LoadingState from '../../../../../library/loading-state';
+import Screen from '../../../../../library/screen';
+import Section from '../../../../../library/section';
+import Separator from '../../../../../library/separator';
+import Stack from '../../../../../library/stack';
+import { Typography } from '../../../../../library/typography';
+import { RootStackParamList } from '../../../../../types/routes';
+import Header from '../../../../common/header';
 
 type ClimbingSessionDetailNavigationProp = NativeStackNavigationProp<
   RootStackParamList,

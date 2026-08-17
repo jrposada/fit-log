@@ -9,16 +9,17 @@ components — not screens; screens are routes and live here.
 
 ```
 navigation/
-  root.tsx                       # NavigationContainer + gate (loading/auth) only
-  tabs.tsx                       # the bottom Tab.Navigator
-  auth-stack.tsx                 # the signed-out Stack.Navigator
-  routes/<route>/
-    <route>-screen.tsx           # the route's screen: composes feature
+  root.tsx                       # NavigationContainer + gate (loading/auth) only,
+                                 # branches between stacks
+  stacks/<stack>/
+    <stack>-stack.tsx            # the stack's Navigator (Stack or Tab)
+    routes/<route>/
+      <route>-screen.tsx         # the route's screen: composes feature
                                  # components, owns the route's data/handlers
-    <route>-options.tsx          # the route's chrome: header, presentation,
+      <route>-options.tsx        # the route's chrome: header, presentation,
                                  # tab bar entry, params → title
-    <route>.styles.ts            # optional, screen-local styles
-  common/          # components shared across multiple routes
+      <route>.styles.ts          # optional, screen-local styles
+  common/          # components shared across multiple stacks
     ...
   sport-picker-modal.tsx
   types.ts         # RootParamList, RootStackParamList, screen props

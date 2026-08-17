@@ -10,12 +10,12 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, View } from 'react-native';
 import { z } from 'zod';
 
-import ExploreFilterChips from '../../../features/explore/components/explore-filter-chips';
-import ExploreListView from '../../../features/explore/components/explore-list-view';
-import ExploreMapView from '../../../features/explore/components/explore-map-view';
-import FormTextInput from '../../../library/form/form-text-input';
-import LoadingState from '../../../library/loading-state';
-import Tabs, { TabBarItem } from '../../../library/tabs';
+import ExploreFilterChips from '../../../../../features/explore/components/explore-filter-chips';
+import ExploreListView from '../../../../../features/explore/components/explore-list-view';
+import ExploreMapView from '../../../../../features/explore/components/explore-map-view';
+import FormTextInput from '../../../../../library/form/form-text-input';
+import LoadingState from '../../../../../library/loading-state';
+import Tabs, { TabBarItem } from '../../../../../library/tabs';
 import { styles } from './explore-screen.styles';
 import { ExploreFilters, useExploreFilters } from './use-explore-filters';
 

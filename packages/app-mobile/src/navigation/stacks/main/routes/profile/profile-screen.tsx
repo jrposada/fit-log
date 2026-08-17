@@ -5,10 +5,10 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import Button from '../../../library/button';
-import Screen from '../../../library/screen';
-import { spacing } from '../../../library/theme';
-import { Typography } from '../../../library/typography';
+import Button from '../../../../../library/button';
+import Screen from '../../../../../library/screen';
+import { spacing } from '../../../../../library/theme';
+import { Typography } from '../../../../../library/typography';
 
 const ProfileScreen: FunctionComponent = () => {
   const { t } = useTranslation();

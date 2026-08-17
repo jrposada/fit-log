@@ -3,13 +3,13 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform } from 'react-native';
 
-import Button from '../../../library/button';
-import { Icon } from '../../../library/icon';
-import Screen from '../../../library/screen';
-import Separator from '../../../library/separator';
-import Stack from '../../../library/stack';
-import { accent } from '../../../library/theme';
-import { Typography } from '../../../library/typography';
+import Button from '../../../../../library/button';
+import { Icon } from '../../../../../library/icon';
+import Screen from '../../../../../library/screen';
+import Separator from '../../../../../library/separator';
+import Stack from '../../../../../library/stack';
+import { accent } from '../../../../../library/theme';
+import { Typography } from '../../../../../library/typography';
 
 const LoginScreen: FunctionComponent = () => {
   const { t } = useTranslation();
