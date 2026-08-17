@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 
 import Header from '../../navigation/common/header';
-import { accent } from '../theme';
+import { Icon } from '../icon';
+import { accent, ink } from '../theme';
 import { useToast } from '../toast';
 import { ImagePickerEvents, ImagePickerResult } from './image-picker-events';
 import { styles } from './image-picker-screen.styles';
@@ -191,7 +192,12 @@ const ImagePickerScreen: FunctionComponent = () => {
               onPress={isCameraBlocked ? undefined : handleTakePhoto}
               disabled={isCameraBlocked}
             >
-              <Text style={styles.selectionIcon}>📷</Text>
+              <Icon
+                icon="photo-camera"
+                size="lg"
+                color={ink.primary}
+                style={styles.selectionIcon}
+              />
               <View style={{ flex: 1 }}>
                 <Text
                   style={[
@@ -219,7 +225,12 @@ const ImagePickerScreen: FunctionComponent = () => {
               onPress={isLibraryBlocked ? undefined : handlePickFromLibrary}
               disabled={isLibraryBlocked}
             >
-              <Text style={styles.selectionIcon}>🖼️</Text>
+              <Icon
+                icon="photo-library"
+                size="lg"
+                color={ink.primary}
+                style={styles.selectionIcon}
+              />
               <View style={{ flex: 1 }}>
                 <Text
                   style={[

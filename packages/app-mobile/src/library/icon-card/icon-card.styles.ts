@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { ink, spacing, typography } from '../theme';
+import { dataTypography, ink, radii, spacing, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   layout: {
@@ -8,21 +8,26 @@ export const styles = StyleSheet.create({
   },
   ['layout--stat']: {
     flexDirection: 'column',
+    gap: spacing.xs,
   },
   ['layout--description']: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: spacing.sm,
   },
 
-  icon: {
-    fontSize: 40,
+  iconChip: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.sm,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   content: {
-    flex: 1,
-
     display: 'flex',
-
-    gap: spacing.xs,
+    gap: spacing['2xs'],
   },
   ['content--stat']: {
     alignItems: 'center',
@@ -31,21 +36,22 @@ export const styles = StyleSheet.create({
 
   title: {},
   ['title--stat']: {
-    ...typography.callout,
+    ...typography.caption,
     color: ink.secondary,
   },
   ['title--description']: {
-    ...typography.heading,
-    fontWeight: 'bold',
+    ...typography.body,
+    fontWeight: '600',
+    color: ink.primary,
   },
 
   subtitle: {},
   ['subtitle--stat']: {
-    ...typography.display,
-    fontWeight: 'bold',
+    ...dataTypography.lg,
+    color: ink.primary,
   },
   ['subtitle--description']: {
-    ...typography.callout,
+    ...dataTypography.sm,
     color: ink.secondary,
   },
 });

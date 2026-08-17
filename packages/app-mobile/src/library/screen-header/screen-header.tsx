@@ -38,7 +38,7 @@ const ScreenHeader: FunctionComponent<ScreenHeaderProps> = ({
         {onBackPress && (
           <IconButton
             variant="ghost"
-            icon="←"
+            icon="arrow-back"
             onPress={onBackPress}
             color={accent.primary}
           />

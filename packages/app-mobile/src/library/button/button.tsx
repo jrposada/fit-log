@@ -1,13 +1,15 @@
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { FunctionComponent } from 'react';
 import { StyleProp, Text, TouchableOpacity, ViewStyle } from 'react-native';
 
-import { Icon, IconSize } from '../icon';
 import {
+  borderStyles,
   sizeIconGapStyles,
   sizeStyles,
   sizeTextStyles,
   styles,
   variantColors,
+  variantTextStyles,
 } from './button.styles';
 
 export interface ButtonProps {
@@ -17,17 +19,16 @@ export interface ButtonProps {
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   icon?: string;
+  /** Icon glyph set. "material" (default) uses the app's functional icon set; "brand" renders third-party logos (Google, Apple sign-in). */
+  iconFamily?: 'material' | 'brand';
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
 }
 
-const buttonSizeToIconSize: Record<
-  NonNullable<ButtonProps['size']>,
-  IconSize
-> = {
-  sm: 'sm',
-  md: 'md',
-  lg: 'lg',
+const ICON_SIZE_PX: Record<NonNullable<ButtonProps['size']>, number> = {
+  sm: 16,
+  md: 20,
+  lg: 20,
 };
 
 const Button: FunctionComponent<ButtonProps> = ({
@@ -37,11 +38,15 @@ const Button: FunctionComponent<ButtonProps> = ({
   size = 'lg',
   fullWidth = false,
   icon,
+  iconFamily = 'material',
   disabled = false,
   style,
 }) => {
   const isOutline = variant === 'outline';
-  const isGhost = variant === 'ghost';
+  const isDestructive = variant === 'destructive';
+
+  const textStyle = variantTextStyles[variant];
+  const IconComponent = iconFamily === 'brand' ? AntDesign : MaterialIcons;
 
   return (
     <TouchableOpacity
@@ -52,7 +57,8 @@ const Button: FunctionComponent<ButtonProps> = ({
         icon && styles.baseWithIcon,
         icon && sizeIconGapStyles[size],
         { backgroundColor: variantColors[variant] },
-        isOutline && styles.outline,
+        isOutline && borderStyles.outline,
+        isDestructive && borderStyles.destructive,
         disabled && styles.disabled,
         style,
       ]}
@@ -60,15 +66,14 @@ const Button: FunctionComponent<ButtonProps> = ({
       disabled={disabled}
       activeOpacity={0.7}
     >
-      {icon && <Icon icon={icon} size={buttonSizeToIconSize[size]} />}
-      <Text
-        style={[
-          styles.text,
-          sizeTextStyles[size],
-          isOutline && styles.textOutline,
-          isGhost && styles.textGhost,
-        ]}
-      >
+      {icon && (
+        <IconComponent
+          name={icon as never}
+          size={ICON_SIZE_PX[size]}
+          color={textStyle.color}
+        />
+      )}
+      <Text style={[styles.text, sizeTextStyles[size], textStyle]}>
         {title}
       </Text>
     </TouchableOpacity>

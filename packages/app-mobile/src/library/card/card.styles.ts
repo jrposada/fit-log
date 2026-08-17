@@ -1,6 +1,15 @@
 import { StyleSheet } from 'react-native';
 
-import { ink, radii, shadows, spacing, surfaces, typography } from '../theme';
+import {
+  accent,
+  borders,
+  ink,
+  radii,
+  shadows,
+  spacing,
+  surfaces,
+  typography,
+} from '../theme';
 
 export const sizeStyles = StyleSheet.create({
   sm: {
@@ -27,15 +36,27 @@ export const styles = StyleSheet.create({
     backgroundColor: surfaces.base,
     borderRadius: radii.card,
   },
+  /** Subtle glow — mild "active" emphasis without full commitment. */
   elevated: {
-    ...shadows.card,
+    borderWidth: 1,
+    borderColor: borders.default,
+    ...shadows.glow,
   },
+  /** Strong glow — live/selected states (active session, selected map pin). */
   elevatedStrong: {
-    ...shadows.cardElevated,
+    borderWidth: 1,
+    borderColor: accent.primary,
+    ...shadows.glowStrong,
   },
-  flat: {},
+  /** Standard flat card — 1px outline instead of a shadow. */
+  flat: {
+    borderWidth: 1,
+    borderColor: borders.default,
+  },
   subdued: {
-    backgroundColor: surfaces.page,
+    backgroundColor: surfaces.sunken,
+    borderWidth: 1,
+    borderColor: borders.default,
   },
   horizontal: {
     flexDirection: 'row',

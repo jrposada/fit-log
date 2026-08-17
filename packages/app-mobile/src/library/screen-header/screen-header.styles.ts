@@ -1,18 +1,20 @@
 import { StyleSheet } from 'react-native';
 
-import { ink, spacing, surfaces, typography } from '../theme';
+import { borders, ink, spacing, surfaces, typography } from '../theme';
 
 const HEADER_FIXED_HEIGHT = 52;
 
 export const styles = StyleSheet.create({
   header: {
-    backgroundColor: surfaces.base,
+    backgroundColor: surfaces.page,
     flexDirection: 'row',
     paddingHorizontal: spacing.md,
     paddingBottom: spacing.sm,
     minHeight: HEADER_FIXED_HEIGHT,
     gap: spacing.md,
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: borders.default,
   },
   leftSection: {
     flexDirection: 'row',

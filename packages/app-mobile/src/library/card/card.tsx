@@ -135,7 +135,7 @@ function SwipeBackground({
 }
 
 const Card: FunctionComponent<PropsWithChildren<CardProps>> = ({
-  variant = 'elevated',
+  variant = 'flat',
   direction = 'vertical',
   size = 'md',
   highlight,
@@ -205,7 +205,7 @@ interface SwipeWrapperProps {
 }
 
 const SwipeWrapper: FunctionComponent<PropsWithChildren<SwipeWrapperProps>> = ({
-  variant = 'elevated',
+  variant = 'flat',
   leftAction,
   rightAction,
   shouldPeek,

@@ -18,11 +18,8 @@ export const styles = StyleSheet.create({
     borderRadius: radii.card,
     padding: spacing['3xl'],
     alignItems: 'center',
+    gap: spacing.sm,
     backgroundColor: surfaces.raised,
-  },
-  mapPlaceholderIcon: {
-    fontSize: 48,
-    marginBottom: spacing.sm,
   },
   mapPlaceholderText: {
     ...typography.body,
@@ -40,10 +37,15 @@ export const styles = StyleSheet.create({
   locationCardContent: {
     flex: 1,
   },
+  locationAddressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+    marginBottom: spacing.xs,
+  },
   locationAddress: {
     ...typography.body,
     color: accent.primary,
-    marginBottom: spacing.xs,
   },
   locationCoords: {
     ...typography.caption,

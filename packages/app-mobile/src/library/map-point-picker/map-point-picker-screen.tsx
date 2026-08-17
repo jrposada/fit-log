@@ -12,7 +12,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Header from '../../navigation/common/header';
 import Button from '../button';
-import { spacing } from '../theme';
+import { Icon } from '../icon';
+import { accent, ink, spacing } from '../theme';
 import { useToast } from '../toast';
 import { MapPointPickerEvents } from './map-point-picker-events';
 import { styles } from './map-point-picker-screen.styles';
@@ -138,7 +139,7 @@ const MapPointPickerScreen: FunctionComponent<Props> = ({ route }) => {
         </MapView>
 
         <Pressable style={styles.myLocationButton} onPress={handleMyLocation}>
-          <Text style={styles.myLocationIcon}>🎯</Text>
+          <Icon icon="my-location" size="md" color={accent.primary} />
         </Pressable>
       </View>
 
@@ -146,7 +147,7 @@ const MapPointPickerScreen: FunctionComponent<Props> = ({ route }) => {
         style={[styles.footer, { paddingBottom: spacing.lg + insets.bottom }]}
       >
         <View style={styles.addressCard}>
-          <Text style={styles.addressIcon}>📍</Text>
+          <Icon icon="location-on" size="sm" color={ink.secondary} />
           <Text style={styles.addressText}>
             {address || t('climbing.drop_pin_on_map')}
           </Text>

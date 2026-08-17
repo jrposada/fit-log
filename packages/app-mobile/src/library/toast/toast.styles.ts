@@ -1,15 +1,23 @@
 import { StyleSheet } from 'react-native';
 
-import { ink, radii, semantic, shadows, spacing, typography } from '../theme';
+import {
+  borders,
+  ink,
+  radii,
+  semantic,
+  spacing,
+  surfaces,
+  typography,
+} from '../theme';
 
 export const variantStyles = StyleSheet.create({
   success: {
-    backgroundColor: semantic.successMuted,
-    borderLeftColor: semantic.success,
+    backgroundColor: surfaces.base,
+    borderColor: semantic.success,
   },
   destructive: {
-    backgroundColor: semantic.destructiveMuted,
-    borderLeftColor: semantic.error,
+    backgroundColor: surfaces.base,
+    borderColor: semantic.error,
   },
 });
 
@@ -26,8 +34,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: radii.card,
     padding: spacing.md,
+    borderWidth: 1,
+    borderColor: borders.default,
     borderLeftWidth: 4,
-    ...shadows.card,
   },
   toastMessage: {
     ...typography.callout,
@@ -37,10 +46,5 @@ export const styles = StyleSheet.create({
   dismissButton: {
     marginLeft: spacing.sm,
     padding: spacing.xs,
-  },
-  dismissText: {
-    ...typography.callout,
-    fontWeight: '600',
-    color: ink.secondary,
   },
 });

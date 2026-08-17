@@ -27,9 +27,8 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   titleLevel1: {
-    ...typography.body,
-    fontWeight: '600',
-    color: ink.primary,
+    ...typography.caption,
+    color: ink.secondary,
   },
   titleLevel2: {
     ...typography.callout,

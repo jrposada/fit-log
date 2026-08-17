@@ -1,27 +1,31 @@
 import { StyleSheet } from 'react-native';
 
-import { radii, surfaces } from '../theme';
+import { borders, radii, spacing, surfaces } from '../theme';
 
 export const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: surfaces.scrim,
   },
   overlayFullscreen: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: surfaces.scrim,
   },
   container: {
     width: '100%',
     maxHeight: '90%',
     display: 'flex',
     backgroundColor: surfaces.base,
-    borderTopEndRadius: radii.md,
-    borderTopStartRadius: radii.md,
+    borderTopEndRadius: radii.xl,
+    borderTopStartRadius: radii.xl,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+    borderColor: borders.default,
     overflow: 'hidden',
   },
   containerFullscreen: {
@@ -30,5 +34,15 @@ export const styles = StyleSheet.create({
     display: 'flex',
     backgroundColor: surfaces.base,
     overflow: 'hidden',
+  },
+  handle: {
+    alignItems: 'center',
+    paddingTop: spacing.sm,
+  },
+  handleBar: {
+    width: 48,
+    height: 4,
+    borderRadius: radii.full,
+    backgroundColor: surfaces.raised,
   },
 });

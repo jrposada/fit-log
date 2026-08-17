@@ -10,6 +10,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
 
+import { Icon } from '../icon';
+import { ink } from '../theme';
 import { styles, variantStyles } from './toast.styles';
 import type { ToastItem as ToastItemType } from './toast-context';
 
@@ -85,7 +87,7 @@ const ToastItem: FunctionComponent<ToastItemProps> = ({ toast, onDismiss }) => {
             hitSlop={8}
             style={styles.dismissButton}
           >
-            <Text style={styles.dismissText}>✕</Text>
+            <Icon icon="close" size="sm" color={ink.primary} />
           </Pressable>
         )}
       </Animated.View>

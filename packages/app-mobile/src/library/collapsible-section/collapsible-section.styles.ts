@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { ink, radii, spacing, surfaces, typography } from '../theme';
+import { borders, ink, radii, spacing, surfaces, typography } from '../theme';
 
 export const styles = StyleSheet.create({
   base: {
@@ -11,18 +11,23 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: surfaces.sunken,
+    borderWidth: 1,
+    borderColor: borders.default,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
     borderRadius: radii.md,
     marginBottom: spacing.sm,
   },
-  title: {
-    ...typography.body,
-    fontWeight: '600',
-    color: ink.primary,
+  titleGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
   },
-  expandIcon: {
-    fontSize: 12,
+  title: {
+    ...typography.callout,
+    fontWeight: '700',
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
     color: ink.secondary,
   },
 });

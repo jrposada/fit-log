@@ -1,31 +1,52 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TextStyle } from 'react-native';
 
 import {
   accent,
+  borders,
   ink,
   radii,
   semantic,
-  shadows,
   spacing,
-  surfaces,
   typography,
 } from '../theme';
 
 export const variantColors = {
   primary: accent.primary,
   success: semantic.success,
-  destructive: semantic.destructive,
+  destructive: 'transparent',
   warning: semantic.warning,
-  info: accent.primary,
-  outline: surfaces.base,
+  info: accent.secondary,
+  outline: 'transparent',
   ghost: 'transparent',
 } as const;
+
+export const variantTextStyles: Record<keyof typeof variantColors, TextStyle> =
+  {
+    primary: { color: ink.inverse },
+    success: { color: ink.inverse },
+    destructive: { color: semantic.destructive },
+    warning: { color: ink.inverse },
+    info: { color: accent.onSecondary },
+    outline: { color: ink.primary },
+    ghost: { color: accent.primary },
+  };
+
+export const borderStyles = StyleSheet.create({
+  outline: {
+    borderWidth: 1,
+    borderColor: borders.default,
+  },
+  destructive: {
+    borderWidth: 1,
+    borderColor: semantic.destructive,
+  },
+});
 
 export const sizeStyles = StyleSheet.create({
   sm: {
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
-    borderRadius: radii.sm,
+    borderRadius: radii.button,
   },
   md: {
     paddingHorizontal: spacing.md,
@@ -47,6 +68,7 @@ export const sizeIconGapStyles = StyleSheet.create({
 export const sizeTextStyles = StyleSheet.create({
   sm: {
     ...typography.callout,
+    textTransform: 'none',
   },
   md: {
     ...typography.body,
@@ -71,18 +93,7 @@ export const styles = StyleSheet.create({
     backgroundColor: ink.disabled,
     opacity: 0.6,
   },
-  outline: {
-    borderRadius: radii.card,
-    ...shadows.cardElevated,
-  },
   text: {
-    color: ink.inverse,
     fontWeight: '600',
-  },
-  textOutline: {
-    color: ink.primary,
-  },
-  textGhost: {
-    color: accent.primary,
   },
 });

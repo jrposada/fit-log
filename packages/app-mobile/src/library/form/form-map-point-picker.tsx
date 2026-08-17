@@ -17,7 +17,9 @@ import MapView, {
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 
+import { Icon } from '../icon';
 import { MapPointPickerEvents } from '../map-point-picker';
+import { ink } from '../theme';
 import FormField from './form-field';
 import { styles } from './form-map-point-picker.styles';
 import { useFormReadonly } from './use-form-readonly';
@@ -122,7 +124,7 @@ const FormMapPointPicker: FunctionComponent<FormMapPointPickerProps> = ({
             </MapView>
             {isOpeningMap && (
               <View style={styles.mapPreviewOverlay}>
-                <ActivityIndicator size="large" color="#fff" />
+                <ActivityIndicator size="large" color={ink.primary} />
               </View>
             )}
           </View>
@@ -139,9 +141,12 @@ const FormMapPointPicker: FunctionComponent<FormMapPointPickerProps> = ({
       {hasLocation ? (
         <View style={styles.locationCard}>
           <View style={styles.locationCardContent}>
-            <Text style={styles.locationAddress}>
-              📍 {t('climbing.location_set')}
-            </Text>
+            <View style={styles.locationAddressRow}>
+              <Icon icon="location-on" size="sm" color={ink.primary} />
+              <Text style={styles.locationAddress}>
+                {t('climbing.location_set')}
+              </Text>
+            </View>
             <Text style={styles.locationCoords}>
               {latitude.toFixed(4)}, {longitude.toFixed(4)}
             </Text>
@@ -154,7 +159,7 @@ const FormMapPointPicker: FunctionComponent<FormMapPointPickerProps> = ({
         </View>
       ) : (
         <Pressable style={styles.mapPlaceholder} onPress={handleOpenPicker}>
-          <Text style={styles.mapPlaceholderIcon}>📍</Text>
+          <Icon icon="location-on" size="xl" color={ink.secondary} />
           <Text style={styles.mapPlaceholderText}>
             {t('climbing.location_tap_to_set')}
           </Text>

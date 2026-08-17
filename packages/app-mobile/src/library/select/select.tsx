@@ -10,7 +10,9 @@ import {
   View,
 } from 'react-native';
 
+import { Icon } from '../icon';
 import Modal from '../modal';
+import { ink } from '../theme';
 import { styles } from './select.styles';
 
 export interface SelectProps {
@@ -133,7 +135,7 @@ function Select({
             onPress={onClear}
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Text style={styles.valueClearButtonText}>✕</Text>
+            <Icon icon="close" size="sm" color={ink.secondary} />
           </TouchableOpacity>
         ) : null}
       </TouchableOpacity>
@@ -153,7 +155,7 @@ function Select({
                 style={styles.clearButton}
                 onPress={() => setSearchTerm('')}
               >
-                <Text style={styles.clearButtonText}>✕</Text>
+                <Icon icon="close" size="sm" color={ink.secondary} />
               </TouchableOpacity>
             )}
           </View>

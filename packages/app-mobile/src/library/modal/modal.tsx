@@ -34,6 +34,11 @@ function Modal({
           style={[fullscreen ? styles.containerFullscreen : styles.container]}
           onStartShouldSetResponder={() => true}
         >
+          {!fullscreen && (
+            <View style={styles.handle}>
+              <View style={styles.handleBar} />
+            </View>
+          )}
           {children}
         </View>
       </TouchableOpacity>

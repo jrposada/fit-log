@@ -7,12 +7,15 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { IconName } from '../icon';
+import Icon from '../icon/icon';
+import { ink } from '../theme';
 import { styles } from './collapsible-section.styles';
 
 export interface CollapsibleSectionProps {
   title: string;
   count?: number;
-  icon?: string;
+  icon?: IconName;
   defaultExpanded?: boolean;
   expanded?: boolean;
   onToggle?: () => void;
@@ -44,7 +47,7 @@ const CollapsibleSection: FunctionComponent<
     }
   };
 
-  const label = [icon, title, count !== undefined ? `(${count})` : undefined]
+  const label = [title, count !== undefined ? `(${count})` : undefined]
     .filter(Boolean)
     .join(' ');
 
@@ -55,10 +58,15 @@ const CollapsibleSection: FunctionComponent<
         onPress={handleToggle}
         activeOpacity={0.7}
       >
-        <Text style={styles.title}>{label}</Text>
-        <Text style={styles.expandIcon}>
-          {isExpanded ? '\u25BC' : '\u25B6'}
-        </Text>
+        <View style={styles.titleGroup}>
+          {icon && <Icon icon={icon} size="sm" color={ink.secondary} />}
+          <Text style={styles.title}>{label}</Text>
+        </View>
+        <Icon
+          icon={isExpanded ? 'expand-less' : 'expand-more'}
+          size="sm"
+          color={ink.secondary}
+        />
       </TouchableOpacity>
       {isExpanded && children}
     </View>

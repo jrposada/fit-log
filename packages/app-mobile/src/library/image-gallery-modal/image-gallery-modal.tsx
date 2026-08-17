@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import IconButton from '../icon-button/icon-button';
 import InteractiveImage from '../interactive-image/interactive-image';
+import { ink } from '../theme';
 import { styles } from './image-gallery-modal.styles';
 
 interface GalleryImage {
@@ -90,10 +91,10 @@ const ImageGalleryModal: FunctionComponent<ImageGalleryModalProps> = ({
       <GestureHandlerRootView style={styles.overlay}>
         <View style={[styles.closeButton, { top: insets.top }]}>
           <IconButton
-            icon="✕"
+            icon="close"
             onPress={onClose}
             variant="ghost"
-            color="#fff"
+            color={ink.primary}
             size="lg"
           />
         </View>
