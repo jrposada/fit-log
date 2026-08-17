@@ -3,10 +3,10 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import { SportFilterProvider } from '../../../features/feed/sport-filter-context';
-import ActiveTrainingSessionFlyover from '../../../features/training-sessions/active-training-session/active-training-session-flyover';
-import { RootParamList } from '../../../types/routes';
-import Header from '../../common/header';
+import { SportFilterProvider } from '../../../../../features/feed/sport-filter-context';
+import ActiveTrainingSessionFlyover from '../../../../../features/training-sessions/active-training-session/active-training-session-flyover';
+import { RootParamList } from '../../../../../types/routes';
+import Header from '../../../../common/header';
 import BottomTabBar from './bottom-tab-bar';
 import ActivityScreen from './routes/activity/activity-screen';
 import ExploreScreen from './routes/explore/explore-screen';

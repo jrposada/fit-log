@@ -6,12 +6,12 @@ import { ImagePickerScreen } from '../../../library/image-picker';
 import { MapPointPickerScreen } from '../../../library/map-point-picker';
 import { RootStackParamList } from '../../../types/routes';
 import Header from '../../common/header';
-import TabsStack from '../tabs/tabs-stack';
 import ClimbDetailScreen from './routes/climb-detail/climb-detail-screen';
 import ClimbLogScreen from './routes/climb-log/climb-log-screen';
 import ClimbingSessionDetailScreen from './routes/climbing-session-detail/climbing-session-detail-screen';
 import LocationDetailScreen from './routes/location-detail/location-detail-screen';
 import ProfileScreen from './routes/profile/profile-screen';
+import TabsStack from './stacks/tabs/tabs-stack';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

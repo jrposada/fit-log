@@ -7,7 +7,7 @@ import {
   spacing,
   surfaces,
   typography,
-} from '../../../library/theme';
+} from '../../../../../library/theme';
 
 export const styles = StyleSheet.create({
   bar: {
