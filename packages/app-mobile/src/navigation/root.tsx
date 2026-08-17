@@ -1,5 +1,9 @@
 import { useAuth } from '@jrposada/fit-log-shared-react/contexts/auth/use-auth';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  DarkTheme,
+  NavigationContainer,
+  Theme,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { FunctionComponent } from 'react';
@@ -14,12 +18,25 @@ import ProfileScreen from '../features/profile/profile-screen';
 import { ImagePickerScreen } from '../library/image-picker';
 import LoadingState from '../library/loading-state';
 import { MapPointPickerScreen } from '../library/map-point-picker';
-import { surfaces } from '../library/theme';
+import { accent, borders, ink, surfaces } from '../library/theme';
 import { RootStackParamList } from '../types/routes';
 import Header from './common/header';
 import Tabs from './tabs';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const navigationTheme: Theme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: accent.primary,
+    background: surfaces.page,
+    card: surfaces.base,
+    text: ink.primary,
+    border: borders.default,
+    notification: accent.primary,
+  },
+};
 
 const Root: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -27,8 +44,8 @@ const Root: FunctionComponent = () => {
 
   if (isLoading) {
     return (
-      <NavigationContainer>
-        <StatusBar style="auto" />
+      <NavigationContainer theme={navigationTheme}>
+        <StatusBar style="light" />
         <LoadingState isLoading style={{ backgroundColor: surfaces.page }} />
       </NavigationContainer>
     );
@@ -36,16 +53,16 @@ const Root: FunctionComponent = () => {
 
   if (!isAuthenticated) {
     return (
-      <NavigationContainer>
-        <StatusBar style="auto" />
+      <NavigationContainer theme={navigationTheme}>
+        <StatusBar style="light" />
         <AuthStack />
       </NavigationContainer>
     );
   }
 
   return (
-    <NavigationContainer>
-      <StatusBar style="auto" />
+    <NavigationContainer theme={navigationTheme}>
+      <StatusBar style="light" />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Tabs" component={Tabs} />
         <Stack.Screen

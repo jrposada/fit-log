@@ -7,8 +7,8 @@ import ActivityScreen from '../features/activity/activity-screen';
 import ExploreScreen from '../features/explore/explore-screen';
 import { SportFilterProvider } from '../features/feed/sport-filter-context';
 import ActiveTrainingSessionFlyover from '../features/training-sessions/active-training-session/active-training-session-flyover';
-import { Icon } from '../library/icon';
 import { RootParamList } from '../types/routes';
+import BottomTabBar from './bottom-tab-bar';
 import Header from './common/header';
 import { homeOptions } from './routes/home/home-options';
 import HomeScreen from './routes/home/home-screen';
@@ -23,6 +23,7 @@ const Tabs: FunctionComponent = () => {
       <View style={{ flex: 1 }}>
         <Tab.Navigator
           initialRouteName="Home"
+          tabBar={(props) => <BottomTabBar {...props} />}
           screenOptions={{
             animation: 'shift',
           }}
@@ -33,21 +34,19 @@ const Tabs: FunctionComponent = () => {
             options={homeOptions(t)}
           />
           <Tab.Screen
-            name="Activity"
-            component={ActivityScreen}
-            options={{
-              header: () => <Header title={t('app_bar.activity')} />,
-              tabBarLabel: t('app_bar.activity'),
-              tabBarIcon: () => <Icon icon="📊" size="lg" />,
-            }}
-          />
-          <Tab.Screen
             name="Explore"
             component={ExploreScreen}
             options={{
               header: () => <Header title={t('app_bar.explore')} />,
               tabBarLabel: t('app_bar.explore'),
-              tabBarIcon: () => <Icon icon="🧭" size="lg" />,
+            }}
+          />
+          <Tab.Screen
+            name="Activity"
+            component={ActivityScreen}
+            options={{
+              header: () => <Header title={t('app_bar.activity')} />,
+              tabBarLabel: t('app_bar.activity'),
             }}
           />
         </Tab.Navigator>
