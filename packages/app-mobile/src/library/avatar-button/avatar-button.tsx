@@ -1,6 +1,12 @@
 import { FunctionComponent } from 'react';
+import { Pressable, Text } from 'react-native';
 
-import IconButton from '../icon-button';
+import {
+  sizeStyles,
+  styles,
+  variantStyles,
+} from '../icon-button/icon-button.styles';
+import { ink } from '../theme';
 
 type AvatarButtonProps = {
   name?: string;
@@ -35,8 +41,24 @@ const AvatarButton: FunctionComponent<AvatarButtonProps> = ({
   const initials = getInitials(name, email);
 
   return (
-    <IconButton icon={initials} onPress={onPress} size="sm" variant="primary" />
+    <Pressable
+      onPress={onPress}
+      style={[
+        styles.base,
+        styles.rounded,
+        sizeStyles.sm,
+        variantStyles.primary,
+      ]}
+    >
+      <Text style={avatarLabelStyle}>{initials}</Text>
+    </Pressable>
   );
+};
+
+const avatarLabelStyle = {
+  fontSize: 12,
+  fontWeight: '700' as const,
+  color: ink.inverse,
 };
 
 export default AvatarButton;

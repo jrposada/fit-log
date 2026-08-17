@@ -1,9 +1,12 @@
 import { FunctionComponent } from 'react';
-import { Pressable, StyleProp, Text, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, ViewStyle } from 'react-native';
 
+import { IconName } from '../icon';
+import Icon from '../icon/icon';
+import { ink } from '../theme';
 import {
+  ICON_SIZE_MAP,
   sizeStyles,
-  sizeTextStyles,
   styles,
   variantStyles,
   variantTextColors,
@@ -13,7 +16,7 @@ type IconButtonVariant = 'default' | 'primary' | 'ghost' | 'destructive';
 type IconButtonSize = 'sm' | 'md' | 'lg';
 
 export interface IconButtonProps {
-  icon: string;
+  icon: IconName;
   onPress: () => void;
   disabled?: boolean;
   variant?: IconButtonVariant;
@@ -34,8 +37,8 @@ const IconButton: FunctionComponent<IconButtonProps> = ({
   style,
 }) => {
   const resolvedColor = disabled
-    ? undefined
-    : (color ?? variantTextColors[variant]);
+    ? ink.disabled
+    : (color ?? variantTextColors[variant] ?? ink.primary);
 
   return (
     <Pressable
@@ -50,16 +53,7 @@ const IconButton: FunctionComponent<IconButtonProps> = ({
         style,
       ]}
     >
-      <Text
-        style={[
-          styles.label,
-          sizeTextStyles[size],
-          disabled && styles.disabledText,
-          resolvedColor ? { color: resolvedColor } : undefined,
-        ]}
-      >
-        {icon}
-      </Text>
+      <Icon icon={icon} size={ICON_SIZE_MAP[size]} color={resolvedColor} />
     </Pressable>
   );
 };

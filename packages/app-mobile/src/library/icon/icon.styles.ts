@@ -1,5 +1,3 @@
-import { StyleSheet } from 'react-native';
-
 export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export const SIZE_MAP: Record<IconSize, number> = {
@@ -9,9 +7,3 @@ export const SIZE_MAP: Record<IconSize, number> = {
   lg: 24,
   xl: 48,
 };
-
-export const styles = StyleSheet.create({
-  base: {
-    fontWeight: '600',
-  },
-});

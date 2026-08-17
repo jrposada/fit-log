@@ -1,10 +1,13 @@
 import { StyleSheet } from 'react-native';
 
-import { accent, ink, radii, semantic, surfaces, typography } from '../theme';
+import { IconSize } from '../icon';
+import { accent, ink, radii, semantic, surfaces } from '../theme';
 
 export const variantStyles = StyleSheet.create({
   default: {
     backgroundColor: surfaces.sunken,
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
   primary: {
     backgroundColor: accent.primary,
@@ -13,15 +16,17 @@ export const variantStyles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   destructive: {
-    backgroundColor: semantic.destructive,
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: semantic.destructive,
   },
 });
 
 export const variantTextColors = {
-  default: undefined,
+  default: ink.primary,
   primary: ink.inverse,
-  ghost: undefined,
-  destructive: ink.inverse,
+  ghost: ink.primary,
+  destructive: semantic.destructive,
 } as const;
 
 // Square dimensions matching Button effective heights
@@ -31,11 +36,11 @@ export const sizeStyles = StyleSheet.create({
   lg: { width: 54, height: 54, borderRadius: radii.button },
 });
 
-export const sizeTextStyles = StyleSheet.create({
-  sm: { fontSize: typography.callout.fontSize },
-  md: { fontSize: typography.body.fontSize },
-  lg: { fontSize: typography.body.fontSize },
-});
+export const ICON_SIZE_MAP: Record<'sm' | 'md' | 'lg', IconSize> = {
+  sm: 'sm',
+  md: 'md',
+  lg: 'lg',
+};
 
 export const styles = StyleSheet.create({
   base: {
@@ -48,11 +53,5 @@ export const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
     backgroundColor: surfaces.sunken,
-  },
-  disabledText: {
-    color: ink.disabled,
-  },
-  label: {
-    fontWeight: '600',
   },
 });

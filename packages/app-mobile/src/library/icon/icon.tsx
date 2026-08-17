@@ -1,13 +1,17 @@
-import { FunctionComponent } from 'react';
-import { StyleProp, Text, TextStyle } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import { ComponentProps, FunctionComponent } from 'react';
+import { StyleProp, TextStyle } from 'react-native';
 
-import { spacing as spacingTokens } from '../theme';
-import { IconSize, SIZE_MAP, styles } from './icon.styles';
+import { ink, spacing as spacingTokens } from '../theme';
+import { IconSize, SIZE_MAP } from './icon.styles';
 
 type SpacingToken = keyof typeof spacingTokens;
 
+/** A functional glyph name from the MaterialIcons set (e.g. "home", "explore", "close"). */
+export type IconName = ComponentProps<typeof MaterialIcons>['name'];
+
 export interface IconProps {
-  icon: string;
+  icon: IconName;
   size?: IconSize;
   color?: string;
   spacer?: SpacingToken;
@@ -17,22 +21,20 @@ export interface IconProps {
 const Icon: FunctionComponent<IconProps> = ({
   icon,
   size = 'md',
-  color,
+  color = ink.primary,
   spacer,
   style,
 }) => {
   return (
-    <Text
+    <MaterialIcons
+      name={icon}
+      size={SIZE_MAP[size]}
+      color={color}
       style={[
-        styles.base,
-        { fontSize: SIZE_MAP[size] },
-        color ? { color } : undefined,
         spacer != null ? { marginBottom: spacingTokens[spacer] } : undefined,
         style,
       ]}
-    >
-      {icon}
-    </Text>
+    />
   );
 };
 
