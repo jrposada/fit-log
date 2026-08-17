@@ -2,17 +2,17 @@ import type { Job } from 'bullmq';
 import { Worker } from 'bullmq';
 import fs from 'fs/promises';
 
-import type { Lifecycle } from '../../infrastructure/lifecycle.ts';
-import Logger from '../../infrastructure/logger.ts';
+import type { Lifecycle } from '../../../infrastructure/lifecycle.ts';
+import Logger from '../../../infrastructure/logger.ts';
 import {
   completeModel3dReconstruction,
   failModel3dReconstruction,
-} from '../../services/model-3d.ts';
-import { Model3dProcessor } from '../../services/model-3d-processor.ts';
-import { createBullMqRedisConnection } from '../infrastructure/redis.ts';
-import type { Model3dReconstructionJobData } from '../queues/model-3d-reconstruction-queue.ts';
-import { MODEL_3D_RECONSTRUCTION_QUEUE_NAME } from '../queues/model-3d-reconstruction-queue.ts';
-import { reconstructionProcessor } from '../reconstruction-processor.ts';
+} from '../../../services/model-3d.ts';
+import { Model3dProcessor } from '../../../services/model-3d-processor.ts';
+import { createBullMqRedisConnection } from '../../infrastructure/redis.ts';
+import type { Model3dReconstructionJobData } from '../../queues/model-3d-reconstruction-queue.ts';
+import { MODEL_3D_RECONSTRUCTION_QUEUE_NAME } from '../../queues/model-3d-reconstruction-queue.ts';
+import { reconstructionProcessor } from './model-3d-reconstruction-worker-processor.ts';
 
 async function processJob(
   job: Job<Model3dReconstructionJobData>

@@ -1,5 +1,6 @@
 import { Queue } from 'bullmq';
 
+import type { Lifecycle } from '../../infrastructure/lifecycle.ts';
 import { createBullMqRedisConnection } from '../infrastructure/redis.ts';
 
 export const MODEL_3D_RECONSTRUCTION_QUEUE_NAME = 'model-3d-reconstruction';
@@ -32,4 +33,13 @@ export async function closeModel3dReconstructionQueue(): Promise<void> {
     await queue.close();
     queue = undefined;
   }
+}
+
+export function createModel3dReconstructionQueue(): Lifecycle {
+  function start(): Promise<void> {
+    getQueue();
+    return Promise.resolve();
+  }
+
+  return { start, stop: closeModel3dReconstructionQueue };
 }

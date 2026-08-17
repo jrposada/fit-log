@@ -59,7 +59,8 @@ type CreateModel3dFromVideoInput = {
 /**
  * Stores the source video and creates a `Model3d` in 'processing' status,
  * then queues the reconstruction job. The worker (see
- * `jobs/workers/model-3d-reconstruction-worker.ts`) fills in `modelUrl` and
+ * `jobs/workers/model-3d-reconstruction-worker/model-3d-reconstruction-worker.ts`)
+ * fills in `modelUrl` and
  * flips `status` to 'ready'/'failed' once the job finishes.
  */
 async function createModel3dFromVideo(
