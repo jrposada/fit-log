@@ -4,6 +4,10 @@ import { spacing } from '../../../library/theme';
 
 export const styles = StyleSheet.create({
   cardsContainer: {
-    gap: spacing.lg,
+    flexDirection: 'row',
+    gap: spacing.md,
+  },
+  sportCard: {
+    width: 160,
   },
 });

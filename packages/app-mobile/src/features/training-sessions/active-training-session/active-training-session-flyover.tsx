@@ -1,6 +1,4 @@
 import { useTrainingSessionsActive } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-active';
-import { useTrainingSessionsPut } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-put';
-import { beautifyDate } from '@jrposada/fit-log-shared-react/beautifiers/date';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Animated, {
@@ -15,25 +13,14 @@ import Card from '../../../library/card';
 import { accent, spacing } from '../../../library/theme';
 import ActiveTrainingSessionContent from './active-training-session-content';
 import { styles } from './active-training-session-flyover.styles';
+import { useStartTrainingSession } from './use-start-training-session';
 
 const ActiveTrainingSessionFlyover: FunctionComponent = () => {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { data: activeSession } = useTrainingSessionsActive();
-  const { mutate: startTrainingSession } = useTrainingSessionsPut();
+  const { handleStart } = useStartTrainingSession();
   const [isExpanded, setExpanded] = useState(false);
-
-  const handleStartTrainingSession = () => {
-    const now = new Date();
-
-    startTrainingSession({
-      title: beautifyDate(now, 'YYYY MM DD'),
-      startedAt: now.toUTCString(),
-
-      location: null,
-      climbHistories: [],
-    });
-  };
 
   const containerStyle = [
     styles.container,
@@ -69,9 +56,9 @@ const ActiveTrainingSessionFlyover: FunctionComponent = () => {
           >
             <Button
               title={t('nav.start_session')}
-              icon="+"
+              icon="play-arrow"
               variant="primary"
-              onPress={handleStartTrainingSession}
+              onPress={() => handleStart()}
             />
           </Animated.View>
         )}

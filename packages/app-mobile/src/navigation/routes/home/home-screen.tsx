@@ -4,19 +4,20 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
 import FeedRow from '../../../features/feed/components/feed-row';
 import { navigateToSessionDetail } from '../../../features/feed/navigate-to-session-detail';
 import { SPORT_ICONS } from '../../../features/feed/sport-icons';
 import EmptyState from '../../../library/empty-state';
+import { IconName } from '../../../library/icon';
 import IconCard from '../../../library/icon-card';
 import LoadingState from '../../../library/loading-state';
 import Measure from '../../../library/measure';
 import Screen from '../../../library/screen';
 import Section from '../../../library/section';
 import Stack from '../../../library/stack';
-import { palette, spacing } from '../../../library/theme';
+import { accent, spacing } from '../../../library/theme';
 import { RootStackParamList } from '../../../types/routes';
 import { styles } from './home.styles';
 
@@ -24,8 +25,7 @@ const RECENT_ACTIVITY_LIMIT = 5;
 
 type HeroCardData = {
   id: string;
-  icon: string;
-  color: string;
+  icon: IconName;
   value: string;
   title: string;
 };
@@ -47,22 +47,19 @@ const HomeScreen: FunctionComponent = () => {
     return [
       {
         id: 'sessions',
-        icon: '🗓️',
-        color: palette.blue,
+        icon: 'event-available',
         value: String(stats.summary.totalSessions),
         title: t('home.total_sessions'),
       },
       {
         id: 'streak',
-        icon: '🔥',
-        color: palette.amber,
+        icon: 'local-fire-department',
         value: String(stats.summary.currentStreak),
         title: t('home.current_streak'),
       },
       {
         id: 'time',
-        icon: '⏱️',
-        color: palette.plum,
+        icon: 'timer',
         value: t('climbing.stats_duration_minutes', {
           count: Math.round(stats.summary.totalDurationMinutes),
         }),
@@ -88,7 +85,6 @@ const HomeScreen: FunctionComponent = () => {
                     <IconCard
                       key={card.id}
                       icon={card.icon}
-                      color={card.color}
                       title={card.title}
                       subtitle={card.value}
                       variant="stat"
@@ -103,18 +99,23 @@ const HomeScreen: FunctionComponent = () => {
 
         {stats && stats.bySport.length > 0 && (
           <Section title={t('home.per_sport_title')} noPadding>
-            <View style={styles.cardsContainer}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.cardsContainer}
+            >
               {stats.bySport.map((entry) => (
                 <IconCard
                   key={entry.sport}
                   icon={SPORT_ICONS[entry.sport]}
-                  color={palette.green}
+                  color={accent.secondary}
                   title={t(`${entry.sport}.title`)}
                   subtitle={String(entry.count)}
                   variant="description"
+                  style={styles.sportCard}
                 />
               ))}
-            </View>
+            </ScrollView>
           </Section>
         )}
 
