@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { borders, spacing, surfaces } from '../../library/theme';
+import { borders, spacing, surfaces } from '../../../library/theme';
 
 export const styles = StyleSheet.create({
   container: {
