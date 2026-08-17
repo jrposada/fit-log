@@ -10,7 +10,6 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ClimbDetailScreen from '../features/climbing/screens/climb-detail-screen';
-import ClimbLogScreen from '../features/climbing/screens/climb-log-screen';
 import ClimbingSessionDetailScreen from '../features/climbing/screens/climbing-session-detail-screen';
 import LocationDetailScreen from '../features/climbing/screens/location-detail-screen';
 import { ImagePickerScreen } from '../library/image-picker';
@@ -20,6 +19,7 @@ import { accent, borders, ink, surfaces } from '../library/theme';
 import { RootStackParamList } from '../types/routes';
 import AuthStack from './auth-stack';
 import Header from './common/header';
+import ClimbLogScreen from './routes/climb-log/climb-log-screen';
 import ProfileScreen from './routes/profile/profile-screen';
 import Tabs from './tabs';
 

@@ -13,6 +13,10 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
+import ClimbCard from '../../../features/climbing/components/common/climb-card';
+import FormGradeChips from '../../../features/climbing/components/common/form-grade-chips';
+import LocationSelector from '../../../features/climbing/components/common/location-selector';
+import { useSwipeHint } from '../../../features/climbing/hooks/use-swipe-hint';
 import Button from '../../../library/button';
 import CollapsibleSection from '../../../library/collapsible-section';
 import EmptyState from '../../../library/empty-state';
@@ -23,10 +27,6 @@ import Screen from '../../../library/screen';
 import Section from '../../../library/section';
 import Separator from '../../../library/separator';
 import { RootStackParamList } from '../../../types/routes';
-import ClimbCard from '../components/common/climb-card';
-import FormGradeChips from '../components/common/form-grade-chips';
-import LocationSelector from '../components/common/location-selector';
-import { useSwipeHint } from '../hooks/use-swipe-hint';
 
 type ClimbLogNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
