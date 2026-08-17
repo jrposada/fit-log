@@ -4,15 +4,20 @@ import { createServer } from './api/server.ts';
 import { createDatabase } from './data/database.ts';
 import type { Lifecycle } from './infrastructure/lifecycle.ts';
 import Logger from './infrastructure/logger.ts';
+import { createJobsManager } from './jobs/jobs-manager.ts';
 
 dotenv.config();
 
 let api: Lifecycle | undefined;
 let database: Lifecycle | undefined;
+let jobs: Lifecycle | undefined;
 
 async function main() {
   database = createDatabase();
   await database.start();
+
+  jobs = createJobsManager();
+  await jobs.start();
 
   api = createServer();
   await api.start();
@@ -21,6 +26,7 @@ async function main() {
 process.on('SIGINT', async () => {
   try {
     await api?.stop();
+    await jobs?.stop();
     await database?.stop();
     process.exit(0);
   } catch (error) {

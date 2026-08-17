@@ -17,9 +17,11 @@ function toApiDepopulatedModel3d(
   return {
     /* Data */
     id: model._id.toString(),
-    modelUrl: resolveFileUrl(model.modelUrl),
+    status: model.status,
+    modelUrl: model.modelUrl ? resolveFileUrl(model.modelUrl) : undefined,
     mimeType: model.mimeType,
     fileSize: model.fileSize,
+    error: model.error,
 
     /* Ownership */
     owner: model.owner._id.toString(),
@@ -35,9 +37,11 @@ function toApiModel3d(model: WithPopulatedOwnership<IModel3d>): Model3d {
   return {
     /* Data */
     id: model._id.toString(),
-    modelUrl: resolveFileUrl(model.modelUrl),
+    status: model.status,
+    modelUrl: model.modelUrl ? resolveFileUrl(model.modelUrl) : undefined,
     mimeType: model.mimeType,
     fileSize: model.fileSize,
+    error: model.error,
 
     /* Ownership */
     owner: toApiUserSummary(model.owner),

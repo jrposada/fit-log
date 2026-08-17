@@ -38,6 +38,14 @@ services:
     volumes:
       - opensearch-data:/usr/share/opensearch/data
 
+  redis:
+    container_name: redis
+    image: 'redis:latest'
+    ports:
+      - '3500:6379'
+    volumes:
+      - redis-data:/data
+
 volumes:
   mongodb-data:
     external: false
@@ -48,4 +56,6 @@ volumes:
   keycloak-data:
     external: false
   opensearch-data:
+    external: false
+  redis-data:
     external: false

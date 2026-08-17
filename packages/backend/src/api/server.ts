@@ -19,7 +19,7 @@ export function createServer(): Lifecycle {
 
     app.use(cors());
     app.use(traceId);
-    app.use(express.json({ limit: '50mb' }));
+    app.use(express.json({ limit: '512mb' }));
 
     app.use('/files', express.static(FilesService.publicDir()));
     app.use('/api', router);

@@ -13,7 +13,10 @@ import type { IModel3d } from '../data/models/model-3d.ts';
 import { Model3d } from '../data/models/model-3d.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
+import { enqueueModel3dReconstruction } from '../jobs/queues/model-3d-reconstruction-queue.ts';
+import type { ProcessedModel3d } from './model-3d-processor.ts';
 import { Model3dProcessor } from './model-3d-processor.ts';
+import { VideoProcessor } from './video-processor.ts';
 
 /** Fully populated 3D model, as returned to API mappers. */
 type ValidModel3d = WithPopulatedOwnership<IModel3d>;
@@ -35,6 +38,7 @@ async function createModel3d(
 
   const model3d = await upsertOwnedDocument(Model3d, undefined, user, {
     /* Data */
+    status: 'ready',
     modelUrl: processedModel3d.modelUrl,
     mimeType: processedModel3d.mimeType,
     fileSize: processedModel3d.fileSize,
@@ -45,6 +49,68 @@ async function createModel3d(
   }
 
   return model3d;
+}
+
+type CreateModel3dFromVideoInput = {
+  base64: string;
+  mimeType: string;
+};
+
+/**
+ * Stores the source video and creates a `Model3d` in 'processing' status,
+ * then queues the reconstruction job. The worker (see
+ * `jobs/workers/model-3d-reconstruction-worker.ts`) fills in `modelUrl` and
+ * flips `status` to 'ready'/'failed' once the job finishes.
+ */
+async function createModel3dFromVideo(
+  user: IUser,
+  input: CreateModel3dFromVideoInput
+): Promise<ValidModel3d> {
+  const videoProcessor = new VideoProcessor();
+  const { videoPath } = await videoProcessor.processVideoFromBase64(
+    input.base64,
+    input.mimeType
+  );
+
+  const model3d = await upsertOwnedDocument(Model3d, undefined, user, {
+    /* Data */
+    status: 'processing',
+  }).populate<PopulatedOwnership>([...OWNERSHIP_POPULATE]);
+
+  if (!model3d) {
+    throw new ResourceNotFound('Model3d creation failed');
+  }
+
+  await enqueueModel3dReconstruction({
+    model3dId: model3d._id.toString(),
+    videoPath,
+  });
+
+  return model3d;
+}
+
+/** Called by the reconstruction worker once a job succeeds. */
+async function completeModel3dReconstruction(
+  id: string,
+  processed: ProcessedModel3d
+): Promise<void> {
+  await Model3d.updateOne(
+    { _id: id },
+    {
+      status: 'ready',
+      modelUrl: processed.modelUrl,
+      mimeType: processed.mimeType,
+      fileSize: processed.fileSize,
+    }
+  );
+}
+
+/** Called by the reconstruction worker once a job fails. */
+async function failModel3dReconstruction(
+  id: string,
+  error: string
+): Promise<void> {
+  await Model3d.updateOne({ _id: id }, { status: 'failed', error });
 }
 
 async function addModel3dCollaborator(
@@ -97,8 +163,11 @@ async function deleteModel3d(user: IUser, id: string): Promise<void> {
 
 export {
   addModel3dCollaborator,
+  completeModel3dReconstruction,
   createModel3d,
+  createModel3dFromVideo,
   deleteModel3d,
+  failModel3dReconstruction,
   removeModel3dCollaborator,
 };
 export type { ValidModel3d };

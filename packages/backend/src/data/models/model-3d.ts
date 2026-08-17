@@ -1,3 +1,5 @@
+import type { Model3dStatus } from '@jrposada/fit-log-shared/common/model-3d/model-3d-statuses';
+import { MODEL_3D_STATUSES } from '@jrposada/fit-log-shared/common/model-3d/model-3d-statuses';
 import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
@@ -7,25 +9,39 @@ import { ownershipFields } from './_collaborator.ts';
 export interface IModel3d
   extends WithTimestamps<Document<Types.ObjectId>>, WithOwnership {
   /* Data */
-  modelUrl: string;
-  mimeType: string;
-  fileSize: number;
+  status: Model3dStatus;
+  /** Set once `status` is 'ready'. */
+  modelUrl?: string;
+  mimeType?: string;
+  fileSize?: number;
+  /** Set once `status` is 'failed'. */
+  error?: string;
 }
 
 const model3dSchema = new Schema<IModel3d>(
   {
     /* Data */
+    status: {
+      type: String,
+      enum: [...MODEL_3D_STATUSES],
+      required: true,
+      default: 'ready',
+    },
     modelUrl: {
       type: String,
-      required: true,
+      required: false,
     },
     mimeType: {
       type: String,
-      required: true,
+      required: false,
     },
     fileSize: {
       type: Number,
-      required: true,
+      required: false,
+    },
+    error: {
+      type: String,
+      required: false,
     },
 
     /* Ownership */

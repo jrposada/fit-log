@@ -15,8 +15,14 @@ export class FilesService {
     return path.join(FilesService.baseDir(), 'public');
   }
 
+  /** Files never served directly to clients (e.g. source capture videos). */
+  public static privateDir(): string {
+    return path.join(FilesService.baseDir(), 'private');
+  }
+
   public static async ensureDirectories(): Promise<void> {
     await fs.mkdir(FilesService.baseDir(), { recursive: true });
     await fs.mkdir(FilesService.publicDir(), { recursive: true });
+    await fs.mkdir(FilesService.privateDir(), { recursive: true });
   }
 }
