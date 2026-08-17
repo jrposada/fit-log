@@ -1,19 +1,23 @@
 import { Platform } from 'react-native';
 
 // ---------------------------------------------------------------------------
-// Surfaces – 5-level tonal hierarchy (light mode, warm-gray progression)
+// Surfaces – Kinetic Dark tonal hierarchy (dark-mode-first slate/navy)
 // ---------------------------------------------------------------------------
 export const surfaces = {
-  /** Pure white. Primary content cards, modals, sheets. */
-  base: '#FFFFFF',
-  /** Very faint warm gray. Elevated cards, selected states, input fields. */
-  raised: '#FAFAF9',
+  /** Base cards, modals, sheets. */
+  base: '#171f33',
+  /** Elevated cards, selected states, input fields. */
+  raised: '#222a3d',
   /** The page itself. Screen/scroll backgrounds. */
-  page: '#F4F3F1',
+  page: '#0b1326',
   /** Subtle recessed areas. Collapsible headers, chips, subdued cards. */
-  sunken: '#ECEAE7',
+  sunken: '#131b2e',
   /** Strongest contrast from base. Nav bars, footer bars, overlays. */
-  overlay: '#E4E2DE',
+  overlay: '#060e20',
+  /** Brightest surface. Floating cards (session flyover) that must pop off the page. */
+  bright: '#31394d',
+  /** Modal/sheet backdrop scrim. */
+  scrim: 'rgba(6, 14, 32, 0.8)',
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -21,60 +25,64 @@ export const surfaces = {
 // ---------------------------------------------------------------------------
 export const ink = {
   /** Primary text. Headings, body copy, input values. */
-  primary: '#1A1A19',
+  primary: '#dae2fd',
   /** Secondary text. Subtitles, descriptions, meta. */
-  secondary: '#6B6966',
+  secondary: '#c6c9ab',
   /** Tertiary text. Placeholders, timestamps, disabled hints. */
-  tertiary: '#9C9891',
+  tertiary: '#909378',
   /** Disabled text. Truly non-interactive. */
-  disabled: '#C5C1BB',
-  /** Inverse text. On dark/accent backgrounds. */
-  inverse: '#FFFFFF',
+  disabled: '#5c6270',
+  /** Inverse text. On lime/light-accent backgrounds. */
+  inverse: '#2c3400',
 } as const;
 
 // ---------------------------------------------------------------------------
-// Accent – single primary accent (deep forest green)
+// Accent – electric lime primary, cyan secondary
 // ---------------------------------------------------------------------------
 export const accent = {
-  /** Primary accent. CTAs, active tab, focused inputs, links. */
-  primary: '#2D6A4F',
+  /** Primary accent. CTAs, active tab, focused/active states. */
+  primary: '#d2f000',
   /** Hover/press state or slight emphasis. */
-  emphasis: '#1B4332',
+  emphasis: '#b8d300',
   /** Very light tint for selected backgrounds, chips, badges. */
-  subtle: 'rgba(45, 106, 79, 0.08)',
+  subtle: 'rgba(210, 240, 0, 0.08)',
   /** Medium tint for icon backgrounds, progress fills. */
-  muted: 'rgba(45, 106, 79, 0.15)',
-  /** Text on accent-colored backgrounds. */
-  onAccent: '#FFFFFF',
+  muted: 'rgba(210, 240, 0, 0.15)',
+  /** Text on lime-colored backgrounds. */
+  onAccent: '#2c3400',
+  /** Secondary accent (cyan). Links, secondary data viz, focus rings. */
+  secondary: '#00eefc',
+  /** Text on cyan-colored backgrounds. */
+  onSecondary: '#00363a',
 } as const;
 
 // ---------------------------------------------------------------------------
 // Semantic – status colors
 // ---------------------------------------------------------------------------
 export const semantic = {
-  success: '#2D6A4F',
-  destructive: '#C1292E',
-  warning: '#D4870E',
-  error: '#C1292E',
+  success: '#d2f000',
+  destructive: '#ffb4ab',
+  warning: '#f59e0b',
+  error: '#ffb4ab',
 
-  successSubtle: 'rgba(45, 106, 79, 0.08)',
-  successMuted: '#EAF4EF',
-  destructiveSubtle: 'rgba(193, 41, 46, 0.08)',
-  destructiveMuted: '#FCEAEA',
-  warningSubtle: 'rgba(212, 135, 14, 0.08)',
-  warningMuted: '#FDF3E4',
+  successSubtle: 'rgba(210, 240, 0, 0.08)',
+  successMuted: 'rgba(210, 240, 0, 0.15)',
+  destructiveSubtle: 'rgba(255, 180, 171, 0.08)',
+  destructiveMuted: 'rgba(147, 0, 10, 0.35)',
+  warningSubtle: 'rgba(245, 158, 11, 0.08)',
+  warningMuted: 'rgba(245, 158, 11, 0.18)',
 } as const;
 
 // ---------------------------------------------------------------------------
 // Palette – named colors for feature card icons / illustrations
 // ---------------------------------------------------------------------------
 export const palette = {
-  green: '#2D6A4F',
-  blue: '#1A659E',
-  amber: '#D4870E',
-  plum: '#7B2D8B',
-  coral: '#C1292E',
-  gold: '#B8860B',
+  green: '#d2f000',
+  blue: '#00eefc',
+  amber: '#f59e0b',
+  plum: '#d4e4fa',
+  coral: '#ffb4ab',
+  gold: '#b8d300',
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -82,72 +90,111 @@ export const palette = {
 // ---------------------------------------------------------------------------
 export const borders = {
   /** For input fields and interactive boundaries. */
-  subtle: '#E0DDD8',
+  subtle: '#454932',
   /** Default separator when a line IS needed. */
-  default: '#D5D2CC',
+  default: '#454932',
   /** Strong borders for focused inputs or key affordances. */
-  strong: '#B8B4AD',
+  strong: '#909378',
 } as const;
 
 // ---------------------------------------------------------------------------
-// Typography – 7-rung semantic scale (system fonts only)
+// Typography – 7-rung semantic scale, Inter (UI) + JetBrains Mono (data)
 // ---------------------------------------------------------------------------
+const FONT_INTER = 'Inter_400Regular';
+const FONT_INTER_SEMIBOLD = 'Inter_600SemiBold';
+const FONT_INTER_BOLD = 'Inter_700Bold';
+const FONT_INTER_EXTRABOLD = 'Inter_800ExtraBold';
+const FONT_MONO_MEDIUM = 'JetBrainsMono_500Medium';
+const FONT_MONO_SEMIBOLD = 'JetBrainsMono_600SemiBold';
+
 export const typography = {
   /** Large brand text. App name, splash text. */
   jumbo: {
-    fontSize: 32,
-    lineHeight: 38,
-    fontWeight: '700' as const,
-    letterSpacing: -0.4,
+    fontFamily: FONT_INTER_EXTRABOLD,
+    fontSize: 48,
+    lineHeight: 56,
+    fontWeight: '800' as const,
+    letterSpacing: -0.96,
   },
   /** Large screen titles. */
   display: {
-    fontSize: 28,
-    lineHeight: 34,
+    fontFamily: FONT_INTER_BOLD,
+    fontSize: 32,
+    lineHeight: 40,
     fontWeight: '700' as const,
-    letterSpacing: -0.3,
+    letterSpacing: -0.32,
   },
   /** Section-level headings inside a screen. */
   heading: {
-    fontSize: 20,
-    lineHeight: 26,
+    fontFamily: FONT_INTER_SEMIBOLD,
+    fontSize: 24,
+    lineHeight: 32,
     fontWeight: '600' as const,
-    letterSpacing: -0.2,
+    letterSpacing: 0,
   },
   /** Card titles, modal titles, screen-header title. */
   title: {
-    fontSize: 17,
-    lineHeight: 22,
+    fontFamily: FONT_INTER_SEMIBOLD,
+    fontSize: 18,
+    lineHeight: 28,
     fontWeight: '600' as const,
-    letterSpacing: -0.1,
+    letterSpacing: 0,
   },
   /** Default body text. Descriptions, paragraphs, input values. */
   body: {
-    fontSize: 15,
-    lineHeight: 22,
+    fontFamily: FONT_INTER,
+    fontSize: 16,
+    lineHeight: 24,
     fontWeight: '400' as const,
     letterSpacing: 0,
   },
   /** Secondary body. Subtitles, context lines, helper text. */
   callout: {
+    fontFamily: FONT_INTER,
     fontSize: 14,
     lineHeight: 20,
     fontWeight: '400' as const,
     letterSpacing: 0,
   },
-  /** Small meta text, badges, timestamps, tab labels. */
+  /** Small meta text, badges, timestamps, tab labels. Uppercase label-caps. */
   caption: {
+    fontFamily: FONT_INTER_BOLD,
     fontSize: 12,
     lineHeight: 16,
-    fontWeight: '500' as const,
-    letterSpacing: 0.2,
+    fontWeight: '700' as const,
+    letterSpacing: 0.6,
+    textTransform: 'uppercase' as const,
   },
   /** Tiny labels, version text, fine print. */
   overline: {
+    fontFamily: FONT_INTER_SEMIBOLD,
     fontSize: 11,
     lineHeight: 14,
     fontWeight: '600' as const,
     letterSpacing: 0.5,
+  },
+} as const;
+
+/**
+ * Monospaced "data" rungs (JetBrains Mono) for numeric readouts: stat values,
+ * timers, counts, distances. Kept separate from the semantic 7-rung scale
+ * since data text is a font-family swap layered on top of a size choice, not
+ * another semantic rung.
+ */
+export const dataTypography = {
+  lg: {
+    fontFamily: FONT_MONO_SEMIBOLD,
+    fontSize: 20,
+    lineHeight: 24,
+    fontWeight: '600' as const,
+    letterSpacing: 0,
+  },
+  sm: {
+    fontFamily: FONT_MONO_MEDIUM,
+    fontSize: 14,
+    lineHeight: 20,
+    fontWeight: '500' as const,
+    letterSpacing: 0,
   },
 } as const;
 
@@ -169,47 +216,50 @@ export const spacing = {
 } as const;
 
 // ---------------------------------------------------------------------------
-// Radii – expanded with semantic aliases
+// Radii – soft/technical scale per Kinetic Dark shape language
 // ---------------------------------------------------------------------------
 export const radii = {
-  xs: 4,
-  sm: 6,
-  md: 8,
-  lg: 12,
-  xl: 16,
+  xs: 2,
+  sm: 4,
+  md: 6,
+  lg: 8,
+  xl: 12,
   full: 9999,
 
   // Semantic aliases
-  card: 12,
-  button: 8,
-  input: 8,
-  badge: 6,
+  card: 8,
+  button: 4,
+  input: 4,
+  badge: 4,
   chip: 9999,
 } as const;
 
 // ---------------------------------------------------------------------------
-// Shadows
+// Shadows / glow – flat surfaces with borders, glow replaces elevation
 // ---------------------------------------------------------------------------
 export const shadows = {
   card: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    ...Platform.select({ android: { elevation: 2 } }),
+    ...Platform.select({ android: { elevation: 0 } }),
   },
   cardElevated: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    ...Platform.select({ android: { elevation: 3 } }),
+    ...Platform.select({ android: { elevation: 0 } }),
   },
   cardSubtle: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    ...Platform.select({ android: { elevation: 1 } }),
+    ...Platform.select({ android: { elevation: 0 } }),
+  },
+  /** "Active Elevation" glow for live/selected states — replaces shadow-based elevation. */
+  glow: {
+    shadowColor: accent.primary,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    ...Platform.select({ android: { elevation: 4 } }),
+  },
+  glowStrong: {
+    shadowColor: accent.primary,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 20,
+    ...Platform.select({ android: { elevation: 6 } }),
   },
 } as const;

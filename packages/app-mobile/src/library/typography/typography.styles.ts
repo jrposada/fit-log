@@ -1,8 +1,8 @@
 import { StyleSheet, TextStyle } from 'react-native';
 
-import { accent, ink, semantic, typography } from '../theme';
+import { accent, dataTypography, ink, semantic, typography } from '../theme';
 
-export type TypographySize = keyof typeof typography;
+export type TypographySize = keyof typeof typography | 'dataLg' | 'dataSm';
 
 export type TypographyColor =
   | 'primary'
@@ -11,6 +11,7 @@ export type TypographyColor =
   | 'disabled'
   | 'inverse'
   | 'accent'
+  | 'secondaryAccent'
   | 'error'
   | 'warning';
 
@@ -25,6 +26,9 @@ export const sizeStyles = StyleSheet.create<Record<TypographySize, TextStyle>>({
   callout: { ...typography.callout },
   caption: { ...typography.caption },
   overline: { ...typography.overline },
+  /** JetBrains Mono numeric readouts — stat values, timers, counts. */
+  dataLg: { ...dataTypography.lg },
+  dataSm: { ...dataTypography.sm },
 });
 
 export const colorMap: Record<TypographyColor, string> = {
@@ -34,6 +38,7 @@ export const colorMap: Record<TypographyColor, string> = {
   disabled: ink.disabled,
   inverse: ink.inverse,
   accent: accent.primary,
+  secondaryAccent: accent.secondary,
   error: semantic.error,
   warning: semantic.warning,
 };

@@ -2,6 +2,7 @@ export { commonStyles } from './common-styles';
 export {
   accent,
   borders,
+  dataTypography,
   ink,
   palette,
   radii,
