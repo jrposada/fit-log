@@ -3,12 +3,13 @@ import {
   canDelete,
   canEdit,
 } from '@jrposada/fit-log-shared/models/auth/with-ownership';
-import type { Location } from '@jrposada/fit-log-shared/models/locations/location';
 import { useImagesPost } from '@jrposada/fit-log-shared-react/api/images/use-images-post';
 import { useLocationsById } from '@jrposada/fit-log-shared-react/api/locations/use-locations-by-id';
 import { useLocationsDelete } from '@jrposada/fit-log-shared-react/api/locations/use-locations-delete';
 import { useLocationsPut } from '@jrposada/fit-log-shared-react/api/locations/use-locations-put';
 import { useMe } from '@jrposada/fit-log-shared-react/api/me/use-me';
+import { useModel3dsFromVideoPost } from '@jrposada/fit-log-shared-react/api/model-3ds/use-model-3ds-from-video-post';
+import { useModel3dsPost } from '@jrposada/fit-log-shared-react/api/model-3ds/use-model-3ds-post';
 import { useSectorsBatchDelete } from '@jrposada/fit-log-shared-react/api/sectors/use-sectors-batch-delete';
 import { useSectorsBatchPut } from '@jrposada/fit-log-shared-react/api/sectors/use-sectors-batch-put';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -49,19 +50,6 @@ type LocationDetailNavigationProp = NativeStackNavigationProp<
 >;
 
 type LocationDetailRouteProp = RouteProp<RootStackParamList, 'LocationDetail'>;
-
-/**
- * The form only lets a climb reference a 3D model, not upload/manage one
- * directly — so the sector's `models3d` pool is carried through as plain
- * ids, the same way `climbs` already is, rather than as editable objects
- * like `images`.
- */
-function toFormSectors(sectors: Location['sectors']): FormData['sectors'] {
-  return sectors.map((sector) => ({
-    ...sector,
-    models3d: sector.models3d.map((model) => model.id),
-  }));
-}
 
 const LocationDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -132,6 +120,16 @@ const LocationDetailScreen: FunctionComponent = () => {
       toast.show(t('climbing.failed_upload_image', { error }), 'destructive');
     },
   });
+  const model3dsPost = useModel3dsPost({
+    onError: (error) => {
+      toast.show(t('climbing.failed_upload_model3d', { error }), 'destructive');
+    },
+  });
+  const model3dsFromVideoPost = useModel3dsFromVideoPost({
+    onError: (error) => {
+      toast.show(t('climbing.failed_upload_model3d', { error }), 'destructive');
+    },
+  });
   const deleteLocation = useLocationsDelete({
     onSuccess: () => {
       toast.show(t('climbing.location_deleted_message'), 'success');
@@ -167,20 +165,53 @@ const LocationDetailScreen: FunctionComponent = () => {
       return result;
     })();
 
-    const sectorsWithUpdatedStatus = sectorsWithImages.map((sector, index) => {
-      const sectorDirtyFields = methods.formState.dirtyFields.sectors?.[index];
+    // Upload pending 3D models (video → queued job, or a finished model file)
+    const sectorsWithModels3d = await (async () => {
+      const result = [...sectorsWithImages];
+      for (let sIdx = 0; sIdx < result.length; sIdx++) {
+        const sector = result[sIdx]!;
+        if (sector._status === 'deleted') continue;
 
-      if (
-        sector.id &&
-        sector._status !== 'new' &&
-        sector._status !== 'deleted' &&
-        Object.keys(sectorDirtyFields ?? {}).length > 0
-      ) {
-        return { ...sector, _status: 'updated' as const };
+        const updatedModels3d = [];
+        for (const model of sector.models3d) {
+          if (model._status === 'new' && model.base64 && model.mimeType) {
+            const savedModel =
+              model.kind === 'video'
+                ? await model3dsFromVideoPost.mutateAsync({
+                    base64: model.base64,
+                    mimeType: model.mimeType,
+                  })
+                : await model3dsPost.mutateAsync({
+                    base64: model.base64,
+                    mimeType: model.mimeType,
+                  });
+            updatedModels3d.push(savedModel);
+          } else {
+            updatedModels3d.push(model);
+          }
+        }
+        result[sIdx] = { ...sector, models3d: updatedModels3d };
       }
+      return result;
+    })();
 
-      return sector;
-    });
+    const sectorsWithUpdatedStatus = sectorsWithModels3d.map(
+      (sector, index) => {
+        const sectorDirtyFields =
+          methods.formState.dirtyFields.sectors?.[index];
+
+        if (
+          sector.id &&
+          sector._status !== 'new' &&
+          sector._status !== 'deleted' &&
+          Object.keys(sectorDirtyFields ?? {}).length > 0
+        ) {
+          return { ...sector, _status: 'updated' as const };
+        }
+
+        return sector;
+      }
+    );
 
     const sectorsToDelete = sectorsWithUpdatedStatus.filter(
       (s): s is typeof s & { _status: 'deleted'; id: string } =>
@@ -225,6 +256,10 @@ const LocationDetailScreen: FunctionComponent = () => {
               .filter((image) => image._status !== 'deleted')
               .map((image) => image.id)
               .filter((id): id is string => !!id),
+            models3d: sector.models3d
+              .filter((model) => model._status !== 'deleted')
+              .map((model) => model.id)
+              .filter((id): id is string => !!id),
           })),
         });
         result.sectors.forEach((s) => sectorsId.add(s.id));
@@ -258,7 +293,7 @@ const LocationDetailScreen: FunctionComponent = () => {
         latitude: existingLocation.latitude,
         longitude: existingLocation.longitude,
         googleMapsId: existingLocation.googleMapsId,
-        sectors: toFormSectors(existingLocation.sectors),
+        sectors: existingLocation.sectors,
       });
       initializedRef.current = true;
     }
@@ -273,7 +308,7 @@ const LocationDetailScreen: FunctionComponent = () => {
         latitude: existingLocation.latitude,
         longitude: existingLocation.longitude,
         googleMapsId: existingLocation.googleMapsId,
-        sectors: toFormSectors(existingLocation.sectors),
+        sectors: existingLocation.sectors,
       });
     }
     setIsEditMode(true);
@@ -418,6 +453,8 @@ const LocationDetailScreen: FunctionComponent = () => {
 
   const isSubmitting =
     imagesPost.isPending ||
+    model3dsPost.isPending ||
+    model3dsFromVideoPost.isPending ||
     sectorsBatchPut.isPending ||
     sectorsBatchDelete.isPending ||
     locationsPut.isPending;

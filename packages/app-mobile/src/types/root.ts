@@ -15,6 +15,7 @@ export type RootStackParamList = {
   ClimbingSessionDetail: { sessionId: string };
   MapPointPicker: { latitude?: number; longitude?: number } | undefined;
   ImagePicker: undefined;
+  Model3dPicker: undefined;
 };
 
 export type ProfileScreenProps = NativeStackScreenProps<

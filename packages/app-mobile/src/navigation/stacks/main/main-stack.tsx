@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ImagePickerScreen } from '../../../library/image-picker';
 import { MapPointPickerScreen } from '../../../library/map-point-picker';
+import { Model3dPickerScreen } from '../../../library/model-3d-picker';
 import { RootStackParamList } from '../../../types/routes';
 import Header from '../../common/header';
 import ClimbDetailScreen from './routes/climb-detail/climb-detail-screen';
@@ -77,6 +78,14 @@ const MainStack: FunctionComponent = () => {
       <Stack.Screen
         name="ImagePicker"
         component={ImagePickerScreen}
+        options={{
+          headerShown: true,
+          presentation: 'modal',
+        }}
+      />
+      <Stack.Screen
+        name="Model3dPicker"
+        component={Model3dPickerScreen}
         options={{
           headerShown: true,
           presentation: 'modal',

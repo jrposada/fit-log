@@ -15,10 +15,13 @@ import Animated, { FadeIn } from 'react-native-reanimated';
 import FormTextArea from '../../../../library/form/form-text-area';
 import FormTextInput from '../../../../library/form/form-text-input';
 import { useFormReadonly } from '../../../../library/form/use-form-readonly';
+import { Icon } from '../../../../library/icon';
 import IconButton from '../../../../library/icon-button/icon-button';
 import { ImageGalleryModal } from '../../../../library/image-gallery-modal';
 import { ImagePickerEvents } from '../../../../library/image-picker';
-import { spacing } from '../../../../library/theme';
+import { Model3dPickerEvents } from '../../../../library/model-3d-picker';
+import { accent, semantic, spacing } from '../../../../library/theme';
+import { useToast } from '../../../../library/toast';
 import { Typography } from '../../../../library/typography';
 import { FormData } from './form-location';
 import { styles } from './form-location-sectors.styles';
@@ -27,6 +30,7 @@ const FormLocationSectors: FunctionComponent = () => {
   const { t } = useTranslation();
   const isReadonly = useFormReadonly();
   const navigation = useNavigation();
+  const toast = useToast();
   const { control, setValue } = useFormContext<FormData>();
   const watchedSectors = useWatch({ control, name: 'sectors' });
   const allSectors = useMemo(() => watchedSectors || [], [watchedSectors]);
@@ -37,6 +41,7 @@ const FormLocationSectors: FunctionComponent = () => {
   const editingSectorIndexRef = useRef<number | null>(null);
   const tempIdCounter = useRef(0);
   const imageTempIdCounter = useRef(0);
+  const model3dTempIdCounter = useRef(0);
 
   const [galleryState, setGalleryState] = useState<{
     visible: boolean;
@@ -106,6 +111,55 @@ const FormLocationSectors: FunctionComponent = () => {
     [allSectors, setValue]
   );
 
+  const handleDeleteModel3d = useCallback(
+    (sectorIndex: number, modelIndex: number) => {
+      const currentSectors = [...allSectors];
+      if (!currentSectors[sectorIndex]) {
+        return;
+      }
+      const sector = { ...currentSectors[sectorIndex] };
+
+      if (!sector.models3d?.length) {
+        return;
+      }
+
+      const model = sector.models3d[modelIndex]!;
+
+      if (model._status === 'new') {
+        sector.models3d = sector.models3d.filter((_, i) => i !== modelIndex);
+      } else {
+        sector.models3d = sector.models3d.map((m, i) =>
+          i === modelIndex ? { ...m, _status: 'deleted' as const } : m
+        );
+      }
+
+      currentSectors[sectorIndex] = sector;
+      setValue('sectors', currentSectors, { shouldDirty: true });
+    },
+    [allSectors, setValue]
+  );
+
+  const handleRestoreModel3d = useCallback(
+    (sectorIndex: number, modelIndex: number) => {
+      const currentSectors = [...allSectors];
+      if (!currentSectors[sectorIndex]) {
+        return;
+      }
+      const sector = { ...currentSectors[sectorIndex] };
+
+      if (!sector.models3d?.length) {
+        return;
+      }
+
+      sector.models3d = sector.models3d.map((m, i) =>
+        i === modelIndex ? { ...m, _status: undefined } : m
+      );
+      currentSectors[sectorIndex] = sector;
+      setValue('sectors', currentSectors, { shouldDirty: true });
+    },
+    [allSectors, setValue]
+  );
+
   // Subscribe to image picker results — store locally, upload deferred to submit
   useEffect(() => {
     const unsubscribe = ImagePickerEvents.subscribe((imageData) => {
@@ -129,6 +183,33 @@ const FormLocationSectors: FunctionComponent = () => {
       };
 
       existingSector.images = [...existingSector.images, pendingImage];
+
+      setValue('sectors', currentSectors, { shouldDirty: true });
+    });
+    return unsubscribe;
+  }, [allSectors, setValue]);
+
+  // Subscribe to 3D model picker results — store locally, upload deferred to submit
+  useEffect(() => {
+    const unsubscribe = Model3dPickerEvents.subscribe((result) => {
+      if (editingSectorIndexRef.current === null) return;
+
+      const currentSectors = [...allSectors];
+      const existingSector = currentSectors[editingSectorIndexRef.current];
+      if (!existingSector) {
+        return;
+      }
+
+      model3dTempIdCounter.current += 1;
+      const pendingModel: FormData['sectors'][number]['models3d'][number] = {
+        _status: 'new',
+        _tempId: `model3d-temp-${model3dTempIdCounter.current}`,
+        kind: result.kind,
+        base64: result.base64,
+        mimeType: result.mimeType,
+      };
+
+      existingSector.models3d = [...existingSector.models3d, pendingModel];
 
       setValue('sectors', currentSectors, { shouldDirty: true });
     });
@@ -161,6 +242,22 @@ const FormLocationSectors: FunctionComponent = () => {
   const handleEditSector = (index: number) => {
     editingSectorIndexRef.current = index;
     navigation.navigate('ImagePicker' as never);
+  };
+
+  const handleAddModel3d = (index: number) => {
+    editingSectorIndexRef.current = index;
+    navigation.navigate('Model3dPicker' as never);
+  };
+
+  const handleModel3dPress = (
+    model: FormData['sectors'][number]['models3d'][number]
+  ) => {
+    if (model.status === 'failed') {
+      toast.show(
+        model.error || t('climbing.model3d_status_failed'),
+        'destructive'
+      );
+    }
   };
 
   const handleDeleteSector = (index: number) => {
@@ -228,6 +325,9 @@ const FormLocationSectors: FunctionComponent = () => {
             const visibleImages = isReadonly
               ? sector.images?.filter((img) => img._status !== 'deleted')
               : sector.images;
+            const visibleModels3d = isReadonly
+              ? sector.models3d?.filter((m) => m._status !== 'deleted')
+              : sector.models3d;
             return (
               <View key={sector.id || sector._tempId || index}>
                 <View
@@ -326,6 +426,108 @@ const FormLocationSectors: FunctionComponent = () => {
                           <Pressable
                             style={styles.addImageTile}
                             onPress={() => handleEditSector(actualIndex)}
+                          >
+                            <Typography size="display" color="secondary">
+                              +
+                            </Typography>
+                          </Pressable>
+                        )}
+                      </ScrollView>
+                    </View>
+                  )}
+                  {((visibleModels3d && visibleModels3d.length > 0) ||
+                    (!isReadonly && !isSectorDeleted)) && (
+                    <View style={styles.models3dContainer}>
+                      <Typography
+                        size="callout"
+                        weight="medium"
+                        style={{ marginBottom: spacing.sm }}
+                      >
+                        {t('climbing.models3d')}
+                      </Typography>
+                      <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={styles.models3dScroll}
+                        contentContainerStyle={
+                          !isReadonly ? styles.models3dScrollContent : undefined
+                        }
+                      >
+                        {visibleModels3d?.map((model, modelIndex) => {
+                          const isModelDeleted = model._status === 'deleted';
+                          const status = model.status ?? 'processing';
+                          const statusIcon =
+                            status === 'ready'
+                              ? 'view-in-ar'
+                              : status === 'failed'
+                                ? 'error'
+                                : 'hourglass-top';
+                          const statusColor =
+                            status === 'ready'
+                              ? accent.primary
+                              : status === 'failed'
+                                ? semantic.error
+                                : semantic.warning;
+                          const statusLabel = t(
+                            status === 'ready'
+                              ? 'climbing.model3d_status_ready'
+                              : status === 'failed'
+                                ? 'climbing.model3d_status_failed'
+                                : 'climbing.model3d_status_processing'
+                          );
+                          return (
+                            <View
+                              key={model.id || model._tempId}
+                              style={[
+                                styles.model3dWrapper,
+                                isModelDeleted && styles.model3dDeleted,
+                              ]}
+                            >
+                              {!isReadonly && !isSectorDeleted && (
+                                <IconButton
+                                  icon={isModelDeleted ? 'undo' : 'close'}
+                                  size="sm"
+                                  variant={
+                                    isModelDeleted ? 'default' : 'destructive'
+                                  }
+                                  style={styles.deleteModel3dButton}
+                                  onPress={() =>
+                                    isModelDeleted
+                                      ? handleRestoreModel3d(
+                                          actualIndex,
+                                          modelIndex
+                                        )
+                                      : handleDeleteModel3d(
+                                          actualIndex,
+                                          modelIndex
+                                        )
+                                  }
+                                />
+                              )}
+                              <Pressable
+                                disabled={isSectorDeleted}
+                                style={styles.model3dTile}
+                                onPress={() => handleModel3dPress(model)}
+                              >
+                                <Icon
+                                  icon={statusIcon}
+                                  size="lg"
+                                  color={statusColor}
+                                />
+                                <Typography
+                                  size="caption"
+                                  style={styles.model3dStatusText}
+                                >
+                                  {statusLabel}
+                                </Typography>
+                              </Pressable>
+                            </View>
+                          );
+                        })}
+                        {!isReadonly && !isSectorDeleted && (
+                          <Pressable
+                            style={styles.addModel3dTile}
+                            onPress={() => handleAddModel3d(actualIndex)}
                           >
                             <Typography size="display" color="secondary">
                               +

@@ -93,4 +93,51 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  models3dContainer: {
+    marginTop: spacing.md,
+  },
+  models3dScroll: {
+    flexDirection: 'row',
+  },
+  models3dScrollContent: {
+    paddingTop: spacing.sm,
+    paddingRight: spacing.sm,
+  },
+  model3dWrapper: {
+    marginRight: spacing.sm,
+    position: 'relative',
+  },
+  model3dTile: {
+    width: 100,
+    height: 100,
+    borderRadius: radii.md,
+    backgroundColor: borders.default,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: spacing.xs,
+  },
+  model3dDeleted: {
+    opacity: 0.4,
+  },
+  deleteModel3dButton: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    zIndex: 1,
+  },
+  addModel3dTile: {
+    width: 100,
+    height: 100,
+    borderRadius: radii.md,
+    borderWidth: 2,
+    borderColor: borders.subtle,
+    borderStyle: 'dashed',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  model3dStatusText: {
+    fontSize: 11,
+    textAlign: 'center',
+  },
 });
