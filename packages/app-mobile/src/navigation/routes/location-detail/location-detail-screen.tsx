@@ -23,6 +23,9 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Alert, Linking, Platform, View } from 'react-native';
 
+import type { FormData } from '../../../features/climbing/components/location-detail/form-location';
+import { formDataSchema } from '../../../features/climbing/components/location-detail/form-location';
+import FormLocationSectors from '../../../features/climbing/components/location-detail/form-location-sectors';
 import Button from '../../../library/button';
 import EmptyState from '../../../library/empty-state';
 import FormMapPointPicker from '../../../library/form/form-map-point-picker';
@@ -36,11 +39,8 @@ import Section from '../../../library/section';
 import { accent, surfaces } from '../../../library/theme';
 import { useToast } from '../../../library/toast';
 import UnsavedBanner from '../../../library/unsaved-banner';
-import Header from '../../../navigation/common/header';
 import { RootStackParamList } from '../../../types/routes';
-import type { FormData } from '../components/location-detail/form-location';
-import { formDataSchema } from '../components/location-detail/form-location';
-import FormLocationSectors from '../components/location-detail/form-location-sectors';
+import Header from '../../common/header';
 
 type LocationDetailNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
