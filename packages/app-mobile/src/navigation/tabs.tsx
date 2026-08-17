@@ -3,13 +3,13 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
-import ActivityScreen from '../features/activity/activity-screen';
 import ExploreScreen from '../features/explore/explore-screen';
 import { SportFilterProvider } from '../features/feed/sport-filter-context';
 import ActiveTrainingSessionFlyover from '../features/training-sessions/active-training-session/active-training-session-flyover';
 import { RootParamList } from '../types/routes';
 import BottomTabBar from './bottom-tab-bar';
 import Header from './common/header';
+import ActivityScreen from './routes/activity/activity-screen';
 import { homeOptions } from './routes/home/home-options';
 import HomeScreen from './routes/home/home-screen';
 

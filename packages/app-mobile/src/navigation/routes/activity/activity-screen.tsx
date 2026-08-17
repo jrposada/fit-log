@@ -8,26 +8,32 @@ import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
 
-import Button from '../../library/button';
-import Card from '../../library/card';
-import EmptyState from '../../library/empty-state';
-import { Icon, IconName } from '../../library/icon';
-import LoadingState from '../../library/loading-state';
-import Measure from '../../library/measure';
-import RefetchBar from '../../library/refetch-bar';
-import Screen from '../../library/screen';
-import Section from '../../library/section';
-import Stack from '../../library/stack';
-import Tabs, { TabBarItem } from '../../library/tabs';
-import { accent, ink, palette, spacing, typography } from '../../library/theme';
-import { Typography } from '../../library/typography';
-import { RootStackParamList } from '../../types/routes';
-import ClimbingStatsPanel from '../climbing/components/climbing-stats-panel/climbing-stats-panel';
-import FeedRow from '../feed/components/feed-row';
-import { navigateToSessionDetail } from '../feed/navigate-to-session-detail';
-import { SportFilter } from '../feed/sport-filter-context';
-import { SPORT_ICONS } from '../feed/sport-icons';
-import { useSportFilter } from '../feed/use-sport-filter';
+import ClimbingStatsPanel from '../../../features/climbing/components/climbing-stats-panel/climbing-stats-panel';
+import FeedRow from '../../../features/feed/components/feed-row';
+import { navigateToSessionDetail } from '../../../features/feed/navigate-to-session-detail';
+import { SportFilter } from '../../../features/feed/sport-filter-context';
+import { SPORT_ICONS } from '../../../features/feed/sport-icons';
+import { useSportFilter } from '../../../features/feed/use-sport-filter';
+import Button from '../../../library/button';
+import Card from '../../../library/card';
+import EmptyState from '../../../library/empty-state';
+import { Icon, IconName } from '../../../library/icon';
+import LoadingState from '../../../library/loading-state';
+import Measure from '../../../library/measure';
+import RefetchBar from '../../../library/refetch-bar';
+import Screen from '../../../library/screen';
+import Section from '../../../library/section';
+import Stack from '../../../library/stack';
+import Tabs, { TabBarItem } from '../../../library/tabs';
+import {
+  accent,
+  ink,
+  palette,
+  spacing,
+  typography,
+} from '../../../library/theme';
+import { Typography } from '../../../library/typography';
+import { RootStackParamList } from '../../../types/routes';
 
 /** Period keys arrive as "2026-06" (month) or "2026-W23" (ISO week). */
 const formatPeriodLabel = (period: string): string => {
