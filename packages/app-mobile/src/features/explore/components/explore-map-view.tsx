@@ -1,21 +1,26 @@
 import { Sport } from '@jrposada/fit-log-shared/common/sports/sports';
 import { ClimbSearchResult } from '@jrposada/fit-log-shared/models/climbs/climbs-search';
 import { Location } from '@jrposada/fit-log-shared/models/locations/location';
+import { useTrainingSessionsActive } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-active';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { FunctionComponent, useMemo } from 'react';
+import { FunctionComponent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Platform, Text } from 'react-native';
+import { Platform, TouchableOpacity, View } from 'react-native';
 import MapView, {
   Marker,
   PROVIDER_DEFAULT,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 
+import Button from '../../../library/button';
 import EmptyState from '../../../library/empty-state';
+import { Icon } from '../../../library/icon';
 import LoadingState from '../../../library/loading-state';
+import { accent } from '../../../library/theme';
+import { Typography } from '../../../library/typography';
 import { RootStackParamList } from '../../../types/routes';
-import { SPORT_ICONS } from '../../feed/sport-icons';
+import { useStartTrainingSession } from '../../training-sessions/active-training-session/use-start-training-session';
 import { styles } from './explore-map-view.styles';
 
 type ExploreMapViewNavigationProp =
@@ -43,6 +48,12 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
 }) => {
   const { t } = useTranslation();
   const navigation = useNavigation<ExploreMapViewNavigationProp>();
+  const { data: activeSession } = useTrainingSessionsActive();
+  const { handleStart, isPending: isStarting } = useStartTrainingSession();
+
+  const [selectedLocation, setSelectedLocation] = useState<
+    (Location & { sports: Sport[] }) | null
+  >(null);
 
   // A location with no sport-having sessions is meaningless on a map that
   // shows "every place the user trains" — never show a dead pin.
@@ -88,32 +99,90 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
       : DEFAULT_REGION;
   }, [pins]);
 
+  const routesCount = (location: Location) =>
+    location.sectors.reduce((total, sector) => total + sector.climbs.length, 0);
+
   return (
     <LoadingState isLoading={isLoading}>
       {pins.length === 0 ? (
         <EmptyState message={t('explore.map_empty')} />
       ) : (
-        <MapView
-          provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}
-          style={styles.map}
-          initialRegion={initialRegion}
-        >
-          {pins.map((pin) => (
-            <Marker
-              key={pin.id}
-              coordinate={{
-                latitude: pin.latitude,
-                longitude: pin.longitude,
-              }}
-              title={pin.name}
-              onPress={() =>
-                navigation.navigate('LocationDetail', { locationId: pin.id })
-              }
-            >
-              <Text style={styles.pin}>{SPORT_ICONS[pin.sports[0]!]}</Text>
-            </Marker>
-          ))}
-        </MapView>
+        <View style={styles.container}>
+          <MapView
+            provider={
+              Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE
+            }
+            style={styles.map}
+            initialRegion={initialRegion}
+            onPress={() => setSelectedLocation(null)}
+          >
+            {pins.map((pin) => {
+              const isSelected = pin.id === selectedLocation?.id;
+              return (
+                <Marker
+                  key={pin.id}
+                  coordinate={{
+                    latitude: pin.latitude,
+                    longitude: pin.longitude,
+                  }}
+                  title={pin.name}
+                  onPress={() => setSelectedLocation(pin)}
+                >
+                  <View style={[styles.pin, isSelected && styles.pinSelected]}>
+                    <Icon
+                      icon="landscape"
+                      size="sm"
+                      color={isSelected ? accent.onAccent : accent.primary}
+                    />
+                  </View>
+                </Marker>
+              );
+            })}
+          </MapView>
+
+          {selectedLocation && (
+            <View style={styles.detailCard}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('LocationDetail', {
+                    locationId: selectedLocation.id,
+                  })
+                }
+              >
+                <Typography size="title">{selectedLocation.name}</Typography>
+                <View style={styles.detailStatsRow}>
+                  <View style={styles.detailStat}>
+                    <Typography size="caption" color="secondary">
+                      {t('explore.pin_sectors', {
+                        count: selectedLocation.sectors.length,
+                      })}
+                    </Typography>
+                  </View>
+                  <View style={styles.detailStat}>
+                    <Typography size="dataSm" color="accent">
+                      {t('explore.pin_routes', {
+                        count: routesCount(selectedLocation),
+                      })}
+                    </Typography>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {!activeSession && (
+            <View style={styles.startSessionContainer} pointerEvents="box-none">
+              <Button
+                title={t('explore.start_session')}
+                icon="play-arrow"
+                variant="primary"
+                disabled={isStarting}
+                onPress={() => handleStart(selectedLocation?.id ?? null)}
+                style={styles.startSessionButton}
+              />
+            </View>
+          )}
+        </View>
       )}
     </LoadingState>
   );
