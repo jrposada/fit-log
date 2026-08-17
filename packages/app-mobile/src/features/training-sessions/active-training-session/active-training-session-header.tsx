@@ -28,7 +28,11 @@ const ActiveTrainingSessionHeader: FunctionComponent<
         <Typography size="title" weight="bold" color="accent">
           {duration}
         </Typography>
-        <Icon icon={isExpanded ? '⌃' : '⌄'} size="sm" color={accent.primary} />
+        <Icon
+          icon={isExpanded ? 'expand-less' : 'expand-more'}
+          size="sm"
+          color={accent.primary}
+        />
       </Stack>
     </Stack>
   );

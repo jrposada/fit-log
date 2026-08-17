@@ -121,7 +121,7 @@ const ClimbImageToolbar: FunctionComponent<{
         />
         <IconButton
           variant="destructive"
-          icon="🗑️"
+          icon="delete"
           size="sm"
           onPress={onDelete}
           disabled={!hasSelection}
@@ -131,7 +131,7 @@ const ClimbImageToolbar: FunctionComponent<{
     {onChangeImage && (
       <IconButton
         variant="default"
-        icon="📷"
+        icon="camera-alt"
         size="sm"
         onPress={onChangeImage}
         disabled={isImageUploading}

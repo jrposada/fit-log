@@ -46,10 +46,10 @@ const ClimbDetailHeader: FunctionComponent<ClimbDetailHeaderProps> = ({
       action={
         !isCreateMode && (
           <Stack direction="horizontal" gap="sm">
-            <IconButton icon="📍" onPress={onOpenMap} />
+            <IconButton icon="location-on" onPress={onOpenMap} />
             {canEdit && (
               <IconButton
-                icon={isEditMode && isDirty ? '⚠️' : '✏️'}
+                icon={isEditMode && isDirty ? 'warning' : 'edit'}
                 variant={isEditMode ? 'primary' : 'default'}
                 onPress={isEditMode ? onCancelEdit : onEnterEditMode}
               />

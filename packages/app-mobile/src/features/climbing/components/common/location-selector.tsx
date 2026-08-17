@@ -97,7 +97,7 @@ const LocationSelector: FunctionComponent<LocationSelectorProps> = ({
             </Typography>
             <Button
               title={t('actions.view')}
-              icon="👁️"
+              icon="visibility"
               variant="ghost"
               size="sm"
               onPress={handleEditLocation}

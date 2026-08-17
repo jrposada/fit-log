@@ -11,6 +11,7 @@ import { BarChart } from 'react-native-gifted-charts';
 import Button from '../../library/button';
 import Card from '../../library/card';
 import EmptyState from '../../library/empty-state';
+import { Icon, IconName } from '../../library/icon';
 import LoadingState from '../../library/loading-state';
 import Measure from '../../library/measure';
 import RefetchBar from '../../library/refetch-bar';
@@ -46,7 +47,7 @@ const Y_AXIS_GUTTER = spacing['3xl'];
 
 type SummaryCardData = {
   id: string;
-  icon: string;
+  icon: IconName;
   color: string;
   value: string;
   label: string;
@@ -56,9 +57,9 @@ const SummaryCard: FunctionComponent<{
   card: SummaryCardData;
   width: number;
 }> = ({ card, width }) => (
-  <Card variant="elevated" size="md" highlight={card.color} style={{ width }}>
+  <Card variant="flat" size="md" highlight={card.color} style={{ width }}>
     <Stack flex align="center" justify="center" gap="2xs">
-      <Typography size="title">{card.icon}</Typography>
+      <Icon icon={card.icon} size="md" color={card.color} />
       <Typography size="heading" weight="bold" style={{ color: card.color }}>
         {card.value}
       </Typography>
@@ -105,28 +106,28 @@ const ActivityScreen: FunctionComponent = () => {
     return [
       {
         id: 'sessions',
-        icon: '🗓️',
+        icon: 'event-available',
         color: palette.blue,
         value: String(summary.totalSessions),
         label: t('stats.summary_sessions'),
       },
       {
         id: 'active-days',
-        icon: '📅',
+        icon: 'event',
         color: palette.green,
         value: String(summary.totalActiveDays),
         label: t('stats.summary_active_days'),
       },
       {
         id: 'streak',
-        icon: '🔥',
+        icon: 'local-fire-department',
         color: palette.amber,
         value: String(summary.currentStreak),
         label: t('stats.summary_current_streak'),
       },
       {
         id: 'longest-streak',
-        icon: '🏆',
+        icon: 'emoji-events',
         color: palette.gold,
         value: String(summary.longestStreak),
         label: t('stats.summary_longest_streak'),
@@ -181,7 +182,7 @@ const ActivityScreen: FunctionComponent = () => {
                 </Measure>
 
                 {activityData.length > 0 && (
-                  <Card variant="elevated" size="lg">
+                  <Card variant="flat" size="lg">
                     <Stack gap="sm">
                       <Typography size="body" weight="semibold">
                         {t('stats.chart_title')}
@@ -214,7 +215,7 @@ const ActivityScreen: FunctionComponent = () => {
                 )}
 
                 {data.bySport.length > 0 && (
-                  <Card variant="elevated" size="lg">
+                  <Card variant="flat" size="lg">
                     <Stack gap="sm">
                       <Typography size="body" weight="semibold">
                         {t('stats.by_sport_title')}

@@ -106,7 +106,7 @@ const ClimbingSessionDetailScreen: FunctionComponent = () => {
                   key={sectorId}
                   title={name}
                   count={histories.length}
-                  icon="📍"
+                  icon="location-on"
                   expanded
                 >
                   {histories.map((history) => (

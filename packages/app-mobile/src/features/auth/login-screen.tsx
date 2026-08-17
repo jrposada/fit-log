@@ -8,6 +8,7 @@ import { Icon } from '../../library/icon';
 import Screen from '../../library/screen';
 import Separator from '../../library/separator';
 import Stack from '../../library/stack';
+import { accent } from '../../library/theme';
 import { Typography } from '../../library/typography';
 
 const LoginScreen: FunctionComponent = () => {
@@ -28,7 +29,12 @@ const LoginScreen: FunctionComponent = () => {
       paddingHorizontal="2xl"
     >
       <Stack align="center" gap="sm" spacer="5xl">
-        <Icon icon="💪" size="xl" spacer="md" />
+        <Icon
+          icon="fitness-center"
+          size="xl"
+          spacer="md"
+          color={accent.primary}
+        />
         <Typography size="jumbo" color="accent">
           {t('auth.appName')}
         </Typography>
@@ -48,7 +54,8 @@ const LoginScreen: FunctionComponent = () => {
           title={t('auth.signInWithGoogle')}
           onPress={() => loginWithIdp('google')}
           variant="outline"
-          icon="G"
+          icon="google"
+          iconFamily="brand"
         />
 
         {Platform.OS === 'ios' && (
@@ -56,7 +63,8 @@ const LoginScreen: FunctionComponent = () => {
             title={t('auth.signInWithApple')}
             onPress={() => loginWithIdp('apple')}
             variant="outline"
-            icon="&#xF8FF;"
+            icon="apple"
+            iconFamily="brand"
           />
         )}
       </Stack>

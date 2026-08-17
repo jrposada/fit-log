@@ -348,11 +348,11 @@ const LocationDetailScreen: FunctionComponent = () => {
             !isCreateMode ? (
               <View style={{ flexDirection: 'row', gap: 8 }}>
                 {existingLocation?.latitude && existingLocation?.longitude && (
-                  <IconButton icon="📍" onPress={handleOpenMap} />
+                  <IconButton icon="location-on" onPress={handleOpenMap} />
                 )}
                 {canEditLocation && (
                   <IconButton
-                    icon="✏️"
+                    icon="edit"
                     onPress={
                       isEditMode ? handleCancelEdit : handleEnterEditMode
                     }

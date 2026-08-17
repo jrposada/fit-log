@@ -79,7 +79,7 @@ const ExploreListView: FunctionComponent<ExploreListViewProps> = ({
                     key={sectorId}
                     title={name}
                     count={sectorClimbs.length}
-                    icon="📍"
+                    icon="location-on"
                     expanded={isExpanded}
                     onToggle={() => toggleSector(sectorId)}
                   >

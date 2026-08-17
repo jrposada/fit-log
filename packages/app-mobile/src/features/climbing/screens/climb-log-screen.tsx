@@ -157,7 +157,7 @@ const ClimbLogScreen: FunctionComponent = () => {
                       key={sectorId}
                       title={name}
                       count={sectorClimbs.length}
-                      icon="📍"
+                      icon="location-on"
                       expanded={isExpanded}
                       onToggle={() => toggleSector(sectorId)}
                     >

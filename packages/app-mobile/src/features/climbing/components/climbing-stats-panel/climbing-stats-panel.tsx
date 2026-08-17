@@ -9,6 +9,7 @@ import { BarChart, LineChart } from 'react-native-gifted-charts';
 
 import Card from '../../../../library/card';
 import EmptyState from '../../../../library/empty-state';
+import { Icon, IconName } from '../../../../library/icon';
 import LoadingState from '../../../../library/loading-state';
 import Measure from '../../../../library/measure';
 import Section from '../../../../library/section';
@@ -63,7 +64,7 @@ const CHART_COLORS = {
 
 type DashboardCardData = {
   id: string;
-  icon: string;
+  icon: IconName;
   color: string;
   value: string;
   label: string;
@@ -74,9 +75,9 @@ const DashboardCard: FunctionComponent<{
   card: DashboardCardData;
   width: number;
 }> = ({ card, width }) => (
-  <Card variant="elevated" size="md" highlight={card.color} style={{ width }}>
+  <Card variant="flat" size="md" highlight={card.color} style={{ width }}>
     <Stack flex align="center" justify="center" gap="2xs">
-      <Typography size="title">{card.icon}</Typography>
+      <Icon icon={card.icon} size="md" color={card.color} />
       <Typography size="heading" weight="bold" style={{ color: card.color }}>
         {card.value}
       </Typography>
@@ -117,7 +118,7 @@ const ChartCard: FunctionComponent<{
   legend: { label: string; color: string }[];
   children: (width: number) => ReactNode;
 }> = ({ title, legend, children }) => (
-  <Card variant="elevated" size="lg">
+  <Card variant="flat" size="lg">
     <Stack gap="sm">
       <Typography size="body" weight="semibold">
         {title}
@@ -253,7 +254,7 @@ const ClimbingStatsPanel: FunctionComponent = () => {
     return [
       {
         id: 'performance',
-        icon: '🏁',
+        icon: 'flag',
         color: palette.green,
         value: String(summary.sends),
         label: t('climbing.stats_card_sends'),
@@ -264,14 +265,14 @@ const ClimbingStatsPanel: FunctionComponent = () => {
       },
       {
         id: 'projects',
-        icon: '🚧',
+        icon: 'construction',
         color: palette.plum,
         value: String(summary.projects),
         label: t('climbing.stats_card_projects'),
       },
       {
         id: 'sessions',
-        icon: '🗓️',
+        icon: 'event-available',
         color: palette.blue,
         value: String(sessions.total),
         label: t('climbing.stats_sessions_total'),
@@ -300,10 +301,10 @@ const ClimbingStatsPanel: FunctionComponent = () => {
         ) : (
           <>
             <Stack gap="sm">
-              <Card variant="elevated" size="lg" highlight={palette.gold}>
+              <Card variant="flat" size="lg" highlight={palette.gold}>
                 <Stack direction="horizontal" align="center" gap="sm">
                   <Stack flex align="center" gap="2xs">
-                    <Typography size="heading">🏆</Typography>
+                    <Icon icon="emoji-events" size="lg" color={palette.gold} />
                     <Typography size="jumbo" style={{ color: palette.gold }}>
                       {heroPersonalBest}
                     </Typography>

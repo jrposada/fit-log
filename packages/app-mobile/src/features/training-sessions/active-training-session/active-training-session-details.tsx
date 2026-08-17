@@ -34,7 +34,7 @@ const ActiveTrainingSessionDetails: FunctionComponent<
       <Button
         title={t('climbing.session_stop_button')}
         variant="destructive"
-        icon="⏹️"
+        icon="stop"
         fullWidth
         onPress={onStop}
         disabled={isStopping}

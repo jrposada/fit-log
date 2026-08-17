@@ -80,7 +80,7 @@ const ClimbDetailFooter: FunctionComponent<ClimbDetailFooterProps> = ({
         {canDelete && (
           <IconButton
             variant="destructive"
-            icon="🗑️"
+            icon="delete"
             size="lg"
             onPress={onDelete}
             disabled={isDeleting}
