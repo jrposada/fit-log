@@ -21,9 +21,14 @@
     "lint:eslint": "eslint . --ext .ts,.tsx --max-warnings 0",
     "lint:format": "prettier . --check",
     "lint:types": "tsc --noEmit -p tsconfig.dev.json",
-    "lint": "run-p lint:*"
+    "lint": "run-p lint:*",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.4.2",
+    "@expo-google-fonts/jetbrains-mono": "^0.4.1",
+    "@expo/vector-icons": "^15.1.1",
     "@hookform/resolvers": "catalog:",
     "@jrposada/fit-log-shared": "workspace:*",
     "@jrposada/fit-log-shared-react": "workspace:*",
@@ -38,10 +43,12 @@
     "expo-auth-session": "~7.0.10",
     "expo-crypto": "~15.0.8",
     "expo-file-system": "~19.0.23",
+    "expo-font": "~14.0.12",
     "expo-haptics": "~15.0.8",
     "expo-image-picker": "~17.0.10",
     "expo-linear-gradient": "~15.0.8",
     "expo-secure-store": "~15.0.8",
+    "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
     "expo-web-browser": "~15.0.10",
     "fuse.js": "7.3.0",
