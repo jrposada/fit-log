@@ -1,4 +1,47 @@
 services:
+  # Runs the backend with tsx watch against your live source (bind-mounted
+  # below), but inside the `dev` image target — which carries colmap/ffmpeg/
+  # OpenMVS. Opt-in: `pnpm dev`/`dev:server` still run the backend directly
+  # on the host and don't need any of this. Reach for this service when you
+  # need the video-to-3D reconstruction pipeline to actually run.
+  backend:
+    container_name: backend
+    build:
+      context: ../..
+      dockerfile: packages/backend/Dockerfile
+      target: dev
+    env_file:
+      - .env
+    environment:
+      # Compose-internal service DNS names, overriding whatever .env has
+      # (host-oriented, e.g. localhost/LAN IP) for these two. Everything
+      # else in .env (KEYCLOAK_ENDPOINT, PUBLIC_FILES_BASE_URL, ...) must
+      # stay host/LAN-reachable since browsers and physical devices hit
+      # those directly too — see scripts/set-dev-ip.sh.
+      - DATABASE_ENDPOINT=mongodb://database:27017/fit-log
+      - REDIS_ENDPOINT=redis://redis:6379
+      - DATA_DIR=/repo/packages/backend/.data
+      # KEYCLOAK_ENDPOINT (LAN IP, from .env) stays as-is for the JWT issuer
+      # check — it must match what Keycloak baked into the token. But this
+      # container reaching that same LAN IP for its own JWKS fetch hits
+      # Docker Desktop's NAT hairpin limitation (a container can't reliably
+      # reach another container's published port via the host's LAN
+      # address), hence "socket hang up" on every login. Route the JWKS
+      # fetch over the compose network instead.
+      - KEYCLOAK_INTERNAL_ENDPOINT=http://keycloak:8080
+    ports:
+      - '3100:3100'
+    volumes:
+      - ../..:/repo
+      - repo-node-modules:/repo/node_modules
+      - backend-node-modules:/repo/packages/backend/node_modules
+      - shared-node-modules:/repo/packages/shared/node_modules
+      - pnpm-store:/pnpm-store
+    depends_on:
+      - database
+      - redis
+      - keycloak
+
   database:
     container_name: database
     image: 'mongo:latest'
@@ -58,4 +101,12 @@ volumes:
   opensearch-data:
     external: false
   redis-data:
+    external: false
+  repo-node-modules:
+    external: false
+  backend-node-modules:
+    external: false
+  shared-node-modules:
+    external: false
+  pnpm-store:
     external: false
