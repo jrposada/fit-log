@@ -18,6 +18,8 @@ interface ExploreFilterChipsProps {
   onLocationChange: (locationId: string) => void;
   locations: Location[];
   isLoadingLocations: boolean;
+  isOwnerFilterActive: boolean;
+  onOwnerFilterChange: (isActive: boolean) => void;
 }
 
 const ExploreFilterChips: FunctionComponent<ExploreFilterChipsProps> = ({
@@ -27,6 +29,8 @@ const ExploreFilterChips: FunctionComponent<ExploreFilterChipsProps> = ({
   onLocationChange,
   locations,
   isLoadingLocations,
+  isOwnerFilterActive,
+  onOwnerFilterChange,
 }) => {
   const { t } = useTranslation();
   const [isGradeSheetOpen, setGradeSheetOpen] = useState(false);
@@ -77,6 +81,19 @@ const ExploreFilterChips: FunctionComponent<ExploreFilterChipsProps> = ({
             <Icon icon="close" size="xs" color={accent.primary} />
           </TouchableOpacity>
         )}
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={[styles.chip, isOwnerFilterActive && styles.chipActive]}
+        onPress={() => onOwnerFilterChange(!isOwnerFilterActive)}
+      >
+        <Typography
+          size="callout"
+          weight="bold"
+          color={isOwnerFilterActive ? 'accent' : 'primary'}
+        >
+          {t('explore.filter_owner_mine')}
+        </Typography>
       </TouchableOpacity>
 
       <ExploreGradeSheet

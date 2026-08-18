@@ -14,13 +14,18 @@ function useClimbsSearch({
   grade,
   limit,
   locationId,
+  ownerId,
   search,
 }: ClimbsSearchQuery = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
   const { getToken, refreshToken, logout } = useAuth();
 
   return useQuery({
-    queryKey: ['climbs', 'search', { grade, limit, locationId, search }],
+    queryKey: [
+      'climbs',
+      'search',
+      { grade, limit, locationId, ownerId, search },
+    ],
     placeholderData: keepPreviousData,
     queryFn: query({
       defaultResponse: [],
@@ -35,6 +40,9 @@ function useClimbsSearch({
         }
         if (locationId) {
           params.append('locationId', locationId);
+        }
+        if (ownerId) {
+          params.append('ownerId', ownerId);
         }
         if (search) {
           params.append('search', search);

@@ -282,6 +282,7 @@
   "explore.filter_grade": "Grade",
   "explore.filter_grade_selected": "Grade ({{count}})",
   "explore.filter_location": "Location",
+  "explore.filter_owner_mine": "My climbs",
   "explore.grade_sheet_title": "Select Grade",
   "explore.location_sheet_title": "Select Location",
   "explore.location_sheet_search_placeholder": "Filter by name...",

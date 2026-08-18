@@ -63,15 +63,17 @@ type ClimbStatusInfo = {
 type FindClimbsOptions = {
   limit?: number;
   locationId?: string;
+  ownerId?: string;
   grade?: string[];
   search?: string;
 };
 
 function findClimbsQuery(options: FindClimbsOptions) {
-  const { limit, locationId, grade, search } = options;
+  const { limit, locationId, ownerId, grade, search } = options;
 
   const query = Climb.find({
     ...(locationId ? { location: locationId } : {}),
+    ...(ownerId ? { owner: ownerId } : {}),
     ...(grade && grade.length > 0 ? { grade: { $in: grade } } : {}),
     ...(search && search.trim()
       ? {

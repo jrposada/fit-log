@@ -3,6 +3,7 @@ import { ClimbGrade } from '@jrposada/fit-log-shared/common/climbs/grades';
 import { climbsSearchQuerySchema } from '@jrposada/fit-log-shared/models/climbs/climbs-search';
 import { useClimbsSearch } from '@jrposada/fit-log-shared-react/api/climbs/use-climbs-search';
 import { useLocations } from '@jrposada/fit-log-shared-react/api/locations/use-locations';
+import { useMe } from '@jrposada/fit-log-shared-react/api/me/use-me';
 import { useDebounce } from '@jrposada/fit-log-shared-react/hooks/use-debounce';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { FormProvider, useForm, useWatch } from 'react-hook-form';
@@ -39,6 +40,7 @@ const ExploreContent: FunctionComponent<{
   onFiltersChange: (values: ExploreFilters) => void;
 }> = ({ initialValues, onFiltersChange }) => {
   const { t } = useTranslation();
+  const { data: me } = useMe();
 
   const methods = useForm<FormData>({
     resolver: zodResolver(climbsSearchQuerySchema),
@@ -48,6 +50,7 @@ const ExploreContent: FunctionComponent<{
   const search = useWatch({ control: methods.control, name: 'search' });
   const grade = useWatch({ control: methods.control, name: 'grade' });
   const locationId = useWatch({ control: methods.control, name: 'locationId' });
+  const ownerId = useWatch({ control: methods.control, name: 'ownerId' });
 
   const debouncedSearch = useDebounce(search || '', 300);
 
@@ -56,13 +59,15 @@ const ExploreContent: FunctionComponent<{
       search: debouncedSearch,
       grade: (grade as ClimbGrade[] | undefined) ?? [],
       locationId: locationId || '',
+      ownerId: ownerId || '',
     });
-  }, [debouncedSearch, grade, locationId, onFiltersChange]);
+  }, [debouncedSearch, grade, locationId, ownerId, onFiltersChange]);
 
   const hasActiveFilters =
     Boolean(debouncedSearch.trim()) ||
     (grade && grade.length > 0) ||
-    Boolean(locationId);
+    Boolean(locationId) ||
+    Boolean(ownerId);
 
   const {
     data: climbs = [],
@@ -70,6 +75,7 @@ const ExploreContent: FunctionComponent<{
     isFetching: isFetchingClimbs,
   } = useClimbsSearch({
     locationId: locationId || undefined,
+    ownerId: ownerId || undefined,
     grade: grade && grade.length > 0 ? (grade as ClimbGrade[]) : undefined,
     search: debouncedSearch.trim() || undefined,
   });
@@ -128,6 +134,12 @@ const ExploreContent: FunctionComponent<{
               }
               locations={locations}
               isLoadingLocations={isLoadingLocations}
+              isOwnerFilterActive={Boolean(me) && ownerId === me?.id}
+              onOwnerFilterChange={(isActive) =>
+                methods.setValue('ownerId', isActive && me ? me.id : '', {
+                  shouldDirty: true,
+                })
+              }
             />
           </ScrollView>
         </View>

@@ -6,6 +6,7 @@ export type ExploreFilters = {
   search: string;
   grade: ClimbGrade[];
   locationId: string;
+  ownerId: string;
 };
 
 const STORAGE_KEY = 'explore_filters';
@@ -13,6 +14,7 @@ const DEFAULT_FILTERS: ExploreFilters = {
   search: '',
   grade: [],
   locationId: '',
+  ownerId: '',
 };
 
 /**

@@ -12,6 +12,7 @@ export type ClimbsSearchQuery = {
   grade?: ClimbGrade[];
   limit?: number;
   locationId?: string;
+  ownerId?: string;
   search?: string;
   status?: ClimbHistoryStatus | 'project';
 };
@@ -24,6 +25,7 @@ export const climbsSearchQuerySchema = z.object({
     .optional(),
   limit: z.coerce.number().int().positive().optional(),
   locationId: z.string().optional(),
+  ownerId: z.string().optional(),
   search: z.string().optional(),
   status: z.enum(CLIMB_HISTORY_QUERY_STATUSES).optional(),
 });
