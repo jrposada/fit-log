@@ -12,15 +12,17 @@ import { Model3dProcessor } from '../../../services/model-3d-processor.ts';
 import { createBullMqRedisConnection } from '../../infrastructure/redis.ts';
 import type { Model3dReconstructionJobData } from '../../queues/model-3d-reconstruction-queue.ts';
 import { MODEL_3D_RECONSTRUCTION_QUEUE_NAME } from '../../queues/model-3d-reconstruction-queue.ts';
+import type { ReconstructionResult } from './model-3d-reconstruction-worker-processor.ts';
 import { reconstructionProcessor } from './model-3d-reconstruction-worker-processor.ts';
 
 async function processJob(
   job: Job<Model3dReconstructionJobData>
 ): Promise<void> {
   const { model3dId, videoPath } = job.data;
+  let result: ReconstructionResult | undefined;
 
   try {
-    const result = await reconstructionProcessor.reconstruct(videoPath);
+    result = await reconstructionProcessor.reconstruct(videoPath);
 
     const modelBuffer = await fs.readFile(result.modelPath);
     const processed = await new Model3dProcessor().processModelFromBuffer(
@@ -36,6 +38,7 @@ async function processJob(
     throw error;
   } finally {
     await fs.rm(videoPath, { force: true });
+    await result?.cleanup();
   }
 }
 

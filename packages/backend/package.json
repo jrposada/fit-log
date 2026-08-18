@@ -20,6 +20,7 @@
     "dev:db": "docker-compose --project-name fit-log up -d",
     "dev:server": "TSX_TSCONFIG_PATH=tsconfig.dev.json tsx watch src/index.ts",
     "dev": "run-p dev:*",
+    "docker:dev": "docker-compose --project-name fit-log up --build backend",
     "format": "prettier . --write",
     "start": "node dist/index.js",
     "lint:eslint": "eslint .",
@@ -37,6 +38,7 @@
     "jsonwebtoken": "9.0.3",
     "jwks-rsa": "3.2.2",
     "mongoose": "catalog:",
+    "obj2gltf": "^3.2.0",
     "sharp": "0.34.5",
     "uuid": "catalog:",
     "zod": "catalog:"
