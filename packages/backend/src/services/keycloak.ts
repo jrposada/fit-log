@@ -35,8 +35,17 @@ class Keycloak {
     });
     this.realm = process.env.KEYCLOAK_REALM;
 
+    // Host/LAN-reachable (KEYCLOAK_ENDPOINT) is what browsers/physical
+    // devices use, and what's baked into the token's issuer claim — but
+    // when the backend itself runs in a container (docker-compose's
+    // `backend` service), that same LAN address can be unreachable from
+    // inside the container (Docker Desktop NAT hairpin). This lets the
+    // JWKS fetch go over the container network instead while `this.url`
+    // (used for the issuer check below) stays LAN-facing either way.
+    const jwksBaseUrl = process.env.KEYCLOAK_INTERNAL_ENDPOINT || this.url;
+
     this.jwks = jwksClient({
-      jwksUri: `${this.url}/realms/${encodeURIComponent(this.realm)}/protocol/openid-connect/certs`,
+      jwksUri: `${jwksBaseUrl}/realms/${encodeURIComponent(this.realm)}/protocol/openid-connect/certs`,
       cache: true,
       cacheMaxAge: 10 * 60 * 1000, // 10 minutes
       rateLimit: true,
