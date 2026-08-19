@@ -1,5 +1,7 @@
 import { spawn } from 'node:child_process';
 
+import Logger from '../../../../infrastructure/logger.ts';
+
 const OUTPUT_TAIL_CHARS = 2000;
 
 export interface RunBinaryOptions {
@@ -27,6 +29,13 @@ export function runBinary(
   options: RunBinaryOptions
 ): Promise<RunBinaryResult> {
   return new Promise((resolve, reject) => {
+    const startedAt = Date.now();
+    Logger.debug(
+      `[reconstruction] ${options.stageName}: starting "${command} ${args.join(' ')}"${
+        options.cwd ? ` (cwd: ${options.cwd})` : ''
+      }`
+    );
+
     const child = spawn(command, args, {
       cwd: options.cwd,
       stdio: ['ignore', 'pipe', 'pipe'],
@@ -38,6 +47,9 @@ export function runBinary(
 
     const timer = setTimeout(() => {
       timedOut = true;
+      Logger.debug(
+        `[reconstruction] ${options.stageName}: timed out after ${options.timeoutMs}ms, killing`
+      );
       child.kill('SIGKILL');
     }, options.timeoutMs);
 
@@ -59,6 +71,7 @@ export function runBinary(
 
     child.on('close', (code) => {
       clearTimeout(timer);
+      const durationMs = Date.now() - startedAt;
 
       if (timedOut) {
         reject(
@@ -73,6 +86,9 @@ export function runBinary(
         const tail =
           stderr.trim().slice(-OUTPUT_TAIL_CHARS) ||
           stdout.trim().slice(-OUTPUT_TAIL_CHARS);
+        Logger.debug(
+          `[reconstruction] ${options.stageName}: failed after ${durationMs}ms with exit code ${code}`
+        );
         reject(
           new Error(
             `${options.stageName}: "${command}" exited with code ${code}${
@@ -83,6 +99,14 @@ export function runBinary(
         return;
       }
 
+      const outTail =
+        stderr.trim().slice(-OUTPUT_TAIL_CHARS) ||
+        stdout.trim().slice(-OUTPUT_TAIL_CHARS);
+      Logger.debug(
+        `[reconstruction] ${options.stageName}: finished in ${durationMs}ms (exit 0)${
+          outTail ? ` — ${outTail}` : ''
+        }`
+      );
       resolve({ stdout });
     });
   });

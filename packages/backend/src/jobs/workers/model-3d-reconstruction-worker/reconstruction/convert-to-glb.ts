@@ -2,6 +2,8 @@ import fs from 'node:fs/promises';
 
 import obj2gltf from 'obj2gltf';
 
+import Logger from '../../../../infrastructure/logger.ts';
+
 /**
  * Model3dProcessor stores a single buffer per model, so the multi-file OBJ +
  * MTL + texture that OpenMVS produces is bundled into one self-contained GLB
@@ -13,4 +15,7 @@ export async function convertObjToGlb(
 ): Promise<void> {
   const glb = (await obj2gltf(objPath, { binary: true })) as Buffer;
   await fs.writeFile(glbPath, glb);
+  Logger.debug(
+    `[reconstruction] convert-to-glb: wrote ${(glb.byteLength / 1024 / 1024).toFixed(2)}MB to "${glbPath}"`
+  );
 }

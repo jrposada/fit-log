@@ -4,6 +4,7 @@ import path from 'node:path';
 
 import { v4 as uuid } from 'uuid';
 
+import Logger from '../../../infrastructure/logger.ts';
 import { convertObjToGlb } from './reconstruction/convert-to-glb.ts';
 import { extractFrames } from './reconstruction/extract-frames.ts';
 import { runColmapSfm } from './reconstruction/run-colmap.ts';
@@ -38,16 +39,31 @@ class ColmapOpenMvsReconstructionProcessor implements ReconstructionProcessor {
     const workDir = await fs.mkdtemp(
       path.join(os.tmpdir(), 'model-3d-reconstruction-')
     );
+    const startedAt = Date.now();
+    Logger.debug(
+      `[reconstruction] starting pipeline for "${videoPath}" in workDir "${workDir}"`
+    );
 
     try {
       const framesDir = path.join(workDir, 'frames');
+      Logger.debug('[reconstruction] stage 1/4: extracting frames');
       await extractFrames(videoPath, framesDir);
 
+      Logger.debug('[reconstruction] stage 2/4: running colmap SfM');
       const denseDir = await runColmapSfm(framesDir, workDir);
+
+      Logger.debug('[reconstruction] stage 3/4: running openmvs pipeline');
       const texturedObjPath = await runOpenMvsPipeline(denseDir);
 
       const glbPath = path.join(workDir, `${uuid()}.glb`);
+      Logger.debug(
+        '[reconstruction] stage 4/4: converting textured obj to glb'
+      );
       await convertObjToGlb(texturedObjPath, glbPath);
+
+      Logger.debug(
+        `[reconstruction] pipeline finished in ${Date.now() - startedAt}ms — output "${glbPath}"`
+      );
 
       return {
         modelPath: glbPath,
@@ -55,6 +71,10 @@ class ColmapOpenMvsReconstructionProcessor implements ReconstructionProcessor {
         cleanup: () => removeDir(workDir),
       };
     } catch (error) {
+      Logger.debug(
+        `[reconstruction] pipeline failed after ${Date.now() - startedAt}ms in workDir "${workDir}":`,
+        error
+      );
       await removeDir(workDir);
       throw error;
     }

@@ -21,9 +21,16 @@ async function processJob(
   const { model3dId, videoPath } = job.data;
   let result: ReconstructionResult | undefined;
 
+  Logger.debug(
+    `[reconstruction] job ${job.id}: picked up model3d ${model3dId}, video "${videoPath}"`
+  );
+
   try {
     result = await reconstructionProcessor.reconstruct(videoPath);
 
+    Logger.debug(
+      `[reconstruction] job ${job.id}: reading produced model from "${result.modelPath}"`
+    );
     const modelBuffer = await fs.readFile(result.modelPath);
     const processed = await new Model3dProcessor().processModelFromBuffer(
       modelBuffer,
@@ -31,9 +38,15 @@ async function processJob(
     );
 
     await completeModel3dReconstruction(model3dId, processed);
+    Logger.debug(
+      `[reconstruction] job ${job.id}: model3d ${model3dId} marked ready`
+    );
   } catch (error) {
     const message =
       error instanceof Error ? error.message : 'Reconstruction failed';
+    Logger.debug(
+      `[reconstruction] job ${job.id}: model3d ${model3dId} failed — ${message}`
+    );
     await failModel3dReconstruction(model3dId, message);
     throw error;
   } finally {

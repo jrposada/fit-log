@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
+import Logger from '../../../../infrastructure/logger.ts';
 import { reconstructionConfig } from './config.ts';
 import { runBinary } from './exec.ts';
 
@@ -49,6 +50,9 @@ export async function extractFrames(
   const duration = await getVideoDurationSeconds(videoPath);
   const rawFps = reconstructionConfig.maxFrames / duration;
   const fps = Math.min(Math.max(rawFps, MIN_FPS), MAX_FPS);
+  Logger.debug(
+    `[reconstruction] extract-frames: video duration ${duration.toFixed(2)}s, sampling at ${fps.toFixed(3)} fps (raw ${rawFps.toFixed(3)}), max ${reconstructionConfig.maxFrames} frames`
+  );
 
   await runBinary(
     reconstructionConfig.ffmpegBin,
@@ -81,6 +85,10 @@ export async function extractFrames(
         'short or too low quality for reconstruction'
     );
   }
+
+  Logger.debug(
+    `[reconstruction] extract-frames: extracted ${frames.length} frame(s) into ${framesDir}`
+  );
 
   return frames.sort();
 }
