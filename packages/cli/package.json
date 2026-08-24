@@ -1,5 +1,5 @@
 {
-  "name": "@jrposada/fit-log-dev-tools",
+  "name": "@jrposada/fit-log-cli",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -12,14 +12,14 @@
     "url": "git+https://github.com/jrposada/fit-log.git"
   },
   "bin": {
-    "dev-tools": "./bin/dev-tools.ts"
+    "cli": "./bin/cli.ts"
   },
   "engines": {
     "node": ">=22",
     "pnpm": "^10"
   },
   "scripts": {
-    "start": "tsx bin/dev-tools.ts",
+    "start": "tsx bin/cli.ts",
     "lint:eslint": "eslint .",
     "lint:format": "prettier . --check",
     "lint:types": "tsc --noEmit -p tsconfig.dev.json",

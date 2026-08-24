@@ -11,7 +11,7 @@ export default function registerMoonboardCommand(program: Command): void {
     .description(
       'Fetch problems and benchmarks from Moonboard and print JSON to stdout.\n' +
         'Requires MOONBOARD_USERNAME and MOONBOARD_PASSWORD in .env.\n\n' +
-        'Usage: pnpm dev-tools moonboard fetch > src/commands/seed/mock-data/moonboard-problems.json'
+        'Usage: pnpm cli moonboard fetch > src/commands/seed/mock-data/moonboard-problems.json'
     )
     .action(async () => {
       const username = process.env.MOONBOARD_USERNAME;
@@ -44,7 +44,7 @@ export default function registerMoonboardCommand(program: Command): void {
     console.log('Available moonboard commands:');
     console.log();
     console.log(
-      '  dev-tools moonboard fetch   Fetch problems/benchmarks and print JSON to stdout'
+      '  cli moonboard fetch   Fetch problems/benchmarks and print JSON to stdout'
     );
     console.log();
   });

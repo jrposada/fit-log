@@ -90,7 +90,7 @@ export default function registerAuthCommand(program: Command): void {
     console.log();
     console.log('Available auth commands:');
     console.log();
-    console.log('  dev-tools auth token    Get a bearer token from Keycloak');
+    console.log('  cli auth token    Get a bearer token from Keycloak');
     console.log();
   });
 }

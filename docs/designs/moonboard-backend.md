@@ -118,12 +118,12 @@ Moonboard concepts map to existing fit-log models:
 
 `Location`, `Sector`, and `Climb` models gain a mandatory `source: string` field (default `'user'` for existing records — no migration script needed). `Climb` gains `sourceId?: string` as the upsert deduplication key.
 
-### CLI Fetch Command — `dev-tools moonboard fetch`
+### CLI Fetch Command — `cli moonboard fetch`
 
-A new `moonboard` command group in the `dev-tools` CLI with a `fetch` subcommand:
+A new `moonboard` command group in the `cli` CLI with a `fetch` subcommand:
 
 ```
-pnpm dev-tools moonboard fetch > packages/dev-tools/src/commands/seed/mock-data/moonboard-problems.json
+pnpm cli moonboard fetch > packages/cli/src/commands/seed/mock-data/moonboard-problems.json
 ```
 
 - Reads `MOONBOARD_USERNAME` / `MOONBOARD_PASSWORD` from `.env`
@@ -132,7 +132,7 @@ pnpm dev-tools moonboard fetch > packages/dev-tools/src/commands/seed/mock-data/
 
 The resulting file is committed to the repo. `setup data` reads it to seed Moonboard problems into the local dev DB — no live Moonboard credentials needed during normal dev setup.
 
-The command lives in `packages/dev-tools/src/commands/moonboard/`, registered in `dev-tools/src/index.ts`.
+The command lives in `packages/cli/src/commands/moonboard/`, registered in `cli/src/index.ts`.
 
 ### Seeder Integration
 
@@ -174,10 +174,10 @@ No changes to `User` model or `MeResponse`.
 Once the API discovery step is done and the SDK is pointed at the new
 endpoints:
 
-1. `pnpm dev-tools moonboard fetch > .../moonboard-problems.json` exits 0 and
+1. `pnpm cli moonboard fetch > .../moonboard-problems.json` exits 0 and
    produces a non-empty JSON file with the new shape
    (`{ setups: [{ setup, problems }, …] }`).
-2. `dev-tools setup data` re-seeds the local DB without error; Climbs with
+2. `cli setup data` re-seeds the local DB without error; Climbs with
    `source: 'system'` and `sourceId` show up under the "Moonboard" Location
    in the Climbing tab.
 3. Running `setup data` twice in a row does not duplicate Climbs (upsert on

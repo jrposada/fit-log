@@ -18,7 +18,7 @@ export async function seedMoonboardProblems(): Promise<void> {
       '⚠ No moonboard-problems.json found — skipping Moonboard seed.'
     );
     console.log(
-      '  Run `pnpm dev-tools moonboard fetch > packages/dev-tools/src/commands/seed/mock-data/moonboard-problems.json` to generate it.'
+      '  Run `pnpm cli moonboard fetch > packages/cli/src/commands/seed/mock-data/moonboard-problems.json` to generate it.'
     );
     return;
   }

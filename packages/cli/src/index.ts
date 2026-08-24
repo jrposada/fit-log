@@ -13,7 +13,7 @@ import registerSetupCommand from './commands/setup';
 
 const program = new Command();
 
-program.name('dev-tools').description('Developer CLI tool');
+program.name('cli').description('Developer CLI tool');
 
 registerAuthCommand(program);
 registerModel3dCommand(program);

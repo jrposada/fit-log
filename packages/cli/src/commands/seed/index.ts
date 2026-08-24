@@ -25,22 +25,16 @@ export default function registerSeedCommand(program: Command): void {
     console.log();
     console.log('Available seed commands:');
     console.log();
+    console.log('  cli seed images            Seed N images for an owner');
+    console.log('  cli seed climbs            Seed N climbs in a sector');
+    console.log('  cli seed sectors           Seed N sectors in a location');
+    console.log('  cli seed locations         Seed N locations (full subtree)');
     console.log(
-      '  dev-tools seed images            Seed N images for an owner'
+      '  cli seed climb-histories   Seed a climb history for a climb'
     );
-    console.log('  dev-tools seed climbs            Seed N climbs in a sector');
+    console.log('  cli seed workouts          Seed N workouts');
     console.log(
-      '  dev-tools seed sectors           Seed N sectors in a location'
-    );
-    console.log(
-      '  dev-tools seed locations         Seed N locations (full subtree)'
-    );
-    console.log(
-      '  dev-tools seed climb-histories   Seed a climb history for a climb'
-    );
-    console.log('  dev-tools seed workouts          Seed N workouts');
-    console.log(
-      '  dev-tools seed training-sessions Seed a standalone training session'
+      '  cli seed training-sessions Seed a standalone training session'
     );
     console.log();
   });

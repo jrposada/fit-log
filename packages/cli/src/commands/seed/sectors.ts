@@ -120,7 +120,7 @@ export function registerSeedSectorsCommand(parent: Command): void {
         if (!owner) {
           throw new Error(
             `No Mongo user found with email "${options.ownerEmail}". ` +
-              `Run \`dev-tools setup data\` first or pass a different --owner-email.`
+              `Run \`cli setup data\` first or pass a different --owner-email.`
           );
         }
 

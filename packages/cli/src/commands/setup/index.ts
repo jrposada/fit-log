@@ -15,8 +15,8 @@ export default function registerSetupCommand(program: Command): void {
     console.log();
     console.log('Available setup commands:');
     console.log();
-    console.log('  dev-tools setup data    Seed DB with mock data');
-    console.log('  dev-tools setup nuke    Delete all items from the database');
+    console.log('  cli setup data    Seed DB with mock data');
+    console.log('  cli setup nuke    Delete all items from the database');
     console.log();
   });
 }
