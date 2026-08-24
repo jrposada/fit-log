@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-import Logger from '../../../../infrastructure/logger.ts';
+import Logger from '../../infrastructure/logger.ts';
 import { reconstructionConfig } from './config.ts';
 import { runBinary } from './exec.ts';
 

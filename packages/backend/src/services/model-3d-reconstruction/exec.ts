@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process';
 
-import Logger from '../../../../infrastructure/logger.ts';
+import Logger from '../../infrastructure/logger.ts';
 
 const OUTPUT_TAIL_CHARS = 2000;
 

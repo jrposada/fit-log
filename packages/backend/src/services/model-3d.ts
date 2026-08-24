@@ -13,7 +13,7 @@ import type { IModel3d } from '../data/models/model-3d.ts';
 import { Model3d } from '../data/models/model-3d.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
-import { enqueueModel3dReconstruction } from '../jobs/queues/model-3d-reconstruction-queue.ts';
+import { enqueueModel3dReconstruction } from '../jobs/model-3d-reconstruction/model-3d-reconstruction-queue.ts';
 import type { ProcessedModel3d } from './model-3d-processor.ts';
 import { Model3dProcessor } from './model-3d-processor.ts';
 import { VideoProcessor } from './video-processor.ts';
@@ -59,7 +59,7 @@ type CreateModel3dFromVideoInput = {
 /**
  * Stores the source video and creates a `Model3d` in 'processing' status,
  * then queues the reconstruction job. The worker (see
- * `jobs/workers/model-3d-reconstruction-worker/model-3d-reconstruction-worker.ts`)
+ * `jobs/model-3d-reconstruction/model-3d-reconstruction-worker.ts`)
  * fills in `modelUrl` and
  * flips `status` to 'ready'/'failed' once the job finishes.
  */

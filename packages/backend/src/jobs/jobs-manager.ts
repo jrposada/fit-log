@@ -2,8 +2,7 @@ import { batch } from '@jrposada/fit-log-shared/utils/batch';
 
 import type { Lifecycle } from '../infrastructure/lifecycle.ts';
 import Logger from '../infrastructure/logger.ts';
-import registerQueues from './queues/queues.ts';
-import registerWorkers from './workers/workers.ts';
+import { registerQueues, registerWorkers } from './registry.ts';
 
 /**
  * Owns every background worker/queue in the app. `index.ts` only ever talks

@@ -4,11 +4,11 @@ import path from 'node:path';
 
 import { v4 as uuid } from 'uuid';
 
-import Logger from '../../../infrastructure/logger.ts';
-import { convertObjToGlb } from './reconstruction/convert-to-glb.ts';
-import { extractFrames } from './reconstruction/extract-frames.ts';
-import { runColmapSfm } from './reconstruction/run-colmap.ts';
-import { runOpenMvsPipeline } from './reconstruction/run-openmvs.ts';
+import Logger from '../infrastructure/logger.ts';
+import { convertObjToGlb } from './model-3d-reconstruction/convert-to-glb.ts';
+import { extractFrames } from './model-3d-reconstruction/extract-frames.ts';
+import { runColmapSfm } from './model-3d-reconstruction/run-colmap.ts';
+import { runOpenMvsPipeline } from './model-3d-reconstruction/run-openmvs.ts';
 
 export type ReconstructionResult = {
   /** Absolute path to the produced glTF/GLB (or similar) on disk. */

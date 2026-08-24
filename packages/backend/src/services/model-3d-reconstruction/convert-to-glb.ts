@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 
 import obj2gltf from 'obj2gltf';
 
-import Logger from '../../../../infrastructure/logger.ts';
+import Logger from '../../infrastructure/logger.ts';
 
 /**
  * Model3dProcessor stores a single buffer per model, so the multi-file OBJ +
