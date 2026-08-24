@@ -38,13 +38,22 @@ services:
       - shared-node-modules:/repo/packages/shared/node_modules
       - pnpm-store:/pnpm-store
     depends_on:
-      - database
-      - redis
-      - keycloak
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      keycloak:
+        condition: service_started
 
   database:
     container_name: database
     image: 'mongo:latest'
+    # Transactions (used e.g. by batchUpsertSectorsInSession) require a
+    # replica set — a standalone mongod rejects them with "Transaction
+    # numbers are only allowed on a replica set member or mongos". Run as a
+    # single-node replica set; the healthcheck initiates it on its first
+    # pass (rs.status() throws until then) and just confirms status after.
+    command: mongod --replSet rs0 --bind_ip_all
     ports:
       - '3200:27017'
     environment:
@@ -52,6 +61,18 @@ services:
     volumes:
       - mongodb-data:/data/db
       - mongodb-configdb:/data/configdb
+    healthcheck:
+      test: |
+        mongosh --quiet --eval '
+          try {
+            rs.status();
+          } catch (e) {
+            rs.initiate({ _id: "rs0", members: [{ _id: 0, host: "database:27017" }] });
+          }
+        '
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   keycloak:
     container_name: keycloak
