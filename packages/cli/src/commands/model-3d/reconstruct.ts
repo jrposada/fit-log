@@ -5,7 +5,7 @@ import { assert } from '@jrposada/fit-log-shared/utils/assert';
 import { upsertOwnedDocument } from '@backend/data/infrastructure/upsert-owned-document';
 import { Model3d } from '@backend/data/models/model-3d';
 import { User } from '@backend/data/models/user';
-import { enqueueModel3dReconstruction } from '@backend/jobs/queues/model-3d-reconstruction-queue';
+import { enqueueModel3dReconstruction } from '@backend/jobs/model-3d-reconstruction/model-3d-reconstruction-queue';
 import { VideoProcessor } from '@backend/services/video-processor';
 import type { Command } from 'commander';
 
