@@ -64,7 +64,22 @@ export async function runOpenMvsPipeline(denseDir: string): Promise<string> {
 
   await runBinary(
     openMvsBinPath('ReconstructMesh'),
-    ['-i', 'scene_dense.mvs', '-o', 'scene_mesh.ply'],
+    [
+      '-i',
+      'scene_dense.mvs',
+      '-o',
+      'scene_mesh.ply',
+      // Without free-space support, ReconstructMesh's Delaunay-based surface
+      // fit closes up any region between the camera trajectory and the
+      // scanned object that has sparse/no point support, "ballooning" the
+      // mesh out to include surface no camera ever actually saw. That
+      // fabricated surface is what makes the model look nonsensical, and
+      // since TextureMesh has no photo evidence for it, those faces get
+      // painted with a flat dummy color instead of real texture — the
+      // patchwork of solid colors seen in the output atlas.
+      '--free-space-support',
+      '1',
+    ],
     {
       cwd: denseDir,
       stageName: 'openmvs ReconstructMesh',
@@ -102,6 +117,20 @@ export async function runOpenMvsPipeline(denseDir: string): Promise<string> {
       `${texturedBase}.obj`,
       '--export-type',
       'obj',
+      // Both leveling passes blend/correct colors across patches using the
+      // photo overlap between views. On a short, low-texture capture (few
+      // frames, large uniform surfaces) that overlap is too weak for the
+      // math to stay well-conditioned, and it diverges: local leveling
+      // pushes whole patches to fully saturated, essentially random flat
+      // colors, and global leveling blacks out patches it can't reconcile.
+      // Disabling both leaves the raw best-view sample per face, which is
+      // consistently correct — verified against a real capture where only
+      // this combination produced a clean, fully photographic texture (see
+      // `dev-tools`/`cli` `model-3d reconstruct`).
+      '--global-seam-leveling',
+      '0',
+      '--local-seam-leveling',
+      '0',
     ],
     {
       cwd: denseDir,
