@@ -30,6 +30,7 @@ export function useStopTrainingSession(
           onPress: () => {
             stopSession.mutate({
               id: session.id,
+              sport: 'climbing',
               title: session.title,
               notes: session.notes,
               startedAt: session.startedAt,

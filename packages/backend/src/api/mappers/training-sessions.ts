@@ -21,6 +21,7 @@ function toApiDepopulatedTrainingSession(
   return {
     /* Data */
     id: model._id.toString(),
+    sport: model.sport,
     title: model.title,
     notes: model.notes,
     startedAt: model.startedAt.toISOString(),
@@ -44,6 +45,7 @@ function toApiTrainingSession(model: ValidTrainingSession): TrainingSession {
   return {
     /* Data */
     id: model._id.toString(),
+    sport: model.sport,
     title: model.title,
     notes: model.notes,
     startedAt: model.startedAt.toISOString(),

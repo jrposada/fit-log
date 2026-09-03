@@ -8,6 +8,7 @@ export function useStartTrainingSession() {
     const now = new Date();
 
     startTrainingSession({
+      sport: 'climbing',
       title: beautifyDate(now, 'YYYY MM DD'),
       startedAt: now.toUTCString(),
       location: locationId,

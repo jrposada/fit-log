@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import Card from '../../library/card';
 import EmptyState from '../../library/empty-state';
+import { Icon } from '../../library/icon';
 import LoadingState from '../../library/loading-state';
 import Separator from '../../library/separator';
 import Stack from '../../library/stack';
@@ -43,7 +44,7 @@ const TrainingSessionsList: FunctionComponent<TrainingSessionsListProps> = ({
               }
             >
               <Stack direction="horizontal" align="center" gap="sm" spacer="xs">
-                <Typography size="title">{SPORT_ICONS['climbing']}</Typography>
+                <Icon icon={SPORT_ICONS[session.sport]} size="md" />
                 <Typography size="body" weight="semibold" style={{ flex: 1 }}>
                   {session.title}
                 </Typography>

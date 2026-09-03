@@ -14,6 +14,7 @@ export type TrainingSessionsPutRequest = Omit<
 
 export const trainingSessionsPutRequestSchema = z.object({
   id: z.string().optional(),
+  sport: z.literal('climbing'),
   title: z.string().nonempty(),
   notes: z.string().optional(),
   startedAt: z.string().nonempty(),

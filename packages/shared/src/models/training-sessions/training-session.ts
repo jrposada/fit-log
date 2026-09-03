@@ -10,6 +10,7 @@ export const SESSION_STALE_MS = 4 * 60 * 60 * 1000;
 export type TrainingSession = WithTimestamps<{
   /* Data */
   id: string;
+  sport: 'climbing';
   title: string;
   notes?: string;
   startedAt: string;
