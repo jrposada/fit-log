@@ -14,6 +14,7 @@ type AuthContextValue = {
   getToken: () => string | null;
   login: () => Promise<void>;
   loginWithIdp: (idp: 'google' | 'apple') => Promise<void>;
+  loginAsDev: () => Promise<void>;
   register: () => Promise<void>;
   refreshToken: () => Promise<void>;
   logout: () => Promise<void>;

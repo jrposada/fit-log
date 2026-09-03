@@ -16,6 +16,9 @@ import {
 
 import { authService, getRedirectUri, UserInfo } from './auth-service';
 
+const DEV_USER_EMAIL = 'dev@example.com';
+const DEV_USER_PASSWORD = 'dev123';
+
 type AuthProviderProps = {
   children: ReactNode;
 };
@@ -141,6 +144,25 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
     [discovery, redirectUri, setToken]
   );
 
+  const loginAsDev = useCallback(async () => {
+    if (!__DEV__) {
+      return;
+    }
+
+    try {
+      const tokens = await authService.loginWithPassword(
+        DEV_USER_EMAIL,
+        DEV_USER_PASSWORD
+      );
+      await authService.saveTokens(tokens);
+      setToken(tokens.accessToken);
+      const userInfo = await authService.fetchUserInfo(tokens.accessToken);
+      setUser(userInfo);
+    } catch (error) {
+      console.error('Dev login failed:', error);
+    }
+  }, [setToken]);
+
   const register = useCallback(async () => {
     try {
       const keycloakUrl = process.env.EXPO_PUBLIC_KEYCLOAK_URL;
@@ -213,6 +235,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
       getToken,
       login,
       loginWithIdp,
+      loginAsDev,
       register,
       refreshToken,
       logout,
@@ -222,6 +245,7 @@ const AuthProvider: FunctionComponent<AuthProviderProps> = ({ children }) => {
       isLoading,
       login,
       loginWithIdp,
+      loginAsDev,
       logout,
       refreshToken,
       register,

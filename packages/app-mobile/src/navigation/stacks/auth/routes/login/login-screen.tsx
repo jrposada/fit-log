@@ -13,7 +13,7 @@ import { Typography } from '../../../../../library/typography';
 
 const LoginScreen: FunctionComponent = () => {
   const { t } = useTranslation();
-  const { login, loginWithIdp, register } = useAuth();
+  const { login, loginWithIdp, loginAsDev, register } = useAuth();
 
   return (
     <Screen
@@ -65,6 +65,14 @@ const LoginScreen: FunctionComponent = () => {
             variant="outline"
             icon="apple"
             iconFamily="brand"
+          />
+        )}
+
+        {__DEV__ && (
+          <Button
+            title={t('auth.quickLoginDev')}
+            onPress={loginAsDev}
+            variant="ghost"
           />
         )}
       </Stack>

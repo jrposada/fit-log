@@ -4,6 +4,7 @@
   "auth.createAccount": "Create Account",
   "auth.logout": "Log Out",
   "auth.or": "or",
+  "auth.quickLoginDev": "Quick login (dev)",
   "auth.signInWithApple": "Sign in with Apple",
   "auth.signInWithEmail": "Sign in with Email",
   "auth.signInWithGoogle": "Sign in with Google",

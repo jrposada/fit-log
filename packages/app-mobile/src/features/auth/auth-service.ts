@@ -82,6 +82,41 @@ export const authService = {
     ]);
   },
 
+  async loginWithPassword(
+    username: string,
+    password: string
+  ): Promise<AuthTokens> {
+    const discovery = getDiscoveryDocument();
+
+    const response = await fetch(discovery.tokenEndpoint!, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        grant_type: 'password',
+        client_id: KEYCLOAK_CLIENT_ID!,
+        scope: 'openid profile email',
+        username,
+        password,
+      }).toString(),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      throw new Error(`Login failed: ${errorData}`);
+    }
+
+    const data = await response.json();
+
+    return {
+      accessToken: data.access_token,
+      refreshToken: data.refresh_token,
+      idToken: data.id_token,
+      expiresIn: data.expires_in,
+    };
+  },
+
   async refreshTokens(refreshToken: string): Promise<AuthTokens> {
     const discovery = getDiscoveryDocument();
 
