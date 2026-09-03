@@ -1,5 +1,5 @@
-import { useFeed } from '@jrposada/fit-log-shared-react/api/feed/use-feed';
 import { useFeedStats } from '@jrposada/fit-log-shared-react/api/feed/use-feed-stats';
+import { useTrainingSessions } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useMemo } from 'react';
@@ -7,10 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useTabBarOverlayHeight } from '../../../../../../../common/tab-bar-overlay/use-tab-bar-overlay-height';
-import FeedRow from '../../../../../../../features/feed/components/feed-row';
-import { navigateToSessionDetail } from '../../../../../../../features/feed/navigate-to-session-detail';
+import TrainingSessionsList from '../../../../../../../features/training-sessions/training-sessions-list';
 import Button from '../../../../../../../library/button';
-import EmptyState from '../../../../../../../library/empty-state';
 import { IconName } from '../../../../../../../library/icon';
 import IconCard from '../../../../../../../library/icon-card';
 import LoadingState from '../../../../../../../library/loading-state';
@@ -37,9 +35,10 @@ const HomeScreen: FunctionComponent = () => {
   const tabBarOverlayHeight = useTabBarOverlayHeight();
 
   const { data: stats, isLoading: isStatsLoading } = useFeedStats();
-  const { items: recentSessions, isLoading: isFeedLoading } = useFeed({
-    limit: RECENT_ACTIVITY_LIMIT,
-  });
+  const {
+    items: recentTrainingSessions,
+    isLoading: isTrainingSessionsLoading,
+  } = useTrainingSessions({ limit: RECENT_ACTIVITY_LIMIT });
 
   const heroCards = useMemo<HeroCardData[]>(() => {
     if (!stats) {
@@ -112,21 +111,10 @@ const HomeScreen: FunctionComponent = () => {
           }
           noPadding
         >
-          <LoadingState isLoading={isFeedLoading}>
-            {recentSessions.length === 0 ? (
-              <EmptyState message={t('home.empty_sessions_warning')} />
-            ) : (
-              <Stack gap="sm">
-                {recentSessions.map((session) => (
-                  <FeedRow
-                    key={session.id}
-                    session={session}
-                    onPress={(s) => navigateToSessionDetail(navigation, s)}
-                  />
-                ))}
-              </Stack>
-            )}
-          </LoadingState>
+          <TrainingSessionsList
+            trainingSessions={recentTrainingSessions}
+            isLoading={isTrainingSessionsLoading}
+          />
         </Section>
       </Stack>
 
