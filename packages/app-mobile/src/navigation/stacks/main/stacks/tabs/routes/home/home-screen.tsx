@@ -6,6 +6,7 @@ import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
+import { useTabBarOverlayHeight } from '../../../../../../../common/tab-bar-overlay/use-tab-bar-overlay-height';
 import FeedRow from '../../../../../../../features/feed/components/feed-row';
 import { navigateToSessionDetail } from '../../../../../../../features/feed/navigate-to-session-detail';
 import Button from '../../../../../../../library/button';
@@ -33,6 +34,7 @@ const HomeScreen: FunctionComponent = () => {
   const { t } = useTranslation();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const tabBarOverlayHeight = useTabBarOverlayHeight();
 
   const { data: stats, isLoading: isStatsLoading } = useFeedStats();
   const { items: recentSessions, isLoading: isFeedLoading } = useFeed({
@@ -129,7 +131,7 @@ const HomeScreen: FunctionComponent = () => {
       </Stack>
 
       {/* Spacer so the last card isn't hidden behind the session flyover. */}
-      <View style={{ height: spacing['4xl'] }} />
+      <View style={{ height: tabBarOverlayHeight + spacing.md }} />
     </Screen>
   );
 };
