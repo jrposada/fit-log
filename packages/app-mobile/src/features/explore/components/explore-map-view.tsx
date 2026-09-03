@@ -3,7 +3,7 @@ import { ClimbSearchResult } from '@jrposada/fit-log-shared/models/climbs/climbs
 import { Location } from '@jrposada/fit-log-shared/models/locations/location';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { FunctionComponent, useMemo, useState } from 'react';
+import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, TouchableOpacity, View } from 'react-native';
 import MapView, {
@@ -11,6 +11,14 @@ import MapView, {
   PROVIDER_DEFAULT,
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
+import Animated, {
+  Easing,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 
 import { useTabBarOverlayHeight } from '../../../common/tab-bar-overlay/use-tab-bar-overlay-height';
 import EmptyState from '../../../library/empty-state';
@@ -48,6 +56,32 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
   const navigation = useNavigation<ExploreMapViewNavigationProp>();
   const tabBarOverlayHeight = useTabBarOverlayHeight();
   const overlayClearance = tabBarOverlayHeight + spacing.sm;
+
+  // mapPadding is an imperative MapView prop, not a style, so it can't be
+  // driven directly by a Reanimated style — the shared value is bridged back
+  // to JS state to animate it in step with the flyover's own transitions.
+  const overlayClearanceValue = useSharedValue(overlayClearance);
+  const [mapPaddingBottom, setMapPaddingBottom] = useState(overlayClearance);
+
+  useEffect(() => {
+    // Matches the bare `LinearTransition` used by the flyover (its default
+    // resolves to withTiming(300, Easing.inOut(Easing.quad))).
+    overlayClearanceValue.value = withTiming(overlayClearance, {
+      duration: 300,
+      easing: Easing.inOut(Easing.quad),
+    });
+  }, [overlayClearance, overlayClearanceValue]);
+
+  useAnimatedReaction(
+    () => overlayClearanceValue.value,
+    (current) => {
+      scheduleOnRN(setMapPaddingBottom, current);
+    }
+  );
+
+  const detailCardAnimatedStyle = useAnimatedStyle(() => ({
+    bottom: overlayClearanceValue.value,
+  }));
 
   const [selectedLocation, setSelectedLocation] = useState<
     (Location & { sports: Sport[] }) | null
@@ -116,7 +150,7 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
               top: 0,
               left: spacing.md,
               right: 0,
-              bottom: overlayClearance,
+              bottom: mapPaddingBottom,
             }}
             onPress={() => setSelectedLocation(null)}
           >
@@ -145,7 +179,7 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
           </MapView>
 
           {selectedLocation && (
-            <View style={[styles.detailCard, { bottom: overlayClearance }]}>
+            <Animated.View style={[styles.detailCard, detailCardAnimatedStyle]}>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate('LocationDetail', {
@@ -171,7 +205,7 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
                   </View>
                 </View>
               </TouchableOpacity>
-            </View>
+            </Animated.View>
           )}
         </View>
       )}
