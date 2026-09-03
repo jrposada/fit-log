@@ -6,32 +6,26 @@ import Animated, {
   FadeOut,
   LinearTransition,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Button from '../../../library/button';
 import Card from '../../../library/card';
-import { accent, spacing } from '../../../library/theme';
+import { accent } from '../../../library/theme';
 import ActiveTrainingSessionContent from './active-training-session-content';
 import { styles } from './active-training-session-flyover.styles';
 import { useStartTrainingSession } from './use-start-training-session';
 
 const ActiveTrainingSessionFlyover: FunctionComponent = () => {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
   const { data: activeSession } = useTrainingSessionsActive();
   const { handleStart } = useStartTrainingSession();
   const [isExpanded, setExpanded] = useState(false);
 
-  const containerStyle = [
-    styles.container,
-    { bottom: insets.bottom + spacing['3xl'] },
-  ];
-
   return (
-    <Animated.View style={containerStyle} layout={LinearTransition}>
+    <Animated.View style={styles.container} layout={LinearTransition}>
       <Card
         variant="elevatedStrong"
         highlight={accent.primary}
+        style={styles.card}
         onPress={
           activeSession ? () => setExpanded((expanded) => !expanded) : undefined
         }

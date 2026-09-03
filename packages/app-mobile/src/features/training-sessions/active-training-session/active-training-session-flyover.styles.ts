@@ -4,8 +4,11 @@ import { spacing } from '../../../library/theme';
 
 export const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    left: spacing.lg,
-    right: spacing.lg,
+    marginHorizontal: spacing.lg,
+  },
+  card: {
+    borderBottomWidth: 0,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
 });

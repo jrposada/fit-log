@@ -1,10 +1,8 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
 
 import { SportFilterProvider } from '../../../../../features/feed/sport-filter-context';
-import ActiveTrainingSessionFlyover from '../../../../../features/training-sessions/active-training-session/active-training-session-flyover';
 import { RootParamList } from '../../../../../types/routes';
 import Header from '../../../../common/header';
 import BottomTabBar from './bottom-tab-bar';
@@ -20,38 +18,35 @@ const TabsStack: FunctionComponent = () => {
 
   return (
     <SportFilterProvider>
-      <View style={{ flex: 1 }}>
-        <Tab.Navigator
-          initialRouteName="Home"
-          tabBar={(props) => <BottomTabBar {...props} />}
-          screenOptions={{
-            animation: 'shift',
+      <Tab.Navigator
+        initialRouteName="Home"
+        tabBar={(props) => <BottomTabBar {...props} />}
+        screenOptions={{
+          animation: 'shift',
+        }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={HomeScreen}
+          options={homeOptions(t)}
+        />
+        <Tab.Screen
+          name="Explore"
+          component={ExploreScreen}
+          options={{
+            header: () => <Header title={t('app_bar.explore')} />,
+            tabBarLabel: t('app_bar.explore'),
           }}
-        >
-          <Tab.Screen
-            name="Home"
-            component={HomeScreen}
-            options={homeOptions(t)}
-          />
-          <Tab.Screen
-            name="Explore"
-            component={ExploreScreen}
-            options={{
-              header: () => <Header title={t('app_bar.explore')} />,
-              tabBarLabel: t('app_bar.explore'),
-            }}
-          />
-          <Tab.Screen
-            name="Activity"
-            component={ActivityScreen}
-            options={{
-              header: () => <Header title={t('app_bar.activity')} />,
-              tabBarLabel: t('app_bar.activity'),
-            }}
-          />
-        </Tab.Navigator>
-        <ActiveTrainingSessionFlyover />
-      </View>
+        />
+        <Tab.Screen
+          name="Activity"
+          component={ActivityScreen}
+          options={{
+            header: () => <Header title={t('app_bar.activity')} />,
+            tabBarLabel: t('app_bar.activity'),
+          }}
+        />
+      </Tab.Navigator>
     </SportFilterProvider>
   );
 };
