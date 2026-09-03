@@ -4,11 +4,10 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import FeedRow from '../../../../../../../features/feed/components/feed-row';
 import { navigateToSessionDetail } from '../../../../../../../features/feed/navigate-to-session-detail';
-import { SPORT_ICONS } from '../../../../../../../features/feed/sport-icons';
 import EmptyState from '../../../../../../../library/empty-state';
 import { IconName } from '../../../../../../../library/icon';
 import IconCard from '../../../../../../../library/icon-card';
@@ -17,9 +16,8 @@ import Measure from '../../../../../../../library/measure';
 import Screen from '../../../../../../../library/screen';
 import Section from '../../../../../../../library/section';
 import Stack from '../../../../../../../library/stack';
-import { accent, spacing } from '../../../../../../../library/theme';
+import { spacing } from '../../../../../../../library/theme';
 import { RootStackParamList } from '../../../../../../../types/routes';
-import { styles } from './home.styles';
 
 const RECENT_ACTIVITY_LIMIT = 5;
 
@@ -96,28 +94,6 @@ const HomeScreen: FunctionComponent = () => {
             }}
           </Measure>
         </LoadingState>
-
-        {stats && stats.bySport.length > 0 && (
-          <Section title={t('home.per_sport_title')} noPadding>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.cardsContainer}
-            >
-              {stats.bySport.map((entry) => (
-                <IconCard
-                  key={entry.sport}
-                  icon={SPORT_ICONS[entry.sport]}
-                  color={accent.secondary}
-                  title={t(`${entry.sport}.title`)}
-                  subtitle={String(entry.count)}
-                  variant="description"
-                  style={styles.sportCard}
-                />
-              ))}
-            </ScrollView>
-          </Section>
-        )}
 
         <Section title={t('home.recent_sessions')} noPadding>
           <LoadingState isLoading={isFeedLoading}>
