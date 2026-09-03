@@ -21,7 +21,7 @@ import Stack from '../../../../../../../library/stack';
 import { spacing } from '../../../../../../../library/theme';
 import { RootStackParamList } from '../../../../../../../types/routes';
 
-const RECENT_ACTIVITY_LIMIT = 5;
+const RECENT_ACTIVITY_LIMIT = 10;
 
 type HeroCardData = {
   id: string;
