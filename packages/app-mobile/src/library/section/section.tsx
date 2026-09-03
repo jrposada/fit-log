@@ -1,5 +1,5 @@
-import { FunctionComponent, PropsWithChildren } from 'react';
-import { StyleProp, Text, ViewStyle } from 'react-native';
+import { FunctionComponent, PropsWithChildren, ReactNode } from 'react';
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
 import Animated, { LinearTransition } from 'react-native-reanimated';
 
 import { spacing as spacingTokens } from '../theme';
@@ -7,6 +7,7 @@ import { styles } from './section.styles';
 
 export interface SectionProps {
   title?: string;
+  action?: ReactNode;
   variant?: 'filled' | 'transparent';
   level?: 1 | 2;
   direction?: 'horizontal' | 'vertical';
@@ -23,6 +24,7 @@ const titleLevelStyles = {
 
 const Section: FunctionComponent<PropsWithChildren<SectionProps>> = ({
   title,
+  action,
   variant = 'filled',
   level = 1,
   direction = 'vertical',
@@ -45,8 +47,13 @@ const Section: FunctionComponent<PropsWithChildren<SectionProps>> = ({
         style,
       ]}
     >
-      {title && (
-        <Text style={[styles.title, titleLevelStyles[level]]}>{title}</Text>
+      {(title || action) && (
+        <View style={styles.titleRow}>
+          {title && (
+            <Text style={[styles.title, titleLevelStyles[level]]}>{title}</Text>
+          )}
+          {action}
+        </View>
       )}
       {children}
     </Animated.View>

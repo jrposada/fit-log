@@ -8,6 +8,7 @@ import { View } from 'react-native';
 
 import FeedRow from '../../../../../../../features/feed/components/feed-row';
 import { navigateToSessionDetail } from '../../../../../../../features/feed/navigate-to-session-detail';
+import Button from '../../../../../../../library/button';
 import EmptyState from '../../../../../../../library/empty-state';
 import { IconName } from '../../../../../../../library/icon';
 import IconCard from '../../../../../../../library/icon-card';
@@ -95,7 +96,20 @@ const HomeScreen: FunctionComponent = () => {
           </Measure>
         </LoadingState>
 
-        <Section title={t('home.recent_sessions')} noPadding>
+        <Section
+          title={t('home.recent_sessions')}
+          action={
+            <Button
+              title={t('home.view_all')}
+              variant="ghost"
+              size="sm"
+              onPress={() =>
+                navigation.navigate('Tabs', { screen: 'Activity' })
+              }
+            />
+          }
+          noPadding
+        >
           <LoadingState isLoading={isFeedLoading}>
             {recentSessions.length === 0 ? (
               <EmptyState message={t('home.empty_sessions_warning')} />

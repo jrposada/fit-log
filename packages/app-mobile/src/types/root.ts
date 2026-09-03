@@ -1,3 +1,4 @@
+import type { NavigatorScreenParams } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type RootParamList = {
@@ -7,7 +8,7 @@ export type RootParamList = {
 };
 
 export type RootStackParamList = {
-  Tabs: undefined;
+  Tabs: NavigatorScreenParams<RootParamList> | undefined;
   Profile: undefined;
   LocationDetail: { initialName?: string; locationId?: string } | undefined;
   ClimbDetail: { climbId?: string; locationId?: string };

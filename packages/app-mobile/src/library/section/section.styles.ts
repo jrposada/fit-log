@@ -23,8 +23,14 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 0,
     paddingVertical: 0,
   },
-  title: {
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: spacing.sm,
+  },
+  title: {
+    flexShrink: 1,
   },
   titleLevel1: {
     ...typography.caption,
