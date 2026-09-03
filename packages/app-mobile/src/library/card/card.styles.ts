@@ -5,7 +5,6 @@ import {
   borders,
   ink,
   radii,
-  shadows,
   spacing,
   surfaces,
   typography,
@@ -33,17 +32,15 @@ export const styles = StyleSheet.create({
   noPadding: {
     padding: 0,
   },
-  /** Subtle glow — mild "active" emphasis without full commitment. */
+  /** Mild "active" emphasis without full commitment. */
   elevated: {
     borderWidth: 1,
     borderColor: borders.default,
-    ...shadows.glow,
   },
-  /** Strong glow — live/selected states (active session, selected map pin). */
+  /** Live/selected states (active session, selected map pin). */
   elevatedStrong: {
     borderWidth: 1,
     borderColor: accent.primary,
-    ...shadows.glowStrong,
   },
   /** Standard flat card — 1px outline instead of a shadow. */
   flat: {
