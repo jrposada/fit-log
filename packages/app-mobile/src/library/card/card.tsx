@@ -22,12 +22,7 @@ import Animated, {
 import { scheduleOnRN } from 'react-native-worklets';
 
 import { surfaces } from '../theme';
-import {
-  ACTION_WIDTH,
-  highlightWidths,
-  sizeStyles,
-  styles,
-} from './card.styles';
+import { ACTION_WIDTH, sizeStyles, styles } from './card.styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const LONG_SWIPE_THRESHOLD = ACTION_WIDTH * 2;
@@ -46,6 +41,7 @@ export interface CardProps {
   size?: 'sm' | 'md' | 'lg';
   highlight?: string;
   onPress?: () => void;
+  noPadding?: boolean;
   style?: StyleProp<ViewStyle>;
   /** Action revealed when swiping right (left side background) */
   leftAction?: SwipeAction | false;
@@ -140,6 +136,7 @@ const Card: FunctionComponent<PropsWithChildren<CardProps>> = ({
   size = 'md',
   highlight,
   onPress,
+  noPadding = false,
   style,
   leftAction,
   rightAction,
@@ -153,12 +150,12 @@ const Card: FunctionComponent<PropsWithChildren<CardProps>> = ({
   const cardStyle = [
     styles.base,
     sizeStyles[size],
+    noPadding && styles.noPadding,
     !hasSwipe && styles[variant],
     hasSwipe && { backgroundColor: 'transparent' },
     direction === 'horizontal' && styles.horizontal,
     highlight !== undefined && {
       borderLeftColor: highlight,
-      borderLeftWidth: highlightWidths[size],
     },
     style,
   ];

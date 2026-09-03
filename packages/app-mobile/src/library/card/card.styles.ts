@@ -23,18 +23,15 @@ export const sizeStyles = StyleSheet.create({
   },
 });
 
-export const highlightWidths = {
-  sm: 2,
-  md: 4,
-  lg: 6,
-} as const;
-
 export const ACTION_WIDTH = 72;
 
 export const styles = StyleSheet.create({
   base: {
     backgroundColor: surfaces.base,
     borderRadius: radii.card,
+  },
+  noPadding: {
+    padding: 0,
   },
   /** Subtle glow — mild "active" emphasis without full commitment. */
   elevated: {

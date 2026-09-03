@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     gap: 2,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing['2xs'],
-    borderRadius: radii.full,
+    borderRadius: radii.lg,
   },
   tabActive: {
     backgroundColor: accent.primary,

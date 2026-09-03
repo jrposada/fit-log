@@ -11,4 +11,8 @@ export const styles = StyleSheet.create({
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
   },
+  startButton: {
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
 });

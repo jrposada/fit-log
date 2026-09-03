@@ -26,6 +26,7 @@ const ActiveTrainingSessionFlyover: FunctionComponent = () => {
         variant="elevatedStrong"
         highlight={accent.primary}
         style={styles.card}
+        noPadding={!activeSession}
         onPress={
           activeSession ? () => setExpanded((expanded) => !expanded) : undefined
         }
@@ -52,6 +53,7 @@ const ActiveTrainingSessionFlyover: FunctionComponent = () => {
               title={t('nav.start_session')}
               icon="play-arrow"
               variant="primary"
+              style={styles.startButton}
               onPress={() => handleStart()}
             />
           </Animated.View>
