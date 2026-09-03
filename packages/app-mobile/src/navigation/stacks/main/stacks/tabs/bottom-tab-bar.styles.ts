@@ -10,6 +10,11 @@ import {
 } from '../../../../../library/theme';
 
 export const styles = StyleSheet.create({
+  activeTrainingSession: {
+    position: 'absolute',
+    left: spacing.lg,
+    right: spacing.lg,
+  },
   bar: {
     flexDirection: 'row',
     justifyContent: 'space-around',

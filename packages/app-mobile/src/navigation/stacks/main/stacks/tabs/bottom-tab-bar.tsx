@@ -1,6 +1,6 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { FunctionComponent } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { FunctionComponent, useState } from 'react';
+import { LayoutChangeEvent, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ActiveTrainingSessionFlyover from '../../../../../features/training-sessions/active-training-session/active-training-session-flyover';
@@ -20,11 +20,24 @@ const BottomTabBar: FunctionComponent<BottomTabBarProps> = ({
   navigation,
 }) => {
   const insets = useSafeAreaInsets();
+  const [barHeight, setBarHeight] = useState(0);
+
+  const handleBarLayout = (event: LayoutChangeEvent) => {
+    const next = event.nativeEvent.layout.height;
+    setBarHeight((prev) => (prev === next ? prev : next));
+  };
 
   return (
     <View>
-      <ActiveTrainingSessionFlyover />
-      <View style={[styles.bar, { paddingBottom: insets.bottom }]}>
+      {barHeight > 0 && (
+        <ActiveTrainingSessionFlyover
+          style={[styles.activeTrainingSession, { bottom: barHeight }]}
+        />
+      )}
+      <View
+        style={[styles.bar, { paddingBottom: insets.bottom }]}
+        onLayout={handleBarLayout}
+      >
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key]!;
           const label = (options.tabBarLabel ??
