@@ -25,7 +25,7 @@ const titleLevelStyles = {
 const Section: FunctionComponent<PropsWithChildren<SectionProps>> = ({
   title,
   action,
-  variant = 'filled',
+  variant = 'transparent',
   level = 1,
   direction = 'vertical',
   spacing,
