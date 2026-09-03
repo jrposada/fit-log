@@ -38,7 +38,7 @@ const TrainingSessionsList: FunctionComponent<TrainingSessionsListProps> = ({
             <Card
               key={session.id}
               onPress={() =>
-                navigation.navigate('ClimbingSessionDetail', {
+                navigation.navigate('TrainingSessionsDetail', {
                   sessionId: session.id,
                 })
               }

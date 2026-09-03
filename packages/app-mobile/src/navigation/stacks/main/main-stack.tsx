@@ -9,10 +9,10 @@ import { RootStackParamList } from '../../../types/routes';
 import Header from '../../common/header';
 import ClimbDetailScreen from './routes/climb-detail/climb-detail-screen';
 import ClimbLogScreen from './routes/climb-log/climb-log-screen';
-import ClimbingSessionDetailScreen from './routes/climbing-session-detail/climbing-session-detail-screen';
 import LocationDetailScreen from './routes/location-detail/location-detail-screen';
 import ProfileScreen from './routes/profile/profile-screen';
 import TabsStack from './routes/tabs/tabs-stack';
+import TrainingSessionsDetailScreen from './routes/training-sessions-detail/training-sessions-detail-screen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -63,8 +63,8 @@ const MainStack: FunctionComponent = () => {
         }}
       />
       <Stack.Screen
-        name="ClimbingSessionDetail"
-        component={ClimbingSessionDetailScreen}
+        name="TrainingSessionsDetail"
+        component={TrainingSessionsDetailScreen}
         options={{ headerShown: true }}
       />
       <Stack.Screen

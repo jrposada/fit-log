@@ -19,20 +19,20 @@ import { Typography } from '../../../../../library/typography';
 import { RootStackParamList } from '../../../../../types/routes';
 import Header from '../../../../common/header';
 
-type ClimbingSessionDetailNavigationProp = NativeStackNavigationProp<
+type TrainingSessionsDetailNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'ClimbingSessionDetail'
+  'TrainingSessionsDetail'
 >;
 
-type ClimbingSessionDetailRouteProp = RouteProp<
+type TrainingSessionsDetailRouteProp = RouteProp<
   RootStackParamList,
-  'ClimbingSessionDetail'
+  'TrainingSessionsDetail'
 >;
 
-const ClimbingSessionDetailScreen: FunctionComponent = () => {
+const TrainingSessionsDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
-  const navigation = useNavigation<ClimbingSessionDetailNavigationProp>();
-  const route = useRoute<ClimbingSessionDetailRouteProp>();
+  const navigation = useNavigation<TrainingSessionsDetailNavigationProp>();
+  const route = useRoute<TrainingSessionsDetailRouteProp>();
   const { sessionId } = route.params;
 
   const { data: session, isLoading: isLoadingSession } =
@@ -128,4 +128,4 @@ const ClimbingSessionDetailScreen: FunctionComponent = () => {
   );
 };
 
-export default ClimbingSessionDetailScreen;
+export default TrainingSessionsDetailScreen;

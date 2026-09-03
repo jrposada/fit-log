@@ -13,7 +13,7 @@ export type RootStackParamList = {
   LocationDetail: { initialName?: string; locationId?: string } | undefined;
   ClimbDetail: { climbId?: string; locationId?: string };
   ClimbLog: undefined;
-  ClimbingSessionDetail: { sessionId: string };
+  TrainingSessionsDetail: { sessionId: string };
   MapPointPicker: { latitude?: number; longitude?: number } | undefined;
   ImagePicker: undefined;
   Model3dPicker: undefined;
