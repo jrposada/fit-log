@@ -12,10 +12,11 @@ import MapView, {
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 
+import { useTabBarOverlayHeight } from '../../../common/tab-bar-overlay/use-tab-bar-overlay-height';
 import EmptyState from '../../../library/empty-state';
 import { Icon } from '../../../library/icon';
 import LoadingState from '../../../library/loading-state';
-import { accent } from '../../../library/theme';
+import { accent, spacing } from '../../../library/theme';
 import { Typography } from '../../../library/typography';
 import { RootStackParamList } from '../../../types/routes';
 import { styles } from './explore-map-view.styles';
@@ -45,6 +46,8 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
 }) => {
   const { t } = useTranslation();
   const navigation = useNavigation<ExploreMapViewNavigationProp>();
+  const tabBarOverlayHeight = useTabBarOverlayHeight();
+  const overlayClearance = tabBarOverlayHeight + spacing.sm;
 
   const [selectedLocation, setSelectedLocation] = useState<
     (Location & { sports: Sport[] }) | null
@@ -109,6 +112,12 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
             }
             style={styles.map}
             initialRegion={initialRegion}
+            mapPadding={{
+              top: 0,
+              left: spacing.md,
+              right: 0,
+              bottom: overlayClearance,
+            }}
             onPress={() => setSelectedLocation(null)}
           >
             {pins.map((pin) => {
@@ -136,7 +145,7 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
           </MapView>
 
           {selectedLocation && (
-            <View style={styles.detailCard}>
+            <View style={[styles.detailCard, { bottom: overlayClearance }]}>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate('LocationDetail', {

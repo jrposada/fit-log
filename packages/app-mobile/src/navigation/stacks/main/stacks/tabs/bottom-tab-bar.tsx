@@ -1,8 +1,9 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { LayoutChangeEvent, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useSetTabBarOverlayHeight } from '../../../../../common/tab-bar-overlay/use-set-tab-bar-overlay-height';
 import ActiveTrainingSessionFlyover from '../../../../../features/training-sessions/active-training-session/active-training-session-flyover';
 import { Icon, IconName } from '../../../../../library/icon';
 import { accent, ink } from '../../../../../library/theme';
@@ -21,17 +22,29 @@ const BottomTabBar: FunctionComponent<BottomTabBarProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const [barHeight, setBarHeight] = useState(0);
+  const [flyoverHeight, setFlyoverHeight] = useState(0);
+  const setOverlayHeight = useSetTabBarOverlayHeight();
 
   const handleBarLayout = (event: LayoutChangeEvent) => {
     const next = event.nativeEvent.layout.height;
     setBarHeight((prev) => (prev === next ? prev : next));
   };
 
+  const handleFlyoverLayout = (event: LayoutChangeEvent) => {
+    const next = event.nativeEvent.layout.height;
+    setFlyoverHeight((prev) => (prev === next ? prev : next));
+  };
+
+  useEffect(() => {
+    setOverlayHeight(barHeight > 0 ? flyoverHeight : 0);
+  }, [barHeight, flyoverHeight, setOverlayHeight]);
+
   return (
     <View>
       {barHeight > 0 && (
         <ActiveTrainingSessionFlyover
           style={[styles.activeTrainingSession, { bottom: barHeight }]}
+          onLayout={handleFlyoverLayout}
         />
       )}
       <View

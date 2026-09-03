@@ -1,7 +1,7 @@
 import { useTrainingSessionsActive } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-active';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleProp, ViewStyle } from 'react-native';
+import { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -17,18 +17,19 @@ import { useStartTrainingSession } from './use-start-training-session';
 
 interface ActiveTrainingSessionFlyoverProps {
   style?: StyleProp<ViewStyle>;
+  onLayout?: (event: LayoutChangeEvent) => void;
 }
 
 const ActiveTrainingSessionFlyover: FunctionComponent<
   ActiveTrainingSessionFlyoverProps
-> = ({ style }) => {
+> = ({ style, onLayout }) => {
   const { t } = useTranslation();
   const { data: activeSession } = useTrainingSessionsActive();
   const { handleStart } = useStartTrainingSession();
   const [isExpanded, setExpanded] = useState(false);
 
   return (
-    <Animated.View style={style} layout={LinearTransition}>
+    <Animated.View style={style} onLayout={onLayout} layout={LinearTransition}>
       <Card
         variant="elevatedStrong"
         highlight={accent.primary}

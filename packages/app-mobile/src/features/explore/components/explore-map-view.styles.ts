@@ -32,7 +32,6 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     left: spacing.lg,
     right: spacing.lg,
-    bottom: 96,
     backgroundColor: surfaces.raised,
     borderWidth: 1,
     borderColor: borders.default,
