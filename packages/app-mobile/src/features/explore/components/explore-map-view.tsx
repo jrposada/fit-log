@@ -1,7 +1,6 @@
 import { Sport } from '@jrposada/fit-log-shared/common/sports/sports';
 import { ClimbSearchResult } from '@jrposada/fit-log-shared/models/climbs/climbs-search';
 import { Location } from '@jrposada/fit-log-shared/models/locations/location';
-import { useTrainingSessionsActive } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-active';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useMemo, useState } from 'react';
@@ -13,14 +12,12 @@ import MapView, {
   PROVIDER_GOOGLE,
 } from 'react-native-maps';
 
-import Button from '../../../library/button';
 import EmptyState from '../../../library/empty-state';
 import { Icon } from '../../../library/icon';
 import LoadingState from '../../../library/loading-state';
 import { accent } from '../../../library/theme';
 import { Typography } from '../../../library/typography';
 import { RootStackParamList } from '../../../types/routes';
-import { useStartTrainingSession } from '../../training-sessions/active-training-session/use-start-training-session';
 import { styles } from './explore-map-view.styles';
 
 type ExploreMapViewNavigationProp =
@@ -48,8 +45,6 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
 }) => {
   const { t } = useTranslation();
   const navigation = useNavigation<ExploreMapViewNavigationProp>();
-  const { data: activeSession } = useTrainingSessionsActive();
-  const { handleStart, isPending: isStarting } = useStartTrainingSession();
 
   const [selectedLocation, setSelectedLocation] = useState<
     (Location & { sports: Sport[] }) | null
@@ -167,19 +162,6 @@ const ExploreMapView: FunctionComponent<ExploreMapViewProps> = ({
                   </View>
                 </View>
               </TouchableOpacity>
-            </View>
-          )}
-
-          {!activeSession && (
-            <View style={styles.startSessionContainer} pointerEvents="box-none">
-              <Button
-                title={t('explore.start_session')}
-                icon="play-arrow"
-                variant="primary"
-                disabled={isStarting}
-                onPress={() => handleStart(selectedLocation?.id ?? null)}
-                style={styles.startSessionButton}
-              />
             </View>
           )}
         </View>
