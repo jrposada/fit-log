@@ -19,8 +19,10 @@ navigation/
       <route>-options.tsx        # the route's chrome: header, presentation,
                                  # tab bar entry, params → title
       <route>.styles.ts          # optional, screen-local styles
-    stacks/<stack>/               # nested navigator reachable only from the
-      ...                        # parent stack (e.g. main/stacks/tabs)
+      <route>-stack.tsx          # if the route is itself a nested navigator,
+                                 # its Navigator lives directly in the route's
+      routes/<route>/            # own folder, with its own routes/ nested
+        ...                      # inside (e.g. main/routes/tabs)
   common/          # components shared across multiple stacks
     ...
   sport-picker-modal.tsx
