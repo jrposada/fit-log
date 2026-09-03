@@ -39,7 +39,7 @@ const TrainingSessionsList: FunctionComponent<TrainingSessionsListProps> = ({
               key={session.id}
               onPress={() =>
                 navigation.navigate('TrainingSessionsDetail', {
-                  sessionId: session.id,
+                  trainingSessionId: session.id,
                 })
               }
             >

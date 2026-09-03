@@ -33,12 +33,12 @@ const TrainingSessionsDetailScreen: FunctionComponent = () => {
   const { t } = useTranslation();
   const navigation = useNavigation<TrainingSessionsDetailNavigationProp>();
   const route = useRoute<TrainingSessionsDetailRouteProp>();
-  const { sessionId } = route.params;
+  const { trainingSessionId } = route.params;
 
-  const { data: session, isLoading: isLoadingSession } =
-    useTrainingSessionsById({ id: sessionId });
+  const { data: trainingSession, isLoading: isLoadingTrainingSession } =
+    useTrainingSessionsById({ id: trainingSessionId });
   const { items: climbHistories, isLoading: isLoadingHistories } =
-    useClimbHistories({ trainingSession: sessionId, limit: 50 });
+    useClimbHistories({ trainingSession: trainingSessionId, limit: 50 });
 
   const climbHistoriesBySector = useMemo(() => {
     const grouped = new Map<
@@ -60,32 +60,38 @@ const TrainingSessionsDetailScreen: FunctionComponent = () => {
   useEffect(() => {
     navigation.setOptions({
       header: () => (
-        <Header title={session?.title} loading={isLoadingSession} back />
+        <Header
+          title={trainingSession?.title}
+          loading={isLoadingTrainingSession}
+          back
+        />
       ),
     });
-  }, [navigation, session?.title, isLoadingSession]);
+  }, [navigation, trainingSession?.title, isLoadingTrainingSession]);
 
   return (
     <Screen>
       <Section gap="md">
         <Stack gap="2xs">
           <Typography size="callout" color="secondary">
-            {session ? formatRelativeDate(session.startedAt, t) : ''}
+            {trainingSession
+              ? formatRelativeDate(trainingSession.startedAt, t)
+              : ''}
           </Typography>
-          {session?.location && (
+          {trainingSession?.location && (
             <Typography size="callout" color="secondary">
-              {session.location.name}
+              {trainingSession.location.name}
             </Typography>
           )}
         </Stack>
 
-        {session?.notes && (
+        {trainingSession?.notes && (
           <Stack gap="2xs">
             <Typography size="body" weight="semibold">
               {t('climbing.session_notes_title')}
             </Typography>
             <Typography size="callout" color="secondary">
-              {session.notes}
+              {trainingSession.notes}
             </Typography>
           </Stack>
         )}
