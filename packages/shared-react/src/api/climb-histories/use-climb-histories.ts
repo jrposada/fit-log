@@ -15,6 +15,7 @@ type UseClimbHistoriesParams = Omit<ClimbHistoriesGetQuery, 'cursor'>;
 
 function useClimbHistories({
   limit,
+  trainingSession,
   climbId,
   locationId,
   sectorId,
@@ -34,7 +35,16 @@ function useClimbHistories({
   >({
     queryKey: [
       'climb-histories',
-      { limit, climbId, locationId, sectorId, status, startDate, endDate },
+      {
+        trainingSession,
+        limit,
+        climbId,
+        locationId,
+        sectorId,
+        status,
+        startDate,
+        endDate,
+      },
     ],
     initialPageParam: undefined,
     placeholderData: keepPreviousData,
@@ -48,6 +58,9 @@ function useClimbHistories({
           const params = new URLSearchParams();
           if (limit) {
             params.append('limit', limit.toString());
+          }
+          if (trainingSession) {
+            params.append('trainingSession', trainingSession);
           }
           if (pageParam) {
             params.append('cursor', pageParam);
