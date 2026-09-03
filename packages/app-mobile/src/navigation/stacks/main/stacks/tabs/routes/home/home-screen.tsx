@@ -103,7 +103,7 @@ const HomeScreen: FunctionComponent = () => {
           action={
             <Button
               title={t('home.view_all')}
-              variant="ghost"
+              variant="secondaryGhost"
               size="sm"
               onPress={() =>
                 navigation.navigate('Tabs', { screen: 'Activity' })

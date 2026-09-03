@@ -18,6 +18,7 @@ export const variantColors = {
   info: accent.secondary,
   outline: 'transparent',
   ghost: 'transparent',
+  secondaryGhost: 'transparent',
 } as const;
 
 export const variantTextStyles: Record<keyof typeof variantColors, TextStyle> =
@@ -29,6 +30,7 @@ export const variantTextStyles: Record<keyof typeof variantColors, TextStyle> =
     info: { color: accent.onSecondary },
     outline: { color: ink.primary },
     ghost: { color: accent.primary },
+    secondaryGhost: { color: accent.secondary },
   };
 
 export const borderStyles = StyleSheet.create({
