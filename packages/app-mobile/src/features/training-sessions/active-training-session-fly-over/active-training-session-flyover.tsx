@@ -1,5 +1,6 @@
 import { useTrainingSessionsActive } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-active';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { useTrainingSessionsPut } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-put';
+import { beautifyDate } from '@jrposada/fit-log-shared-react/beautifiers/date';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native';
@@ -12,25 +13,42 @@ import Animated, {
 import Button from '../../../library/button';
 import Card from '../../../library/card';
 import { accent } from '../../../library/theme';
-import LogATrySheet from '../log-a-try/log-a-try-sheet';
-import ActiveTrainingSessionContent from './active-training-session-content';
+import TrainingSessionDetail from '../training-session-detail/training-session-detail';
 import { styles } from './active-training-session-flyover.styles';
-import { useStartTrainingSession } from './use-start-training-session';
 
 interface ActiveTrainingSessionFlyoverProps {
   style?: StyleProp<ViewStyle>;
   onLayout?: (event: LayoutChangeEvent) => void;
-  navigation: BottomTabBarProps['navigation'];
+  onGoToDashboard: () => void;
 }
 
 const ActiveTrainingSessionFlyover: FunctionComponent<
   ActiveTrainingSessionFlyoverProps
-> = ({ style, onLayout, navigation }) => {
+> = ({ style, onLayout, onGoToDashboard }) => {
   const { t } = useTranslation();
   const { data: activeSession } = useTrainingSessionsActive();
-  const { handleStart } = useStartTrainingSession();
   const [isExpanded, setExpanded] = useState(false);
-  const [isLogATryVisible, setLogATryVisible] = useState(false);
+
+  const {
+    mutate: startTrainingSession,
+    isPending: isPendingStartTrainingSession,
+  } = useTrainingSessionsPut();
+
+  const handleStartTrainingSession = (locationId: string | null = null) => {
+    const now = new Date();
+
+    startTrainingSession({
+      sport: 'climbing',
+      title: beautifyDate(now, 'YYYY MM DD'),
+      startedAt: now.toUTCString(),
+      location: locationId,
+      climbHistories: [],
+    });
+  };
+
+  const handleToggleExpand = () => {
+    setExpanded((expanded) => !expanded);
+  };
 
   return (
     <Animated.View style={style} onLayout={onLayout} layout={LinearTransition}>
@@ -39,9 +57,6 @@ const ActiveTrainingSessionFlyover: FunctionComponent<
         highlight={accent.primary}
         style={styles.card}
         noPadding={!activeSession}
-        onPress={
-          activeSession ? () => setExpanded((expanded) => !expanded) : undefined
-        }
       >
         {activeSession ? (
           <Animated.View
@@ -49,12 +64,12 @@ const ActiveTrainingSessionFlyover: FunctionComponent<
             entering={FadeIn.duration(200)}
             exiting={FadeOut.duration(150)}
           >
-            <ActiveTrainingSessionContent
+            <TrainingSessionDetail
               session={activeSession}
+              isActive
               isExpanded={isExpanded}
-              onCollapse={() => setExpanded(false)}
-              onOpenDashboard={() => navigation.navigate('Home')}
-              onOpenLogATry={() => setLogATryVisible(true)}
+              onToggleIsExpanded={handleToggleExpand}
+              onGoToDashboard={onGoToDashboard}
             />
           </Animated.View>
         ) : (
@@ -68,18 +83,12 @@ const ActiveTrainingSessionFlyover: FunctionComponent<
               icon="play-arrow"
               variant="primary"
               style={styles.startButton}
-              onPress={() => handleStart()}
+              onPress={() => handleStartTrainingSession()}
+              disabled={isPendingStartTrainingSession}
             />
           </Animated.View>
         )}
       </Card>
-      {activeSession && (
-        <LogATrySheet
-          session={activeSession}
-          visible={isLogATryVisible}
-          onClose={() => setLogATryVisible(false)}
-        />
-      )}
     </Animated.View>
   );
 };

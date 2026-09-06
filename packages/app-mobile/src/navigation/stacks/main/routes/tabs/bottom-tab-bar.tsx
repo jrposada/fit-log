@@ -4,7 +4,7 @@ import { LayoutChangeEvent, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSetTabBarOverlayHeight } from '../../../../../common/tab-bar-overlay/use-set-tab-bar-overlay-height';
-import ActiveTrainingSessionFlyover from '../../../../../features/training-sessions/active-training-session/active-training-session-flyover';
+import ActiveTrainingSessionFlyover from '../../../../../features/training-sessions/active-training-session-fly-over/active-training-session-flyover';
 import { Icon, IconName } from '../../../../../library/icon';
 import { accent, ink } from '../../../../../library/theme';
 import { styles } from './bottom-tab-bar.styles';
@@ -45,7 +45,7 @@ const BottomTabBar: FunctionComponent<BottomTabBarProps> = ({
         <ActiveTrainingSessionFlyover
           style={[styles.activeTrainingSession, { bottom: barHeight }]}
           onLayout={handleFlyoverLayout}
-          navigation={navigation}
+          onGoToDashboard={() => navigation.navigate('Home')}
         />
       )}
       <View
