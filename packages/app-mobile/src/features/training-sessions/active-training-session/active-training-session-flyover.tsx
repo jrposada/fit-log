@@ -1,4 +1,5 @@
 import { useTrainingSessionsActive } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-active';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native';
@@ -11,6 +12,7 @@ import Animated, {
 import Button from '../../../library/button';
 import Card from '../../../library/card';
 import { accent } from '../../../library/theme';
+import LogATrySheet from '../log-a-try/log-a-try-sheet';
 import ActiveTrainingSessionContent from './active-training-session-content';
 import { styles } from './active-training-session-flyover.styles';
 import { useStartTrainingSession } from './use-start-training-session';
@@ -18,15 +20,17 @@ import { useStartTrainingSession } from './use-start-training-session';
 interface ActiveTrainingSessionFlyoverProps {
   style?: StyleProp<ViewStyle>;
   onLayout?: (event: LayoutChangeEvent) => void;
+  navigation: BottomTabBarProps['navigation'];
 }
 
 const ActiveTrainingSessionFlyover: FunctionComponent<
   ActiveTrainingSessionFlyoverProps
-> = ({ style, onLayout }) => {
+> = ({ style, onLayout, navigation }) => {
   const { t } = useTranslation();
   const { data: activeSession } = useTrainingSessionsActive();
   const { handleStart } = useStartTrainingSession();
   const [isExpanded, setExpanded] = useState(false);
+  const [isLogATryVisible, setLogATryVisible] = useState(false);
 
   return (
     <Animated.View style={style} onLayout={onLayout} layout={LinearTransition}>
@@ -49,6 +53,8 @@ const ActiveTrainingSessionFlyover: FunctionComponent<
               session={activeSession}
               isExpanded={isExpanded}
               onCollapse={() => setExpanded(false)}
+              onOpenDashboard={() => navigation.navigate('Home')}
+              onOpenLogATry={() => setLogATryVisible(true)}
             />
           </Animated.View>
         ) : (
@@ -67,6 +73,13 @@ const ActiveTrainingSessionFlyover: FunctionComponent<
           </Animated.View>
         )}
       </Card>
+      {activeSession && (
+        <LogATrySheet
+          session={activeSession}
+          visible={isLogATryVisible}
+          onClose={() => setLogATryVisible(false)}
+        />
+      )}
     </Animated.View>
   );
 };
