@@ -16,6 +16,7 @@ export type TrainingSession = WithTimestamps<{
   startedAt: string;
   endedAt?: string;
   lastActivityAt?: string;
+  currentClimbId?: string;
 
   /* Ownership */
   owner: string;

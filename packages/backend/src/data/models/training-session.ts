@@ -66,6 +66,7 @@ export interface ITrainingSession
   startedAt: Date;
   endedAt?: Date;
   lastActivityAt: Date;
+  currentClimbId?: Types.ObjectId;
   /** Denormalized cache, recomputed by the owning sport package on every
    * write that touches the session's derived data. Never authoritative. */
   summary: SessionSummaryData;
@@ -119,6 +120,11 @@ const trainingSessionSchema = new Schema<ITrainingSession>(
     },
 
     /* References */
+    currentClimbId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Climb',
+      required: false,
+    },
     location: {
       type: Schema.Types.ObjectId,
       ref: 'Location',

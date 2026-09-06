@@ -27,6 +27,9 @@ function toApiDepopulatedTrainingSession(
     startedAt: model.startedAt.toISOString(),
     endedAt: model.endedAt ? model.endedAt.toISOString() : undefined,
     lastActivityAt: model.lastActivityAt.toISOString(),
+    currentClimbId: model.currentClimbId
+      ? model.currentClimbId.toString()
+      : undefined,
 
     /* Ownership */
     owner: model.owner.toString(),
@@ -51,6 +54,9 @@ function toApiTrainingSession(model: ValidTrainingSession): TrainingSession {
     startedAt: model.startedAt.toISOString(),
     endedAt: model.endedAt ? model.endedAt.toISOString() : undefined,
     lastActivityAt: model.lastActivityAt.toISOString(),
+    currentClimbId: model.currentClimbId
+      ? model.currentClimbId.toString()
+      : undefined,
 
     /* Ownership */
     owner: model.owner.toString(),
@@ -81,6 +87,9 @@ function toUpsertTrainingSessionInput(
     lastActivityAt: request.lastActivityAt
       ? new Date(request.lastActivityAt)
       : new Date(),
+    currentClimbId: request.currentClimbId
+      ? new Types.ObjectId(request.currentClimbId)
+      : undefined,
 
     /* References */
     location: request.location ? new Types.ObjectId(request.location) : null,
