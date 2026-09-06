@@ -23,7 +23,12 @@ async function main() {
   await api.start();
 }
 
-process.on('SIGINT', async () => {
+let isShuttingDown = false;
+
+async function shutdown() {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+
   try {
     await api?.stop();
     await jobs?.stop();
@@ -33,7 +38,10 @@ process.on('SIGINT', async () => {
     Logger.error('Error during shutdown:', error);
     process.exit(1);
   }
-});
+}
+
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
 
 main().catch((error) => {
   Logger.error('Error in main execution:', error);
