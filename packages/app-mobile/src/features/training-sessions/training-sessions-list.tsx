@@ -5,6 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { Badge } from '../../library/badge';
 import Card from '../../library/card';
 import EmptyState from '../../library/empty-state';
 import { Icon } from '../../library/icon';
@@ -48,6 +49,12 @@ const TrainingSessionsList: FunctionComponent<TrainingSessionsListProps> = ({
                 <Typography size="body" weight="semibold" style={{ flex: 1 }}>
                   {session.title}
                 </Typography>
+                {!session.endedAt && (
+                  <Badge
+                    label={t('climbing.session_active_badge')}
+                    variant={'info'}
+                  />
+                )}
                 <Typography size="caption" color="tertiary">
                   {formatRelativeDate(session.startedAt, t)}
                 </Typography>
