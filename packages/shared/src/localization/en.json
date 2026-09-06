@@ -165,6 +165,8 @@
   "climbing.stats_sessions_avg_climbs": "Per Session",
   "climbing.stats_sessions_avg_duration": "Avg Time",
   "climbing.stats_duration_minutes": "{{count}}m",
+  "climbing.stats_duration_hours_minutes": "{{hours}}h {{minutes}}m",
+  "climbing.stats_duration_days_hours": "{{days}}d {{hours}}h",
   "climbing.stats_perf_secondary": "{{flashes}} flash · {{attempts}} att",
   "climbing.stats_sessions_secondary": "{{value}} / session",
   "climbing.title": "Climbing",

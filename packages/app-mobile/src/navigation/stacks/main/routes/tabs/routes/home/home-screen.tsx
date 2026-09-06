@@ -1,5 +1,6 @@
 import { useFeedStats } from '@jrposada/fit-log-shared-react/api/feed/use-feed-stats';
 import { useTrainingSessions } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions';
+import { beautifyDuration } from '@jrposada/fit-log-shared-react/beautifiers/time';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useMemo } from 'react';
@@ -60,9 +61,7 @@ const HomeScreen: FunctionComponent = () => {
       {
         id: 'time',
         icon: 'timer',
-        value: t('climbing.stats_duration_minutes', {
-          count: Math.round(stats.summary.totalDurationMinutes),
-        }),
+        value: beautifyDuration(stats.summary.totalDurationMinutes, t),
         title: t('home.total_time'),
       },
     ];
