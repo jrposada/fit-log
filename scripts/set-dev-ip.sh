@@ -10,6 +10,7 @@
 # Usage:
 #   ./scripts/set-dev-ip.sh            # auto-detect the default-route IP
 #   ./scripts/set-dev-ip.sh 172.20.10.2  # force a specific IP
+#   ./scripts/set-dev-ip.sh localhost    # simulator only, no network needed
 #
 set -euo pipefail
 
@@ -47,8 +48,8 @@ if [ -z "$IP" ]; then
   exit 1
 fi
 
-if ! [[ "$IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-  echo "Refusing to use '$IP' — not an IPv4 address." >&2
+if [ "$IP" != "localhost" ] && ! [[ "$IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "Refusing to use '$IP' — not an IPv4 address or 'localhost'." >&2
   exit 1
 fi
 
