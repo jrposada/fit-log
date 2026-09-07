@@ -13,6 +13,7 @@ import type {
   ValidTrainingSession,
 } from '../../services/training-session.ts';
 import { toApiDepopulatedClimbHistory } from './climb-histories.ts';
+import { toApiDepopulatedClimb } from './climbs.ts';
 import { toApiDepopulatedLocation } from './locations.ts';
 
 function toApiDepopulatedTrainingSession(
@@ -27,14 +28,14 @@ function toApiDepopulatedTrainingSession(
     startedAt: model.startedAt.toISOString(),
     endedAt: model.endedAt ? model.endedAt.toISOString() : undefined,
     lastActivityAt: model.lastActivityAt.toISOString(),
-    currentClimbId: model.currentClimbId
-      ? model.currentClimbId.toString()
-      : undefined,
 
     /* Ownership */
     owner: model.owner.toString(),
 
     /* References */
+    currentClimb: model.currentClimb
+      ? model.currentClimb.toString()
+      : undefined,
     location: model.location ? model.location.toString() : undefined,
     climbHistories: model.climbHistories.map((id) => id.toString()),
 
@@ -54,14 +55,14 @@ function toApiTrainingSession(model: ValidTrainingSession): TrainingSession {
     startedAt: model.startedAt.toISOString(),
     endedAt: model.endedAt ? model.endedAt.toISOString() : undefined,
     lastActivityAt: model.lastActivityAt.toISOString(),
-    currentClimbId: model.currentClimbId
-      ? model.currentClimbId.toString()
-      : undefined,
 
     /* Ownership */
     owner: model.owner.toString(),
 
     /* References */
+    currentClimb: model.currentClimb
+      ? toApiDepopulatedClimb(model.currentClimb)
+      : undefined,
     location: model.location
       ? toApiDepopulatedLocation(model.location)
       : undefined,
@@ -87,9 +88,9 @@ function toUpsertTrainingSessionInput(
     lastActivityAt: request.lastActivityAt
       ? new Date(request.lastActivityAt)
       : new Date(),
-    currentClimbId: request.currentClimbId
-      ? new Types.ObjectId(request.currentClimbId)
-      : undefined,
+    currentClimb: request.currentClimb
+      ? new Types.ObjectId(request.currentClimb)
+      : null,
 
     /* References */
     location: request.location ? new Types.ObjectId(request.location) : null,

@@ -4,10 +4,17 @@ import { TrainingSession } from './training-session.ts';
 
 export type TrainingSessionsPutRequest = Omit<
   TrainingSession,
-  'id' | 'createdAt' | 'updatedAt' | 'owner' | 'location' | 'climbHistories'
+  | 'id'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'owner'
+  | 'location'
+  | 'climbHistories'
+  | 'currentClimb'
 > & {
   id?: string;
 
+  currentClimb?: string;
   location: string | null;
   climbHistories: string[];
 };
@@ -20,7 +27,7 @@ export const trainingSessionsPutRequestSchema = z.object({
   startedAt: z.string().nonempty(),
   endedAt: z.string().nonempty().optional(),
   lastActivityAt: z.string().nonempty().optional(),
-  currentClimbId: z.string().nonempty().optional(),
+  currentClimb: z.string().nonempty().optional(),
   location: z.string().nonempty().nullable(),
   climbHistories: z.array(z.string().nonempty()),
 });

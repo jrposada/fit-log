@@ -4,6 +4,7 @@ import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
 import type { WithRefs } from '../infrastructure/with-refs.ts';
+import type { IClimb } from './climb.ts';
 import type { IClimbHistory } from './climb-history.ts';
 import type { ILocation } from './location.ts';
 
@@ -48,11 +49,12 @@ const sessionSummarySchema = new Schema<SessionSummaryData>(
 export type TrainingSessionPopulatedRefs = {
   location: ILocation | null;
   climbHistories: IClimbHistory[];
+  currentClimb: IClimb | null;
 };
 
 export type TrainingSessionRequiredRefs = Exclude<
   keyof TrainingSessionPopulatedRefs,
-  'location'
+  'location' | 'currentClimb'
 >;
 
 export interface ITrainingSession
@@ -66,7 +68,6 @@ export interface ITrainingSession
   startedAt: Date;
   endedAt?: Date;
   lastActivityAt: Date;
-  currentClimbId?: Types.ObjectId;
   /** Denormalized cache, recomputed by the owning sport package on every
    * write that touches the session's derived data. Never authoritative. */
   summary: SessionSummaryData;
@@ -120,7 +121,7 @@ const trainingSessionSchema = new Schema<ITrainingSession>(
     },
 
     /* References */
-    currentClimbId: {
+    currentClimb: {
       type: Schema.Types.ObjectId,
       ref: 'Climb',
       required: false,

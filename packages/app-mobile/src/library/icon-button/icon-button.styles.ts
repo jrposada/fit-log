@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { IconSize } from '../icon';
-import { accent, ink, radii, semantic, surfaces } from '../theme';
+import { accent, ink, palette, radii, semantic, surfaces } from '../theme';
 
 export const variantStyles = StyleSheet.create({
   default: {
@@ -20,6 +20,9 @@ export const variantStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: semantic.destructive,
   },
+  accent: {
+    backgroundColor: palette.amber,
+  },
 });
 
 export const variantTextColors = {
@@ -27,6 +30,7 @@ export const variantTextColors = {
   primary: ink.inverse,
   ghost: ink.primary,
   destructive: semantic.destructive,
+  accent: ink.inverse,
 } as const;
 
 // Square dimensions matching Button effective heights

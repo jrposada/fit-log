@@ -12,7 +12,12 @@ import {
   variantTextColors,
 } from './icon-button.styles';
 
-type IconButtonVariant = 'default' | 'primary' | 'ghost' | 'destructive';
+type IconButtonVariant =
+  | 'default'
+  | 'primary'
+  | 'ghost'
+  | 'destructive'
+  | 'accent';
 type IconButtonSize = 'sm' | 'md' | 'lg';
 
 export interface IconButtonProps {

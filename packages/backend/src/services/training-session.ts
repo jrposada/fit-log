@@ -6,7 +6,7 @@ import { Types } from 'mongoose';
 import type { EntityAttributes } from '../data/infrastructure/entity-attributes.ts';
 import type { WithRequiredRefs } from '../data/infrastructure/with-required-refs.ts';
 import type { WithRequiredOwnership } from '../data/models/_collaborator.ts';
-import type { IClimb } from '../data/models/climb.ts';
+import type { ClimbRequiredRefs, IClimb } from '../data/models/climb.ts';
 import type {
   ClimbHistoryRequiredRefs,
   ClimbHistoryStatus,
@@ -21,6 +21,7 @@ import {
 } from '../data/models/training-session.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
+import { hasRequiredRefs as hasRequiredClimbRefs } from './climb.ts';
 import { hasRequiredClimbHistoryRefs } from './climb-history.ts';
 
 const GRADES: string[] = [...GRADE_OPTIONS];
@@ -31,6 +32,9 @@ type ValidTrainingSession = MergeType<
   {
     climbHistories: WithRequiredRefs<IClimbHistory, ClimbHistoryRequiredRefs>[];
     location: WithRequiredOwnership<ILocation> | null;
+    currentClimb: WithRequiredOwnership<
+      WithRequiredRefs<IClimb, ClimbRequiredRefs>
+    > | null;
   }
 >;
 
@@ -47,7 +51,29 @@ function withValidClimbHistories<T extends { climbHistories: IClimbHistory[] }>(
   });
 }
 
-const TRAINING_SESSION_POPULATE = ['location', 'climbHistories'] as const;
+function withValidCurrentClimb<T extends { currentClimb: IClimb | null }>(
+  session: T
+): MergeType<
+  T,
+  {
+    currentClimb: WithRequiredOwnership<
+      WithRequiredRefs<IClimb, ClimbRequiredRefs>
+    > | null;
+  }
+> {
+  return Object.assign(session, {
+    currentClimb:
+      session.currentClimb && hasRequiredClimbRefs(session.currentClimb)
+        ? session.currentClimb
+        : null,
+  });
+}
+
+const TRAINING_SESSION_POPULATE = [
+  'location',
+  'climbHistories',
+  'currentClimb',
+] as const;
 
 const DEFAULT_LIMIT = 20;
 
@@ -90,6 +116,7 @@ async function getTrainingSessions(
     .populate<{
       location: WithRequiredOwnership<ILocation> | null;
       climbHistories: IClimbHistory[];
+      currentClimb: WithRequiredOwnership<IClimb> | null;
     }>([...TRAINING_SESSION_POPULATE]);
 
   const hasMore = sessions.length > pageSize;
@@ -102,7 +129,9 @@ async function getTrainingSessions(
       : null;
 
   return {
-    trainingSessions: pageSessions.map(withValidClimbHistories),
+    trainingSessions: pageSessions.map((session) =>
+      withValidCurrentClimb(withValidClimbHistories(session))
+    ),
     nextCursor,
   };
 }
@@ -117,13 +146,14 @@ async function getTrainingSessionById(
   }).populate<{
     location: WithRequiredOwnership<ILocation> | null;
     climbHistories: IClimbHistory[];
+    currentClimb: WithRequiredOwnership<IClimb> | null;
   }>([...TRAINING_SESSION_POPULATE]);
 
   if (!session) {
     throw new ResourceNotFound(`Training session with id ${id} not found`);
   }
 
-  return withValidClimbHistories(session);
+  return withValidCurrentClimb(withValidClimbHistories(session));
 }
 
 /**

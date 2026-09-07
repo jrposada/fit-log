@@ -1,5 +1,6 @@
 import { WithDepopulatedOwnership } from '../auth/with-ownership.ts';
 import { ClimbHistory } from '../climb-histories/climb-history.ts';
+import { Climb } from '../climbs/climb.ts';
 import { Location } from '../locations/location.ts';
 import { WithTimestamps } from '../utils/with-timestamps.ts';
 
@@ -16,12 +17,21 @@ export type TrainingSession = WithTimestamps<{
   startedAt: string;
   endedAt?: string;
   lastActivityAt?: string;
-  currentClimbId?: string;
 
   /* Ownership */
   owner: string;
 
   /* References */
+
+  currentClimb?: Omit<
+    WithDepopulatedOwnership<Climb>,
+    'image' | 'location' | 'sector' | 'model3d'
+  > & {
+    image: string | null;
+    location: string;
+    sector: string;
+    model3d: string | null;
+  };
   location?: Omit<WithDepopulatedOwnership<Location>, 'sectors'> & {
     sectors: string[];
   };

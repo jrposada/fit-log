@@ -19,12 +19,11 @@ import { styles } from './active-training-session-flyover.styles';
 interface ActiveTrainingSessionFlyoverProps {
   style?: StyleProp<ViewStyle>;
   onLayout?: (event: LayoutChangeEvent) => void;
-  onGoToDashboard: () => void;
 }
 
 const ActiveTrainingSessionFlyover: FunctionComponent<
   ActiveTrainingSessionFlyoverProps
-> = ({ style, onLayout, onGoToDashboard }) => {
+> = ({ style, onLayout }) => {
   const { t } = useTranslation();
   const { data: activeSession } = useTrainingSessionsActive();
   const [isExpanded, setExpanded] = useState(false);
@@ -69,7 +68,6 @@ const ActiveTrainingSessionFlyover: FunctionComponent<
               isActive
               isExpanded={isExpanded}
               onToggleIsExpanded={handleToggleExpand}
-              onGoToDashboard={onGoToDashboard}
             />
           </Animated.View>
         ) : (

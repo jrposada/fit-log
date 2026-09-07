@@ -202,6 +202,7 @@ export const dataTypography = {
 // Spacing – expanded scale (2xs through 5xl)
 // ---------------------------------------------------------------------------
 export const spacing = {
+  '0': 0,
   '2xs': 2,
   xs: 4,
   sm: 8,

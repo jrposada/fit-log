@@ -45,7 +45,6 @@ const BottomTabBar: FunctionComponent<BottomTabBarProps> = ({
         <ActiveTrainingSessionFlyover
           style={[styles.activeTrainingSession, { bottom: barHeight }]}
           onLayout={handleFlyoverLayout}
-          onGoToDashboard={() => navigation.navigate('Home')}
         />
       )}
       <View

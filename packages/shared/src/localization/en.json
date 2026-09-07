@@ -27,6 +27,7 @@
   "app_bar.history": "History",
   "common.characters_count": "{{count}}/{{max}} characters",
   "common.filter_all": "All",
+  "common.unknown": "Unknown",
   "app_bar.home": "Home",
   "app_bar.explore": "Explore",
   "app_bar.settings": "Settings",

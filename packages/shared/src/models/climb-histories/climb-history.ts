@@ -41,9 +41,10 @@ export type ClimbHistory = WithTimestamps<{
     climbs: string[];
   };
   trainingSession:
-    | (Omit<TrainingSession, 'location' | 'climbHistories'> & {
+    | (Omit<TrainingSession, 'location' | 'climbHistories' | 'currentClimb'> & {
         location?: string;
         climbHistories: string[];
+        currentClimb?: string;
       })
     | null;
 }>;
