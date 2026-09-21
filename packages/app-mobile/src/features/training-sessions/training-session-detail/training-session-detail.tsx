@@ -1,10 +1,12 @@
 import { TrainingSession } from '@jrposada/fit-log-shared/models/training-sessions/training-session';
+import { useTrainingSessionsPut } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-put';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { Badge } from '../../../library/badge';
+import Button from '../../../library/button';
 import { Icon } from '../../../library/icon';
 import IconButton from '../../../library/icon-button';
 import Stack from '../../../library/stack';
@@ -27,9 +29,14 @@ const TrainingSessionDetail: FunctionComponent<TrainingSessionDetailProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  const trainingSessionsPut = useTrainingSessionsPut();
+
   const handleLogFlash = () => {};
   const handleLogSend = () => {};
   const handleLogTry = () => {};
+  const handleStopTrainingSession = () => {
+    trainingSessionsPut.stop(session);
+  };
 
   return (
     <Stack gap="md">
@@ -65,36 +72,46 @@ const TrainingSessionDetail: FunctionComponent<TrainingSessionDetailProps> = ({
           </Stack>
 
           {/* Right */}
-          {session.currentClimb?.name && (
-            <Stack direction="vertical" align="end" gap="0">
-              <Typography>{session.currentClimb.name}</Typography>
-              <Stack direction="horizontal" align="center" gap="xs">
-                <IconButton
-                  icon="bolt"
-                  variant="accent"
-                  size="sm"
-                  onPress={handleLogFlash}
-                />
-                <IconButton
-                  icon="check"
-                  variant="primary"
-                  size="sm"
-                  onPress={handleLogSend}
-                />
-                <IconButton
-                  icon="replay"
-                  variant="default"
-                  size="sm"
-                  onPress={handleLogTry}
-                />
-                <Icon
-                  icon={isExpanded ? 'expand-less' : 'expand-more'}
-                  size="sm"
-                  color={accent.primary}
-                />
-              </Stack>
-            </Stack>
-          )}
+          <Stack direction="vertical" align="end" gap="0">
+            <Button
+              title={t('climbing.session_stop_button')}
+              variant="destructive"
+              icon="stop"
+              fullWidth
+              onPress={handleStopTrainingSession}
+              disabled={trainingSessionsPut.isPending}
+            />
+            {session.currentClimb?.name && (
+              <>
+                <Typography>{session.currentClimb.name}</Typography>
+                <Stack direction="horizontal" align="center" gap="xs">
+                  <IconButton
+                    icon="bolt"
+                    variant="accent"
+                    size="sm"
+                    onPress={handleLogFlash}
+                  />
+                  <IconButton
+                    icon="check"
+                    variant="primary"
+                    size="sm"
+                    onPress={handleLogSend}
+                  />
+                  <IconButton
+                    icon="replay"
+                    variant="default"
+                    size="sm"
+                    onPress={handleLogTry}
+                  />
+                  <Icon
+                    icon={isExpanded ? 'expand-less' : 'expand-more'}
+                    size="sm"
+                    color={accent.primary}
+                  />
+                </Stack>
+              </>
+            )}
+          </Stack>
         </Stack>
       </Pressable>
 
@@ -132,38 +149,6 @@ const TrainingSessionDetail: FunctionComponent<TrainingSessionDetailProps> = ({
                 </Typography>
               </Stack>
             </Stack>
-
-            {/* {canStep && currentClimb && (
-              <Stack direction="horizontal" align="center" justify="between">
-                <Stack gap="2xs">
-                  <Typography
-                    size="overline"
-                    color="secondary"
-                    style={{ textTransform: 'uppercase' }}
-                  >
-                    {t('climbing.session_current_climb_label')}
-                  </Typography>
-                  <Typography weight="semibold">
-                    {currentClimb.grade} {currentClimb.name}
-                  </Typography>
-                </Stack>
-                <Stepper
-                  value={attempts}
-                  onChange={handleChangeAttempts}
-                  min={1}
-                  disabled={isUpdatingAttempts}
-                />
-              </Stack>
-            )}
-
-            <Button
-              title={t('climbing.session_stop_button')}
-              variant="destructive"
-              icon="stop"
-              fullWidth
-              onPress={handleStop}
-              disabled={isStopping}
-            /> */}
           </Stack>
         </Animated.View>
       )}

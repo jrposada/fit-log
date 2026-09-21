@@ -1,4 +1,5 @@
 import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
+import { TrainingSession } from '@jrposada/fit-log-shared/models/training-sessions/training-session';
 import {
   TrainingSessionsPutRequest,
   TrainingSessionsPutResponse,
@@ -25,7 +26,7 @@ function useTrainingSessionsPut({
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
   const { getToken, refreshToken, logout } = useAuth();
 
-  return useMutation<
+  const result = useMutation<
     TrainingSessionsPutResponse['trainingSession'],
     string,
     TrainingSessionsPutRequest,
@@ -63,6 +64,18 @@ function useTrainingSessionsPut({
       onSuccess?.(trainingSession);
     },
   });
+
+  const stop = (session: TrainingSession) => {
+    result.mutate({
+      ...session,
+      endedAt: new Date().toISOString(),
+      currentClimb: session.currentClimb?.id,
+      location: session.location?.id ?? null,
+      climbHistories: session.climbHistories.map((item) => item.id),
+    });
+  };
+
+  return { ...result, stop };
 }
 
 export { useTrainingSessionsPut };
