@@ -16,6 +16,7 @@ type UseTrainingSessionsParams = Omit<TrainingSessionsGetQuery, 'cursor'>;
 function useTrainingSessions({
   limit,
   active,
+  enrollment,
 }: UseTrainingSessionsParams = {}) {
   const apiBaseUrl = getEnvVariable('PUBLIC_API_BASE_URL');
   const { getToken, refreshToken, logout } = useAuth();
@@ -30,7 +31,7 @@ function useTrainingSessions({
     readonly unknown[],
     string | undefined
   >({
-    queryKey: ['training-sessions', { limit, active }],
+    queryKey: ['training-sessions', { limit, active, enrollment }],
     initialPageParam: undefined,
     placeholderData: keepPreviousData,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
@@ -46,6 +47,9 @@ function useTrainingSessions({
           }
           if (active) {
             params.append('active', 'true');
+          }
+          if (enrollment) {
+            params.append('enrollment', enrollment);
           }
           if (pageParam) {
             params.append('cursor', pageParam);

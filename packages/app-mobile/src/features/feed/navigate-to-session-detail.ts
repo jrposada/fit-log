@@ -14,6 +14,7 @@ function navigateToSessionDetail(
 ): void {
   switch (session.sport) {
     case 'climbing':
+    case 'gym':
       navigation.navigate('TrainingSessionsDetail', {
         trainingSessionId: session.id,
       });

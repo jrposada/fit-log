@@ -1,5 +1,16 @@
+import type { Sport } from '@jrposada/fit-log-shared/common/sports/sports';
+import { SPORTS } from '@jrposada/fit-log-shared/common/sports/sports';
 import type { SessionSummaryData } from '@jrposada/fit-log-shared/models/feed/feed';
-import { SESSION_STALE_MS } from '@jrposada/fit-log-shared/models/training-sessions/training-session';
+import { TRAINING_PLAN_SLOTS } from '@jrposada/fit-log-shared/models/training-plans/training-plan';
+import type {
+  TrainingSessionItemLog,
+  TrainingSessionItemLogSet,
+  TrainingSessionPlanned,
+} from '@jrposada/fit-log-shared/models/training-sessions/training-session';
+import {
+  SESSION_STALE_MS,
+  TRAINING_SESSION_ITEM_LOG_STATUSES,
+} from '@jrposada/fit-log-shared/models/training-sessions/training-session';
 import type { Document, Types, WithTimestamps } from 'mongoose';
 import { model, Schema } from 'mongoose';
 
@@ -46,6 +57,95 @@ const sessionSummarySchema = new Schema<SessionSummaryData>(
   { _id: false }
 );
 
+export type ITrainingSessionPlanned = Omit<
+  TrainingSessionPlanned,
+  'enrollment'
+> & {
+  enrollment: Types.ObjectId;
+};
+
+const plannedSchema = new Schema<ITrainingSessionPlanned>(
+  {
+    enrollment: {
+      type: Schema.Types.ObjectId,
+      ref: 'PlanEnrollment',
+      required: true,
+    },
+    sessionTemplateId: {
+      type: String,
+      required: true,
+    },
+    week: {
+      type: Number,
+      required: true,
+    },
+    day: {
+      type: Number,
+      required: true,
+    },
+    slot: {
+      type: String,
+      enum: TRAINING_PLAN_SLOTS,
+      required: true,
+    },
+  },
+  { _id: false }
+);
+
+const itemLogSetSchema = new Schema<TrainingSessionItemLogSet>(
+  {
+    reps: {
+      type: Number,
+      required: false,
+    },
+    weightKg: {
+      type: Number,
+      required: false,
+    },
+    holdS: {
+      type: Number,
+      required: false,
+    },
+    durationMin: {
+      type: Number,
+      required: false,
+    },
+    rpe: {
+      type: Number,
+      required: false,
+    },
+  },
+  { _id: false }
+);
+
+const itemLogSchema = new Schema<TrainingSessionItemLog>(
+  {
+    itemOrder: {
+      type: Number,
+      required: true,
+    },
+    exerciseId: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: TRAINING_SESSION_ITEM_LOG_STATUSES,
+      required: true,
+    },
+    notes: {
+      type: String,
+      required: false,
+    },
+    sets: {
+      type: [itemLogSetSchema],
+      required: true,
+      default: [],
+    },
+  },
+  { _id: false }
+);
+
 export type TrainingSessionPopulatedRefs = {
   location: ILocation | null;
   climbHistories: IClimbHistory[];
@@ -62,12 +162,14 @@ export interface ITrainingSession
     WithTimestamps<Document<Types.ObjectId>>,
     WithRefs<TrainingSessionPopulatedRefs> {
   /* Data */
-  sport: 'climbing';
+  sport: Sport;
   title: string;
   notes?: string;
   startedAt: Date;
   endedAt?: Date;
   lastActivityAt: Date;
+  planned?: ITrainingSessionPlanned;
+  itemLogs: TrainingSessionItemLog[];
   /** Denormalized cache, recomputed by the owning sport package on every
    * write that touches the session's derived data. Never authoritative. */
   summary: SessionSummaryData;
@@ -81,7 +183,7 @@ const trainingSessionSchema = new Schema<ITrainingSession>(
     /* Data */
     sport: {
       type: String,
-      enum: ['climbing'],
+      enum: SPORTS,
       required: true,
       default: 'climbing',
     },
@@ -104,6 +206,15 @@ const trainingSessionSchema = new Schema<ITrainingSession>(
     lastActivityAt: {
       type: Date,
       required: true,
+    },
+    planned: {
+      type: plannedSchema,
+      required: false,
+    },
+    itemLogs: {
+      type: [itemLogSchema],
+      required: true,
+      default: [],
     },
     summary: {
       type: sessionSummarySchema,

@@ -6,6 +6,7 @@ import type {
 import type { Types } from 'mongoose';
 
 import { climbingFeedStatsAdapter } from './feed-stats-adapter-climbing.ts';
+import { gymFeedStatsAdapter } from './feed-stats-adapter-gym.ts';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -32,7 +33,10 @@ export interface FeedStatsAdapter {
 }
 
 /** One adapter per sport collection; new sports register here. */
-const feedStatsAdapters: FeedStatsAdapter[] = [climbingFeedStatsAdapter];
+const feedStatsAdapters: FeedStatsAdapter[] = [
+  climbingFeedStatsAdapter,
+  gymFeedStatsAdapter,
+];
 
 /** `en-CA` formats as `YYYY-MM-DD`, giving a stable calendar-day key. */
 function dayKeyInTimezone(date: Date, timezone: string): string {

@@ -1,5 +1,7 @@
 import { GRADE_OPTIONS } from '@jrposada/fit-log-shared/common/climbs/grades';
+import { validatePlannedSession } from '@jrposada/fit-log-shared/common/training-plans/validate-planned-session';
 import type { SessionSummaryData } from '@jrposada/fit-log-shared/models/feed/feed';
+import type { TrainingSessionItemLog } from '@jrposada/fit-log-shared/models/training-sessions/training-session';
 import type { MergeType } from 'mongoose';
 import { Types } from 'mongoose';
 
@@ -14,6 +16,7 @@ import type {
 } from '../data/models/climb-history.ts';
 import { ClimbHistory } from '../data/models/climb-history.ts';
 import type { ILocation } from '../data/models/location.ts';
+import { PlanEnrollment } from '../data/models/plan-enrollment.ts';
 import type { ITrainingSession } from '../data/models/training-session.ts';
 import {
   EMPTY_TRAINING_SESSION_SUMMARY,
@@ -21,8 +24,10 @@ import {
 } from '../data/models/training-session.ts';
 import type { IUser } from '../data/models/user.ts';
 import ResourceNotFound from '../infrastructure/not-found-error.ts';
+import ValidationError from '../infrastructure/validation-error.ts';
 import { hasRequiredRefs as hasRequiredClimbRefs } from './climb.ts';
 import { hasRequiredClimbHistoryRefs } from './climb-history.ts';
+import { getTrainingPlanById } from './training-plan.ts';
 
 const GRADES: string[] = [...GRADE_OPTIONS];
 
@@ -84,6 +89,7 @@ type GetTrainingSessionsOptions = {
   limit?: number;
   cursor?: TrainingSessionsCursor | null;
   active?: boolean;
+  enrollment?: string;
 };
 
 async function getTrainingSessions(
@@ -93,11 +99,14 @@ async function getTrainingSessions(
   trainingSessions: ValidTrainingSession[];
   nextCursor: TrainingSessionsCursor | null;
 }> {
-  const { limit, cursor, active } = options;
+  const { limit, cursor, active, enrollment } = options;
 
   const filter: Record<string, unknown> = { owner };
   if (active) {
     filter.endedAt = { $exists: false };
+  }
+  if (enrollment) {
+    filter['planned.enrollment'] = enrollment;
   }
   if (cursor) {
     const cursorDate = new Date(cursor.startedAt);
@@ -170,12 +179,50 @@ type UpsertTrainingSessionInput = Omit<
   'owner' | 'summary'
 > & { id?: string };
 
+/** Item logs only make sense against a planned session's template. */
+async function validatePlanned(
+  owner: Types.ObjectId,
+  { id, planned, sport, itemLogs }: UpsertTrainingSessionInput
+): Promise<void> {
+  if (!planned) {
+    if (itemLogs.length > 0) {
+      throw new ValidationError('Item logs require a planned session');
+    }
+    return;
+  }
+
+  const enrollment = await PlanEnrollment.findOne({
+    _id: planned.enrollment,
+    owner,
+  });
+  if (!enrollment) {
+    throw new ResourceNotFound(
+      `Plan enrollment ${planned.enrollment.toString()} not found`
+    );
+  }
+  // Only new sessions need an active plan; one already in progress must stay
+  // stoppable after its plan is abandoned or completed.
+  if (!id && enrollment.status !== 'active') {
+    throw new ValidationError(
+      `Plan enrollment ${enrollment._id.toString()} is ${enrollment.status}`
+    );
+  }
+
+  const plan = await getTrainingPlanById(enrollment.planId);
+  const error = validatePlannedSession(plan, planned, sport, itemLogs);
+  if (error) {
+    throw new ValidationError(error);
+  }
+}
+
 async function upsertTrainingSession(
   user: IUser,
   input: UpsertTrainingSessionInput
 ): Promise<ValidTrainingSession> {
   const { id, ...data } = input;
   const userId = user._id;
+
+  await validatePlanned(userId, input);
 
   let sessionId: Types.ObjectId;
 
@@ -201,6 +248,12 @@ async function upsertTrainingSession(
       lastActivityAt: now,
     });
     sessionId = created._id;
+  }
+
+  // A gym session's summary derives from its own item logs, so every put is
+  // a write that touches it.
+  if (data.sport === 'gym') {
+    await recomputeGymSessionSummary(sessionId);
   }
 
   return getTrainingSessionById(userId, sessionId.toString());
@@ -264,6 +317,44 @@ async function recomputeTrainingSessionSummary(
   }).populate<{ climb: IClimb | null }>('climb');
 
   const summary = computeTrainingSessionSummary(histories);
+
+  await TrainingSession.updateOne({ _id: sessionId }, { $set: { summary } });
+}
+
+function computeGymSessionSummary(
+  totalItems: number,
+  itemLogs: Pick<TrainingSessionItemLog, 'status'>[]
+): SessionSummaryData {
+  const done = itemLogs.filter(({ status }) => status === 'done').length;
+  return { headline: `${done}/${totalItems} exercises`, count: done };
+}
+
+/**
+ * Recomputes the `summary` cache of a gym session from its item logs against
+ * its planned template. Reads the stored session rather than the put input
+ * because an update that omits `planned` keeps the stored one.
+ */
+async function recomputeGymSessionSummary(
+  sessionId: Types.ObjectId
+): Promise<void> {
+  const session = await TrainingSession.findById(sessionId);
+  if (!session) {
+    return;
+  }
+
+  let totalItems = 0;
+  if (session.planned) {
+    const { enrollment: enrollmentId, sessionTemplateId } = session.planned;
+    const enrollment = await PlanEnrollment.findById(enrollmentId);
+    if (enrollment) {
+      const plan = await getTrainingPlanById(enrollment.planId);
+      totalItems =
+        plan.sessionTemplates.find(({ id }) => id === sessionTemplateId)?.items
+          .length ?? 0;
+    }
+  }
+
+  const summary = computeGymSessionSummary(totalItems, session.itemLogs);
 
   await TrainingSession.updateOne({ _id: sessionId }, { $set: { summary } });
 }

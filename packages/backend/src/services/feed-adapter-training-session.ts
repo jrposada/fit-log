@@ -1,0 +1,103 @@
+import type { Sport } from '@jrposada/fit-log-shared/common/sports/sports';
+import type { SessionSummary } from '@jrposada/fit-log-shared/models/feed/feed';
+import { Types } from 'mongoose';
+
+import type { ITrainingSession } from '../data/models/training-session.ts';
+import {
+  EMPTY_TRAINING_SESSION_SUMMARY,
+  TrainingSession,
+} from '../data/models/training-session.ts';
+import type { FeedAdapter, FeedAdapterQuery } from './feed.ts';
+
+function toSessionSummary(model: ITrainingSession): SessionSummary {
+  return {
+    /* Data */
+    id: model._id.toString(),
+    sport: model.sport,
+    title: model.title,
+    startedAt: model.startedAt.toISOString(),
+    endedAt: model.endedAt ? model.endedAt.toISOString() : undefined,
+    // Sessions created before the summary cache existed have no value yet.
+    summary: model.summary ?? { ...EMPTY_TRAINING_SESSION_SUMMARY },
+
+    /* References */
+    location: model.location ? model.location.toString() : undefined,
+  };
+}
+
+/**
+ * Resumes the merged stream's total order (`startedAt` desc, `sport` asc,
+ * `id` desc) within this collection. Rows at the cursor's exact `startedAt`
+ * are included or excluded depending on where this adapter's sport sorts
+ * relative to the cursor row's sport; `_id` only breaks ties within the
+ * cursor's own collection.
+ */
+function cursorClause(
+  sport: Sport,
+  cursor: NonNullable<FeedAdapterQuery['cursor']>
+): Record<string, unknown> {
+  const cursorDate = new Date(cursor.startedAt);
+
+  if (cursor.sport === sport) {
+    return {
+      $or: [
+        { startedAt: { $lt: cursorDate } },
+        { startedAt: cursorDate, _id: { $lt: new Types.ObjectId(cursor.id) } },
+      ],
+    };
+  }
+
+  if (sport < cursor.sport) {
+    // This sport's equal-`startedAt` rows were already emitted.
+    return { startedAt: { $lt: cursorDate } };
+  }
+
+  return { startedAt: { $lte: cursorDate } };
+}
+
+/** Every sport is stored as a `TrainingSession`; each gets its own adapter
+ * over its slice of the collection. */
+export function createTrainingSessionFeedAdapter(sport: Sport): FeedAdapter {
+  return {
+    sport,
+
+    async distinctLocationIds(ownerId) {
+      const locationIds = await TrainingSession.distinct('location', {
+        owner: ownerId,
+        sport,
+        location: { $ne: null },
+      });
+      return locationIds.map((id) => id.toString());
+    },
+
+    async fetch(query) {
+      const baseFilter: Record<string, unknown> = {
+        owner: query.ownerId,
+        sport,
+        ...(query.locationId ? { location: query.locationId } : {}),
+      };
+
+      const clauses: Record<string, unknown>[] = [];
+      if (query.startDate || query.endDate) {
+        clauses.push({
+          startedAt: {
+            ...(query.startDate ? { $gte: new Date(query.startDate) } : {}),
+            ...(query.endDate ? { $lte: new Date(query.endDate) } : {}),
+          },
+        });
+      }
+      if (query.cursor) {
+        clauses.push(cursorClause(sport, query.cursor));
+      }
+      if (clauses.length > 0) {
+        baseFilter.$and = clauses;
+      }
+
+      const sessions = await TrainingSession.find(baseFilter)
+        .sort({ startedAt: -1, _id: -1 })
+        .limit(query.limit);
+
+      return sessions.map(toSessionSummary);
+    },
+  };
+}

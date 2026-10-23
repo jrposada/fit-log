@@ -3,6 +3,7 @@ import type { SessionSummary } from '@jrposada/fit-log-shared/models/feed/feed';
 import type { Types } from 'mongoose';
 
 import { climbingFeedAdapter } from './feed-adapter-climbing.ts';
+import { gymFeedAdapter } from './feed-adapter-gym.ts';
 
 const DEFAULT_LIMIT = 20;
 
@@ -56,7 +57,7 @@ function compareFeedRowsDesc(a: SessionSummary, b: SessionSummary): number {
 }
 
 /** One adapter per sport collection; new sports register here. */
-const feedAdapters: FeedAdapter[] = [climbingFeedAdapter];
+const feedAdapters: FeedAdapter[] = [climbingFeedAdapter, gymFeedAdapter];
 
 type GetFeedOptions = {
   sport?: Sport;

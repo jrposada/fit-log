@@ -6,6 +6,8 @@ export type TrainingSessionsGetQuery = {
   limit?: number;
   cursor?: string;
   active?: boolean;
+  /** Only sessions planned from this enrollment. */
+  enrollment?: string;
 };
 export const trainingSessionsGetQuerySchema = z.object({
   limit: z.coerce.number().int().positive().max(50).optional(),
@@ -14,6 +16,7 @@ export const trainingSessionsGetQuerySchema = z.object({
     .union([z.boolean(), z.enum(['true', 'false'])])
     .transform((value) => value === true || value === 'true')
     .optional(),
+  enrollment: z.string().nonempty().optional(),
 });
 
 export type TrainingSessionsGetResponse = {
