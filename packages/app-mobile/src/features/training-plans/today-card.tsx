@@ -114,6 +114,7 @@ const TodayCard: FunctionComponent = () => {
               <Badge
                 label={t('training_plans.benchmarks_due')}
                 variant="warning"
+                onPress={() => navigation.navigate('Benchmarks')}
               />
             )}
           </Stack>

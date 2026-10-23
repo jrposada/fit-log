@@ -7,6 +7,8 @@ import {
   TrainingPlanItem,
   TrainingPlanPrescription,
 } from '@jrposada/fit-log-shared/models/training-plans/training-plan';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -14,6 +16,7 @@ import Card from '../../library/card';
 import CollapsibleSection from '../../library/collapsible-section';
 import Stack from '../../library/stack';
 import { Typography } from '../../library/typography';
+import { RootStackParamList } from '../../types/routes';
 import { hangLoadText, prescriptionText } from './prescription-text';
 
 type PlannedItemCardProps = {
@@ -37,6 +40,9 @@ const PlannedItemCard: FunctionComponent<PlannedItemCardProps> = ({
   bodyweightKg,
 }) => {
   const { t } = useTranslation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const openBenchmarks = () => navigation.navigate('Benchmarks');
 
   const exercise = plan.exercises.find(({ id }) => id === item.exerciseId);
   const summary = prescriptionText(t, prescription);
@@ -69,13 +75,23 @@ const PlannedItemCard: FunctionComponent<PlannedItemCardProps> = ({
                 {hangLoadText(t, load)}
               </Typography>
               {bodyweightKg === undefined && (
-                <Typography size="caption" color="warning">
+                <Typography
+                  size="caption"
+                  color="warning"
+                  style={{ textDecorationLine: 'underline' }}
+                  onPress={openBenchmarks}
+                >
                   {t('training_plans.hang_load_missing_bodyweight')}
                 </Typography>
               )}
             </>
           ) : (
-            <Typography size="callout" color="warning">
+            <Typography
+              size="callout"
+              color="warning"
+              style={{ textDecorationLine: 'underline' }}
+              onPress={openBenchmarks}
+            >
               {t('training_plans.hang_load_missing_mvc')}
             </Typography>
           ))}

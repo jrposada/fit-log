@@ -75,6 +75,14 @@ const PlanOverviewScreen: FunctionComponent = () => {
               </Typography>
             </Stack>
 
+            <Button
+              title={t('training_plans.benchmarks_title')}
+              icon="assessment"
+              variant="outline"
+              size="md"
+              onPress={() => navigation.navigate('Benchmarks')}
+            />
+
             <PlanWeeks
               plan={plan}
               enrollment={enrollment}

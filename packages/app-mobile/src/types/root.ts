@@ -23,6 +23,7 @@ export type RootStackParamList = {
     slot: TrainingPlanSlot;
     sessionTemplateId: string;
   };
+  Benchmarks: undefined;
   MapPointPicker: { latitude?: number; longitude?: number } | undefined;
   ImagePicker: undefined;
   Model3dPicker: undefined;

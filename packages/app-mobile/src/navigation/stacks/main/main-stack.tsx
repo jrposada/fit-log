@@ -7,6 +7,7 @@ import { MapPointPickerScreen } from '../../../library/map-point-picker';
 import { Model3dPickerScreen } from '../../../library/model-3d-picker';
 import { RootStackParamList } from '../../../types/routes';
 import Header from '../../common/header';
+import BenchmarksScreen from './routes/benchmarks/benchmarks-screen';
 import ClimbDetailScreen from './routes/climb-detail/climb-detail-screen';
 import ClimbLogScreen from './routes/climb-log/climb-log-screen';
 import LocationDetailScreen from './routes/location-detail/location-detail-screen';
@@ -76,6 +77,16 @@ const MainStack: FunctionComponent = () => {
           headerShown: true,
           header: () => (
             <Header title={t('training_plans.planned_session_title')} back />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="Benchmarks"
+        component={BenchmarksScreen}
+        options={{
+          headerShown: true,
+          header: () => (
+            <Header title={t('training_plans.benchmarks_title')} back />
           ),
         }}
       />
