@@ -599,6 +599,9 @@ importers:
       '@eslint/js':
         specifier: 'catalog:'
         version: 9.39.4
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.19.18
       eslint:
         specifier: 'catalog:'
         version: 9.39.4(jiti@2.7.0)
@@ -620,6 +623,9 @@ importers:
       typescript-eslint:
         specifier: 'catalog:'
         version: 8.59.2(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
+      vitest:
+        specifier: 3.2.4
+        version: 3.2.4(@types/node@22.19.18)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(tsx@4.21.0)(yaml@2.8.4)
 
   packages/shared-react:
     dependencies:

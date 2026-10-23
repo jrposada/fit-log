@@ -26,19 +26,22 @@
     "lint:eslint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:format": "prettier . --check",
     "lint:types": "tsc --noEmit",
-    "lint": "run-p lint:*"
+    "lint": "run-p lint:*",
+    "test": "vitest run"
   },
   "dependencies": {
     "zod": "catalog:"
   },
   "devDependencies": {
     "@eslint/js": "catalog:",
+    "@types/node": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-simple-import-sort": "catalog:",
     "globals": "catalog:",
     "npm-run-all": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "catalog:"
+    "typescript-eslint": "catalog:",
+    "vitest": "3.2.4"
   }
 }
