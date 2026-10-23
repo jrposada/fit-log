@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import { registerBenchmarkResultsRoutes } from './benchmark-results/benchmark-results-routes.ts';
 import { registerClimbHistoriesRoutes } from './climb-histories/climb-histories-routes.ts';
 import { registerClimbsRoutes } from './climbs/climbs-routes.ts';
 import { registerFeedRoutes } from './feed/feed-routes.ts';
@@ -23,6 +24,7 @@ registerWorkoutsRoutes(router);
 registerTrainingSessionsRoutes(router);
 registerTrainingPlansRoutes(router);
 registerPlanEnrollmentsRoutes(router);
+registerBenchmarkResultsRoutes(router);
 registerLocationsRoutes(router);
 registerSectorsRoutes(router);
 registerImagesRoutes(router);
