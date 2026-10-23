@@ -2,7 +2,7 @@ import { TrainingSession } from '@jrposada/fit-log-shared/models/training-sessio
 import { useTrainingSessionsPut } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions-put';
 import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable } from 'react-native';
+import { Pressable, ScrollView } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 
 import { Badge } from '../../../library/badge';
@@ -13,6 +13,8 @@ import Stack from '../../../library/stack';
 import { accent, ink } from '../../../library/theme';
 import { Typography } from '../../../library/typography';
 import { SPORT_ICONS } from '../../feed/sport-icons';
+import PlannedItemsLog from '../../training-plans/planned-items-log';
+import { styles } from './training-session-detail.styles';
 
 interface TrainingSessionDetailProps {
   session: TrainingSession;
@@ -63,12 +65,14 @@ const TrainingSessionDetail: FunctionComponent<TrainingSessionDetailProps> = ({
               {session.title}
             </Typography>
 
-            <Stack direction="horizontal" align="center">
-              <Icon icon="location-pin" size="xs" color={ink.tertiary} />
-              <Typography size="callout" color="tertiary">
-                {session.location?.name ?? t('common.unknown')}
-              </Typography>
-            </Stack>
+            {session.sport === 'climbing' && (
+              <Stack direction="horizontal" align="center">
+                <Icon icon="location-pin" size="xs" color={ink.tertiary} />
+                <Typography size="callout" color="tertiary">
+                  {session.location?.name ?? t('common.unknown')}
+                </Typography>
+              </Stack>
+            )}
           </Stack>
 
           {/* Right */}
@@ -121,6 +125,17 @@ const TrainingSessionDetail: FunctionComponent<TrainingSessionDetailProps> = ({
           exiting={FadeOut.duration(150)}
         >
           <Stack gap="md">
+            {session.planned && (
+              <ScrollView
+                style={styles.plannedItems}
+                keyboardShouldPersistTaps="handled"
+              >
+                <PlannedItemsLog
+                  key={session.id}
+                  session={{ ...session, planned: session.planned }}
+                />
+              </ScrollView>
+            )}
             <Stack direction="horizontal" justify="between">
               <Stack gap="2xs">
                 <Typography
@@ -134,20 +149,22 @@ const TrainingSessionDetail: FunctionComponent<TrainingSessionDetailProps> = ({
                   {t('climbing.session_duration_unit')}
                 </Typography>
               </Stack>
-              <Stack gap="2xs">
-                <Typography
-                  size="overline"
-                  color="secondary"
-                  style={{ textTransform: 'uppercase' }}
-                >
-                  {t('climbing.session_progress_label')}
-                </Typography>
-                <Typography size="heading" weight="bold">
-                  {t('climbing.climbs_count', {
-                    count: session.climbHistories.length,
-                  })}
-                </Typography>
-              </Stack>
+              {session.sport === 'climbing' && (
+                <Stack gap="2xs">
+                  <Typography
+                    size="overline"
+                    color="secondary"
+                    style={{ textTransform: 'uppercase' }}
+                  >
+                    {t('climbing.session_progress_label')}
+                  </Typography>
+                  <Typography size="heading" weight="bold">
+                    {t('climbing.climbs_count', {
+                      count: session.climbHistories.length,
+                    })}
+                  </Typography>
+                </Stack>
+              )}
             </Stack>
           </Stack>
         </Animated.View>

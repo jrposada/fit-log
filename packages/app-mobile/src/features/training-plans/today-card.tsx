@@ -123,15 +123,29 @@ const TodayCard: FunctionComponent = () => {
               {t('training_plans.rest_day')}
             </Typography>
           ) : (
-            planDay.entries.map((entry) => (
-              <ScheduleEntryRow
-                key={`${entry.slot}-${entry.sessionTemplateId}`}
-                entry={entry}
-                template={plan.sessionTemplates.find(
-                  ({ id }) => id === entry.sessionTemplateId
-                )}
-              />
-            ))
+            planDay.entries.map((entry) => {
+              const { sessionTemplateId } = entry;
+              return (
+                <ScheduleEntryRow
+                  key={`${entry.slot}-${sessionTemplateId}`}
+                  entry={entry}
+                  template={plan.sessionTemplates.find(
+                    ({ id }) => id === sessionTemplateId
+                  )}
+                  onPress={
+                    sessionTemplateId === null
+                      ? undefined
+                      : () =>
+                          navigation.navigate('PlannedSessionDetail', {
+                            week: planDay.week,
+                            day: entry.day,
+                            slot: entry.slot,
+                            sessionTemplateId,
+                          })
+                  }
+                />
+              );
+            })
           )}
         </Stack>
       </Card>

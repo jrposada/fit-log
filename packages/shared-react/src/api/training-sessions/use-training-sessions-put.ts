@@ -1,3 +1,4 @@
+import { toTrainingSessionsPutRequest } from '@jrposada/fit-log-shared/common/training-sessions/to-training-sessions-put-request';
 import { ApiResponse } from '@jrposada/fit-log-shared/models/api-response';
 import { TrainingSession } from '@jrposada/fit-log-shared/models/training-sessions/training-session';
 import {
@@ -67,11 +68,8 @@ function useTrainingSessionsPut({
 
   const stop = (session: TrainingSession) => {
     result.mutate({
-      ...session,
+      ...toTrainingSessionsPutRequest(session),
       endedAt: new Date().toISOString(),
-      currentClimb: session.currentClimb?.id,
-      location: session.location?.id ?? null,
-      climbHistories: session.climbHistories.map((item) => item.id),
     });
   };
 

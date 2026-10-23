@@ -1,3 +1,4 @@
+import type { TrainingPlanSlot } from '@jrposada/fit-log-shared/models/training-plans/training-plan';
 import type { NavigatorScreenParams } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -16,6 +17,12 @@ export type RootStackParamList = {
   TrainingSessionsDetail: { trainingSessionId: string };
   PlanEnroll: undefined;
   PlanOverview: undefined;
+  PlannedSessionDetail: {
+    week: number;
+    day: number;
+    slot: TrainingPlanSlot;
+    sessionTemplateId: string;
+  };
   MapPointPicker: { latitude?: number; longitude?: number } | undefined;
   ImagePicker: undefined;
   Model3dPicker: undefined;

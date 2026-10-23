@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { loadSeedTrainingPlan } from '../../test-utils/seed-training-plan.ts';
-import { hangLoad } from './hang-load.ts';
+import { hangLoad, hasHangLoad } from './hang-load.ts';
 
 const plan = loadSeedTrainingPlan();
 
@@ -40,5 +40,15 @@ describe('hangLoad', () => {
 
   it('is null for an exercise without a load prescription', () => {
     expect(hangLoad(plan, 'pushup', 'block1', 100, 70)).toBeNull();
+  });
+});
+
+describe('hasHangLoad', () => {
+  it('is true for an exercise with a load prescription', () => {
+    expect(hasHangLoad(plan, 'open_hand_repeaters')).toBe(true);
+  });
+
+  it('is false for any other exercise', () => {
+    expect(hasHangLoad(plan, 'weighted_pullup')).toBe(false);
   });
 });

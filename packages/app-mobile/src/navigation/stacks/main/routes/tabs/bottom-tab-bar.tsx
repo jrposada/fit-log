@@ -1,6 +1,13 @@
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { FunctionComponent, useEffect, useState } from 'react';
-import { LayoutChangeEvent, Pressable, Text, View } from 'react-native';
+import {
+  LayoutChangeEvent,
+  Platform,
+  Pressable,
+  Text,
+  View,
+} from 'react-native';
+import { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSetTabBarOverlayHeight } from '../../../../../common/tab-bar-overlay/use-set-tab-bar-overlay-height';
@@ -8,6 +15,10 @@ import ActiveTrainingSessionFlyover from '../../../../../features/training-sessi
 import { Icon, IconName } from '../../../../../library/icon';
 import { accent, ink } from '../../../../../library/theme';
 import { styles } from './bottom-tab-bar.styles';
+
+// iOS doesn't resize the window for the keyboard, so the flyover has to rise
+// above it to keep its set inputs visible.
+const IS_KEYBOARD_OVERLAYING = Platform.OS === 'ios';
 
 const TAB_ICONS: Record<string, IconName> = {
   Home: 'home',
@@ -24,6 +35,12 @@ const BottomTabBar: FunctionComponent<BottomTabBarProps> = ({
   const [barHeight, setBarHeight] = useState(0);
   const [flyoverHeight, setFlyoverHeight] = useState(0);
   const setOverlayHeight = useSetTabBarOverlayHeight();
+  const keyboard = useAnimatedKeyboard();
+  const flyoverPositionStyle = useAnimatedStyle(() => ({
+    bottom: IS_KEYBOARD_OVERLAYING
+      ? Math.max(barHeight, keyboard.height.value)
+      : barHeight,
+  }));
 
   const handleBarLayout = (event: LayoutChangeEvent) => {
     const next = event.nativeEvent.layout.height;
@@ -43,7 +60,7 @@ const BottomTabBar: FunctionComponent<BottomTabBarProps> = ({
     <View>
       {barHeight > 0 && (
         <ActiveTrainingSessionFlyover
-          style={[styles.activeTrainingSession, { bottom: barHeight }]}
+          style={[styles.activeTrainingSession, flyoverPositionStyle]}
           onLayout={handleFlyoverLayout}
         />
       )}

@@ -12,6 +12,7 @@ import ClimbLogScreen from './routes/climb-log/climb-log-screen';
 import LocationDetailScreen from './routes/location-detail/location-detail-screen';
 import PlanEnrollScreen from './routes/plan-enroll/plan-enroll-screen';
 import PlanOverviewScreen from './routes/plan-overview/plan-overview-screen';
+import PlannedSessionDetailScreen from './routes/planned-session-detail/planned-session-detail-screen';
 import ProfileScreen from './routes/profile/profile-screen';
 import TabsStack from './routes/tabs/tabs-stack';
 import TrainingSessionsDetailScreen from './routes/training-sessions-detail/training-sessions-detail-screen';
@@ -65,6 +66,16 @@ const MainStack: FunctionComponent = () => {
           headerShown: true,
           header: () => (
             <Header title={t('training_plans.overview_title')} back />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="PlannedSessionDetail"
+        component={PlannedSessionDetailScreen}
+        options={{
+          headerShown: true,
+          header: () => (
+            <Header title={t('training_plans.planned_session_title')} back />
           ),
         }}
       />

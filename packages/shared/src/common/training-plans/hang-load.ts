@@ -17,6 +17,13 @@ function roundToHalf(value: number): number {
   return Math.round(value * 2) / 2;
 }
 
+/** Whether `exerciseId` is loaded from the open-hand MVC. */
+export function hasHangLoad(plan: TrainingPlan, exerciseId: string): boolean {
+  return plan.tindeq.loadPrescription.some(
+    (prescription) => prescription.exerciseId === exerciseId
+  );
+}
+
 /**
  * Hang load for `exerciseId` in `blockId`, derived from the open-hand MVC,
  * which is a total load (bodyweight + added). `null` when the exercise has no

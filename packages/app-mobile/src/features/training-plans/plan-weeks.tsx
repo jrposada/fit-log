@@ -3,6 +3,8 @@ import { planWeekForDate } from '@jrposada/fit-log-shared/common/training-plans/
 import { PlanEnrollment } from '@jrposada/fit-log-shared/models/plan-enrollments/plan-enrollment';
 import { TrainingPlan } from '@jrposada/fit-log-shared/models/training-plans/training-plan';
 import { useTrainingSessions } from '@jrposada/fit-log-shared-react/api/training-sessions/use-training-sessions';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FunctionComponent, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,6 +15,7 @@ import Section from '../../library/section';
 import Separator from '../../library/separator';
 import Stack from '../../library/stack';
 import { Typography } from '../../library/typography';
+import { RootStackParamList } from '../../types/routes';
 import ScheduleEntryRow from './schedule-entry-row';
 
 const SESSIONS_PAGE_LIMIT = 50;
@@ -30,6 +33,8 @@ const PlanWeeks: FunctionComponent<PlanWeeksProps> = ({
   today,
 }) => {
   const { t } = useTranslation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const {
     items: sessions,
@@ -107,6 +112,17 @@ const PlanWeeks: FunctionComponent<PlanWeeksProps> = ({
                                 })
                           }
                           showDay
+                          onPress={
+                            sessionTemplateId === null
+                              ? undefined
+                              : () =>
+                                  navigation.navigate('PlannedSessionDetail', {
+                                    week,
+                                    day: entry.day,
+                                    slot: entry.slot,
+                                    sessionTemplateId,
+                                  })
+                          }
                         />
                       );
                     })}
