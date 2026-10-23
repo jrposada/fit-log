@@ -5,6 +5,7 @@ import { registerSeedClimbsCommand } from './climbs';
 import { registerSeedImagesCommand } from './images';
 import { registerSeedLocationsCommand } from './locations';
 import { registerSeedSectorsCommand } from './sectors';
+import { registerSeedTrainingPlanCommand } from './training-plan';
 import { registerSeedTrainingSessionsCommand } from './training-sessions';
 import { registerSeedWorkoutsCommand } from './workouts';
 
@@ -20,6 +21,7 @@ export default function registerSeedCommand(program: Command): void {
   registerSeedClimbHistoriesCommand(seedCmd);
   registerSeedTrainingSessionsCommand(seedCmd);
   registerSeedWorkoutsCommand(seedCmd);
+  registerSeedTrainingPlanCommand(seedCmd);
 
   seedCmd.action(() => {
     console.log();
@@ -35,6 +37,9 @@ export default function registerSeedCommand(program: Command): void {
     console.log('  cli seed workouts          Seed N workouts');
     console.log(
       '  cli seed training-sessions Seed a standalone training session'
+    );
+    console.log(
+      '  cli seed training-plan     Upsert a training plan from JSON'
     );
     console.log();
   });
