@@ -1,0 +1,1498 @@
+{
+  "schema_version": 1,
+  "plan": {
+    "id": "boulder-v6-v7-12wk",
+    "name": "Bouldering V6-V7 + gym, 12 weeks",
+    "duration_weeks": 12,
+    "goal": "Send a specific V6 or V7 boulder project",
+    "discipline": "bouldering",
+    "athlete": {
+      "current_grade": "V3-V5",
+      "target_grade": "V6-V7",
+      "training_age": "0 (no prior structured training)",
+      "gym_experience": "beginner",
+      "limiters": [
+        "open-hand/sloper strength",
+        "power endurance",
+        "core/body tension"
+      ],
+      "strengths": [
+        "crimp strength: 143% BW on 20mm edge, both hands (measured a year ago)"
+      ],
+      "equipment": [
+        "hangboard",
+        "gym/weights",
+        "kilter/moonboard/system board",
+        "climbing gym",
+        "tindeq"
+      ],
+      "injuries": "none (fully healed)",
+      "days_per_week": 5,
+      "gym_days_per_week": 2,
+      "gym_timing": "morning, before climbing"
+    },
+    "day_of_week_convention": "1=Monday ... 7=Sunday",
+    "slot_values": ["am", "pm", "any"]
+  },
+
+  "exercises": [
+    {
+      "id": "easy_traverse_warmup",
+      "name": "Easy traversing warm-up",
+      "category": "warmup",
+      "equipment": ["wall"],
+      "description": "Easy traversing plus joint circles: shoulders, elbows, wrists."
+    },
+    {
+      "id": "progressive_warmup",
+      "name": "Progressive climbing warm-up",
+      "category": "warmup",
+      "equipment": ["wall"],
+      "description": "Climb problems of gradually increasing difficulty. Nothing hard."
+    },
+    {
+      "id": "general_gym_warmup",
+      "name": "General gym warm-up",
+      "category": "warmup",
+      "equipment": ["bike"],
+      "description": "Leg swings, arm circles, hip circles, 2 min light bike or row."
+    },
+    {
+      "id": "shoulder_warmup",
+      "name": "Shoulder and spine warm-up",
+      "category": "warmup",
+      "equipment": ["band"],
+      "description": "Band pull-aparts 2x15, cat-cow, thoracic rotations."
+    },
+    {
+      "id": "arc",
+      "name": "ARC (Aerobic Restoration and Capillarity)",
+      "category": "endurance",
+      "equipment": ["wall"],
+      "description": "Continuous easy climbing (V0-V1), barely pumped. If you must stop, it is too hard. Builds capillarity and speeds recovery.",
+      "cues": ["straight arms", "silent feet"]
+    },
+    {
+      "id": "silent_feet",
+      "name": "Silent feet drill",
+      "category": "technique",
+      "equipment": ["wall"],
+      "description": "Place every foot silently and with intention. Climb slowly."
+    },
+    {
+      "id": "down_climbing",
+      "name": "Down-climbing",
+      "category": "technique",
+      "equipment": ["wall"],
+      "description": "Climb up AND back down the same problem."
+    },
+    {
+      "id": "straight_arm_climbing",
+      "name": "Straight-arm climbing",
+      "category": "technique",
+      "equipment": ["wall"],
+      "description": "Keep arms straight as long as possible on moderate problems."
+    },
+    {
+      "id": "compression_problems",
+      "name": "Compression problems",
+      "category": "body_tension",
+      "equipment": ["wall"],
+      "description": "Compression-style problems squeezing knees together and engaging the whole body."
+    },
+    {
+      "id": "limit_bouldering",
+      "name": "Limit bouldering",
+      "category": "strength",
+      "equipment": ["kilter"],
+      "description": "Problems at absolute limit, full rest between attempts. Slopers, compression and body tension styles only. Stop when quality drops."
+    },
+    {
+      "id": "linked_problems",
+      "name": "Linked problems",
+      "category": "power_endurance",
+      "equipment": ["wall"],
+      "description": "Several problems linked back-to-back with no rest between them, then rest. Choose problems that mimic the project style."
+    },
+    {
+      "id": "four_by_four",
+      "name": "4x4",
+      "category": "power_endurance",
+      "equipment": ["wall"],
+      "description": "4 problems back-to-back with zero rest between them, then 4 min rest, repeated for 4 rounds. Should feel very hard by round 3-4; raise grade if too easy."
+    },
+    {
+      "id": "project_attempts",
+      "name": "Project attempts",
+      "category": "project",
+      "equipment": ["wall"],
+      "description": "Work the target V6/V7 project in sections (bottom, crux, top). Track which sections are linked each session."
+    },
+    {
+      "id": "easy_climbing",
+      "name": "Easy climbing",
+      "category": "recovery",
+      "equipment": ["wall"],
+      "description": "Easy social or movement-focused climbing, V0-V2 only."
+    },
+
+    {
+      "id": "open_hand_repeaters",
+      "name": "Open-hand repeaters",
+      "category": "finger",
+      "equipment": ["hangboard", "tindeq"],
+      "description": "20mm edge, open-hand grip ONLY (do not default to crimping). 7s on / 3s off x 6 reps = 1 set.",
+      "tindeq_load": "60-70% of open-hand MVC-7"
+    },
+    {
+      "id": "max_hangs_open_hand",
+      "name": "Max hangs, open-hand",
+      "category": "finger",
+      "equipment": ["hangboard", "tindeq"],
+      "description": "20mm edge, open-hand, 10s hang. Add weight until RPE 8 (struggling at 8-9s).",
+      "tindeq_load": "85-90% of open-hand MVC-7"
+    },
+    {
+      "id": "weighted_pullup",
+      "name": "Weighted pull-up",
+      "category": "pull",
+      "equipment": ["pullup_bar", "weight_belt"],
+      "description": "Full range of motion, 3 min rest between sets."
+    },
+    {
+      "id": "lock_offs",
+      "name": "Lock-offs",
+      "category": "pull",
+      "equipment": ["pullup_bar"],
+      "description": "Hold at 90, 110, 135 degrees for 5s each = 1 set."
+    },
+    {
+      "id": "front_lever_tuck",
+      "name": "Front lever, tuck",
+      "category": "pull",
+      "equipment": ["pullup_bar"],
+      "description": "Tuck front lever holds. Progress to advanced tuck by week 7."
+    },
+
+    {
+      "id": "hollow_body_hold",
+      "name": "Hollow body hold",
+      "category": "core",
+      "equipment": ["mat"],
+      "description": "Lie on back, lower back pressed into floor, arms overhead, legs straight 30-45 degrees off floor, shoulders slightly lifted, chin tucked. Easier: bend knees or raise legs higher."
+    },
+    {
+      "id": "plank",
+      "name": "Plank",
+      "category": "core",
+      "equipment": ["mat"],
+      "description": "Forearm plank."
+    },
+    {
+      "id": "dead_bug",
+      "name": "Dead bug",
+      "category": "core",
+      "equipment": ["mat"],
+      "description": "Slow, controlled, spine neutral."
+    },
+    {
+      "id": "pallof_press",
+      "name": "Pallof press",
+      "category": "core",
+      "equipment": ["cable_or_band"],
+      "description": "Anti-rotation core exercise."
+    },
+    {
+      "id": "dragon_flag",
+      "name": "Dragon flag",
+      "category": "core",
+      "equipment": ["bench"],
+      "description": "Advanced core exercise."
+    },
+    {
+      "id": "hanging_leg_raise",
+      "name": "Hanging leg raise",
+      "category": "core",
+      "equipment": ["pullup_bar"],
+      "description": "Hanging leg raises."
+    },
+    {
+      "id": "ring_row",
+      "name": "Ring row or cable row",
+      "category": "pull",
+      "equipment": ["rings_or_cable"],
+      "description": "Scapular health and horizontal pulling."
+    },
+
+    {
+      "id": "reverse_wrist_curl",
+      "name": "Reverse wrist curl",
+      "category": "antagonist",
+      "equipment": ["dumbbell"],
+      "description": "Light weight."
+    },
+    {
+      "id": "wrist_curl",
+      "name": "Wrist curl",
+      "category": "antagonist",
+      "equipment": ["dumbbell"],
+      "description": "Light weight."
+    },
+    {
+      "id": "pronation_supination",
+      "name": "Pronation/supination",
+      "category": "antagonist",
+      "equipment": ["dumbbell"],
+      "description": "Rotate forearm with light dumbbell in both directions."
+    },
+    {
+      "id": "band_external_rotation",
+      "name": "Band external rotation",
+      "category": "antagonist",
+      "equipment": ["band"],
+      "description": "Shoulder external rotation with band."
+    },
+    {
+      "id": "wall_slides",
+      "name": "Wall slides",
+      "category": "antagonist",
+      "equipment": ["wall"],
+      "description": "Serratus and shoulder stability."
+    },
+
+    {
+      "id": "goblet_squat",
+      "name": "Goblet squat",
+      "category": "legs",
+      "equipment": ["dumbbell"],
+      "description": "Focus on depth and form."
+    },
+    {
+      "id": "back_squat",
+      "name": "Back squat",
+      "category": "legs",
+      "equipment": ["barbell"],
+      "description": "Progression from goblet squat in block 2."
+    },
+    {
+      "id": "romanian_deadlift",
+      "name": "Romanian deadlift (RDL)",
+      "category": "legs",
+      "equipment": ["dumbbell_or_barbell"],
+      "description": "Hamstrings and glutes; builds hip drive for overhangs."
+    },
+    {
+      "id": "walking_lunges",
+      "name": "Walking lunges",
+      "category": "legs",
+      "equipment": [],
+      "description": "Bodyweight to start."
+    },
+    {
+      "id": "db_bench_press",
+      "name": "Dumbbell bench press",
+      "category": "push",
+      "equipment": ["dumbbell", "bench"],
+      "description": "Chest, front delts, triceps."
+    },
+    {
+      "id": "bench_press",
+      "name": "Bench press",
+      "category": "push",
+      "equipment": ["barbell", "bench"],
+      "description": "Block 2 progression."
+    },
+    {
+      "id": "db_shoulder_press",
+      "name": "Dumbbell shoulder press",
+      "category": "push",
+      "equipment": ["dumbbell"],
+      "description": "Overhead pressing for shoulder definition."
+    },
+    {
+      "id": "tricep_pushdown",
+      "name": "Tricep pushdown",
+      "category": "push",
+      "equipment": ["cable_or_band"],
+      "description": "Cable or band."
+    },
+    {
+      "id": "pushup",
+      "name": "Push-up",
+      "category": "push",
+      "equipment": [],
+      "description": "Finisher, max reps."
+    },
+    {
+      "id": "face_pull",
+      "name": "Face pull",
+      "category": "shoulders",
+      "equipment": ["cable_or_band"],
+      "description": "Rear delts and external rotators; posture and shoulder health."
+    },
+    {
+      "id": "lateral_raise",
+      "name": "Lateral raise",
+      "category": "shoulders",
+      "equipment": ["dumbbell"],
+      "description": "Side delts."
+    },
+    {
+      "id": "rear_delt_fly",
+      "name": "Rear delt fly",
+      "category": "shoulders",
+      "equipment": ["dumbbell"],
+      "description": "Rear delts."
+    },
+    {
+      "id": "incline_db_curl",
+      "name": "Incline dumbbell curl",
+      "category": "arms",
+      "equipment": ["dumbbell", "bench"],
+      "description": "Biceps."
+    },
+    {
+      "id": "dips",
+      "name": "Dips or bench dips",
+      "category": "push",
+      "equipment": ["dip_bars_or_bench"],
+      "description": "Triceps and chest."
+    },
+
+    {
+      "id": "stretching",
+      "name": "Cool-down stretch",
+      "category": "recovery",
+      "equipment": [],
+      "description": "Full-body stretch and easy traversing."
+    }
+  ],
+
+  "session_templates": [
+    {
+      "id": "b1_mon_technique_arc",
+      "name": "Technique + ARC",
+      "type": "climb",
+      "focus": "technique, aerobic base",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "easy_traverse_warmup",
+          "duration_min": 15
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "arc",
+          "duration_min": 20,
+          "intensity": "V0-V1, barely pumped"
+        },
+        {
+          "order": 3,
+          "section": "main",
+          "exercise_id": "silent_feet",
+          "reps": 10,
+          "unit": "problems"
+        },
+        {
+          "order": 4,
+          "section": "main",
+          "exercise_id": "down_climbing",
+          "reps": 5,
+          "unit": "problems",
+          "notes": "V1-V2"
+        },
+        {
+          "order": 5,
+          "section": "accessory",
+          "exercise_id": "hollow_body_hold",
+          "sets": 3,
+          "hold_s": 20
+        },
+        {
+          "order": 6,
+          "section": "accessory",
+          "exercise_id": "reverse_wrist_curl",
+          "sets": 3,
+          "reps": 15
+        },
+        {
+          "order": 7,
+          "section": "accessory",
+          "exercise_id": "band_external_rotation",
+          "sets": 3,
+          "reps": 15,
+          "notes": "each arm"
+        }
+      ]
+    },
+    {
+      "id": "gym_a_b1",
+      "name": "Gym A: push + legs",
+      "type": "gym",
+      "focus": "legs and push",
+      "duration_min": 55,
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "general_gym_warmup",
+          "duration_min": 5
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "goblet_squat",
+          "sets": 3,
+          "reps": 12,
+          "rpe": 7,
+          "rest_s": 75
+        },
+        {
+          "order": 3,
+          "section": "main",
+          "exercise_id": "romanian_deadlift",
+          "sets": 3,
+          "reps": 10,
+          "rpe": 7,
+          "rest_s": 75
+        },
+        {
+          "order": 4,
+          "section": "main",
+          "exercise_id": "walking_lunges",
+          "sets": 2,
+          "reps": 10,
+          "notes": "each leg, bodyweight"
+        },
+        {
+          "order": 5,
+          "section": "main",
+          "exercise_id": "db_bench_press",
+          "sets": 3,
+          "reps": 10,
+          "rpe": 7,
+          "rest_s": 75
+        },
+        {
+          "order": 6,
+          "section": "main",
+          "exercise_id": "db_shoulder_press",
+          "sets": 3,
+          "reps": 10,
+          "rpe": 7,
+          "rest_s": 75
+        },
+        {
+          "order": 7,
+          "section": "accessory",
+          "exercise_id": "tricep_pushdown",
+          "sets": 3,
+          "reps": 12
+        },
+        {
+          "order": 8,
+          "section": "accessory",
+          "exercise_id": "pushup",
+          "sets": 2,
+          "reps": null,
+          "notes": "max reps"
+        }
+      ]
+    },
+    {
+      "id": "b1_tue_hangboard_pull",
+      "name": "Hangboard + pulling",
+      "type": "climb",
+      "focus": "open-hand strength, pulling",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 15
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "open_hand_repeaters",
+          "sets_by_week": { "1": 3, "2": 4, "3": 5 },
+          "reps": 6,
+          "on_s": 7,
+          "off_s": 3,
+          "rest_s": 180,
+          "load_hint": "60-70% of open-hand MVC-7",
+          "notes": "20mm open-hand only. Optional extra set on 35mm edge if wrists feel good (sloper prep)."
+        },
+        {
+          "order": 3,
+          "section": "main",
+          "exercise_id": "weighted_pullup",
+          "sets": 3,
+          "reps": 5,
+          "load_hint": "+10-15 kg",
+          "rest_s": 180
+        },
+        {
+          "order": 4,
+          "section": "main",
+          "exercise_id": "lock_offs",
+          "sets": 3,
+          "hold_s": 5,
+          "notes": "5s each at 90, 110, 135 degrees = 1 set"
+        },
+        {
+          "order": 5,
+          "section": "accessory",
+          "exercise_id": "wrist_curl",
+          "sets": 3,
+          "reps": 15
+        },
+        {
+          "order": 6,
+          "section": "accessory",
+          "exercise_id": "wall_slides",
+          "sets": 2,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "id": "b1_thu_limit_boulder",
+      "name": "Limit bouldering (Kilter)",
+      "type": "climb",
+      "focus": "limit strength, sloper and compression",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 20,
+          "notes": "build to V3, nothing hard"
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "limit_bouldering",
+          "reps_min": 6,
+          "reps_max": 8,
+          "unit": "problems",
+          "intensity": "V4-V5+ on Kilter, 0-4 moves each",
+          "rest_s_min": 180,
+          "rest_s_max": 300,
+          "duration_min": 45,
+          "notes": "45 min max. Slopers and compression only."
+        },
+        {
+          "order": 3,
+          "section": "main",
+          "exercise_id": "compression_problems",
+          "reps": 5,
+          "unit": "problems"
+        },
+        {
+          "order": 4,
+          "section": "accessory",
+          "exercise_id": "hollow_body_hold",
+          "sets": 3,
+          "hold_s": 20
+        },
+        {
+          "order": 5,
+          "section": "accessory",
+          "exercise_id": "plank",
+          "sets": 3,
+          "hold_s": 30
+        },
+        {
+          "order": 6,
+          "section": "accessory",
+          "exercise_id": "pronation_supination",
+          "sets": 3,
+          "reps": 15,
+          "notes": "each direction, light dumbbell"
+        }
+      ]
+    },
+    {
+      "id": "gym_b",
+      "name": "Gym B: core + shoulders",
+      "type": "gym",
+      "focus": "core, shoulders, posture",
+      "duration_min": 50,
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "shoulder_warmup",
+          "duration_min": 5
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "plank",
+          "sets": 3,
+          "hold_s": 40
+        },
+        {
+          "order": 3,
+          "section": "main",
+          "exercise_id": "dead_bug",
+          "sets": 3,
+          "reps": 10,
+          "notes": "each side"
+        },
+        {
+          "order": 4,
+          "section": "main",
+          "exercise_id": "pallof_press",
+          "sets": 3,
+          "reps": 12,
+          "notes": "each side"
+        },
+        {
+          "order": 5,
+          "section": "main",
+          "exercise_id": "face_pull",
+          "sets": 3,
+          "reps": 15
+        },
+        {
+          "order": 6,
+          "section": "main",
+          "exercise_id": "lateral_raise",
+          "sets": 3,
+          "reps": 12
+        },
+        {
+          "order": 7,
+          "section": "main",
+          "exercise_id": "rear_delt_fly",
+          "sets": 3,
+          "reps": 12
+        },
+        {
+          "order": 8,
+          "section": "accessory",
+          "exercise_id": "incline_db_curl",
+          "sets": 2,
+          "reps": 12
+        },
+        {
+          "order": 9,
+          "section": "accessory",
+          "exercise_id": "dips",
+          "sets": 2,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "id": "b1_fri_power_endurance_intro",
+      "name": "Power endurance intro",
+      "type": "climb",
+      "focus": "linked moves, low intensity",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 15
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "linked_problems",
+          "reps_min": 6,
+          "reps_max": 8,
+          "unit": "sets",
+          "intensity": "2 problems at V2-V3 back-to-back, no rest between",
+          "rest_s": 120,
+          "notes": "Should feel challenging but not destroying."
+        },
+        {
+          "order": 3,
+          "section": "main",
+          "exercise_id": "straight_arm_climbing",
+          "reps": 5,
+          "unit": "problems",
+          "notes": "moderate problems"
+        },
+        {
+          "order": 4,
+          "section": "accessory",
+          "exercise_id": "reverse_wrist_curl",
+          "sets": 2,
+          "reps": 15,
+          "notes": "antagonist circuit, 2 rounds"
+        },
+        {
+          "order": 5,
+          "section": "accessory",
+          "exercise_id": "band_external_rotation",
+          "sets": 2,
+          "reps": 15,
+          "notes": "antagonist circuit, 2 rounds"
+        },
+        {
+          "order": 6,
+          "section": "accessory",
+          "exercise_id": "wall_slides",
+          "sets": 2,
+          "reps": 10,
+          "notes": "antagonist circuit, 2 rounds"
+        }
+      ]
+    },
+    {
+      "id": "optional_arc_20",
+      "name": "Optional easy ARC",
+      "type": "climb",
+      "focus": "active recovery",
+      "optional": true,
+      "items": [
+        {
+          "order": 1,
+          "section": "main",
+          "exercise_id": "arc",
+          "duration_min": 20,
+          "notes": "20 min max. Skip if tired."
+        }
+      ]
+    },
+    {
+      "id": "optional_easy_climb",
+      "name": "Optional easy climbing",
+      "type": "climb",
+      "focus": "social, movement",
+      "optional": true,
+      "items": [
+        {
+          "order": 1,
+          "section": "main",
+          "exercise_id": "easy_climbing",
+          "intensity": "V0-V2 only"
+        }
+      ]
+    },
+
+    {
+      "id": "b2_mon_heavy_hang_pull",
+      "name": "Heavy hangboard + pulling",
+      "type": "climb",
+      "focus": "max open-hand strength, pulling",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 20
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "max_hangs_open_hand",
+          "sets_min": 5,
+          "sets_max": 6,
+          "hold_s": 10,
+          "rest_s": 180,
+          "rpe": 8,
+          "load_hint": "85-90% of open-hand MVC-7",
+          "notes": "Add weight until struggling at 8-9s. Also 1-2 sets on 35mm sloper-width edge if available."
+        },
+        {
+          "order": 3,
+          "section": "main",
+          "exercise_id": "weighted_pullup",
+          "sets": 4,
+          "reps": 4,
+          "load_hint": "+15-20 kg",
+          "rest_s": 180
+        },
+        {
+          "order": 4,
+          "section": "main",
+          "exercise_id": "front_lever_tuck",
+          "sets": 3,
+          "hold_s": 5,
+          "notes": "Progress to advanced tuck by week 7."
+        },
+        {
+          "order": 5,
+          "section": "accessory",
+          "exercise_id": "wrist_curl",
+          "sets": 2,
+          "reps": 15,
+          "notes": "antagonist circuit: wrist curls + band ER + wall slides"
+        },
+        {
+          "order": 6,
+          "section": "accessory",
+          "exercise_id": "band_external_rotation",
+          "sets": 2,
+          "reps": 15
+        },
+        {
+          "order": 7,
+          "section": "accessory",
+          "exercise_id": "wall_slides",
+          "sets": 2,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "id": "gym_a_b2",
+      "name": "Gym A: push + legs (block 2)",
+      "type": "gym",
+      "focus": "legs and push, add load vs block 1",
+      "duration_min": 55,
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "general_gym_warmup",
+          "duration_min": 5
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "back_squat",
+          "sets": 3,
+          "reps": 10,
+          "notes": "Goblet to back squat. Increase load each week."
+        },
+        {
+          "order": 3,
+          "section": "main",
+          "exercise_id": "romanian_deadlift",
+          "sets": 3,
+          "reps": 10,
+          "notes": "Heavier than block 1."
+        },
+        {
+          "order": 4,
+          "section": "main",
+          "exercise_id": "bench_press",
+          "sets": 3,
+          "reps": 8,
+          "rpe_min": 7,
+          "rpe_max": 8
+        },
+        {
+          "order": 5,
+          "section": "main",
+          "exercise_id": "db_shoulder_press",
+          "sets": 3,
+          "reps": 8
+        },
+        {
+          "order": 6,
+          "section": "accessory",
+          "exercise_id": "tricep_pushdown",
+          "sets": 3,
+          "reps": 12
+        },
+        {
+          "order": 7,
+          "section": "accessory",
+          "exercise_id": "pushup",
+          "sets": 2,
+          "reps": null,
+          "notes": "max reps"
+        }
+      ]
+    },
+    {
+      "id": "b2_tue_limit_boulder",
+      "name": "Limit bouldering (block 2)",
+      "type": "climb",
+      "focus": "limit strength",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 20
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "limit_bouldering",
+          "reps_min": 8,
+          "reps_max": 10,
+          "unit": "problems",
+          "intensity": "V4-V6 on Kilter",
+          "rest_s_min": 240,
+          "rest_s_max": 300,
+          "notes": "Zero junk volume. Slopers, compression, body tension styles. Stop when quality drops."
+        }
+      ]
+    },
+    {
+      "id": "b2_thu_core_arc",
+      "name": "Core + ARC",
+      "type": "climb",
+      "focus": "loaded core, scapular health",
+      "items": [
+        {
+          "order": 1,
+          "section": "main",
+          "exercise_id": "hollow_body_hold",
+          "sets": 3,
+          "hold_s": 30
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "dragon_flag",
+          "sets": 3,
+          "reps": 5
+        },
+        {
+          "order": 3,
+          "section": "main",
+          "exercise_id": "hanging_leg_raise",
+          "sets": 3,
+          "reps": 10
+        },
+        {
+          "order": 4,
+          "section": "main",
+          "exercise_id": "ring_row",
+          "sets": 3,
+          "reps": 12
+        },
+        {
+          "order": 5,
+          "section": "accessory",
+          "exercise_id": "wrist_curl",
+          "sets": 2,
+          "reps": 15,
+          "notes": "antagonist circuit, 2 rounds"
+        },
+        {
+          "order": 6,
+          "section": "accessory",
+          "exercise_id": "band_external_rotation",
+          "sets": 2,
+          "reps": 15
+        },
+        {
+          "order": 7,
+          "section": "accessory",
+          "exercise_id": "wall_slides",
+          "sets": 2,
+          "reps": 10
+        },
+        {
+          "order": 8,
+          "section": "cooldown",
+          "exercise_id": "arc",
+          "duration_min": 30
+        }
+      ]
+    },
+    {
+      "id": "b2_fri_4x4",
+      "name": "4x4 power endurance",
+      "type": "climb",
+      "focus": "power endurance",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 20
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "four_by_four",
+          "sets": 4,
+          "intensity": "4 problems at V2-V3",
+          "rest_s": 240,
+          "notes": "4 rounds, 4 min rest between rounds."
+        },
+        {
+          "order": 3,
+          "section": "cooldown",
+          "exercise_id": "stretching",
+          "duration_min": 10,
+          "notes": "10 min easy traversing + full stretch"
+        }
+      ]
+    },
+
+    {
+      "id": "b3_mon_project",
+      "name": "Project session",
+      "type": "climb",
+      "focus": "project attempts",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 20
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "project_attempts",
+          "duration_min": 90,
+          "rest_s": 300,
+          "notes": "90 min max. Break into bottom, crux, top."
+        },
+        {
+          "order": 3,
+          "section": "cooldown",
+          "exercise_id": "arc",
+          "duration_min": 20
+        }
+      ]
+    },
+    {
+      "id": "b3_tue_4x4_harder",
+      "name": "4x4 harder",
+      "type": "climb",
+      "focus": "power endurance",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 20
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "four_by_four",
+          "sets": 4,
+          "intensity": "4 problems at V3-V4",
+          "rest_s": 240
+        }
+      ]
+    },
+    {
+      "id": "b3_thu_hang_core_maintain",
+      "name": "Hangboard + core (maintain)",
+      "type": "climb",
+      "focus": "maintain finger strength, compression core",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 15
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "max_hangs_open_hand",
+          "sets": 4,
+          "hold_s": 10,
+          "rest_s": 180,
+          "load_hint": "~85% of open-hand MVC-7",
+          "notes": "Maintain strength, do not chase new PRs."
+        },
+        {
+          "order": 3,
+          "section": "main",
+          "exercise_id": "hollow_body_hold",
+          "sets": 3,
+          "hold_s": 30,
+          "notes": "Core circuit. Squeeze a ball between knees during hanging exercises."
+        },
+        {
+          "order": 4,
+          "section": "main",
+          "exercise_id": "dragon_flag",
+          "sets": 3,
+          "reps": 5
+        },
+        {
+          "order": 5,
+          "section": "main",
+          "exercise_id": "pallof_press",
+          "sets": 3,
+          "reps": 12,
+          "notes": "each side"
+        },
+        {
+          "order": 6,
+          "section": "accessory",
+          "exercise_id": "wrist_curl",
+          "sets": 2,
+          "reps": 15,
+          "notes": "antagonist circuit"
+        },
+        {
+          "order": 7,
+          "section": "accessory",
+          "exercise_id": "band_external_rotation",
+          "sets": 2,
+          "reps": 15
+        },
+        {
+          "order": 8,
+          "section": "accessory",
+          "exercise_id": "wall_slides",
+          "sets": 2,
+          "reps": 10
+        }
+      ]
+    },
+    {
+      "id": "b3_fri_linked_hard",
+      "name": "Linked hard problems",
+      "type": "climb",
+      "focus": "power endurance, project-specific",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 20
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "linked_problems",
+          "sets": 8,
+          "intensity": "3 problems at V3-V4 back-to-back",
+          "rest_s": 120,
+          "notes": "Choose problems that simulate project style."
+        }
+      ]
+    },
+    {
+      "id": "b3_sat_optional_project",
+      "name": "Optional project session",
+      "type": "climb",
+      "focus": "project",
+      "optional": true,
+      "items": [
+        {
+          "order": 1,
+          "section": "main",
+          "exercise_id": "project_attempts",
+          "duration_min": 90,
+          "notes": "Only if fresh. Fatigue means rest."
+        }
+      ]
+    },
+
+    {
+      "id": "deload_easy_climbing",
+      "name": "Deload easy climbing",
+      "type": "climb",
+      "focus": "recovery and benchmark retest",
+      "items": [
+        {
+          "order": 1,
+          "section": "main",
+          "exercise_id": "easy_climbing",
+          "intensity": "easy only",
+          "notes": "No hangboard, no gym, no limit climbing."
+        }
+      ]
+    },
+    {
+      "id": "send_week_project",
+      "name": "Send week project attempts",
+      "type": "climb",
+      "focus": "peak, send",
+      "items": [
+        {
+          "order": 1,
+          "section": "warmup",
+          "exercise_id": "progressive_warmup",
+          "duration_min": 20
+        },
+        {
+          "order": 2,
+          "section": "main",
+          "exercise_id": "project_attempts",
+          "notes": "Fresh attempts, high quality, low volume (-50%)."
+        }
+      ]
+    }
+  ],
+
+  "blocks": [
+    {
+      "id": "block1",
+      "name": "Foundation",
+      "weeks": [1, 2, 3],
+      "focus": "technique, aerobic base, gentle open-hand loading, antagonist work"
+    },
+    {
+      "id": "deload1",
+      "name": "Deload 1",
+      "weeks": [4],
+      "focus": "easy climbing only, no hangboard, no gym, benchmark retest"
+    },
+    {
+      "id": "block2",
+      "name": "Strength",
+      "weeks": [5, 6, 7],
+      "focus": "max open-hand, heavy pulling, front lever, loaded core"
+    },
+    {
+      "id": "deload2",
+      "name": "Deload 2",
+      "weeks": [8],
+      "focus": "easy climbing only, no hangboard, no gym, benchmark retest"
+    },
+    {
+      "id": "block3",
+      "name": "Power endurance + project",
+      "weeks": [9, 10, 11],
+      "focus": "4x4, linked problems, project attempts"
+    },
+    {
+      "id": "send",
+      "name": "Send phase",
+      "weeks": [12],
+      "focus": "volume -50%, 2-3 sessions, project only, no hangboard"
+    }
+  ],
+
+  "weekly_schedule": {
+    "block1": [
+      { "day": 1, "slot": "pm", "session_id": "b1_mon_technique_arc" },
+      { "day": 2, "slot": "am", "session_id": "gym_a_b1" },
+      { "day": 2, "slot": "pm", "session_id": "b1_tue_hangboard_pull" },
+      {
+        "day": 3,
+        "slot": "any",
+        "session_id": "optional_arc_20",
+        "notes": "Rest day. Optional 20 min ARC only."
+      },
+      { "day": 4, "slot": "pm", "session_id": "b1_thu_limit_boulder" },
+      { "day": 5, "slot": "am", "session_id": "gym_b" },
+      { "day": 5, "slot": "pm", "session_id": "b1_fri_power_endurance_intro" },
+      { "day": 6, "slot": "any", "session_id": null, "notes": "Full rest" },
+      {
+        "day": 7,
+        "slot": "any",
+        "session_id": "optional_easy_climb",
+        "notes": "Optional, or full rest"
+      }
+    ],
+    "deload1": [
+      { "day": 1, "slot": "pm", "session_id": "deload_easy_climbing" },
+      { "day": 3, "slot": "pm", "session_id": "deload_easy_climbing" },
+      { "day": 5, "slot": "pm", "session_id": "deload_easy_climbing" }
+    ],
+    "block2": [
+      { "day": 1, "slot": "pm", "session_id": "b2_mon_heavy_hang_pull" },
+      { "day": 2, "slot": "am", "session_id": "gym_a_b2" },
+      { "day": 2, "slot": "pm", "session_id": "b2_tue_limit_boulder" },
+      { "day": 3, "slot": "any", "session_id": null, "notes": "Full rest" },
+      { "day": 4, "slot": "pm", "session_id": "b2_thu_core_arc" },
+      {
+        "day": 5,
+        "slot": "am",
+        "session_id": "gym_b",
+        "notes": "Add 1-2 kg when all reps are clean."
+      },
+      { "day": 5, "slot": "pm", "session_id": "b2_fri_4x4" },
+      { "day": 6, "slot": "any", "session_id": null, "notes": "Full rest" },
+      { "day": 7, "slot": "any", "session_id": null, "notes": "Full rest" }
+    ],
+    "deload2": [
+      { "day": 1, "slot": "pm", "session_id": "deload_easy_climbing" },
+      { "day": 3, "slot": "pm", "session_id": "deload_easy_climbing" },
+      { "day": 5, "slot": "pm", "session_id": "deload_easy_climbing" }
+    ],
+    "block3": [
+      { "day": 1, "slot": "pm", "session_id": "b3_mon_project" },
+      {
+        "day": 2,
+        "slot": "am",
+        "session_id": "gym_a_b2",
+        "notes": "Maintain strength. Do not go to failure, do not chase PRs."
+      },
+      { "day": 2, "slot": "pm", "session_id": "b3_tue_4x4_harder" },
+      { "day": 3, "slot": "any", "session_id": null, "notes": "Full rest" },
+      { "day": 4, "slot": "pm", "session_id": "b3_thu_hang_core_maintain" },
+      {
+        "day": 5,
+        "slot": "am",
+        "session_id": "gym_b",
+        "notes": "Maintain load."
+      },
+      { "day": 5, "slot": "pm", "session_id": "b3_fri_linked_hard" },
+      {
+        "day": 6,
+        "slot": "any",
+        "session_id": "b3_sat_optional_project",
+        "notes": "Only if fresh, otherwise full rest"
+      },
+      { "day": 7, "slot": "any", "session_id": null, "notes": "Full rest" }
+    ],
+    "send": [
+      { "day": 1, "slot": "pm", "session_id": "send_week_project" },
+      { "day": 3, "slot": "pm", "session_id": "send_week_project" },
+      {
+        "day": 5,
+        "slot": "pm",
+        "session_id": "send_week_project",
+        "optional": true
+      }
+    ]
+  },
+
+  "progression_rules": [
+    {
+      "id": "gym_overload",
+      "applies_to": "gym",
+      "rule": "Add 1-2 kg to a lift once all reps are completed cleanly. Log every session."
+    },
+    {
+      "id": "gym_intensity",
+      "applies_to": "gym",
+      "rule": "Stay around RPE 7, never grind to failure as a beginner. Rest 60-90s between sets."
+    },
+    {
+      "id": "repeaters_volume",
+      "applies_to": "open_hand_repeaters",
+      "rule": "Week 1: 3 sets, week 2: 4 sets, week 3: 5 sets."
+    },
+    {
+      "id": "deload_cadence",
+      "applies_to": "plan",
+      "rule": "Never more than 3 hard weeks in a row. Deload weeks are mandatory."
+    },
+    {
+      "id": "fatigue_valve",
+      "applies_to": "plan",
+      "rule": "If systemically fatigued (tired, unmotivated, sleeping poorly), drop from 5 to 4 climbing days. Re-add the 5th in block 2."
+    },
+    {
+      "id": "gym_block3",
+      "applies_to": "gym",
+      "rule": "Block 3 gym is maintenance: hold load, no failure, no PR chasing."
+    }
+  ],
+
+  "tindeq": {
+    "baseline_test": {
+      "when": "Before week 1, fresh, after a proper warm-up. Never at the end of a session.",
+      "protocol": "Open-hand on 20mm edge: max pull for 7s, 3 attempts, 3 min rest. Best attempt = open-hand MVC-7. Optional: repeat on half-crimp to quantify the open-hand gap.",
+      "note": "Athlete has been off climbing for 1+ month; expect numbers below the old 143% BW crimp. Do not chase old numbers in week 1."
+    },
+    "load_prescription": [
+      { "exercise_id": "open_hand_repeaters", "percent_of_mvc": [60, 70] },
+      { "exercise_id": "max_hangs_open_hand", "percent_of_mvc": [85, 90] },
+      {
+        "exercise_id": "max_hangs_open_hand",
+        "block": "block3",
+        "percent_of_mvc": [85, 85],
+        "notes": "maintenance"
+      }
+    ],
+    "critical_force_test": {
+      "protocol": "Tindeq app built-in: 24 all-out 7s pulls with 3s rest. Critical force = average of the last 6 reps.",
+      "use": "Benchmark for forearm endurance / power endurance block.",
+      "optional": true
+    },
+    "retest_weeks": [4, 8, 12]
+  },
+
+  "benchmarks": [
+    {
+      "id": "bodyweight",
+      "name": "Bodyweight",
+      "unit": "kg",
+      "retest_weeks": [0, 4, 8, 12]
+    },
+    {
+      "id": "open_hand_mvc",
+      "name": "Open-hand max (Tindeq MVC-7, 20mm)",
+      "unit": "kg",
+      "retest_weeks": [0, 4, 8, 12]
+    },
+    {
+      "id": "crimp_mvc",
+      "name": "Crimp max (20mm), compare to 143% BW baseline",
+      "unit": "kg",
+      "retest_weeks": [0, 4, 8, 12]
+    },
+    {
+      "id": "weighted_pullup_1rm",
+      "name": "Weighted pull-up, max added weight for 1 rep",
+      "unit": "kg",
+      "retest_weeks": [0, 4, 8, 12]
+    },
+    {
+      "id": "limit_grade",
+      "name": "Limit grade, hardest V-grade sent after warm-up",
+      "unit": "v_grade",
+      "retest_weeks": [4, 8, 12]
+    },
+    {
+      "id": "four_by_four_rounds",
+      "name": "4x4 rounds completed before failure",
+      "unit": "rounds",
+      "retest_weeks": [4, 8, 12]
+    },
+    {
+      "id": "arc_baseline",
+      "name": "ARC baseline, minutes until pump on V1-V2",
+      "unit": "minutes",
+      "retest_weeks": [0, 4, 8, 12]
+    },
+    {
+      "id": "critical_force",
+      "name": "Critical force (Tindeq, optional)",
+      "unit": "kg",
+      "retest_weeks": [0, 4, 8, 12]
+    },
+    {
+      "id": "project_progress",
+      "name": "Project sections linked",
+      "unit": "text",
+      "retest_weeks": [9, 10, 11, 12]
+    }
+  ],
+
+  "glossary": [
+    {
+      "term": "RPE",
+      "definition": "Rate of Perceived Exertion, 1-10. RPE 7 = challenging, 3+ reps in reserve. RPE 8 = 1-2 reps left. RPE 9 = 1 rep left. RPE 10 = absolute max."
+    },
+    { "term": "DB", "definition": "Dumbbell." },
+    {
+      "term": "ARC",
+      "definition": "Aerobic Restoration and Capillarity: continuous very easy climbing for 20-45 min to build aerobic base and recovery."
+    },
+    {
+      "term": "MVC-7",
+      "definition": "Maximum voluntary contraction over a 7 second pull, measured with the Tindeq."
+    },
+    {
+      "term": "4x4",
+      "definition": "4 problems back-to-back, 4 min rest, 4 rounds."
+    },
+    {
+      "term": "Open-hand",
+      "definition": "Grip with fingers extended and relaxed, no crimping. The athlete's weakest grip and the main hangboard focus."
+    }
+  ],
+
+  "coach_notes": [
+    "Crimp is not the limiter. Force open-hand on the hangboard even when it feels weak.",
+    "5 days is aggressive for training age zero. Drop to 4 days if systemically fatigued.",
+    "Slopers are half technique: hip drive, momentum, body position. Seek out sloper problems.",
+    "Gym push/pull balance protects shoulders and builds the definition the athlete wants.",
+    "Never skip deloads. Max 3 hard weeks in a row.",
+    "Do not skip legs: RDLs and squats transfer to compression and overhangs.",
+    "Protein 1.6-2 g per kg bodyweight daily for visible muscle definition.",
+    "Log gym lifts and add 1-2 kg when all reps are clean.",
+    "V6-V7 in 12 weeks is realistic given the finger strength baseline."
+  ]
+}
