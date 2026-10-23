@@ -14,6 +14,8 @@ export type RootStackParamList = {
   ClimbDetail: { climbId?: string; locationId?: string };
   ClimbLog: undefined;
   TrainingSessionsDetail: { trainingSessionId: string };
+  PlanEnroll: undefined;
+  PlanOverview: undefined;
   MapPointPicker: { latitude?: number; longitude?: number } | undefined;
   ImagePicker: undefined;
   Model3dPicker: undefined;

@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 import { useTabBarOverlayHeight } from '../../../../../../../common/tab-bar-overlay/use-tab-bar-overlay-height';
+import TodayCard from '../../../../../../../features/training-plans/today-card';
 import TrainingSessionsList from '../../../../../../../features/training-sessions/training-sessions-list';
 import Button from '../../../../../../../library/button';
 import { IconName } from '../../../../../../../library/icon';
@@ -70,6 +71,8 @@ const HomeScreen: FunctionComponent = () => {
   return (
     <Screen padding="lg">
       <Stack gap="lg">
+        <TodayCard />
+
         <LoadingState isLoading={isStatsLoading}>
           <Measure>
             {(width) => {

@@ -41,6 +41,10 @@ const variantStyles = {
     container: { backgroundColor: 'rgba(33, 150, 243, 0.12)' },
     text: { color: accent.primary },
   },
+  warning: {
+    container: { backgroundColor: semantic.warningMuted },
+    text: { color: semantic.warning },
+  },
 } as const;
 
 export type BadgeVariant = keyof typeof variantStyles;

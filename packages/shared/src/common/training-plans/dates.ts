@@ -36,3 +36,18 @@ export function isMonday(date: string): boolean {
 export function daysBetween(a: string, b: string): number {
   return Math.round((parseDate(b) - parseDate(a)) / MS_PER_DAY);
 }
+
+function formatDate(time: number): string {
+  return new Date(time).toISOString().slice(0, 10);
+}
+
+/** @param date `YYYY-MM-DD` */
+export function addDays(date: string, days: number): string {
+  return formatDate(parseDate(date) + days * MS_PER_DAY);
+}
+
+/** Monday on or before `date` (`YYYY-MM-DD`). */
+export function startOfIsoWeek(date: string): string {
+  const daysSinceMonday = (new Date(parseDate(date)).getUTCDay() + 6) % 7;
+  return addDays(date, -daysSinceMonday);
+}

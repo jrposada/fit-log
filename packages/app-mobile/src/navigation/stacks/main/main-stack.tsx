@@ -10,6 +10,8 @@ import Header from '../../common/header';
 import ClimbDetailScreen from './routes/climb-detail/climb-detail-screen';
 import ClimbLogScreen from './routes/climb-log/climb-log-screen';
 import LocationDetailScreen from './routes/location-detail/location-detail-screen';
+import PlanEnrollScreen from './routes/plan-enroll/plan-enroll-screen';
+import PlanOverviewScreen from './routes/plan-overview/plan-overview-screen';
 import ProfileScreen from './routes/profile/profile-screen';
 import TabsStack from './routes/tabs/tabs-stack';
 import TrainingSessionsDetailScreen from './routes/training-sessions-detail/training-sessions-detail-screen';
@@ -45,6 +47,26 @@ const MainStack: FunctionComponent = () => {
           ),
           presentation: 'modal',
         })}
+      />
+      <Stack.Screen
+        name="PlanEnroll"
+        component={PlanEnrollScreen}
+        options={{
+          headerShown: true,
+          header: () => (
+            <Header title={t('training_plans.enroll_title')} back />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="PlanOverview"
+        component={PlanOverviewScreen}
+        options={{
+          headerShown: true,
+          header: () => (
+            <Header title={t('training_plans.overview_title')} back />
+          ),
+        }}
       />
       <Stack.Screen
         name="ClimbDetail"
