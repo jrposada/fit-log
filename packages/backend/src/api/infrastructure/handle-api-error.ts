@@ -7,6 +7,7 @@ import ForbiddenError from '../../infrastructure/forbidden-error.ts';
 import Logger from '../../infrastructure/logger.ts';
 import ResourceNotFound from '../../infrastructure/not-found-error.ts';
 import RelatedEntityRequiredError from '../../infrastructure/related-entity-required-error.ts';
+import ValidationError from '../../infrastructure/validation-error.ts';
 
 export function handleApiError<TError = unknown>(error: TError, res: Response) {
   Logger.error('API Error:', error);
@@ -21,6 +22,8 @@ export function handleApiError<TError = unknown>(error: TError, res: Response) {
     status = 403;
   } else if (error instanceof ResourceNotFound) {
     status = 404;
+  } else if (error instanceof ValidationError) {
+    status = 400;
   } else if (error instanceof RelatedEntityRequiredError) {
     status = 428;
     body.data = {
