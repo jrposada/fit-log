@@ -61,11 +61,13 @@ const TrainingSessionsList: FunctionComponent<TrainingSessionsListProps> = ({
               </Stack>
 
               <Stack direction="horizontal" align="center" gap="sm">
-                <Typography size="callout" color="secondary">
-                  {t('climbing.climbs_count', {
-                    count: session.climbHistories.length,
-                  })}
-                </Typography>
+                {session.sport === 'climbing' && (
+                  <Typography size="callout" color="secondary">
+                    {t('climbing.climbs_count', {
+                      count: session.climbHistories.length,
+                    })}
+                  </Typography>
+                )}
                 {session.location && (
                   <>
                     <Separator direction="dot" />
