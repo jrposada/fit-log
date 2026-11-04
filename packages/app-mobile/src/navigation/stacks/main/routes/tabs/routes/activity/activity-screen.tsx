@@ -233,9 +233,7 @@ const ActivityScreen: FunctionComponent = () => {
                           align="center"
                           gap="sm"
                         >
-                          <Typography size="title">
-                            {SPORT_ICONS[entry.sport]}
-                          </Typography>
+                          <Icon icon={SPORT_ICONS[entry.sport]} size="md" />
                           <Typography size="body" style={{ flex: 1 }}>
                             {t(`${entry.sport}.title`)}
                           </Typography>

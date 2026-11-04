@@ -4,6 +4,7 @@ import { FunctionComponent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Card from '../../../library/card';
+import { Icon } from '../../../library/icon';
 import Separator from '../../../library/separator';
 import Stack from '../../../library/stack';
 import { Typography } from '../../../library/typography';
@@ -20,7 +21,7 @@ const FeedRow: FunctionComponent<FeedRowProps> = ({ session, onPress }) => {
   return (
     <Card onPress={onPress ? () => onPress(session) : undefined}>
       <Stack direction="horizontal" align="center" gap="sm" spacer="xs">
-        <Typography size="title">{SPORT_ICONS[session.sport]}</Typography>
+        <Icon icon={SPORT_ICONS[session.sport]} size="md" />
         <Typography size="body" weight="semibold" style={{ flex: 1 }}>
           {session.title}
         </Typography>
