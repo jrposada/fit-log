@@ -73,7 +73,7 @@ export const styles = StyleSheet.create({
     height: 180,
   },
   mapPreviewOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     justifyContent: 'center',
     alignItems: 'center',

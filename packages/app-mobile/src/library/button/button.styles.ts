@@ -21,17 +21,19 @@ export const variantColors = {
   secondaryGhost: 'transparent',
 } as const;
 
-export const variantTextStyles: Record<keyof typeof variantColors, TextStyle> =
-  {
-    primary: { color: ink.inverse },
-    success: { color: ink.inverse },
-    destructive: { color: semantic.destructive },
-    warning: { color: ink.inverse },
-    info: { color: accent.onSecondary },
-    outline: { color: ink.primary },
-    ghost: { color: accent.primary },
-    secondaryGhost: { color: accent.secondary },
-  };
+export const variantTextStyles: Record<
+  keyof typeof variantColors,
+  TextStyle & { color: string }
+> = {
+  primary: { color: ink.inverse },
+  success: { color: ink.inverse },
+  destructive: { color: semantic.destructive },
+  warning: { color: ink.inverse },
+  info: { color: accent.onSecondary },
+  outline: { color: ink.primary },
+  ghost: { color: accent.primary },
+  secondaryGhost: { color: accent.secondary },
+};
 
 export const borderStyles = StyleSheet.create({
   outline: {

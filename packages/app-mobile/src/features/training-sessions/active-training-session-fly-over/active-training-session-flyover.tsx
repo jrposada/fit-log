@@ -5,6 +5,7 @@ import { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native';
 import Animated, {
+  AnimatedStyle,
   FadeIn,
   FadeOut,
   LinearTransition,
@@ -17,7 +18,7 @@ import TrainingSessionDetail from '../training-session-detail/training-session-d
 import { styles } from './active-training-session-flyover.styles';
 
 interface ActiveTrainingSessionFlyoverProps {
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<AnimatedStyle<ViewStyle>>;
   onLayout?: (event: LayoutChangeEvent) => void;
 }
 

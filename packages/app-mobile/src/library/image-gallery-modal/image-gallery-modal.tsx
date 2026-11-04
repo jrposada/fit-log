@@ -2,10 +2,10 @@ import { FunctionComponent, useCallback, useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
+  ListViewToken,
   Modal,
   Text,
   View,
-  ViewToken,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -47,7 +47,7 @@ const ImageGalleryModal: FunctionComponent<ImageGalleryModalProps> = ({
   }, []);
 
   const handleViewableItemsChanged = useCallback(
-    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+    ({ viewableItems }: { viewableItems: ListViewToken[] }) => {
       if (viewableItems.length > 0 && viewableItems[0]!.index != null) {
         setCurrentIndex(viewableItems[0]!.index);
       }

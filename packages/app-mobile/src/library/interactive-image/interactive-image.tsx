@@ -7,11 +7,10 @@ import {
 } from 'react';
 import {
   Image,
-  ImageLoadEventData,
+  ImageLoadEvent,
   ImageSourcePropType,
   ImageStyle,
   LayoutChangeEvent,
-  NativeSyntheticEvent,
   StyleProp,
   View,
   ViewStyle,
@@ -118,13 +117,10 @@ const InteractiveImage: FunctionComponent<InteractiveImageProps> = ({
     setContainerSize({ width, height });
   }, []);
 
-  const handleImageLoad = useCallback(
-    (event: NativeSyntheticEvent<ImageLoadEventData>) => {
-      const { width, height } = event.nativeEvent.source;
-      setNaturalSize({ width, height });
-    },
-    []
-  );
+  const handleImageLoad = useCallback((event: ImageLoadEvent) => {
+    const { width, height } = event.nativeEvent.source;
+    setNaturalSize({ width, height });
+  }, []);
 
   const resetTransform = () => {
     'worklet';
