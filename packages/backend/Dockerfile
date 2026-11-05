@@ -6,11 +6,13 @@
 #
 #   docker build -f packages/backend/Dockerfile --target runtime -t fit-log-backend .
 #
-# Two usable targets:
+# Three usable targets:
 #   - `dev`:     OS toolchain only. Used by docker-compose (`backend` service)
 #                with the repo bind-mounted at /repo — pnpm install + tsx
 #                watch run at container start against your live source.
 #   - `runtime`: self-contained deploy image with the built dist/ baked in.
+#   - `production`: slim Node-only image (no reconstruction toolchain),
+#                published to GHCR by CI. See its stage below.
 #
 # All targets build successfully as of this writing (`openmvs-builder`,
 # `toolchain`, `dev`, `builder`, `runtime`), and `dev` has been exercised
@@ -175,6 +177,45 @@ FROM toolchain AS runtime
 
 WORKDIR /repo
 COPY --from=builder /repo /repo
+
+WORKDIR /repo/packages/backend
+ENV NODE_ENV=production
+CMD ["node", "dist/index.js"]
+
+##
+## ---- production builder ------------------------------------------------
+## Same build as `builder`, but on the official Node image instead of
+## `toolchain`: the production deploy has no 3D reconstruction, so it skips
+## colmap/ffmpeg/OpenMVS. Dependencies (incl. sharp's native binary) are
+## installed here so they match the image's platform.
+##
+FROM node:22-bookworm-slim AS production-builder
+
+RUN corepack enable
+
+WORKDIR /repo
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY packages/backend/package.json packages/backend/package.json
+COPY packages/shared/package.json packages/shared/package.json
+
+RUN pnpm install --frozen-lockfile --filter @jrposada/fit-log-backend...
+
+COPY packages/shared packages/shared
+COPY packages/backend packages/backend
+
+RUN pnpm --filter @jrposada/fit-log-shared build
+RUN pnpm --filter @jrposada/fit-log-backend build
+
+##
+## ---- production --------------------------------------------------------
+## Slim deploy image published to GHCR by .github/workflows/backend-image.yml.
+## Reconstruction jobs still run here but fail (missing binaries), marking
+## the model failed.
+##
+FROM node:22-bookworm-slim AS production
+
+WORKDIR /repo
+COPY --from=production-builder /repo /repo
 
 WORKDIR /repo/packages/backend
 ENV NODE_ENV=production
