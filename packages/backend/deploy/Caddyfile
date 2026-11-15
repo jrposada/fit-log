@@ -1,0 +1,16 @@
+# Single public entry point for the production stack (docker-compose.prod.yml).
+# `handle` (not `handle_path`) keeps the path prefix: the backend serves
+# /api and /files itself, and Keycloak runs under KC_HTTP_RELATIVE_PATH=/auth.
+# reverse_proxy sets X-Forwarded-For/Proto/Host, which Keycloak reads
+# (KC_PROXY_HEADERS=xforwarded).
+{$FITLOG_HOST} {
+	handle /api* {
+		reverse_proxy backend:3100
+	}
+	handle /files* {
+		reverse_proxy backend:3100
+	}
+	handle /auth* {
+		reverse_proxy keycloak:8080
+	}
+}
