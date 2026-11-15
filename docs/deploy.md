@@ -1,6 +1,6 @@
 # Deploying the backend
 
-The production backend runs as a docker compose stack on a free Oracle Cloud ARM VM, behind Caddy for HTTPS. `<host>` below is the DuckDNS hostname, e.g. `fitlog.duckdns.org`.
+The production backend runs as a docker compose stack on a free Oracle Cloud ARM VM, behind Caddy for HTTPS. `<host>` below is the DuckDNS hostname and `<realm>` the Keycloak realm (`KEYCLOAK_REALM`, URL-encoded in URLs).
 
 | Path                   | Served by                |
 | ---------------------- | ------------------------ |
@@ -57,19 +57,19 @@ cd fit-log/packages/backend
 
 `docker-compose.prod.yml` reads `packages/backend/.env.prod`, both for compose interpolation (`--env-file`) and as the backend's `env_file`. A deploy workflow will generate it from GitHub secrets; until that exists, create it by hand with these variables:
 
-| Variable                     | Value                                                                       |
-| ---------------------------- | --------------------------------------------------------------------------- |
-| `FITLOG_HOST`                | `<host>`, no scheme. Caddy requests the certificate for it.                 |
-| `KEYCLOAK_ENDPOINT`          | `https://<host>/auth`. Also Keycloak's `KC_HOSTNAME_URL`: the JWT issuer.   |
-| `KEYCLOAK_INTERNAL_ENDPOINT` | `http://keycloak:8080/auth`. The backend fetches signing keys over compose. |
-| `KEYCLOAK_REALM`             | `"FIT Log"`                                                                 |
-| `KEYCLOAK_ADMIN`             | Bootstrap admin username for `https://<host>/auth/admin`.                   |
-| `KEYCLOAK_ADMIN_PASSWORD`    | Secret. Strong password.                                                    |
-| `KEYCLOAK_DB_PASSWORD`       | Secret. Keycloak's Postgres password (user and database are `keycloak`).    |
-| `PUBLIC_FILES_BASE_URL`      | `https://<host>/files`                                                      |
-| `DATABASE_ENDPOINT`          | `mongodb://database:27017/fit-log`                                          |
-| `REDIS_ENDPOINT`             | `redis://redis:6379`                                                        |
-| `DATA_DIR`                   | `/data` (the `backend-data` volume).                                        |
+| Variable                     | Description                                                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `FITLOG_HOST`                | Public hostname, without scheme. Caddy requests the certificate for it.                                      |
+| `KEYCLOAK_ENDPOINT`          | Public Keycloak URL: `https://<host>/auth`. Also Keycloak's `KC_HOSTNAME_URL`, so it becomes the JWT issuer. |
+| `KEYCLOAK_INTERNAL_ENDPOINT` | Keycloak URL on the compose network, including `/auth`. The backend fetches signing keys from it.            |
+| `KEYCLOAK_REALM`             | Realm name, as in `realm-export.prod.json`.                                                                  |
+| `KEYCLOAK_ADMIN`             | Bootstrap admin username for `https://<host>/auth/admin`.                                                    |
+| `KEYCLOAK_ADMIN_PASSWORD`    | Secret. Bootstrap admin password.                                                                            |
+| `KEYCLOAK_DB_PASSWORD`       | Secret. Password for Keycloak's Postgres database.                                                           |
+| `PUBLIC_FILES_BASE_URL`      | Public base URL for uploaded files: `https://<host>/files`.                                                  |
+| `DATABASE_ENDPOINT`          | Mongo connection string, using the `database` service.                                                       |
+| `REDIS_ENDPOINT`             | Redis connection string, using the `redis` service.                                                          |
+| `DATA_DIR`                   | Container path for uploaded files; mount point of the `backend-data` volume.                                 |
 
 `KEYCLOAK_ENDPOINT` must be exactly `https://<host>/auth`. Keycloak puts it in every token's `iss` claim, and the backend rejects any token whose issuer differs.
 
@@ -86,7 +86,7 @@ Wait until Caddy logs that it obtained the certificate for `<host>`.
 
 ### 7. Create your account
 
-Registration is off and the realm has no users. Open `https://<host>/auth/admin`, sign in with `KEYCLOAK_ADMIN` / `KEYCLOAK_ADMIN_PASSWORD`, switch to the `FIT Log` realm, and create your user under **Users**. Set a non-temporary password under **Credentials**, and fill in email, first name and last name (the backend requires `email` and `name` claims).
+Registration is off and the realm has no users. Open `https://<host>/auth/admin`, sign in with `KEYCLOAK_ADMIN` / `KEYCLOAK_ADMIN_PASSWORD`, switch to `<realm>`, and create your user under **Users**. Set a non-temporary password under **Credentials**, and fill in email, first name and last name (the backend requires `email` and `name` claims).
 
 ## Updating
 
@@ -113,14 +113,14 @@ docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
 ## Verifying
 
 ```bash
-# OIDC discovery: issuer must be https://<host>/auth/realms/FIT%20Log
-curl -s "https://<host>/auth/realms/FIT%20Log/.well-known/openid-configuration" | jq -r .issuer
+# OIDC discovery: issuer must be https://<host>/auth/realms/<realm>
+curl -s "https://<host>/auth/realms/<realm>/.well-known/openid-configuration" | jq -r .issuer
 
 # Protected endpoint: 401 without a token
 curl -s -o /dev/null -w '%{http_code}\n' https://<host>/api/me
 
 # ...and 200 with one
-TOKEN=$(curl -s -X POST "https://<host>/auth/realms/FIT%20Log/protocol/openid-connect/token" \
+TOKEN=$(curl -s -X POST "https://<host>/auth/realms/<realm>/protocol/openid-connect/token" \
   -d grant_type=password -d client_id=fit-log-mobile \
   -d username=<email> -d password=<password> | jq -r .access_token)
 curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $TOKEN" https://<host>/api/me
