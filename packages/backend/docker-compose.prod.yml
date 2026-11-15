@@ -1,0 +1,119 @@
+# Production stack for a single VM. Run from this directory:
+#
+#   docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+#
+# Only caddy publishes ports; everything else is reachable only over the
+# compose network. See docs/deploy.md and .prod.example.env.
+services:
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    environment:
+      - FITLOG_HOST=${FITLOG_HOST}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - backend
+      - keycloak
+
+  backend:
+    image: ghcr.io/jrposada/fit-log-backend:latest
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    volumes:
+      - backend-data:/data
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      keycloak:
+        condition: service_started
+
+  database:
+    image: 'mongo:latest'
+    restart: unless-stopped
+    # Single-node replica set (transactions need one); same init as dev.
+    # The member host must be the service name, not localhost.
+    command: mongod --replSet rs0 --bind_ip_all
+    environment:
+      - MONGO_INITDB_DATABASE=fit-log
+    volumes:
+      - mongodb-data:/data/db
+      - mongodb-configdb:/data/configdb
+    healthcheck:
+      test: |
+        mongosh --quiet --eval '
+          try {
+            rs.status();
+          } catch (e) {
+            rs.initiate({ _id: "rs0", members: [{ _id: 0, host: "database:27017" }] });
+          }
+        '
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: 'redis:latest'
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    restart: unless-stopped
+    # --import-realm skips a realm that already exists: later realm changes go
+    # through the admin console (or a reset keycloak-db-data volume).
+    command: start --import-realm
+    environment:
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://keycloak-db:5432/keycloak
+      - KC_DB_USERNAME=keycloak
+      - KC_DB_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+      # TLS ends at caddy; Keycloak speaks plain HTTP on the compose network.
+      - KC_HTTP_ENABLED=true
+      - KC_HTTP_RELATIVE_PATH=/auth
+      # Keycloak 24 (hostname v1): the full public URL, path included. It is
+      # baked into the JWT issuer, so it must equal KEYCLOAK_ENDPOINT.
+      - KC_HOSTNAME_URL=${KEYCLOAK_ENDPOINT}
+      - KC_HOSTNAME_ADMIN_URL=${KEYCLOAK_ENDPOINT}
+      - KC_PROXY_HEADERS=xforwarded
+      - KEYCLOAK_ADMIN=${KEYCLOAK_ADMIN}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+    volumes:
+      - ./keycloak/realm-export.prod.json:/opt/keycloak/data/import/realm-export.json:ro
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+
+  keycloak-db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=keycloak
+      - POSTGRES_USER=keycloak
+      - POSTGRES_PASSWORD=${KEYCLOAK_DB_PASSWORD}
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U keycloak -d keycloak']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  caddy-data:
+  caddy-config:
+  backend-data:
+  mongodb-data:
+  mongodb-configdb:
+  redis-data:
+  keycloak-db-data:
