@@ -10,7 +10,7 @@ The production backend runs as a docker compose stack on a free Oracle Cloud ARM
 
 Only Caddy publishes ports (80, 443). Mongo, Redis, Postgres and Keycloak are reachable only over the compose network.
 
-Files: `packages/backend/docker-compose.prod.yml`, `packages/backend/deploy/Caddyfile`, `packages/backend/.prod.example.env`, `packages/backend/keycloak/realm-export.prod.json`.
+Files: `packages/backend/docker-compose.prod.yml`, `packages/backend/deploy/Caddyfile`, `packages/backend/keycloak/realm-export.prod.json`.
 
 The backend image (`ghcr.io/jrposada/fit-log-backend:latest`) is built by the manual **Backend image** workflow (`.github/workflows/backend-image.yml`). It is never built on the VM. Make the GHCR package public, or run `docker login ghcr.io` on the VM.
 
@@ -53,13 +53,23 @@ Sign in at [duckdns.org](https://www.duckdns.org), register a subdomain, and set
 ```bash
 git clone https://github.com/jrposada/fit-log.git
 cd fit-log/packages/backend
-cp .prod.example.env .env.prod
 ```
 
-Edit `.env.prod`:
+`docker-compose.prod.yml` reads `packages/backend/.env.prod`, both for compose interpolation (`--env-file`) and as the backend's `env_file`. A deploy workflow will generate it from GitHub secrets; until that exists, create it by hand with these variables:
 
-- Replace `fitlog.duckdns.org` with `<host>` in `FITLOG_HOST`, `KEYCLOAK_ENDPOINT` and `PUBLIC_FILES_BASE_URL`.
-- Set strong values for `KEYCLOAK_ADMIN_PASSWORD` and `KEYCLOAK_DB_PASSWORD`.
+| Variable                     | Value                                                                       |
+| ---------------------------- | --------------------------------------------------------------------------- |
+| `FITLOG_HOST`                | `<host>`, no scheme. Caddy requests the certificate for it.                 |
+| `KEYCLOAK_ENDPOINT`          | `https://<host>/auth`. Also Keycloak's `KC_HOSTNAME_URL`: the JWT issuer.   |
+| `KEYCLOAK_INTERNAL_ENDPOINT` | `http://keycloak:8080/auth`. The backend fetches signing keys over compose. |
+| `KEYCLOAK_REALM`             | `"FIT Log"`                                                                 |
+| `KEYCLOAK_ADMIN`             | Bootstrap admin username for `https://<host>/auth/admin`.                   |
+| `KEYCLOAK_ADMIN_PASSWORD`    | Secret. Strong password.                                                    |
+| `KEYCLOAK_DB_PASSWORD`       | Secret. Keycloak's Postgres password (user and database are `keycloak`).    |
+| `PUBLIC_FILES_BASE_URL`      | `https://<host>/files`                                                      |
+| `DATABASE_ENDPOINT`          | `mongodb://database:27017/fit-log`                                          |
+| `REDIS_ENDPOINT`             | `redis://redis:6379`                                                        |
+| `DATA_DIR`                   | `/data` (the `backend-data` volume).                                        |
 
 `KEYCLOAK_ENDPOINT` must be exactly `https://<host>/auth`. Keycloak puts it in every token's `iss` claim, and the backend rejects any token whose issuer differs.
 

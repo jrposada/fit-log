@@ -3,7 +3,7 @@
 #   docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
 #
 # Only caddy publishes ports; everything else is reachable only over the
-# compose network. See docs/deploy.md and .prod.example.env.
+# compose network. See docs/deploy.md for the .env.prod variables.
 services:
   caddy:
     image: caddy:2
